@@ -22,5 +22,5 @@
   },
   "include": [
     "src"
-  ]
+, "layout/Mymenu.tsx", "layout/MyLayout.tsx"  ]
 }
