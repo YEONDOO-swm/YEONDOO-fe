@@ -4,7 +4,7 @@ export const authProvider = {
     login: ({ username }: any) => {
       localStorage.setItem("username", username);
       // accept all username/password combinations
-      return Promise.resolve();
+      return Promise.resolve({ redirectTo: '/userprofile'});
     },
     // called when the user clicks on the logout button
     logout: () => {
