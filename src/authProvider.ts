@@ -1,3 +1,6 @@
+import * as amplitude from '@amplitude/analytics-browser';
+import { useEffect } from 'react';
+
 // TypeScript users must reference the type: `AuthProvider`
 export const authProvider = {
     // called when the user attempts to log in
@@ -9,6 +12,7 @@ export const authProvider = {
     // called when the user clicks on the logout button
     logout: () => {
       localStorage.removeItem("username");
+      amplitude.track("Login Page Viewed");
       return Promise.resolve();
     },
     // called when the API returns an error

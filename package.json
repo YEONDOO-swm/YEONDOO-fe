@@ -8,6 +8,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@amplitude/analytics-browser": "^2.1.2",
     "@coreui/coreui": "^4.2.6",
     "@coreui/react": "^4.8.0",
     "ra-data-json-server": "^4.9.2",

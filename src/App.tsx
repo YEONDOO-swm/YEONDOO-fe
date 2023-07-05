@@ -9,6 +9,9 @@ import { History } from './history';
 import { MyLayout } from '../layout/MyLayout';
 import { UserProfile } from './userProfile';
 import { useNavigate } from 'react-router-dom';
+import * as amplitude from '@amplitude/analytics-browser';
+
+amplitude.init('fa2f5340585a6728ae2103fb05e56bec');
 
 export const App = () => (
     <Admin

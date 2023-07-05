@@ -1,11 +1,16 @@
 import * as React from "react";
 import { Card, CardContent } from '@mui/material';
 import { Container, InputAdornment, TextField, IconButton } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import { Title } from 'react-admin';
+import * as amplitude from '@amplitude/analytics-browser';
 
 export const Home = () => {
+    useEffect(() => {
+        amplitude.track("Home Page Viewed");
+    }, []);
+    
     const [searchTerm, setSearchTerm] = useState("");
 
     const handleChange = (event: any) => {
