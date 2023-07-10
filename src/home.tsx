@@ -3,10 +3,14 @@ import { Card, CardContent } from '@mui/material';
 import { Container, InputAdornment, TextField, IconButton } from "@mui/material";
 import { useState, useEffect } from "react";
 import SearchIcon from "@mui/icons-material/Search";
-import { Title } from 'react-admin';
+import { Title, useAuthenticated } from 'react-admin';
 import * as amplitude from '@amplitude/analytics-browser';
 
+// url 상으로 
+
 export const Home = () => {
+    console.log("home!!!");
+    useAuthenticated();
     useEffect(() => {
         amplitude.track("Home Page Viewed");
     }, []);
