@@ -1,4 +1,5 @@
 import { rest } from 'msw';
+import fields from '../json/fields.json'
 
 const users = [
     { id: 1, username: 'john', password: '1' },
@@ -16,19 +17,43 @@ export const apiHandlers = [
         );
 
         if (user) {
-            return res(ctx.status(200), ctx.json({message: '로그인 성공'}))
+            return res(ctx.status(200), ctx.json({username, password, message: 'Success'}))
         } else {
-            return res(ctx.status(401),
-            ctx.json( { message: '사용자 인증에 실패했습니다. '}))
+            return res(ctx.status(401), ctx.json( { message: 'Invalid User'}))
         }
-        // return res(
-        //     ctx.status(200),
-        //     ctx.delay(4000),
-        //     ctx.json({
+    }),
 
-        //     })
+    rest.get('/api/userprofile/:username', (req, res, ctx) => {
+      const { username } = req.params;
+      const payload = {
+        username,
+        fields: fields
+      }
+      return res(ctx.status(200), ctx.json(payload));
+    }),
 
-        // )
+    rest.post('/api/userprofile', (req, res, ctx) => {
+      const { username, studyfield, keywords } = req.body;
+
+      if (!username) {
+        console.log('username error')
+        return res(ctx.status(400), ctx.json({message: 'Bad Request - username'}))
+      }
+      if (!studyfield) {
+        console.log('field error')
+        return res(ctx.status(400), ctx.json({message: 'Bad Request - studyfield'}))
+      }
+      if (!keywords || keywords.length == 0) {
+        console.log('keywords error')
+        return res(ctx.status(400), ctx.json({message: 'Bad Request - keywords'}))
+      }
+
+      const user = users.find( (user) => user.username === username);
+      if (!user){
+        return res(ctx.status(401), ctx.json({message: 'Unauthorized'}))
+      }
+
+      return res(ctx.status(200), ctx.json({username, studyfield, keywords, message: 'Success'}));
     })
 ]
 

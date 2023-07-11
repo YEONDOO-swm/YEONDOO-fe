@@ -11,9 +11,9 @@ export const authProvider = {
     //   // accept all username/password combinations
     //   return Promise.resolve({ redirectTo: '/userprofile'});
     // },
-    isLoggedIn: false,
 
     login: ({ username, password }:any) => {
+      sessionStorage.setItem("username", username);
       return fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type' : 'application/json' },
@@ -21,7 +21,6 @@ export const authProvider = {
       })
       .then((response) => {
         if (response.status === 200) {
-          authProvider.isLoggedIn = true;
           return { redirectTo: '/userprofile' };
         } else {
           throw new Error ('로그인에 실패했습니다.');
@@ -35,13 +34,12 @@ export const authProvider = {
     // called when the user clicks on the logout button
     logout: () => {
       amplitude.track("Login Page Viewed");
-      authProvider.isLoggedIn = false;
+      sessionStorage.removeItem('username');
       return Promise.resolve();
     },
     // called when the API returns an error
     checkError: ({ status }: any) => {
       if (status === 401 || status === 403) {
-        authProvider.isLoggedIn = false;
         return Promise.reject();
       }
       return Promise.resolve();
@@ -49,7 +47,7 @@ export const authProvider = {
     // called when the user navigates to a new location, to check for authentication
     checkAuth: () => {
       console.log("check auth!!");
-      if (authProvider.isLoggedIn) {
+      if (sessionStorage.getItem('username')) {
         return Promise.resolve();
       } else {
         return Promise.reject({ redirectTo: '/login' });
@@ -58,6 +56,11 @@ export const authProvider = {
     
     // called when the user navigates to a new location, to check for permissions / roles
     getPermissions: () => Promise.resolve(),
+    getIdentity: () => {
+          return Promise.resolve({
+              fullName: sessionStorage.getItem('username'),
+          });
+      },
     
   };
 
