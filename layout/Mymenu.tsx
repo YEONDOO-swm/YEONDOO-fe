@@ -3,9 +3,9 @@ import LabelIcon from '@mui/icons-material/Label';
 import HomeIcon from '@mui/icons-material/Home';
 import StorageIcon from '@mui/icons-material/Storage';
 import HistoryIcon from '@mui/icons-material/History';
-import { App } from '../src/app';
+import { App } from '../src/App';
 
-export const MyMenu = () => (
+export const Mymenu = () => (
     <Menu>
         < Menu.Item to="/home" primaryText="Home" leftIcon = {<HomeIcon />} />
         < Menu.Item to="/paperStorage" primaryText="논문보관함" leftIcon = {<StorageIcon />} />

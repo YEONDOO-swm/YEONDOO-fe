@@ -1,3 +1,4 @@
+
 import * as amplitude from '@amplitude/analytics-browser';
 import { useNavigate } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
@@ -8,7 +9,6 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 // TypeScript users must reference the type: `AuthProvider`
 export const authProvider = {
-
     login: ({ username, password }:any) => {
       sessionStorage.setItem("username", username);
       return fetch('/api/login', {
@@ -38,6 +38,7 @@ export const authProvider = {
     // called when the API returns an error
     checkError: ({ status }: any) => {
       if (status === 401 || status === 403) {
+        localStorage.removeItem("username");
         return Promise.reject();
       }
       return Promise.resolve();
@@ -45,25 +46,23 @@ export const authProvider = {
     // called when the user navigates to a new location, to check for authentication
     checkAuth: () => {
       //const navigate = useNavigate()
-      const history = createBrowserHistory();
       if (!sessionStorage.getItem('username')) {
         return Promise.reject();
       } 
       else if (!localStorage.getItem('userprofile')) {
 
-        return Promise.resolve({ redirectTo: '/userprofile'})
+        return Promise.resolve()
       }
       else {
         return Promise.resolve();
       }
-    },
-    
+    }, 
     // called when the user navigates to a new location, to check for permissions / roles
     getPermissions: () => Promise.resolve(),
-    getIdentity: () => {
-          return Promise.resolve({
-              fullName: sessionStorage.getItem('username'),
-          });
-      },
+    // getIdentity: () => {
+    //       return Promise.resolve({
+    //           fullName: sessionStorage.getItem('username'),
+    //       });
+    //   },
     
   };

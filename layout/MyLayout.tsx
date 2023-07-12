@@ -1,4 +1,4 @@
 import { Layout } from "react-admin";
-import { MyMenu } from "./myMenu";
+import { Mymenu } from "./Mymenu";
 
-export const MyLayout = (props: any) => <Layout {...props} menu={MyMenu} />;
+export const MyLayout = (props: any) => <Layout {...props} menu={Mymenu} />;

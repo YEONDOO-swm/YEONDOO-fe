@@ -11,6 +11,7 @@ export const History = () => {
     }, []);
     
     return (
+
     <Card>
         <Title title="히스토리" />
         <CardContent>
