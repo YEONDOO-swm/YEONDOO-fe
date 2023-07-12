@@ -50,7 +50,7 @@ export const authProvider = {
         return Promise.reject();
       } 
       else if (!localStorage.getItem('userprofile')) {
-        history
+
         return Promise.resolve({ redirectTo: '/userprofile'})
       }
       else {
