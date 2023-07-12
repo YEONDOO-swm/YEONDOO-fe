@@ -114,6 +114,7 @@ export const UserProfile = () => {
         })
         // console.log('연구분야: ', researchField);
         // console.log('키워드: ', keywords);
+        amplitude.track("유저 프로필 제출 Clicked");
         localStorage.setItem("userprofile", "exists");
     };
     
@@ -122,71 +123,80 @@ export const UserProfile = () => {
     // console.log(fields)
 
     return (
-        <Box sx={{ maxWidth: 450, margin: '30px auto', padding: '3rem', backgroundColor: '#ffffff', borderRadius: '20px' }}>
-            <Title title="Profile"/>
+        <Box sx={{ height: '80vh', maxWidth: 500, margin: '30px auto', padding: '3rem', backgroundColor: '#DCDCDC', borderRadius: '20px' , border: '1px solid #DCDCDC'}}>
+            <Title title="Register"/>
         {/* <Typography variant="h4" sx={{ marginBottom: '1rem' }}>Profile</Typography> */}
-        <form onSubmit={handleSubmit}>
-            <Typography variant="body1" sx={{ marginBottom: '0.5rem' }}>
-            1. 현재 하고 있는 연구분야는 무엇인가요?
-            </Typography>
-            <FormControl fullWidth sx={{ marginBottom: '1rem' }}>
-            <InputLabel htmlFor="researchField">연구분야</InputLabel>
-            <Select
-                native
-                value={researchField}
-                onChange={handleResearchFieldChange}
-                inputProps={{ id: 'researchField' }}
-            >
-                <option value="NO">없음</option>
-                {/* <option value="CV">Computer vision</option>
-                <option value="NLP">Natural Language Processing</option>
-                <option value="Robotics">Robotics</option> */}
-                {Array.isArray(fields) &&
-                fields.map((field:string, index:number) => (
-                    <option key={index} value={field}>
-                        {field}
-                    </option>
-                ))}
-                <option value="직접 입력">직접 입력</option>
-            </Select>
-            {researchField === '직접 입력' && (
-                <input 
-                    id="customeField"
-                    placeholder="연구 분야를 입력해 주세요."
-                    value={customeField} 
-                    onChange={handleCustomFieldChange}
-                    className={styles.input_box}/>
-            )}
-            </FormControl>
-            <Typography variant="body1" sx={{ marginBottom: '0.5rem' }}>
-            2. 관심있는 키워드는 무엇인가요? (최대 3개)
-            </Typography>
-            <input
-            type="text"
-            value={keywords}
-            placeholder='입력 후 엔터'
-            onChange={handleKeywordsChange}
-            onKeyDown={handleKeywordsKeyDown}
-            className={styles.input_box}
-            />
-            {enteredKeywords.length > 0 && (
-                <div>
-                    {enteredKeywords.map((keyword, index) => (
-                        <div key={index} style={{ display: 'flex', alignItems: 'center'}}>
-                            <Typography>
-                                {keyword}
-                            </Typography>
-                            <IconButton onClick={() => handleRemoveKeyword(index)}>
-                                <CloseIcon />
-                            </IconButton>
+        <form onSubmit={handleSubmit} >
+            <Box sx={{ height: '70vh', display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
+                <Box>
+                    <Typography variant='h4' sx={{marginBottom: '20px'}}>
+                        Register
+                    </Typography>
+                    <Box sx={{ height: '20vh'}}>
+                        <Typography variant="h6" sx={{ marginBottom: '0.5rem' }}>
+                        1. 현재 하고 있는 연구분야는 무엇인가요?
+                        </Typography>
+                        <FormControl fullWidth sx={{ marginBottom: '1rem' }}>
+                        <InputLabel htmlFor="researchField">연구분야</InputLabel>
+                        <Select
+                            native
+                            value={researchField}
+                            onChange={handleResearchFieldChange}
+                            inputProps={{ id: 'researchField' }}
+                        >
+                            <option value="NO">없음</option>
+                            {/* <option value="CV">Computer vision</option>
+                            <option value="NLP">Natural Language Processing</option>
+                            <option value="Robotics">Robotics</option> */}
+                            {Array.isArray(fields) &&
+                            fields.map((field:string, index:number) => (
+                                <option key={index} value={field}>
+                                    {field}
+                                </option>
+                            ))}
+                            <option value="직접 입력">직접 입력</option>
+                        </Select>
+                        {researchField === '직접 입력' && (
+                            <input 
+                                id="customeField"
+                                placeholder="연구 분야를 입력해 주세요."
+                                value={customeField} 
+                                onChange={handleCustomFieldChange}
+                                className={styles.input_box}/>
+                        )}
+                        </FormControl>
+                    </Box>
+                    <Typography variant="h6" sx={{ marginBottom: '0.5rem' }}>
+                    2. 관심있는 키워드는 무엇인가요? (최대 3개)
+                    </Typography>
+                    <input
+                    type="text"
+                    value={keywords}
+                    placeholder='입력 후 엔터'
+                    onChange={handleKeywordsChange}
+                    onKeyDown={handleKeywordsKeyDown}
+                    className={styles.input_box}
+                    />
+                    {enteredKeywords.length > 0 && (
+                        <div>
+                            {enteredKeywords.map((keyword, index) => (
+                                <div key={index} style={{ display: 'flex', alignItems: 'center'}}>
+                                    <Typography>
+                                        {keyword}
+                                    </Typography>
+                                    <IconButton onClick={() => handleRemoveKeyword(index)}>
+                                        <CloseIcon />
+                                    </IconButton>
+                                </div>
+                            ))}
                         </div>
-                    ))}
-                </div>
-            )}
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Button type="submit" variant="outlined">
-                Submit
-                </Button>
+                    )}
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button type="submit" variant="outlined">
+                    Submit
+                    </Button>
+                </Box>
             </Box>
         </form>
         </Box>

@@ -5,6 +5,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useState, useEffect, useRef, KeyboardEvent, MouseEvent } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { Title, useAuthenticated } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
 import * as amplitude from '@amplitude/analytics-browser';
@@ -16,6 +17,8 @@ export const Home = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResults, setSearchResults] = useState("");
     const [enteredSearch, setEnteredSearch] = useState("");
+    const [isFavorite, setIsFavorite] = useState(false);
+    const [paperIdArray, setPaperIdArray] = useState<string[]>([]);
 
     const searchInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -42,6 +45,7 @@ export const Home = () => {
 
     const performSearch = async () => {
         try {
+            // const response = await fetch(`http://be.yeondoo.net:8080/homesearch?query=${searchTerm}&&username=${username}`);
             const response = await fetch(`/api/homesearch?query=${searchTerm}&&username=${username}`);
             const data = await response.json();
             console.log(data);
@@ -54,7 +58,44 @@ export const Home = () => {
     };
 
     const handleViewPaper = (url:string) => {
+        amplitude.track("논문 보기 Clicked");
         window.location.href = url;
+    }
+
+    const handleHeartClick = (paperId:any) => {
+      if (paperIdArray.includes(paperId)) {
+        for (var i = 0; i<paperIdArray.length; i++){
+          if (paperIdArray[i] === paperId) {
+            paperIdArray.splice(i, 1);
+            break;
+          }
+        }
+        setPaperIdArray(paperIdArray)
+      }
+      else {
+        setPaperIdArray(prevArray => [...prevArray, paperId]);
+      }
+      setIsFavorite(!isFavorite);
+
+      const payload = {
+        username: sessionStorage.getItem('username'),
+        paperId: paperId,
+        onoff: true
+      }
+
+      fetch('/api/paperlikeonoff', {
+        method: 'POST',
+        headers: { 'Content-Type' : 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(response => {
+        if (response.ok) {
+          return response.json;
+        } else {
+          throw new Error('찜 버튼 에러')
+        }
+      })
+
     }
 
     useEffect(() => {
@@ -64,7 +105,7 @@ export const Home = () => {
 
 
     return (
-    <div>
+    <div style={{height: '50vh'}}>
         <Title title="Home" />
         <CardContent sx={{ margin: '30px auto' }}>
             <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -93,23 +134,30 @@ export const Home = () => {
         {searchResults && (<div>
   <Grid container spacing={2}>
     <Grid item xs={6}>
-      <Box sx={{ display:'flex', border: '1px solid #E6E6FA', margin: '10px', padding: '20px', height: '75vh', borderRadius: '15px', backgroundColor: '#E6E6FA'}}>
-        <Box sx={{height: '75vh', marginRight: '5px'}}>
+      <Box sx={{ display:'flex', border: '1px solid #E6E6FA', margin: '10px', padding: '20px', height: '75vh', borderRadius: '15px', backgroundColor: '#E6E6FA', overflowY: 'scroll'}}>
+        <Box sx={{height: '60vh', marginRight: '5px'}}>
           <QuestionAnswerIcon />
         </Box>
         {searchResults.answer}
       </Box>
     </Grid>
     <Grid item xs={6}>
-      <CardContent sx={{ margin: '0 30px 0 10px', padding: '10px' }}>
+      <CardContent sx={{ height: '75vh', margin: '0 30px 0 10px', padding: '10px', overflowY: 'scroll'}}>
         {searchResults.papers.map((paper) => (
-          <Box key={paper.paperId} sx={{ display: 'flex', justifyContent: 'center', marginBottom: '15px' }}>
-            <Container sx={{ border: '1px solid #E6F8E0', padding: '15px', borderRadius: '15px', backgroundColor: '#DCDCDC'}}>
+          <Box key={paper.paperId} sx={{ display: 'flex', justifyContent: 'center', marginBottom: '15px'}}>
+            <Container sx={{ border: '1px solid #DCDCDC', padding: '15px', borderRadius: '15px', backgroundColor: '#DCDCDC'}}>
               <Box sx={{display: 'flex', justifyContent:'space-between', alignContent: 'center'}}>
                 <Typography variant="h6">{paper.title}</Typography>
                 <Box sx={{ display: 'flex', justifyContent:'center', alignContent:'center'}}>
-                  <IconButton sx={{margin: '0'}} color="error">
-                    <FavoriteIcon />
+                  <IconButton onClick={() => handleHeartClick(paper.paperId)}>
+                    {
+                      paperIdArray.includes(paper.paperId) ? (
+                        <FavoriteIcon sx={{margin: '0'}} color="error"/>
+                      ) : (
+                        <FavoriteBorderIcon />
+                      )
+                    }
+                    
                   </IconButton>
                   <Typography variant="body2" sx={{margin: '10px 0'}}>{paper.likes}</Typography>
                 </Box>

@@ -5,6 +5,7 @@ import searchResults from '../json/searchResult.json'
 const users = [
     { id: 1, username: 'john', password: '1' },
     { id: 2, username: 'jane', password: '1' },
+    { id: 3, username: 'testtest1', password: 'testtest'}
   ];
 
 // handler는 여기 있고 각 부분에서 fetch로 요청 확인
@@ -59,6 +60,11 @@ export const apiHandlers = [
 
     rest.get('/api/homesearch', (req, res, ctx) => {
       return res(ctx.status(200), ctx.json({searchResults}));
+    }),
+
+    rest.post('/api/paperlikeonoff', (req, res, ctx) => {
+      const {username, paperId, onoff} = req.body;
+      return res(ctx.status(200), ctx.json({username, paperId, onoff}))
     })
 ]
 

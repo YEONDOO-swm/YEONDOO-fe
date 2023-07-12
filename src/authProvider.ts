@@ -4,6 +4,7 @@ import { createBrowserHistory } from 'history';
 import { response } from 'msw';
 import { useAuthenticated } from 'ra-core';
 import { useEffect, useState } from 'react';
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 // TypeScript users must reference the type: `AuthProvider`
 export const authProvider = {
@@ -11,6 +12,7 @@ export const authProvider = {
     login: ({ username, password }:any) => {
       sessionStorage.setItem("username", username);
       return fetch('/api/login', {
+      // return fetch('http://be.yeondoo.net:8080/login, {
         method: 'POST',
         headers: { 'Content-Type' : 'application/json' },
         body: JSON.stringify({ username, password })
@@ -48,6 +50,7 @@ export const authProvider = {
         return Promise.reject();
       } 
       else if (!localStorage.getItem('userprofile')) {
+        history
         return Promise.resolve({ redirectTo: '/userprofile'})
       }
       else {
