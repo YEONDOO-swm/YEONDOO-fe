@@ -1,16 +1,12 @@
 import * as amplitude from '@amplitude/analytics-browser';
+import { useNavigate } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
 import { response } from 'msw';
 import { useAuthenticated } from 'ra-core';
 import { useEffect, useState } from 'react';
 
 // TypeScript users must reference the type: `AuthProvider`
 export const authProvider = {
-    // called when the user attempts to log in
-    // login: ({ username }: any) => {
-    //   localStorage.setItem("username", username);
-    //   // accept all username/password combinations
-    //   return Promise.resolve({ redirectTo: '/userprofile'});
-    // },
 
     login: ({ username, password }:any) => {
       sessionStorage.setItem("username", username);
@@ -46,11 +42,16 @@ export const authProvider = {
     },
     // called when the user navigates to a new location, to check for authentication
     checkAuth: () => {
-      console.log("check auth!!");
-      if (sessionStorage.getItem('username')) {
+      //const navigate = useNavigate()
+      const history = createBrowserHistory();
+      if (!sessionStorage.getItem('username')) {
+        return Promise.reject();
+      } 
+      else if (!localStorage.getItem('userprofile')) {
+        return Promise.resolve({ redirectTo: '/userprofile'})
+      }
+      else {
         return Promise.resolve();
-      } else {
-        return Promise.reject({ redirectTo: '/login' });
       }
     },
     
@@ -63,51 +64,3 @@ export const authProvider = {
       },
     
   };
-
-
-
-// export const authProvider = {
-    // login: ({ username, password }:any) => {
-    //     return fetch('/api/login', {
-    //       method: 'POST',
-    //       headers: { 'Content-Type' : 'application/json' },
-    //       body: JSON.stringify({ username, password })
-    //     })
-    //     .then((response) => {
-    //       if (response.status === 200) {
-    //         return { redirectTo: '/userprofile' };
-    //       } else {
-    //         throw new Error ('로그인에 실패했습니다.');
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       console.error('로그인 에러:', error);
-    //       throw error;
-    //     });
-    // },
-//     logout: () => {
-//         amplitude.track("Login Page Viewed");
-//         return Promise.resolve();
-//     },
-//     checkError: ({ status }:any) => {
-//         return status === 401 || status === 403
-//             ? Promise.reject()
-//             : Promise.resolve();
-//     },
-//     checkAuth: () => {
-//         return localStorage.getItem('not_authenticated')
-//             ? Promise.reject()
-//             : Promise.resolve();
-//     },
-//     getPermissions: () => {
-//         const role = localStorage.getItem('role');
-//         return Promise.resolve(role);
-//     },
-    // getIdentity: () => {
-    //     return Promise.resolve({
-    //         id: localStorage.getItem('login'),
-    //         fullName: localStorage.getItem('user'),
-    //         // avatar: localStorage.getItem('avatar'),
-    //     });
-    // },
-// };
