@@ -10,7 +10,7 @@ assignees: coddingyun
 ## Description
 
 ## Todo
-- [] todo
-- [] todo
+- [ ] todo
+- [ ] todo
 
 ## Note
