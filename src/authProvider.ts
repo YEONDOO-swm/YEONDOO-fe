@@ -8,11 +8,11 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 // TypeScript users must reference the type: `AuthProvider`
 export const authProvider = {
-
+  
     login: ({ username, password }:any) => {
       sessionStorage.setItem("username", username);
-      // return fetch('/api/login', {
-      return fetch('https://be.yeondoo.net/login', {
+      return fetch('/api/login', {
+      // return fetch('http://be.yeondoo.net:8080/login, {
         method: 'POST',
         headers: { 'Content-Type' : 'application/json' },
         body: JSON.stringify({ username, password })
