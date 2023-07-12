@@ -12,7 +12,7 @@ export const authProvider = {
     login: ({ username, password }:any) => {
       sessionStorage.setItem("username", username);
       // return fetch('/api/login', {
-      return fetch('http://be.yeondoo.net:8080/login', {
+      return fetch('https://be.yeondoo.net:8080/login', {
         method: 'POST',
         headers: { 'Content-Type' : 'application/json' },
         body: JSON.stringify({ username, password })
