@@ -1,5 +1,6 @@
 import { rest } from 'msw';
 import fields from '../json/fields.json'
+import searchResults from '../json/searchResult.json'
 
 const users = [
     { id: 1, username: 'john', password: '1' },
@@ -27,7 +28,7 @@ export const apiHandlers = [
       const { username } = req.params;
       const payload = {
         username,
-        fields: fields
+        fields: fields // res.fields로 고치기
       }
       return res(ctx.status(200), ctx.json(payload));
     }),
@@ -54,6 +55,10 @@ export const apiHandlers = [
       }
 
       return res(ctx.status(200), ctx.json({username, studyfield, keywords, message: 'Success'}));
+    }),
+
+    rest.get('/api/homesearch', (req, res, ctx) => {
+      return res(ctx.status(200), ctx.json({searchResults}));
     })
 ]
 

@@ -46,7 +46,7 @@ export const UserProfile = () => {
     };
 
     const handleKeywordsKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-        if(event.key === 'Enter') {
+        if(event.key === 'Enter' ||  event.key === ' ') {
             event.preventDefault();
             if (enteredKeywords.length >=3 ){   
                 notify("키워드는 3개까지 입력할 수 있습니다.", {type: 'error'});
@@ -89,7 +89,7 @@ export const UserProfile = () => {
             studyfield: customeField === '' ? researchField : customeField,
             keywords: enteredKeywords
         }
-        console.log(payload);
+        
         fetch('/api/userprofile', {
             method: 'POST',
             headers: { 'Content-Type' : 'application/json' },
@@ -100,6 +100,9 @@ export const UserProfile = () => {
                 console.log('ok!!!!')
                 return response.json;
             } else {
+                if (!payload.keywords || payload.keywords.length === 0) {
+                    notify("키워드가 입력되지 않았습니다. 키워드 입력 후 엔터를 눌러 주세요.", {type: 'error'})
+                }
                 throw new Error('유저 프로필 등록에 실패했습니다.');
             }
         })
@@ -111,6 +114,7 @@ export const UserProfile = () => {
         })
         // console.log('연구분야: ', researchField);
         // console.log('키워드: ', keywords);
+        localStorage.setItem("userprofile", "exists");
     };
     
     const margin_value = '30px'
