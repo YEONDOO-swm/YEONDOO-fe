@@ -7,12 +7,20 @@ import { useAuthenticated } from 'ra-core';
 import { useEffect, useState } from 'react';
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 
+
 // TypeScript users must reference the type: `AuthProvider`
 export const authProvider = {
     login: ({ username, password }:any) => {
       sessionStorage.setItem("username", username);
-      //return fetch('/api/login', {
-      return fetch('https://be.yeondoo.net/login', {
+      var api:string = '';
+      if (process.env.NODE_ENV === 'development'){
+        api =`${process.env.REACT_APP_LOCAL_SERVER}/login`
+        console.log(process.env.REACT_APP_LOCAL_SERVER)
+      }
+      else if (process.env.NODE_ENV === 'production'){
+        api = `${process.env.REACT_APP_AWS_SERVER}/login`
+      }
+      return fetch( api, {
         method: 'POST',
         headers: { 'Content-Type' : 'application/json' },
         body: JSON.stringify({ username, password })
