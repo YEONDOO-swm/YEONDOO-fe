@@ -15,7 +15,7 @@ export const UserProfile = () => {
       api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
     }
     else if (process.env.NODE_ENV === 'production'){
-      api = `${import.meta.env.VITE_REACT_APP_AWS_SERVER}`
+      api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
     }
 
     const [researchField, setResearchField] = useState('NO');
