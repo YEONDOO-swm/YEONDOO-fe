@@ -1,6 +1,6 @@
 
 import * as amplitude from '@amplitude/analytics-browser';
-import { useNavigate } from 'react-router-dom';
+import { redirect, useNavigate } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 import { response } from 'msw';
 import { useAuthenticated } from 'ra-core';
@@ -11,23 +11,32 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 // TypeScript users must reference the type: `AuthProvider`
 export const authProvider = {
     login: ({ username, password }:any) => {
-      sessionStorage.setItem("username", username);
-      var api:string = '';
+      var api ='';
       if (process.env.NODE_ENV === 'development'){
-        api =`${process.env.REACT_APP_LOCAL_SERVER}/login`
-        console.log(process.env.REACT_APP_LOCAL_SERVER)
+        api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}/login`
       }
       else if (process.env.NODE_ENV === 'production'){
-        api = `${process.env.REACT_APP_AWS_SERVER}/login`
+        api = `${import.meta.env.VITE_REACT_APP_AWS_SERVER}/login`
       }
-      return fetch( api, {
+      return fetch(api, {
         method: 'POST',
         headers: { 'Content-Type' : 'application/json' },
         body: JSON.stringify({ username, password })
       })
       .then((response) => {
         if (response.status === 200) {
-          return { redirectTo: '/userprofile' };
+          sessionStorage.setItem("username", username);
+          return response.json().then((data) => {
+            console.log(data['isFirst'])
+            if (data.isFirst) {
+              return Promise.resolve({ redirectTo: '/userprofile' });
+            } else {
+              return Promise.resolve({ redirectTo: '/' });
+            }
+          })
+          // if (localStorage.getItem('userprofile')) {
+          //   return { redirectTo: '/'}
+          // }
         } else {
           throw new Error ('로그인에 실패했습니다.');
         }
@@ -59,7 +68,7 @@ export const authProvider = {
       } 
       else if (!localStorage.getItem('userprofile')) {
 
-        return Promise.resolve()
+        return Promise.resolve();
       }
       else {
         return Promise.resolve();
@@ -67,10 +76,10 @@ export const authProvider = {
     }, 
     // called when the user navigates to a new location, to check for permissions / roles
     getPermissions: () => Promise.resolve(),
-    // getIdentity: () => {
-    //       return Promise.resolve({
-    //           fullName: sessionStorage.getItem('username'),
-    //       });
-    //   },
+    getIdentity: () => {
+          return Promise.resolve({
+              fullName: sessionStorage.getItem('username'),
+          });
+      },
     
   };

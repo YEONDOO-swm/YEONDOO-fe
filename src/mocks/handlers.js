@@ -19,7 +19,7 @@ export const apiHandlers = [
         );
 
         if (user) {
-            return res(ctx.status(200), ctx.json({username, password, message: 'Success'}))
+            return res(ctx.status(200), ctx.json({ isFirst: true }))
         } else {
             return res(ctx.status(401), ctx.json( { message: 'Invalid User'}))
         }

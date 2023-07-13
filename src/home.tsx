@@ -13,6 +13,14 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 export const Home = () => {
     useAuthenticated();
+
+    var api;
+    if (process.env.NODE_ENV === 'development'){
+      api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
+    }
+    else if (process.env.NODE_ENV === 'production'){
+      api = `${import.meta.env.VITE_REACT_APP_AWS_SERVER}`
+    }
     
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResults, setSearchResults] = useState("");
@@ -28,9 +36,13 @@ export const Home = () => {
 
     const handleSearchKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
       if (event.key === 'Enter'){
-          console.log("enter!!!!")
+          // console.log("enter!!!!")
           event.preventDefault();
           setEnteredSearch(searchResults);
+          window.location.href = `/home?query=${searchTerm}`
+          //const query = new URLSearchParams();
+          //query.set('query', searchTerm);
+          //window.history.pushState(null, '', `?query=${searchTerm}`);
           performSearch();
       }
   }
@@ -38,6 +50,7 @@ export const Home = () => {
   const handleButtonClick = (event: MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
           setEnteredSearch(searchResults);
+          window.location.href = `/home?query=${searchTerm}`
           performSearch();
   }
 
@@ -45,12 +58,12 @@ export const Home = () => {
 
   const performSearch = async () => {
       try {
+          const query = new URLSearchParams();
+          query.set('query', searchTerm);
           // const response = await fetch(`http://be.yeondoo.net:8080/homesearch?query=${searchTerm}&&username=${username}`);
-          const response = await fetch(`/api/homesearch?query=${searchTerm}&&username=${username}`);
+          const response = await fetch(`${api}/homesearch?query=${searchTerm}&&username=${username}`);
           const data = await response.json();
-          console.log(data);
-          console.log(data.searchResults);
-          console.log(data.searchResults.papers);
+          // console.log(data);
           setSearchResults(data.searchResults);
       } catch (error) {
           console.error('검색 결과에서 오류가 발생했습니다.')
@@ -63,6 +76,7 @@ export const Home = () => {
   }
 
   const handleHeartClick = (paperId:any) => {
+    var payload
     if (paperIdArray.includes(paperId)) {
       for (var i = 0; i<paperIdArray.length; i++){
         if (paperIdArray[i] === paperId) {
@@ -71,19 +85,23 @@ export const Home = () => {
         }
       }
       setPaperIdArray(paperIdArray)
+      payload = {
+        username: sessionStorage.getItem('username'),
+        paperId: paperId,
+        onoff: false
+      }
     }
     else {
       setPaperIdArray(prevArray => [...prevArray, paperId]);
+      payload = {
+        username: sessionStorage.getItem('username'),
+        paperId: paperId,
+        onoff: true
+      }
     }
     setIsFavorite(!isFavorite);
 
-    const payload = {
-      username: sessionStorage.getItem('username'),
-      paperId: paperId,
-      onoff: true
-    }
-
-    fetch('/api/paperlikeonoff', {
+    fetch(`${api}/paperlikeonoff`, {
       method: 'POST',
       headers: { 'Content-Type' : 'application/json' },
       body: JSON.stringify(payload)
@@ -101,7 +119,14 @@ export const Home = () => {
   useEffect(() => {
     amplitude.track("Home Page Viewed");
     searchInputRef.current?.focus();
-  }, []);
+    // console.log(window.location.search)
+    const query = new URLSearchParams(window.location.search);
+    const searchTermParam = query.get('query') || '';
+    if (searchTermParam) {
+      setSearchTerm(searchTermParam);
+      performSearch();
+    }
+  }, [location]);
 
     return (
     <div style={{height: '50vh'}}>
