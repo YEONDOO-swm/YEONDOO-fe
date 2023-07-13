@@ -19,9 +19,9 @@ jobs:
         node-version: 18
     - name: Generate environment variables file for production
       run: |
-        echo "VITE_REACT_APP_AWS_SERVER=$VITE_REACT_APP_AWS_SERVER">>.env.production
+        echo "VITE_REACT_APP_AWS_SERVER=$VITE_REACT_APP_AWS_SERVER" >>.env.production
       env:
-        REACT_APP_AWS_SERVER: ${{ secrets.VITE_REACT_APP_SERVER }}
+        VITE_REACT_APP_AWS_SERVER: ${{ secrets.VITE_REACT_APP_SERVER }}
         
     - name: npm install, build
       run: |
