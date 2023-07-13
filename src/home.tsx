@@ -36,7 +36,6 @@ export const Home = () => {
 
     const handleSearchKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
       if (event.key === 'Enter'){
-          // console.log("enter!!!!")
           event.preventDefault();
           setEnteredSearch(searchResults);
           window.location.href = `/home?query=${searchTerm}`
@@ -63,7 +62,6 @@ export const Home = () => {
           // const response = await fetch(`http://be.yeondoo.net:8080/homesearch?query=${searchTerm}&&username=${username}`);
           const response = await fetch(`${api}/homesearch?query=${searchTerm}&&username=${username}`);
           const data = await response.json();
-          // console.log(data);
           setSearchResults(data.searchResults);
       } catch (error) {
           console.error('검색 결과에서 오류가 발생했습니다.')
