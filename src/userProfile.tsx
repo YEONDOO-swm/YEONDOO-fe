@@ -90,7 +90,6 @@ export const UserProfile = () => {
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        // console.log("submit!!!");
 
         const payload = {
             username: userName,
