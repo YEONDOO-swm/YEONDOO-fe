@@ -11,8 +11,15 @@ export const authProvider = {
   
     login: ({ username, password }:any) => {
       sessionStorage.setItem("username", username);
+      var api;
+      if (process.env.NODE_ENV === 'development'){
+        api =`${process.env.REACT_APP_LOCAL_SERVER}/login`
+      }
+      else if (process.env.NODE_ENV === 'production'){
+        api = `${process.env.REACT_APP_AWS_SERVER}/login`
+      }
       return fetch('/api/login', {
-      // return fetch('http://be.yeondoo.net:8080/login, {
+      //return fetch('https://be.yeondoo.net/login, {
         method: 'POST',
         headers: { 'Content-Type' : 'application/json' },
         body: JSON.stringify({ username, password })
