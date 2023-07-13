@@ -21,7 +21,7 @@ jobs:
       run: |
         echo "VITE_REACT_APP_AWS_SERVER=$VITE_REACT_APP_AWS_SERVER" >>.env.production
       env:
-        REACT_APP_AWS_SERVER: ${{ secrets.VITE_REACT_APP_SERVER }}
+        VITE_REACT_APP_AWS_SERVER: ${{ secrets.VITE_REACT_APP_SERVER }}
         
     - name: npm install, build
       run: |
