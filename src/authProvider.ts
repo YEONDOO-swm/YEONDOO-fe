@@ -1,5 +1,5 @@
 import * as amplitude from '@amplitude/analytics-browser';
-import { useNavigate } from 'react-router-dom';
+import { redirect, useNavigate } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 import { response } from 'msw';
 import { useAuthenticated } from 'ra-core';
@@ -12,12 +12,10 @@ export const authProvider = {
     login: ({ username, password }:any) => {
       var api;
       if (process.env.NODE_ENV === 'development'){
-        //api = `/api/login`
-        // api =`${process.env.REACT_APP_LOCAL_SERVER}/login`
         api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}/login`
       }
       else if (process.env.NODE_ENV === 'production'){
-        api = `${import.meta.env.REACT_APP_AWS_SERVER}/login`
+        api = `${import.meta.env.VITE_REACT_APP_AWS_SERVER}/login`
       }
       return fetch(api, {
         method: 'POST',
@@ -27,10 +25,16 @@ export const authProvider = {
       .then((response) => {
         if (response.status === 200) {
           sessionStorage.setItem("username", username);
-          if (localStorage.getItem('userprofile')) {
-            return { redirectTo: '/'}
-          }
-          return { redirectTo: '/userprofile' };
+          return response.json().then((data) => {
+            console.log(data['isFirst'])
+            if (data['isFirst'] === true){
+              return { redirectedTo: '/'}
+            }
+            return { redirectedTo: '/userprofile'}
+          })
+          // if (localStorage.getItem('userprofile')) {
+          //   return { redirectTo: '/'}
+          // }
         } else {
           throw new Error ('로그인에 실패했습니다.');
         }

@@ -13,6 +13,14 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 export const Home = () => {
     useAuthenticated();
+
+    var api;
+    if (process.env.NODE_ENV === 'development'){
+      api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
+    }
+    else if (process.env.NODE_ENV === 'production'){
+      api = `${import.meta.env.VITE_REACT_APP_AWS_SERVER}`
+    }
     
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResults, setSearchResults] = useState("");
@@ -53,7 +61,7 @@ export const Home = () => {
           const query = new URLSearchParams();
           query.set('query', searchTerm);
           // const response = await fetch(`http://be.yeondoo.net:8080/homesearch?query=${searchTerm}&&username=${username}`);
-          const response = await fetch(`/api/homesearch?query=${searchTerm}&&username=${username}`);
+          const response = await fetch(`${api}/homesearch?query=${searchTerm}&&username=${username}`);
           const data = await response.json();
           // console.log(data);
           setSearchResults(data.searchResults);
@@ -68,6 +76,7 @@ export const Home = () => {
   }
 
   const handleHeartClick = (paperId:any) => {
+    var payload
     if (paperIdArray.includes(paperId)) {
       for (var i = 0; i<paperIdArray.length; i++){
         if (paperIdArray[i] === paperId) {
@@ -76,19 +85,23 @@ export const Home = () => {
         }
       }
       setPaperIdArray(paperIdArray)
+      payload = {
+        username: sessionStorage.getItem('username'),
+        paperId: paperId,
+        onoff: false
+      }
     }
     else {
       setPaperIdArray(prevArray => [...prevArray, paperId]);
+      payload = {
+        username: sessionStorage.getItem('username'),
+        paperId: paperId,
+        onoff: true
+      }
     }
     setIsFavorite(!isFavorite);
 
-    const payload = {
-      username: sessionStorage.getItem('username'),
-      paperId: paperId,
-      onoff: true
-    }
-
-    fetch('/api/paperlikeonoff', {
+    fetch(`${api}/paperlikeonoff`, {
       method: 'POST',
       headers: { 'Content-Type' : 'application/json' },
       body: JSON.stringify(payload)

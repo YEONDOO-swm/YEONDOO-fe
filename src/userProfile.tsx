@@ -10,6 +10,14 @@ import styles from '../layout/input.module.css'
 export const UserProfile = () => {
     useAuthenticated();
 
+    var api;
+    if (process.env.NODE_ENV === 'development'){
+      api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
+    }
+    else if (process.env.NODE_ENV === 'production'){
+      api = `${import.meta.env.VITE_REACT_APP_AWS_SERVER}`
+    }
+
     const [researchField, setResearchField] = useState('NO');
     const [keywords, setKeywords] = useState('');
     const [enteredKeywords, setEnteredKeywords] = useState<string[]>([]);
@@ -25,7 +33,7 @@ export const UserProfile = () => {
     useEffect(() => {
         amplitude.track("UserProfile Page Viewed");
         // fetch fields from API
-        fetch(`/api/userprofile/${username}`)
+        fetch(`${api}/userprofile/${username}`)
             .then(response => response.json())
             .then(data => {
                 // console.log(data.username)
@@ -90,14 +98,14 @@ export const UserProfile = () => {
             keywords: enteredKeywords
         }
         
-        fetch('/api/userprofile', {
+        fetch(`${api}/userprofile`, {
             method: 'POST',
             headers: { 'Content-Type' : 'application/json' },
             body: JSON.stringify(payload)
         })
         .then(response => {
             if (response.ok) {
-                console.log('ok!!!!')
+                // console.log('ok!!!!')
                 return response.json;
             } else {
                 if (!payload.keywords || payload.keywords.length === 0) {
