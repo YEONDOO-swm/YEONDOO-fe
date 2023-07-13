@@ -3,7 +3,6 @@ import LabelIcon from '@mui/icons-material/Label';
 import HomeIcon from '@mui/icons-material/Home';
 import StorageIcon from '@mui/icons-material/Storage';
 import HistoryIcon from '@mui/icons-material/History';
-import { App } from '../src/App';
 
 export const Mymenu = () => (
     <Menu>
