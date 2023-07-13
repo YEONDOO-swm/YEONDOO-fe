@@ -31,6 +31,10 @@ export const Home = () => {
           console.log("enter!!!!")
           event.preventDefault();
           setEnteredSearch(searchResults);
+          window.location.href = `/home?query=${searchTerm}`
+          //const query = new URLSearchParams();
+          //query.set('query', searchTerm);
+          window.history.pushState(null, '', `?query=${searchTerm}`);
           performSearch();
       }
   }
@@ -45,6 +49,8 @@ export const Home = () => {
 
   const performSearch = async () => {
       try {
+          const query = new URLSearchParams();
+          query.set('query', searchTerm);
           // const response = await fetch(`http://be.yeondoo.net:8080/homesearch?query=${searchTerm}&&username=${username}`);
           const response = await fetch(`/api/homesearch?query=${searchTerm}&&username=${username}`);
           const data = await response.json();
@@ -101,7 +107,19 @@ export const Home = () => {
   useEffect(() => {
     amplitude.track("Home Page Viewed");
     searchInputRef.current?.focus();
-  }, []);
+    console.log(window.location.search)
+    const query = new URLSearchParams(window.location.search);
+    const searchTermParam = query.get('query') || '';
+    // console.log(searchTermParam)
+    // setSearchTerm(searchTermParam);
+    console.log("새로고침")
+    console.log("params 전체: ", query)
+    console.log("url params 확인:", searchTermParam);
+    if (searchTermParam) {
+      setSearchTerm(searchTermParam);
+      performSearch();
+    }
+  }, [location]);
 
     return (
     <div style={{height: '50vh'}}>

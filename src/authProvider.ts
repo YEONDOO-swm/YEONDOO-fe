@@ -10,22 +10,26 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 export const authProvider = {
   
     login: ({ username, password }:any) => {
-      sessionStorage.setItem("username", username);
       var api;
       if (process.env.NODE_ENV === 'development'){
-        api =`${process.env.REACT_APP_LOCAL_SERVER}/login`
+        //api = `/api/login`
+        // api =`${process.env.REACT_APP_LOCAL_SERVER}/login`
+        api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}/login`
       }
       else if (process.env.NODE_ENV === 'production'){
-        api = `${process.env.REACT_APP_AWS_SERVER}/login`
+        api = `${import.meta.env.REACT_APP_AWS_SERVER}/login`
       }
-      return fetch('/api/login', {
-      //return fetch('https://be.yeondoo.net/login, {
+      return fetch(api, {
         method: 'POST',
         headers: { 'Content-Type' : 'application/json' },
         body: JSON.stringify({ username, password })
       })
       .then((response) => {
         if (response.status === 200) {
+          sessionStorage.setItem("username", username);
+          if (localStorage.getItem('userprofile')) {
+            return { redirectTo: '/'}
+          }
           return { redirectTo: '/userprofile' };
         } else {
           throw new Error ('로그인에 실패했습니다.');
