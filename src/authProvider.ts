@@ -34,9 +34,6 @@ export const authProvider = {
               return Promise.resolve({ redirectTo: '/' });
             }
           })
-          // if (localStorage.getItem('userprofile')) {
-          //   return { redirectTo: '/'}
-          // }
         } else {
           throw new Error ('로그인에 실패했습니다.');
         }
