@@ -66,7 +66,8 @@ export const Home = () => {
           // const response = await fetch(`http://be.yeondoo.net:8080/homesearch?query=${searchTerm}&&username=${username}`);
           const response = await fetch(`${api}/homesearch?query=${performSearchTerm}&&username=${username}`);
           const data = await response.json();
-          setSearchResults(data.searchResults);
+          console.log(data);
+          setSearchResults(data);
       } catch (error) {
           console.error('검색 결과에서 오류가 발생했습니다.')
       }

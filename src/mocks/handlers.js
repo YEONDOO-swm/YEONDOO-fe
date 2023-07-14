@@ -60,7 +60,7 @@ export const apiHandlers = [
 
     rest.get('/api/homesearch', (req, res, ctx) => {
       console.log(req)
-      return res(ctx.status(200), ctx.json({searchResults}));
+      return res(ctx.status(200), ctx.json(searchResults));
     }),
 
     rest.post('/api/paperlikeonoff', (req, res, ctx) => {

@@ -97,7 +97,7 @@ export const UserProfile = () => {
 
         const payload = {
             username: userName,
-            studyfield: customeField === '' ? researchField : customeField,
+            studyField: customeField === '' ? researchField : customeField,
             keywords: enteredKeywords
         }
 
@@ -109,6 +109,7 @@ export const UserProfile = () => {
             body: JSON.stringify(payload)
         })
         .then(response => {
+            console.log(response)
             if (response.ok) {
                 // console.log('ok!!!!')
                 return response.json();
