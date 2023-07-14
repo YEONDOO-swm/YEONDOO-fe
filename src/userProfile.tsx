@@ -96,7 +96,7 @@ export const UserProfile = () => {
         event.preventDefault();
 
         const payload = {
-            username: userName,
+            username: sessionStorage.getItem('username'),
             studyField: customeField === '' ? researchField : customeField,
             keywords: enteredKeywords
         }
@@ -110,13 +110,9 @@ export const UserProfile = () => {
         })
         .then(response => {
             console.log(response)
-            
             if (response.ok) {
                 console.log('response is ok!!!!')
-                return response.json().then(data => {
-                    console.log("response.json() is ok")
-                    console.log(data);
-                  });
+                return response.json();
             } else {
                 if (!payload.keywords || payload.keywords.length === 0) {
                     notify("키워드가 입력되지 않았습니다. 키워드 입력 후 엔터를 눌러 주세요.", {type: 'error'})

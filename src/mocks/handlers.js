@@ -35,13 +35,13 @@ export const apiHandlers = [
     }),
 
     rest.post('/api/userprofile', (req, res, ctx) => {
-      const { username, studyfield, keywords } = req.body;
+      const { username, studyField, keywords } = req.body;
 
       if (!username) {
         console.log('username error')
         return res(ctx.status(400), ctx.json({message: 'Bad Request - username'}))
       }
-      if (!studyfield) {
+      if (!studyField) {
         console.log('field error')
         return res(ctx.status(400), ctx.json({message: 'Bad Request - studyfield'}))
       }
