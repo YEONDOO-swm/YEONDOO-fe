@@ -37,8 +37,8 @@ export const UserProfile = () => {
             .then(response => response.json())
             .then(data => {
                 // console.log(data.username)
-                setFields(data.fields.fields);
-                setUserName(data.username)
+                // console.log(data.fields)
+                setFields(data.fields);
             })
             .catch(error => {
                 console.error('fields를 불러오는 데 실패하였습니다.');
@@ -105,7 +105,7 @@ export const UserProfile = () => {
         .then(response => {
             if (response.ok) {
                 // console.log('ok!!!!')
-                return response.json;
+                return response.json();
             } else {
                 if (!payload.keywords || payload.keywords.length === 0) {
                     notify("키워드가 입력되지 않았습니다. 키워드 입력 후 엔터를 눌러 주세요.", {type: 'error'})

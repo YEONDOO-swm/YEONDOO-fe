@@ -57,10 +57,14 @@ export const Home = () => {
 
   const performSearch = async () => {
       try {
-          const query = new URLSearchParams();
-          query.set('query', searchTerm);
+          
+          const query= new URLSearchParams(window.location.search); 
+          const performSearchTerm = query.get('query') || '';
+          // console.log("performsearch", performSearchTerm)
+          // setSearchTerm(performSearchTerm)
+          // console.log("searchTerm: ", performSearchTerm)
           // const response = await fetch(`http://be.yeondoo.net:8080/homesearch?query=${searchTerm}&&username=${username}`);
-          const response = await fetch(`${api}/homesearch?query=${searchTerm}&&username=${username}`);
+          const response = await fetch(`${api}/homesearch?query=${performSearchTerm}&&username=${username}`);
           const data = await response.json();
           setSearchResults(data.searchResults);
       } catch (error) {
@@ -106,7 +110,7 @@ export const Home = () => {
     })
     .then(response => {
       if (response.ok) {
-        return response.json;
+        return response.json();
       } else {
         throw new Error('찜 버튼 에러')
       }

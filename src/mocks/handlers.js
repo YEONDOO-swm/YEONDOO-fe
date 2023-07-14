@@ -27,11 +27,11 @@ export const apiHandlers = [
 
     rest.get('/api/userprofile/:username', (req, res, ctx) => {
       const { username } = req.params;
-      const payload = {
-        username,
-        fields: fields // res.fields로 고치기
-      }
-      return res(ctx.status(200), ctx.json(payload));
+      // const payload = {
+      //   username,
+      //   fields// res.fields로 고치기
+      // }
+      return res(ctx.status(200), ctx.json(fields));
     }),
 
     rest.post('/api/userprofile', (req, res, ctx) => {
@@ -59,6 +59,7 @@ export const apiHandlers = [
     }),
 
     rest.get('/api/homesearch', (req, res, ctx) => {
+      console.log(req)
       return res(ctx.status(200), ctx.json({searchResults}));
     }),
 
