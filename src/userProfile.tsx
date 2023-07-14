@@ -32,6 +32,10 @@ export const UserProfile = () => {
 
     useEffect(() => {
         amplitude.track("UserProfile Page Viewed");
+        const checkUserName = sessionStorage.getItem('username')
+        if (checkUserName){
+            setUserName(checkUserName)
+        }   
         // fetch fields from API
         fetch(`${api}/userprofile/${username}`)
             .then(response => response.json())
@@ -96,6 +100,8 @@ export const UserProfile = () => {
             studyfield: customeField === '' ? researchField : customeField,
             keywords: enteredKeywords
         }
+
+        console.log(payload);
         
         fetch(`${api}/userprofile`, {
             method: 'POST',
