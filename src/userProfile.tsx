@@ -112,7 +112,7 @@ export const UserProfile = () => {
             console.log(response)
             if (response.ok) {
                 console.log('response is ok!!!!')
-                return response.json();
+                return response;
             } else {
                 if (!payload.keywords || payload.keywords.length === 0) {
                     notify("키워드가 입력되지 않았습니다. 키워드 입력 후 엔터를 눌러 주세요.", {type: 'error'})
