@@ -1,0 +1,13 @@
+{
+    "paperId": "string",
+    "title": "string",
+    "likes": 0,
+    "islike": true,
+    "authors": [
+      "string"
+    ],
+    "year": 0,
+    "conference": "string",
+    "cites": 0,
+    "url": "string"
+  }

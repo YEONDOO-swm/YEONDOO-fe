@@ -9,10 +9,13 @@ import { useNavigate } from 'react-router-dom';
 import * as amplitude from '@amplitude/analytics-browser';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { SearchTap } from "./component/searchTap";
+import { GoToArxiv } from "./component/goToArxiv";
 
 
 export const Home = () => {
     useAuthenticated();
+    const navigate = useNavigate()
 
     var api = '';
     if (process.env.NODE_ENV === 'development'){
@@ -46,11 +49,11 @@ export const Home = () => {
       }
   }
 
-  const handleButtonClick = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleButtonClick = (event: any) => {
       event.preventDefault();
-          setEnteredSearch(searchResults);
-          window.location.href = `/home?query=${searchTerm}`
-          performSearch();
+      setEnteredSearch(searchResults);
+      window.location.href = `/home?query=${searchTerm}`
+      performSearch();
   }
 
   const username = sessionStorage.getItem("username");
@@ -64,7 +67,7 @@ export const Home = () => {
           // setSearchTerm(performSearchTerm)
           // console.log("searchTerm: ", performSearchTerm)
           // const response = await fetch(`http://be.yeondoo.net:8080/homesearch?query=${searchTerm}&&username=${username}`);
-          const response = await fetch(`${api}/homesearch?query=${performSearchTerm}&&username=${username}`);
+          const response = await fetch(`${api}/api/homesearch?query=${performSearchTerm}&&username=${username}`);
           const data = await response.json();
           console.log(data);
           setSearchResults(data);
@@ -75,7 +78,12 @@ export const Home = () => {
 
   const handleViewPaper = (url:string) => {
       amplitude.track("논문 보기 Clicked");
-      window.location.href = url;
+      window.open(url, "home")
+  }
+
+  const handleViewMore = (paperId: string) => {
+    amplitude.track("자세히 보기 Clicked")
+    navigate(`/paper?paperid=${paperId}`)
   }
 
   const handleHeartClick = (paperId:any) => {
@@ -104,7 +112,7 @@ export const Home = () => {
     }
     setIsFavorite(!isFavorite);
 
-    fetch(`${api}/paperlikeonoff`, {
+    fetch(`${api}/api/paperlikeonoff`, {
       method: 'POST',
       headers: { 'Content-Type' : 'application/json' },
       body: JSON.stringify(payload)
@@ -134,34 +142,19 @@ export const Home = () => {
     return (
     <div style={{height: '50vh'}}>
         <Title title="Home" />
-        <CardContent sx={{ margin: '30px auto' }}>
-            <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <TextField
-                id="search"
-                type="search"
-                inputRef={searchInputRef}
-                placeholder="CNN과 관련된 논문을 찾아줘"
-                label="Search"
-                value={searchTerm}
-                onChange={handleChange}
-                onKeyDown={handleSearchKeyDown}
-                sx={{ width: '80%' }}
-                InputProps={{
-                    endAdornment: (
-                    <InputAdornment position="end">
-                        <IconButton onClick={handleButtonClick}>
-                        <SearchIcon />
-                        </IconButton>
-                    </InputAdornment>
-                    ),
-                }}
-                />
-            </Container>
-        </CardContent>
+          <SearchTap
+            searchTerm={searchTerm}
+            onChange={setSearchTerm}
+            onSearch={handleButtonClick}
+            onSearchKeyDown={handleSearchKeyDown}
+          />
         {searchResults && (<div>
   <Grid container spacing={2}>
     <Grid item xs={6}>
-      <Box sx={{ display:'flex', border: '1px solid #E6E6FA', margin: '10px', padding: '20px', height: '75vh', borderRadius: '15px', backgroundColor: '#E6E6FA', overflowY: 'scroll'}}>
+      <Box sx={{ display:'flex', border: '1px solid #E6E6FA', margin: '10px', padding: '20px', height: '75vh', borderRadius: '15px', backgroundColor: '#E6E6FA', 
+      overflowY: 'scroll',
+      scrollbarWidth: 'thin',
+      }}>
         <Box sx={{height: '60vh', marginRight: '5px'}}>
           <QuestionAnswerIcon />
         </Box>
@@ -191,9 +184,11 @@ export const Home = () => {
               </Box>
               <Typography variant="body2"> {paper.authors.slice(0,3).join(", ")} / {paper.year} / {paper.conference} / {paper.cites} </Typography>
               <Box sx = {{margin: "15px 0 0 0" , display: 'flex'}}>
-                <Button variant="contained" onClick={() => handleViewPaper(paper.url) }>논문 보기</Button>
+                {/* <Button variant="contained" onClick={() => handleViewPaper(paper.url) }>논문 보기</Button> */}
+                <GoToArxiv url={paper.url} />
+
                 <Box sx={{width: '15px'}}></Box>
-                <Button variant ="contained">자세히 보기</Button>
+                <Button variant ="contained" onClick={() => handleViewMore(paper.paperId)}>자세히 보기</Button>
               </Box>
               {/* Add other details for the paper */}
             </Container>

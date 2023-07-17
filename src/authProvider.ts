@@ -13,13 +13,13 @@ export const authProvider = {
     login: ({ username, password }:any) => {
       var api ='';
       if (process.env.NODE_ENV === 'development'){
-        api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}/login`
+        api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
       }
       else if (process.env.NODE_ENV === 'production'){
-        api = `${process.env.VITE_REACT_APP_AWS_SERVER}/login`
+        api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
         // api = `https://be.yeondoo.net/login`
       }
-      return fetch(api, {
+      return fetch(`${api}/api/login`, {
         method: 'POST',
         headers: { 'Content-Type' : 'application/json' },
         body: JSON.stringify({ username, password })

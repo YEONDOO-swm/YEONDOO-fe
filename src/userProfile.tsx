@@ -37,7 +37,7 @@ export const UserProfile = () => {
             setUserName(checkUserName)
         }   
         // fetch fields from API
-        fetch(`${api}/userprofile/${username}`)
+        fetch(`${api}/api/userprofile/${username}`)
             .then(response => response.json())
             .then(data => {
                 // console.log(data.username)
@@ -103,7 +103,7 @@ export const UserProfile = () => {
 
         console.log(payload);
         
-        fetch(`${api}/userprofile`, {
+        fetch(`${api}/api/userprofile`, {
             method: 'POST',
             headers: { 'Content-Type' : 'application/json' },
             body: JSON.stringify(payload)
