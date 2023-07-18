@@ -1,6 +1,6 @@
 import * as React from "react"
 import { SearchTap } from "./component/searchTap";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Typography, Grid, Box, IconButton, TextField, InputAdornment, Icon } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -8,15 +8,22 @@ import { Title, useAuthenticated } from 'react-admin';
 import { useParams } from "react-router";
 import { GoToArxiv } from "./component/goToArxiv";
 import SearchIcon from "@mui/icons-material/Search";
-
+// TODO1: list 제한 걸기
+// TODO2: 스크롤
 
 export const PaperView = () => {
     useAuthenticated();
 
+    const [searchTerm, setSearchTerm] = useState("");
+    const [enteredSearchTermInPaper, setEnteredSearchTermInPaper] = useState<any>([]);
+    const username = sessionStorage.getItem("username");
+    
     const [paperInfo, setPaperInfo] = useState<any>('');
     const [isExpanded, setIsExpanded] = useState(false);
     const [paperHistory, setPaperHistory] = useState<any>('');
-
+    const [searchTermInPaper, setSearchTermInPaper] = useState("");
+    const [searchResultsInPaper, setSearchResultsInPaper] = useState<any>([])
+    
     var api = '';
     if (process.env.NODE_ENV === 'development'){
       api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
@@ -25,14 +32,13 @@ export const PaperView = () => {
       api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
     }
 
-    const [searchTerm, setSearchTerm] = useState("");
-    const username = sessionStorage.getItem("username");
-
     const handleChange = (event: any) => {
         setSearchTerm(event.target.value)
     };
 
     useEffect(()=> {
+        console.log("in useeffect")
+
         const query = new URLSearchParams(window.location.search);
         const paperId = query.get('paperid') || '';
         
@@ -43,7 +49,7 @@ export const PaperView = () => {
                 setPaperHistory(data.paperhistory)
             })
             .catch(error => {
-                console.error('논문 정보를 불러오는 데 실패하였습니다.')
+                console.error('논문 정보를 불러오는 데 실패하였습니다:', error)
             })
     }, [])
     
@@ -52,10 +58,6 @@ export const PaperView = () => {
             event.preventDefault();
             //setEnteredSearch(searchResults);
             window.location.href = `/home?query=${searchTerm}`
-            //const query = new URLSearchParams();
-            //query.set('query', searchTerm);
-            //window.history.pushState(null, '', `?query=${searchTerm}`);
-            //performSearch();
         }
     }
     
@@ -66,8 +68,55 @@ export const PaperView = () => {
         //performSearch();
     }
 
+    const handleSearchKeyDownInPaper = (event: any) => {
+        if (event.key === 'Enter'){
+            event.preventDefault();
+            performSearchInPaper()
+        }
+    }
+
+    const handleButtonClickInPaper = (event: any) => {
+        event.preventDefault();
+        performSearchInPaper();
+    }
+
     const handleViewMoreAuthors = () => {
         setIsExpanded(true)
+    }
+
+    const performSearchInPaper = async () => {
+        //console.log(searchTermInPaper)
+        //const a = searchTermInPaper
+        //console.log(a)
+        setEnteredSearchTermInPaper([...enteredSearchTermInPaper, searchTermInPaper])
+        console.log(enteredSearchTermInPaper)
+        const query = new URLSearchParams(window.location.search);
+        const paperId = query.get('paperid') || '';
+        fetch(`${api}/api/paper/${paperId}`,{
+            method: 'POST',
+            headers : { 'Content-Type' : 'application/json' },
+            body: JSON.stringify({question: searchTermInPaper})
+        })
+        .then(response => response.json())
+        .then(data => {
+            //console.log(data.answer)
+            setSearchResultsInPaper([...searchResultsInPaper, data.answer])
+            setSearchTermInPaper("")
+        })
+        .catch(error => {
+            console.error("논문 내 질문 오류")
+        })
+
+        // try {
+        //     console.log(searchTermInPaper)
+        //     const query = new URLSearchParams(window.location.search);
+        //     const paperId = query.get('paperid') || '';
+        //     const response = await fetch(`${api}/api/${paperId}`)
+
+
+        // } catch (error) {
+        //     console.log('검색 결과에서 오류가 발생했습니다.')
+        // }
     }
 
     const handleViewLessAuthors = () => {
@@ -83,6 +132,10 @@ export const PaperView = () => {
                 onChange={setSearchTerm}
                 onSearch={handleButtonClick}
                 onSearchKeyDown={handleSearchKeyDown}
+                placeholder="CNN과 관련된 논문을 찾아줘"
+                firstBoxSx={{ margin: '30px auto' }}
+                middleBoxSx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                sx={{width: "80%"}}
             />
             <Box sx={{margin: '10px'}}>
                 <Typography variant="h4">{paperInfo.title}</Typography>
@@ -160,29 +213,39 @@ export const PaperView = () => {
                         <Box>
                             <Typography variant="h5">현 논문 내 질의</Typography>
                             <Box sx={{ border: '1px solid #DCDCDC',  padding: '20px', height: '75vh', borderRadius: '15px', backgroundColor: '#DCDCDC', 
-                            overflowY: 'scroll',
-                            display: 'flex', flexDirection: 'column', justifyContent: 'flex-end'
+                            display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
                             }}>
-                                {paperHistory &&
-                                paperHistory.map((history: any, index: number) => (
-                                <Box key={index} sx={{ backgroundColor: '#FFFFFF', padding: '10px', marginBottom: '10px' }}>
-                                    <Typography variant="body1">{history.content}</Typography>
+                                <Box sx={{ overflowY: 'scroll' }}>
+                                    {paperHistory &&
+                                    paperHistory.map((history: any, index: number) => (
+                                    <Box key={index} sx={{ backgroundColor: '#FFFFFF', padding: '10px', marginBottom: '10px' }}>
+                                        <Typography variant="body1">{history.content}</Typography>
+                                    </Box>
+                                    ))}
+                                    {enteredSearchTermInPaper && searchResultsInPaper && enteredSearchTermInPaper.length === searchResultsInPaper.length && (
+                                    <>
+                                        {enteredSearchTermInPaper.map((term:any, index:number) => (
+                                        <>
+                                            <Box sx={{ backgroundColor: '#FFFFFF', padding: '10px', marginBottom: '10px' }}>
+                                            <Typography variant="body1">{term}</Typography>
+                                            </Box> 
+                                            <Box sx={{ backgroundColor: '#FFFFFF', padding: '10px', marginBottom: '10px' }}>
+                                            <Typography variant="body1">{searchResultsInPaper[index]}</Typography>
+                                            </Box>
+                                        </>
+                                        ))}
+                                    </>
+                                    )}
                                 </Box>
-                                ))}
-                                <TextField 
-                                type="search"
-                                placeholder="이 논문에서 실험1 내용을 요약해줘"
-                                label="Search"
-                                sx={{width: "100%", backgroundColor: "#FFFFFF"}}
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position="end">
-                                            <IconButton>
-                                                <SearchIcon />
-                                            </IconButton>
-                                        </InputAdornment>
-                                    )
-                                }}/>
+
+                                <SearchTap
+                                    searchTerm={searchTermInPaper}
+                                    onChange={setSearchTermInPaper}
+                                    onSearch={handleButtonClickInPaper}
+                                    onSearchKeyDown={handleSearchKeyDownInPaper}
+                                    placeholder="이 논문에서 실험 1의 결과를 요약해줘"
+                                    sx={{width: "100%", backgroundColor: "#FFFFFF"}}
+                                />
                             </Box>
                         </Box>
 

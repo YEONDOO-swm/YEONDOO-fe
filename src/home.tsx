@@ -11,6 +11,7 @@ import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { SearchTap } from "./component/searchTap";
 import { GoToArxiv } from "./component/goToArxiv";
+import { GoToViewMore } from "./component/goToViewMore";
 
 
 export const Home = () => {
@@ -26,7 +27,7 @@ export const Home = () => {
     }
     
     const [searchTerm, setSearchTerm] = useState("");
-    const [searchResults, setSearchResults] = useState("");
+    const [searchResults, setSearchResults] = useState<any>("");
     const [enteredSearch, setEnteredSearch] = useState("");
     const [isFavorite, setIsFavorite] = useState(false);
     const [paperIdArray, setPaperIdArray] = useState<string[]>([]);
@@ -147,6 +148,10 @@ export const Home = () => {
             onChange={setSearchTerm}
             onSearch={handleButtonClick}
             onSearchKeyDown={handleSearchKeyDown}
+            placeholder="CNN과 관련된 논문을 찾아줘"
+            firstBoxSx={{ margin: '30px auto' }}
+            middleBoxSx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+            sx={{width: "80%"}}
           />
         {searchResults && (<div>
   <Grid container spacing={2}>
@@ -163,7 +168,7 @@ export const Home = () => {
     </Grid>
     <Grid item xs={6}>
       <CardContent sx={{ height: '75vh', margin: '0 30px 0 10px', padding: '10px', overflowY: 'scroll'}}>
-        {searchResults.papers.map((paper) => (
+        {searchResults.papers.map((paper: any) => (
           <Box key={paper.paperId} sx={{ display: 'flex', justifyContent: 'center', marginBottom: '15px'}}>
             <Container sx={{ border: '1px solid #DCDCDC', padding: '15px', borderRadius: '15px', backgroundColor: '#DCDCDC'}}>
               <Box sx={{display: 'flex', justifyContent:'space-between', alignContent: 'center'}}>
@@ -188,7 +193,8 @@ export const Home = () => {
                 <GoToArxiv url={paper.url} />
 
                 <Box sx={{width: '15px'}}></Box>
-                <Button variant ="contained" onClick={() => handleViewMore(paper.paperId)}>자세히 보기</Button>
+                {/* <Button variant ="contained" onClick={() => handleViewMore(paper.paperId)}>자세히 보기</Button> */}
+                <GoToViewMore paperid={paper.paperId} />
               </Box>
               {/* Add other details for the paper */}
             </Container>

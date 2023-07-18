@@ -1,34 +1,40 @@
 [
-    {
-      "title": "Attention is all you need",
-      "authors": [
-        "Ashish Vaswani",
-        "Noam Shazeer",
-        "Niki Parmar",
-        "Jakob Uszkoreit",
-        "Llion Jones",
-        "Aidan N. Gomez",
-        "Łukasz Kaiser",
-        "Illia Polosukhin"
-      ],
-      "year": 2017,
-      "conference": "2017 - proceedings.neurips.cc",
-      "cites": 81860
-    },
-    {
-      "title": "Attention is all you need",
-      "authors": [
-        "Ashish Vaswani",
-        "Noam Shazeer",
-        "Niki Parmar",
-        "Jakob Uszkoreit",
-        "Llion Jones",
-        "Aidan N. Gomez",
-        "Łukasz Kaiser",
-        "Illia Polosukhin"
-      ],
-      "year": 2017,
-      "conference": "2017 - proceedings.neurips.cc",
-      "cites": 81860
-    }
-  ]
+  {
+    "title": "Attention is all you need",
+    "paperId": "1C",
+    "authors": [
+      "Ashish Vaswani",
+      "Noam Shazeer",
+      "Niki Parmar",
+      "Jakob Uszkoreit",
+      "Llion Jones",
+      "Aidan N. Gomez",
+      "Łukasz Kaiser",
+      "Illia Polosukhin"
+    ],
+    "year": 2017,
+    "conference": "2017 - proceedings.neurips.cc",
+    "cites": 81860
+  },
+  {
+    "url": "https://arxiv.org/abs/2201.00006"
+  },
+  {
+    "title": "Attention is all you need",
+    "paperId": "2F",
+    "authors": [
+      "Ashish Vaswani",
+      "Noam Shazeer",
+      "Niki Parmar",
+      "Jakob Uszkoreit",
+      "Llion Jones",
+      "Aidan N. Gomez",
+      "Łukasz Kaiser",
+      "Illia Polosukhin"
+    ],
+    "year": 2017,
+    "conference": "2017 - proceedings.neurips.cc",
+    "cites": 81860,
+    "url": "https://arxiv.org/abs/2201.00006"
+  }
+]

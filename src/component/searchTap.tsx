@@ -1,5 +1,5 @@
 import * as React from "react";
-import { TextField, IconButton, InputAdornment, CardContent, Container } from "@mui/material";
+import { Box, SxProps, TextField, IconButton, InputAdornment, CardContent, Container } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
 type SearchTapProps = {
@@ -7,6 +7,10 @@ type SearchTapProps = {
   onChange: (value: string) => void;
   onSearch: (value: any) => void;
   onSearchKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+  placeholder?: string;
+  firstBoxSx?: SxProps;
+  middleBoxSx?: SxProps;
+  sx?: SxProps;
 };
 
 export const SearchTap: React.FC<SearchTapProps> = ({
@@ -14,6 +18,10 @@ export const SearchTap: React.FC<SearchTapProps> = ({
   onChange,
   onSearch,
   onSearchKeyDown,
+  placeholder,
+  firstBoxSx,
+  middleBoxSx,
+  sx
 }) => {
   const searchInputRef = React.useRef<HTMLInputElement | null>(null);
 
@@ -22,18 +30,18 @@ export const SearchTap: React.FC<SearchTapProps> = ({
   }, []);
 
   return (
-    <CardContent sx={{ margin: '30px auto' }}>
-          <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Box sx={firstBoxSx}>
+          <Box sx={middleBoxSx}>
                 <TextField
                 id="search"
                 type="search"
                 inputRef={searchInputRef}
-                placeholder="CNN과 관련된 논문을 찾아줘"
+                placeholder={placeholder}
                 label="Search"
                 value={searchTerm}
                 onChange={(event) => onChange(event.target.value)}
                 onKeyDown={onSearchKeyDown}
-                sx={{ width: "80%" }}
+                sx={{ ...sx }}
                 InputProps={{
                     endAdornment: (
                     <InputAdornment position="end">
@@ -44,7 +52,7 @@ export const SearchTap: React.FC<SearchTapProps> = ({
                     ),
                 }}
                 />
-        </Container>
-    </CardContent>     
+        </Box>
+    </Box>     
   );
 };
