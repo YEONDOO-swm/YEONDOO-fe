@@ -12,11 +12,13 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { SearchTap } from "./component/searchTap";
 import { GoToArxiv } from "./component/goToArxiv";
 import { GoToViewMore } from "./component/goToViewMore";
+import { UserProfileCheck } from "./component/userProfileCheck";
 
 
 export const Home = () => {
     useAuthenticated();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    UserProfileCheck();
 
     var api = '';
     if (process.env.NODE_ENV === 'development'){

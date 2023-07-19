@@ -121,6 +121,7 @@ export const UserProfile = () => {
             }
         })
         .then(() => {
+            localStorage.setItem('isFirst', 'false')
             navigate('/home');
         })
         .catch(error => {

@@ -30,8 +30,10 @@ export const authProvider = {
           return response.json().then((data) => {
             console.log(data['isFirst'])
             if (data.isFirst) {
+              localStorage.setItem('isFirst', 'true')
               return Promise.resolve({ redirectTo: '/userprofile' });
             } else {
+              localStorage.setItem('isFirst', 'false')
               return Promise.resolve({ redirectTo: '/' });
             }
           })
@@ -64,9 +66,8 @@ export const authProvider = {
       if (!sessionStorage.getItem('username')) {
         return Promise.reject();
       } 
-      else if (!localStorage.getItem('userprofile')) {
-
-        return Promise.resolve();
+      else if (localStorage.getItem('isFirst')==='true') {
+        return Promise.resolve({ redirectTo: '/userprofile' });
       }
       else {
         return Promise.resolve();

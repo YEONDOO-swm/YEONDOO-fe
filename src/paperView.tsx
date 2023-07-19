@@ -8,11 +8,13 @@ import { Title, useAuthenticated } from 'react-admin';
 import { useParams } from "react-router";
 import { GoToArxiv } from "./component/goToArxiv";
 import SearchIcon from "@mui/icons-material/Search";
+import { UserProfileCheck } from "./component/userProfileCheck";
 // TODO1: list 제한 걸기
 // TODO2: 스크롤
 
 export const PaperView = () => {
     useAuthenticated();
+    UserProfileCheck();
 
     const [searchTerm, setSearchTerm] = useState("");
     const [enteredSearchTermInPaper, setEnteredSearchTermInPaper] = useState<any>([]);

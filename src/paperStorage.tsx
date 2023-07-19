@@ -6,11 +6,13 @@ import { useEffect, useState } from "react";
 import { SearchTap } from "./component/searchTap";
 import { GoToArxiv } from "./component/goToArxiv";
 import { GoToViewMore } from "./component/goToViewMore";
+import { UserProfileCheck } from "./component/userProfileCheck";
 
 
 export const PaperStorage = () => {
     useAuthenticated();
-
+    UserProfileCheck();
+    
     var api = '';
     if (process.env.NODE_ENV === 'development'){
       api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
