@@ -13,7 +13,7 @@ import { SearchTap } from "./component/searchTap";
 import { GoToArxiv } from "./component/goToArxiv";
 import { GoToViewMore } from "./component/goToViewMore";
 import { UserProfileCheck } from "./component/userProfileCheck";
-
+import { HeartClick } from "./component/heartClick";
 
 export const Home = () => {
     useAuthenticated();
@@ -35,10 +35,6 @@ export const Home = () => {
     const [paperIdArray, setPaperIdArray] = useState<string[]>([]);
 
     const searchInputRef = useRef<HTMLInputElement | null>(null);
-
-    const handleChange = (event: any) => {
-        setSearchTerm(event.target.value)
-    };
 
     const handleSearchKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
       if (event.key === 'Enter'){
@@ -79,15 +75,6 @@ export const Home = () => {
       }
   };
 
-  const handleViewPaper = (url:string) => {
-      amplitude.track("논문 보기 Clicked");
-      window.open(url, "home")
-  }
-
-  const handleViewMore = (paperId: string) => {
-    amplitude.track("자세히 보기 Clicked")
-    navigate(`/paper?paperid=${paperId}`)
-  }
 
   const handleHeartClick = (paperId:any) => {
     var payload
@@ -140,7 +127,7 @@ export const Home = () => {
       setSearchTerm(searchTermParam);
       performSearch();
     }
-  }, [location]);
+  }, [location, paperIdArray]);
 
     return (
     <div style={{height: '50vh'}}>
@@ -158,7 +145,7 @@ export const Home = () => {
         {searchResults && (<div>
   <Grid container spacing={2}>
     <Grid item xs={6}>
-      <Box sx={{ display:'flex', border: '1px solid #E6E6FA', margin: '10px', padding: '20px', height: '75vh', borderRadius: '15px', backgroundColor: '#E6E6FA', 
+      <Box sx={{ display:'flex', border: '1px solid #E6E6FA', margin: '10px', padding: '20px', height: '95%', borderRadius: '15px', backgroundColor: '#E6E6FA', 
       overflowY: 'scroll',
       scrollbarWidth: 'thin',
       }}>
@@ -176,7 +163,7 @@ export const Home = () => {
               <Box sx={{display: 'flex', justifyContent:'space-between', alignContent: 'center'}}>
                 <Typography variant="h6">{paper.title}</Typography>
                 <Box sx={{ display: 'flex', justifyContent:'center', alignContent:'center'}}>
-                  <IconButton onClick={() => handleHeartClick(paper.paperId)}>
+                  {/* <IconButton onClick={() => handleHeartClick(paper.paperId)}>
                     {
                       paperIdArray.includes(paper.paperId) ? (
                         <FavoriteIcon sx={{margin: '0'}} color="error"/>
@@ -184,8 +171,8 @@ export const Home = () => {
                         <FavoriteBorderIcon />
                       )
                     }
-
-                  </IconButton>
+                  </IconButton> */}
+                  < HeartClick currentItem={paper.paperId} home={true} />
                   <Typography variant="body2" sx={{margin: '10px 0'}}>{paper.likes}</Typography>
                 </Box>
               </Box>

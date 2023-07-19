@@ -125,6 +125,9 @@ export const PaperView = () => {
         setIsExpanded(false)
     }
 
+    const sizeTitleInInfo = "body1"
+    const sizeContentInInfo = "body2"
+
 
     return (
         <div>
@@ -140,12 +143,12 @@ export const PaperView = () => {
                 sx={{width: "80%"}}
             />
             <Box sx={{margin: '10px'}}>
-                <Typography variant="h4">{paperInfo.title}</Typography>
+                <Typography variant="h5">{paperInfo.title}</Typography>
                 { paperInfo.authors && (paperInfo.authors.length > 3 
                  ? (
                     !isExpanded ? (
                      <Box sx={{display: 'flex', alignItems: 'center'}}> 
-                        <Typography variant="h6"> {paperInfo.authors.slice(0, 3).join(", ")} </Typography>
+                        <Typography variant="body1"> {paperInfo.authors.slice(0, 3).join(", ")} </Typography>
                         <IconButton onClick={handleViewMoreAuthors}>
                             <ExpandMoreIcon />
                         </IconButton>
@@ -156,7 +159,7 @@ export const PaperView = () => {
                                 {paperInfo.authors.map((author: any) => (
                                     <Typography
                                     key={author}
-                                    variant="h6"
+                                    variant="body1"
                                     sx={{ marginRight: '10px' }}
                                     >
                                     {author}
@@ -169,43 +172,43 @@ export const PaperView = () => {
                         </Box>
                     )
                  )           
-                 : <Typography variant="h6"> {paperInfo.authors.join(", ")} </Typography>) }
+                 : <Typography variant="body1"> {paperInfo.authors.join(", ")} </Typography>) }
                 {/* <Typography variant="h6">{paperInfo.authors && (paperInfo.authors.length > 3 ? paperInfo.authors.slice(0, 3).join(", ") : paperInfo.authors.join(", "))}</Typography> */}
-                <Typography variant="h6">{paperInfo.year} / {paperInfo.conference} / {paperInfo.cites}</Typography>
+                <Typography variant="body1">{paperInfo.year} / {paperInfo.conference} / {paperInfo.cites}</Typography>
             </Box>
             <div>
                 <Box display="flex" justifyContent="space-between">
                     <Box width="50%" sx={{margin: '10px'}}>
-                        <Typography variant="h5">Information</Typography>
+                        <Typography variant="h6">Information</Typography>
                         <Box sx={{ border: '1px solid #E6E6FA',  padding: '20px', height: '75vh', borderRadius: '15px', backgroundColor: '#E6E6FA', 
                             overflowY: 'scroll',
                             scrollbarWidth: 'thin',
                         }}>
                             <GoToArxiv url={paperInfo.url} />
-                            <Typography variant="h5">요약</Typography>
-                            <Typography variant="h6"> {paperInfo.summary} </Typography>
-                            <Typography variant="h5">인사이트</Typography>
+                            <Typography variant={sizeTitleInInfo}>요약</Typography>
+                            <Typography variant={sizeContentInInfo}> {paperInfo.summary} </Typography>
+                            <Typography variant={sizeTitleInInfo}>인사이트</Typography>
                             <Box>
                             {paperInfo.insights && paperInfo.insights.map((insight: string) => (
-                                <Typography variant="h6">{insight}</Typography>
+                                <Typography variant={sizeContentInInfo}>{insight}</Typography>
                             ))}
                             </Box>
-                            <Typography variant="h5">질문</Typography>
+                            <Typography variant={sizeTitleInInfo}>질문</Typography>
                             <Box>
                             {paperInfo.questions && paperInfo.questions.map((question: any) => (
-                                <Typography variant="h6">{question}</Typography>
+                                <Typography variant={sizeContentInInfo}>{question}</Typography>
                             ))}
                             </Box>
-                            <Typography variant="h5">향후 연구주제 추천</Typography>
+                            <Typography variant={sizeTitleInInfo}>향후 연구주제 추천</Typography>
                             <Box>
                             {paperInfo.subjectrecommends && paperInfo.subjectrecommends.map((subjectrecommend: any) => (
-                                <Typography variant="h6">{subjectrecommend}</Typography>
+                                <Typography variant={sizeContentInInfo}>{subjectrecommend}</Typography>
                             ))}
                             </Box>
-                            <Typography variant="h5">레퍼런스</Typography>
+                            <Typography variant={sizeTitleInInfo}>레퍼런스</Typography>
                             <Box>
                             {paperInfo.references && paperInfo.references.map((reference: any) => (
-                                <Typography variant="h6">{reference}</Typography>
+                                <Typography variant={sizeContentInInfo}>{reference}</Typography>
                             ))}
                             </Box>
                         </Box>
@@ -213,7 +216,7 @@ export const PaperView = () => {
                     <Box width="50%" sx={{margin: '10px'}}>
                     {/* true: user(question) false: gpt (answer) */}
                         <Box>
-                            <Typography variant="h5">현 논문 내 질의</Typography>
+                            <Typography variant="h6">현 논문 내 질의</Typography>
                             <Box sx={{ border: '1px solid #DCDCDC',  padding: '20px', height: '75vh', borderRadius: '15px', backgroundColor: '#DCDCDC', 
                             display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
                             }}>

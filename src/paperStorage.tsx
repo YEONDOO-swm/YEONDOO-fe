@@ -7,12 +7,12 @@ import { SearchTap } from "./component/searchTap";
 import { GoToArxiv } from "./component/goToArxiv";
 import { GoToViewMore } from "./component/goToViewMore";
 import { UserProfileCheck } from "./component/userProfileCheck";
-
+import { HeartClick } from "./component/heartClick";
 
 export const PaperStorage = () => {
     useAuthenticated();
     UserProfileCheck();
-    
+
     var api = '';
     if (process.env.NODE_ENV === 'development'){
       api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
@@ -65,9 +65,9 @@ export const PaperStorage = () => {
             middleBoxSx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
             sx={{width: "80%"}}
           />
-          <Box>
+          <Box sx={{height: '75vh', margin: '0 30px 0 10px', padding: '10px', overflowY: 'scroll'}}>
             {papersInStorage && papersInStorage.map((paper:any) => (
-                <Card>
+                <Card sx={{padding: '15px', borderRadius: '15px', margin: '15px', display: 'flex'}}>
                     <Box>
                         <Typography variant="h6">
                             {paper.title}
@@ -79,9 +79,10 @@ export const PaperStorage = () => {
                             {paper.cites}
                         </Typography>
                     </Box>
-                    <Box>
+                    <Box sx={{ margin:'0px 10px', width: '20vh' ,display: 'flex', flexDirection:'column', justifyContent: 'space-between', alignItems: 'flex-end'}}>
+                        <HeartClick currentItem={paper.paperId} home={false} />
                         <GoToArxiv url={paper.url}/>
-                        <Box sx={{width: '15px'}}></Box>
+                        <Box sx={{height:'5px'}}></Box>
                         <GoToViewMore paperid={paper.paperId} />
                     </Box>
                 </Card>
