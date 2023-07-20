@@ -30,7 +30,7 @@ export const Home = () => {
     
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResults, setSearchResults] = useState<any>("");
-    const [enteredSearch, setEnteredSearch] = useState("");
+    const [enteredSearch, setEnteredSearch] = useState(""); 
     const [isFavorite, setIsFavorite] = useState(false);
     const [paperIdArray, setPaperIdArray] = useState<string[]>([]);
 
