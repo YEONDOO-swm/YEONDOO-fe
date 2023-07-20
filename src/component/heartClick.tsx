@@ -3,7 +3,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useState } from "react";
 
-export const HeartClick = ({ currentItem, home }: { currentItem: any, home: boolean }) => {
+export const HeartClick = ({ currentItem, home, onUpdateLikes, callGetApi}: { currentItem: any, home: boolean, onUpdateLikes?:any, callGetApi?: any }) => {
     const [paperIdArray, setPaperIdArray] = useState<string[]>([]);
     const [isFavorite, setIsFavorite] = useState(false);
 
@@ -32,6 +32,12 @@ export const HeartClick = ({ currentItem, home }: { currentItem: any, home: bool
           }
         }
         else {
+          if (!home){
+            const isConfirmed = window.confirm(`정말 "${currentItem.title}"을 논문보관함에서 삭제하시겠습니까?`)
+            if (!isConfirmed) {
+              return
+            }
+          }
           setPaperIdArray(prevArray => [...prevArray, paperId]);
           payload = {
             username: sessionStorage.getItem('username'),
@@ -40,6 +46,11 @@ export const HeartClick = ({ currentItem, home }: { currentItem: any, home: bool
           }
         }
         setIsFavorite(!isFavorite);
+
+        if (home) {
+          const newLikes = isFavorite ? currentItem.likes - 1 : currentItem.likes + 1;
+          onUpdateLikes(currentItem.paperId, newLikes);
+        }
     
         fetch(`${api}/api/paperlikeonoff`, {
           method: 'POST',
@@ -47,25 +58,28 @@ export const HeartClick = ({ currentItem, home }: { currentItem: any, home: bool
           body: JSON.stringify(payload)
         })
         .then(response => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error('찜 버튼 에러')
+          return response;
           }
+        )
+        .catch(error => {
+          console.error("찜 버튼 에러: ", error)
         })
-    
+
+        if (!home) {
+          callGetApi()
+        }
       }
     
     return (
-        <IconButton onClick={() => handleHeartClick(currentItem)}>
+        <IconButton onClick={() => handleHeartClick(currentItem.paperId)}>
             {   home ?
-                (paperIdArray.includes(currentItem) ? (
+                (paperIdArray.includes(currentItem.paperId) ? (
                 <FavoriteIcon sx={{margin: '0'}} color="error"/>
                 ) : (
                 <FavoriteBorderIcon />
                 ))
                 :
-                (paperIdArray.includes(currentItem) ? (
+                (paperIdArray.includes(currentItem.paperId) ? (
                     <FavoriteBorderIcon />
                     ) : (
                     <FavoriteIcon sx={{margin: '0'}} color="error"/>

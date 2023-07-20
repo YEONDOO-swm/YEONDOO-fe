@@ -44,7 +44,7 @@ export const Home = () => {
           //const query = new URLSearchParams();
           //query.set('query', searchTerm);
           //window.history.pushState(null, '', `?query=${searchTerm}`);
-          performSearch();
+          //performSearch();
       }
   }
 
@@ -52,7 +52,7 @@ export const Home = () => {
       event.preventDefault();
       setEnteredSearch(searchResults);
       window.location.href = `/home?query=${searchTerm}`
-      performSearch();
+      //performSearch();
   }
 
   const username = sessionStorage.getItem("username");
@@ -68,7 +68,7 @@ export const Home = () => {
           // const response = await fetch(`http://be.yeondoo.net:8080/homesearch?query=${searchTerm}&&username=${username}`);
           const response = await fetch(`${api}/api/homesearch?query=${performSearchTerm}&&username=${username}`);
           const data = await response.json();
-          console.log(data);
+
           setSearchResults(data);
       } catch (error) {
           console.error('검색 결과에서 오류가 발생했습니다.')
@@ -117,6 +117,19 @@ export const Home = () => {
 
   }
 
+  const handleUpdateLikes = (paperId:any, newLikes:any) => {
+    // Create a new array of papers with updated likes count
+    const updatedPapers = searchResults.papers.map((paper:any) =>
+      paper.paperId === paperId ? { ...paper, likes: newLikes } : paper
+    );
+
+    // Update the searchResults state with the new array of papers
+    setSearchResults((prevSearchResults: any) => ({
+      ...prevSearchResults,
+      papers: updatedPapers,
+    }));
+  };
+
   useEffect(() => {
     amplitude.track("Home Page Viewed");
     searchInputRef.current?.focus();
@@ -160,22 +173,17 @@ export const Home = () => {
         {searchResults.papers.map((paper: any) => (
           <Box key={paper.paperId} sx={{ display: 'flex', justifyContent: 'center', marginBottom: '15px'}}>
             <Container sx={{ border: '1px solid #DCDCDC', padding: '15px', borderRadius: '15px', backgroundColor: '#DCDCDC'}}>
-              <Box sx={{display: 'flex', justifyContent:'space-between', alignContent: 'center'}}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignContent: 'center' }}>
+              <Box sx={{ flexGrow: 1 }}>
                 <Typography variant="h6">{paper.title}</Typography>
-                <Box sx={{ display: 'flex', justifyContent:'center', alignContent:'center'}}>
-                  {/* <IconButton onClick={() => handleHeartClick(paper.paperId)}>
-                    {
-                      paperIdArray.includes(paper.paperId) ? (
-                        <FavoriteIcon sx={{margin: '0'}} color="error"/>
-                      ) : (
-                        <FavoriteBorderIcon />
-                      )
-                    }
-                  </IconButton> */}
-                  < HeartClick currentItem={paper.paperId} home={true} />
-                  <Typography variant="body2" sx={{margin: '10px 0'}}>{paper.likes}</Typography>
-                </Box>
               </Box>
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
+                <HeartClick currentItem={paper} home={true} onUpdateLikes={handleUpdateLikes}/>
+                <Typography variant="body2" sx={{ margin: '10px 0' }}>
+                  {paper.likes}
+                </Typography>
+              </Box>
+            </Box>
               <Typography variant="body2"> {paper.authors.slice(0,3).join(", ")} / {paper.year} / {paper.conference} / {paper.cites} </Typography>
               <Box sx = {{margin: "15px 0 0 0" , display: 'flex'}}>
                 {/* <Button variant="contained" onClick={() => handleViewPaper(paper.url) }>논문 보기</Button> */}

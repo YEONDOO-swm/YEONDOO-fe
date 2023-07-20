@@ -25,6 +25,8 @@ export const PaperView = () => {
     const [paperHistory, setPaperHistory] = useState<any>('');
     const [searchTermInPaper, setSearchTermInPaper] = useState("");
     const [searchResultsInPaper, setSearchResultsInPaper] = useState<any>([])
+
+    const scrollContainerRef = useRef<HTMLDivElement | null>(null);
     
     var api = '';
     if (process.env.NODE_ENV === 'development'){
@@ -39,8 +41,6 @@ export const PaperView = () => {
     };
 
     useEffect(()=> {
-        console.log("in useeffect")
-
         const query = new URLSearchParams(window.location.search);
         const paperId = query.get('paperid') || '';
         
@@ -54,6 +54,10 @@ export const PaperView = () => {
                 console.error('논문 정보를 불러오는 데 실패하였습니다:', error)
             })
     }, [])
+
+    useEffect(() => {
+        scrollContainerRef.current?.scrollTo(0, scrollContainerRef.current.scrollHeight);
+      }, [paperHistory, enteredSearchTermInPaper, searchResultsInPaper]);
     
     const handleSearchKeyDown = (event: any) => {
         if (event.key === 'Enter'){
@@ -91,7 +95,6 @@ export const PaperView = () => {
         //const a = searchTermInPaper
         //console.log(a)
         setEnteredSearchTermInPaper([...enteredSearchTermInPaper, searchTermInPaper])
-        console.log(enteredSearchTermInPaper)
         const query = new URLSearchParams(window.location.search);
         const paperId = query.get('paperid') || '';
         fetch(`${api}/api/paper/${paperId}`,{
@@ -158,7 +161,6 @@ export const PaperView = () => {
                             <Box> 
                                 {paperInfo.authors.map((author: any) => (
                                     <Typography
-                                    key={author}
                                     variant="body1"
                                     sx={{ marginRight: '10px' }}
                                     >
@@ -185,7 +187,7 @@ export const PaperView = () => {
                             scrollbarWidth: 'thin',
                         }}>
                             <GoToArxiv url={paperInfo.url} />
-                            <Typography variant={sizeTitleInInfo}>요약</Typography>
+                            <Typography variant={sizeTitleInInfo} sx={{marginTop: '15px'}}>요약</Typography>
                             <Typography variant={sizeContentInInfo}> {paperInfo.summary} </Typography>
                             <Typography variant={sizeTitleInInfo}>인사이트</Typography>
                             <Box>
@@ -220,10 +222,11 @@ export const PaperView = () => {
                             <Box sx={{ border: '1px solid #DCDCDC',  padding: '20px', height: '75vh', borderRadius: '15px', backgroundColor: '#DCDCDC', 
                             display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
                             }}>
-                                <Box sx={{ overflowY: 'scroll' }}>
+                                <Box sx={{ overflowY: 'scroll' }} ref={scrollContainerRef}>
                                     {paperHistory &&
                                     paperHistory.map((history: any, index: number) => (
-                                    <Box key={index} sx={{ backgroundColor: '#FFFFFF', padding: '10px', marginBottom: '10px' }}>
+                                    <Box key={`history-${index}`}
+                                    sx={{ backgroundColor: '#FFFFFF', padding: '10px', marginBottom: '10px' }}>
                                         <Typography variant="body1">{history.content}</Typography>
                                     </Box>
                                     ))}

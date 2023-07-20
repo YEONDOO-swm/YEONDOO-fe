@@ -100,8 +100,6 @@ export const UserProfile = () => {
             studyField: customeField === '' ? researchField : customeField,
             keywords: enteredKeywords
         }
-
-        console.log(payload);
         
         fetch(`${api}/api/userprofile`, {
             method: 'POST',
@@ -109,9 +107,7 @@ export const UserProfile = () => {
             body: JSON.stringify(payload)
         })
         .then(response => {
-            console.log(response)
             if (response.ok) {
-                console.log('response is ok!!!!')
                 return response;
             } else {
                 if (!payload.keywords || payload.keywords.length === 0) {

@@ -24,17 +24,21 @@ export const PaperStorage = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [papersInStorage, setPapersInStorage] = useState<any>("");
 
-    useEffect(() => {
-        amplitude.track("PaperStorage Page Viewed");
+    const callGetApi = () => {
+        console.log("call get api")
         fetch(`${api}/api/paper/container`)
             .then(response => response.json())
-            .then(data => {  
-                console.log(data[0]) 
+            .then(data => {
                 setPapersInStorage(data)
             })
             .catch(error => {
                 console.error('논문 보관함 정보를 불러오는데 실패하였습니다: ', error)
             })
+    }
+
+    useEffect(() => {
+        amplitude.track("PaperStorage Page Viewed");
+        callGetApi()
     }, []);
 
     const handleSearchKeyDown = (event: any) => {
@@ -80,7 +84,7 @@ export const PaperStorage = () => {
                         </Typography>
                     </Box>
                     <Box sx={{ margin:'0px 10px', width: '20vh' ,display: 'flex', flexDirection:'column', justifyContent: 'space-between', alignItems: 'flex-end'}}>
-                        <HeartClick currentItem={paper.paperId} home={false} />
+                        <HeartClick currentItem={paper} home={false} callGetApi={callGetApi}/>
                         <GoToArxiv url={paper.url}/>
                         <Box sx={{height:'5px'}}></Box>
                         <GoToViewMore paperid={paper.paperId} />
