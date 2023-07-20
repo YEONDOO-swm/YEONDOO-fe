@@ -29,6 +29,70 @@
         "conference": "small conference",
         "cites": 10,
         "url": "http://google.com"
+      },
+      {
+        "paperId": "3",
+        "title": "CNN is the best.",
+        "likes": 0,
+        "islike": true,
+        "authors": [
+          "Gayun Im",
+          "Chanho Jung",
+          "Seokwu Lee",
+          "Chanho Park"
+        ],
+        "year": 2023,
+        "conference": "Big conference",
+        "cites": 20,
+        "url": "http://naver.com"
+      },
+      {
+        "paperId": "4",
+        "title": "CNN is the best.",
+        "likes": 0,
+        "islike": true,
+        "authors": [
+          "Gayun Im",
+          "Chanho Jung",
+          "Seokwu Lee",
+          "Chanho Park"
+        ],
+        "year": 2023,
+        "conference": "Big conference",
+        "cites": 20,
+        "url": "http://naver.com"
+      },
+      {
+        "paperId": "5",
+        "title": "CNN is the best.",
+        "likes": 0,
+        "islike": true,
+        "authors": [
+          "Gayun Im",
+          "Chanho Jung",
+          "Seokwu Lee",
+          "Chanho Park"
+        ],
+        "year": 2023,
+        "conference": "Big conference",
+        "cites": 20,
+        "url": "http://naver.com"
+      },
+      {
+        "paperId": "6",
+        "title": "CNN is the best.",
+        "likes": 0,
+        "islike": true,
+        "authors": [
+          "Gayun Im",
+          "Chanho Jung",
+          "Seokwu Lee",
+          "Chanho Park"
+        ],
+        "year": 2023,
+        "conference": "Big conference",
+        "cites": 20,
+        "url": "http://naver.com"
       }
     ]
   }

@@ -1,6 +1,9 @@
 import { rest } from 'msw';
 import fields from '../json/fields.json'
 import searchResults from '../json/searchResult.json'
+import paperLike from '../json/paperLike.json'
+import viewMore from '../json/viewMore.json'
+import paperStorage from '../json/paperStorage.json'
 
 const users = [
     { id: 1, username: 'john', password: '1' },
@@ -55,7 +58,7 @@ export const apiHandlers = [
         return res(ctx.status(401), ctx.json({message: 'Unauthorized'}))
       }
 
-      return res(ctx.status(200), ctx.json({username, studyfield, keywords, message: 'Success'}));
+      return res(ctx.status(200));
     }),
 
     rest.get('/api/homesearch', (req, res, ctx) => {
@@ -65,7 +68,19 @@ export const apiHandlers = [
 
     rest.post('/api/paperlikeonoff', (req, res, ctx) => {
       const {username, paperId, onoff} = req.body;
-      return res(ctx.status(200), ctx.json({username, paperId, onoff}))
+      return res(ctx.status(200), ctx.json(paperLike))
+    }),
+
+    rest.get(`/api/paper/:paperid`, (req, res, ctx) => {
+      return res(ctx.status(200), ctx.json(viewMore))
+    }),
+
+    rest.post(`/api/paper/:paperid`, (req, res, ctx) => {
+      return res(ctx.status(200), ctx.json({ answer: "This is my answer"}))
+    }),
+
+    rest.get(`/api/paper/contatiner`, (req, res, ctx) => {
+      return res(ctx.status(200), ctx.json(paperStorage))
     })
 ]
 

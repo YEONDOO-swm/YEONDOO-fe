@@ -37,7 +37,7 @@ export const UserProfile = () => {
             setUserName(checkUserName)
         }   
         // fetch fields from API
-        fetch(`${api}/userprofile/${username}`)
+        fetch(`${api}/api/userprofile/${username}`)
             .then(response => response.json())
             .then(data => {
                 // console.log(data.username)
@@ -100,18 +100,14 @@ export const UserProfile = () => {
             studyField: customeField === '' ? researchField : customeField,
             keywords: enteredKeywords
         }
-
-        console.log(payload);
         
-        fetch(`${api}/userprofile`, {
+        fetch(`${api}/api/userprofile`, {
             method: 'POST',
             headers: { 'Content-Type' : 'application/json' },
             body: JSON.stringify(payload)
         })
         .then(response => {
-            console.log(response)
             if (response.ok) {
-                console.log('response is ok!!!!')
                 return response;
             } else {
                 if (!payload.keywords || payload.keywords.length === 0) {
@@ -121,6 +117,7 @@ export const UserProfile = () => {
             }
         })
         .then(() => {
+            localStorage.setItem('isFirst', 'false')
             navigate('/home');
         })
         .catch(error => {

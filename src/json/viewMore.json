@@ -1,0 +1,57 @@
+{
+    "paperinfo": {
+      "title": "Attention is all you need",
+      "year": 2017,
+      "url": "https://arxiv.org/abs/1706.03762",
+      "conference": "2017 - proceedings.neurips.cc",
+      "authors": [
+        "Ashish Vaswani",
+        "Noam Shazeer",
+        "Niki Parmar",
+        "Jakob Uszkoreit",
+        "Llion Jones",
+        "Aidan N. Gomez",
+        "Łukasz Kaiser",
+        "Illia Polosukhin"
+      ],
+      "cites": 81860,
+      "summary": "A long time ago in the machine learning literature, the idea of incorporating a mechanism --- approaches beyond the attention.",
+      "insights": [
+        "핵심 인사이트 1",
+        "핵심 인사이트2"
+      ],
+      "questions": [
+        "gpt가 만든 질문 1",
+        "gpt가 만든 질문 2",
+        "gpt가 만든 질문 3"
+      ],
+      "subjectrecommends": [
+        "향후 연구 주제 추천 1",
+        "향후 연구 주제 추천 2",
+        "향후 연구 주제 추천 3"
+      ],
+      "references": [
+        "ref1",
+        "ref2",
+        "ref3"
+      ]
+    },
+    "paperhistory": [
+      {
+        "who": true,
+        "content": "cnn은 무엇인가요?"
+      },
+      {
+        "who": false,
+        "content": "cnn은 convolutional neural network 어쩌구 저쩌구"
+      },
+      {
+        "who": true,
+        "content": "cnn과 관련된 논문 5개를 추천해주세요"
+      },
+      {
+        "who": false,
+        "content": "imagenet daf;lkdj;lkj;al deep convolutional networks foarjd fasldk deep residual learnign for image recognitiond;alkfd ja;"
+      }
+    ]
+  }

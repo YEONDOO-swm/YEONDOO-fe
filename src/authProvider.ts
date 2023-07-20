@@ -13,13 +13,13 @@ export const authProvider = {
     login: ({ username, password }:any) => {
       var api ='';
       if (process.env.NODE_ENV === 'development'){
-        api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}/login`
+        api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
       }
       else if (process.env.NODE_ENV === 'production'){
-        api = `${process.env.VITE_REACT_APP_AWS_SERVER}/login`
+        api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
         // api = `https://be.yeondoo.net/login`
       }
-      return fetch(api, {
+      return fetch(`${api}/api/login`, {
         method: 'POST',
         headers: { 'Content-Type' : 'application/json' },
         body: JSON.stringify({ username, password })
@@ -30,8 +30,10 @@ export const authProvider = {
           return response.json().then((data) => {
             console.log(data['isFirst'])
             if (data.isFirst) {
+              localStorage.setItem('isFirst', 'true')
               return Promise.resolve({ redirectTo: '/userprofile' });
             } else {
+              localStorage.setItem('isFirst', 'false')
               return Promise.resolve({ redirectTo: '/' });
             }
           })
@@ -64,9 +66,8 @@ export const authProvider = {
       if (!sessionStorage.getItem('username')) {
         return Promise.reject();
       } 
-      else if (!localStorage.getItem('userprofile')) {
-
-        return Promise.resolve();
+      else if (localStorage.getItem('isFirst')==='true') {
+        return Promise.resolve({ redirectTo: '/userprofile' });
       }
       else {
         return Promise.resolve();
