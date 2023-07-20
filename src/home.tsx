@@ -32,7 +32,7 @@ export const Home = () => {
     const [searchResults, setSearchResults] = useState<any>("");
     const [enteredSearch, setEnteredSearch] = useState(""); 
     const [isFavorite, setIsFavorite] = useState(false);
-    const [paperIdArray, setPaperIdArray] = useState<string[]>([]);
+    const [paperIdArray, setPaperIdArray] = useState<string[]>([]); 
 
     const searchInputRef = useRef<HTMLInputElement | null>(null);
 
