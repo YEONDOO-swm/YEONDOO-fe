@@ -62,16 +62,13 @@ export const PaperView = () => {
     const handleSearchKeyDown = (event: any) => {
         if (event.key === 'Enter'){
             event.preventDefault();
-            //setEnteredSearch(searchResults);
             window.location.href = `/home?query=${searchTerm}`
         }
     }
     
     const handleButtonClick = (event: any) => {
         event.preventDefault();
-        //setEnteredSearch(searchResults);
         window.location.href = `/home?query=${searchTerm}`
-        //performSearch();
     }
 
     const handleSearchKeyDownInPaper = (event: any) => {
@@ -91,9 +88,6 @@ export const PaperView = () => {
     }
 
     const performSearchInPaper = async () => {
-        //console.log(searchTermInPaper)
-        //const a = searchTermInPaper
-        //console.log(a)
         setEnteredSearchTermInPaper([...enteredSearchTermInPaper, searchTermInPaper])
         const query = new URLSearchParams(window.location.search);
         const paperId = query.get('paperid') || '';
@@ -104,32 +98,20 @@ export const PaperView = () => {
         })
         .then(response => response.json())
         .then(data => {
-            //console.log(data.answer)
             setSearchResultsInPaper([...searchResultsInPaper, data.answer])
             setSearchTermInPaper("")
         })
         .catch(error => {
             console.error("논문 내 질문 오류")
         })
-
-        // try {
-        //     console.log(searchTermInPaper)
-        //     const query = new URLSearchParams(window.location.search);
-        //     const paperId = query.get('paperid') || '';
-        //     const response = await fetch(`${api}/api/${paperId}`)
-
-
-        // } catch (error) {
-        //     console.log('검색 결과에서 오류가 발생했습니다.')
-        // }
     }
 
     const handleViewLessAuthors = () => {
         setIsExpanded(false)
     }
 
-    const sizeTitleInInfo = "body1"
-    const sizeContentInInfo = "body2"
+    const sizeTitleInInfo = "h6"
+    const sizeContentInInfo = "body1"
 
 
     return (
@@ -145,7 +127,7 @@ export const PaperView = () => {
                 middleBoxSx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
                 sx={{width: "80%"}}
             />
-            <Box sx={{margin: '10px'}}>
+            <Box sx={{margin: '12px'}}>
                 <Typography variant="h5">{paperInfo.title}</Typography>
                 { paperInfo.authors && (paperInfo.authors.length > 3 
                  ? (
@@ -176,13 +158,13 @@ export const PaperView = () => {
                  )           
                  : <Typography variant="body1"> {paperInfo.authors.join(", ")} </Typography>) }
                 {/* <Typography variant="h6">{paperInfo.authors && (paperInfo.authors.length > 3 ? paperInfo.authors.slice(0, 3).join(", ") : paperInfo.authors.join(", "))}</Typography> */}
-                <Typography variant="body1">{paperInfo.year} / {paperInfo.conference} / {paperInfo.cites}</Typography>
+                <Typography variant="body1">{paperInfo.year} / {paperInfo.conference} / cites: {paperInfo.cites}</Typography>
             </Box>
             <div>
                 <Box display="flex" justifyContent="space-between">
                     <Box width="50%" sx={{margin: '10px'}}>
-                        <Typography variant="h6">Information</Typography>
-                        <Box sx={{ border: '1px solid #E6E6FA',  padding: '20px', height: '75vh', borderRadius: '15px', backgroundColor: '#E6E6FA', 
+                        <Typography variant="h6">정보</Typography>
+                        <Box sx={{ border: '1px solid #d8e6cd',  padding: '20px', height: '75vh', borderRadius: '15px', backgroundColor: '#d8e6cd', 
                             overflowY: 'scroll',
                             scrollbarWidth: 'thin',
                         }}>

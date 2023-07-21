@@ -41,10 +41,6 @@ export const Home = () => {
           event.preventDefault();
           setEnteredSearch(searchResults);
           window.location.href = `/home?query=${searchTerm}`
-          //const query = new URLSearchParams();
-          //query.set('query', searchTerm);
-          //window.history.pushState(null, '', `?query=${searchTerm}`);
-          //performSearch();
       }
   }
 
@@ -52,7 +48,6 @@ export const Home = () => {
       event.preventDefault();
       setEnteredSearch(searchResults);
       window.location.href = `/home?query=${searchTerm}`
-      //performSearch();
   }
 
   const username = sessionStorage.getItem("username");
@@ -62,10 +57,6 @@ export const Home = () => {
           
           const query= new URLSearchParams(window.location.search); 
           const performSearchTerm = query.get('query') || '';
-          // console.log("performsearch", performSearchTerm)
-          // setSearchTerm(performSearchTerm)
-          // console.log("searchTerm: ", performSearchTerm)
-          // const response = await fetch(`http://be.yeondoo.net:8080/homesearch?query=${searchTerm}&&username=${username}`);
           const response = await fetch(`${api}/api/homesearch?query=${performSearchTerm}&&username=${username}`);
           const data = await response.json();
 
@@ -75,47 +66,6 @@ export const Home = () => {
       }
   };
 
-
-  const handleHeartClick = (paperId:any) => {
-    var payload
-    if (paperIdArray.includes(paperId)) {
-      for (var i = 0; i<paperIdArray.length; i++){
-        if (paperIdArray[i] === paperId) {
-          paperIdArray.splice(i, 1);
-          break;
-        }
-      }
-      setPaperIdArray(paperIdArray)
-      payload = {
-        username: sessionStorage.getItem('username'),
-        paperId: paperId,
-        onoff: false
-      }
-    }
-    else {
-      setPaperIdArray(prevArray => [...prevArray, paperId]);
-      payload = {
-        username: sessionStorage.getItem('username'),
-        paperId: paperId,
-        onoff: true
-      }
-    }
-    setIsFavorite(!isFavorite);
-
-    fetch(`${api}/api/paperlikeonoff`, {
-      method: 'POST',
-      headers: { 'Content-Type' : 'application/json' },
-      body: JSON.stringify(payload)
-    })
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error('찜 버튼 에러')
-      }
-    })
-
-  }
 
   const handleUpdateLikes = (paperId:any, newLikes:any) => {
     // Create a new array of papers with updated likes count
@@ -158,7 +108,7 @@ export const Home = () => {
         {searchResults && (<div>
   <Grid container spacing={2}>
     <Grid item xs={6}>
-      <Box sx={{ display:'flex', border: '1px solid #E6E6FA', margin: '10px', padding: '20px', height: '95%', borderRadius: '15px', backgroundColor: '#E6E6FA', 
+      <Card sx={{ display:'flex', border: '1px solid #d8e6cd', margin: '10px', padding: '20px', height: '95%', borderRadius: '15px', backgroundColor: '#d8e6cd', 
       overflowY: 'scroll',
       scrollbarWidth: 'thin',
       }}>
@@ -166,13 +116,13 @@ export const Home = () => {
           <QuestionAnswerIcon />
         </Box>
         {searchResults.answer}
-      </Box>
+      </Card>
     </Grid>
     <Grid item xs={6}>
       <CardContent sx={{ height: '75vh', margin: '0 30px 0 10px', padding: '10px', overflowY: 'scroll'}}>
         {searchResults.papers.map((paper: any) => (
-          <Box key={paper.paperId} sx={{ display: 'flex', justifyContent: 'center', marginBottom: '15px'}}>
-            <Container sx={{ border: '1px solid #DCDCDC', padding: '15px', borderRadius: '15px', backgroundColor: '#DCDCDC'}}>
+          <Card key={paper.paperId} sx={{ display: 'flex', justifyContent: 'center', marginBottom: '15px', border: '1px solid #DCDCDC', padding: '15px 5px', borderRadius: '15px', backgroundColor: '#DCDCDC'}}>
+            <Container>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignContent: 'center' }}>
               <Box sx={{ flexGrow: 1 }}>
                 <Typography variant="h6">{paper.title}</Typography>
@@ -184,7 +134,7 @@ export const Home = () => {
                 </Typography>
               </Box>
             </Box>
-              <Typography variant="body2"> {paper.authors.slice(0,3).join(", ")} / {paper.year} / {paper.conference} / {paper.cites} </Typography>
+              <Typography variant="body2"> {paper.authors.slice(0,3).join(", ")} / {paper.year} / {paper.conference} / cites: {paper.cites} </Typography>
               <Box sx = {{margin: "15px 0 0 0" , display: 'flex'}}>
                 {/* <Button variant="contained" onClick={() => handleViewPaper(paper.url) }>논문 보기</Button> */}
                 <GoToArxiv url={paper.url} />
@@ -195,7 +145,7 @@ export const Home = () => {
               </Box>
               {/* Add other details for the paper */}
             </Container>
-          </Box>
+          </Card>
         ))}
       </CardContent>
     </Grid>

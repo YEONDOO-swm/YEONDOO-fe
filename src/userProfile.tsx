@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent, FormEvent, useEffect, KeyboardEvent} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Title, useAuthenticated, useNotify } from 'react-admin';
-import { Box, Button, FormControl, InputLabel, Select, SelectChangeEvent, Typography, IconButton } from '@mui/material';
+import { Box, Button, FormControl, InputLabel, Select, SelectChangeEvent, Typography, IconButton, Card } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import * as amplitude from '@amplitude/analytics-browser';
 import styles from '../layout/input.module.css'
@@ -95,6 +95,8 @@ export const UserProfile = () => {
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
+        console.log(enteredKeywords);
+
         const payload = {
             username: sessionStorage.getItem('username'),
             studyField: customeField === '' ? researchField : customeField,
@@ -108,11 +110,11 @@ export const UserProfile = () => {
         })
         .then(response => {
             if (response.ok) {
-                return response;
-            } else {
                 if (!payload.keywords || payload.keywords.length === 0) {
                     notify("키워드가 입력되지 않았습니다. 키워드 입력 후 엔터를 눌러 주세요.", {type: 'error'})
+                    throw new Error('유저 프로필 등록에 실패했습니다.');
                 }
+            } else {
                 throw new Error('유저 프로필 등록에 실패했습니다.');
             }
         })
@@ -134,13 +136,13 @@ export const UserProfile = () => {
     // console.log(fields)
 
     return (
-        <Box sx={{ height: '80vh', maxWidth: 500, margin: '30px auto', padding: '3rem', backgroundColor: '#DCDCDC', borderRadius: '20px' , border: '1px solid #DCDCDC'}}>
+        <Card sx={{ height: '80vh', maxWidth: 500, margin: '30px auto', padding: '3rem', backgroundColor: '#DCDCDC', borderRadius: '20px' , border: '1px solid #DCDCDC'}}>
             <Title title="Register"/>
         {/* <Typography variant="h4" sx={{ marginBottom: '1rem' }}>Profile</Typography> */}
         <form onSubmit={handleSubmit} >
             <Box sx={{ height: '70vh', display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
                 <Box>
-                    <Typography variant='h4' sx={{marginBottom: '20px'}}>
+                    <Typography variant='h4' sx={{marginBottom: '20px', textAlign:'center' }}>
                         Register
                     </Typography>
                     <Box sx={{ height: '20vh'}}>
@@ -177,6 +179,7 @@ export const UserProfile = () => {
                         )}
                         </FormControl>
                     </Box>
+                    <Box>
                     <Typography variant="h6" sx={{ marginBottom: '0.5rem' }}>
                     2. 관심있는 키워드는 무엇인가요? (최대 3개)
                     </Typography>
@@ -202,6 +205,7 @@ export const UserProfile = () => {
                             ))}
                         </div>
                     )}
+                    </Box>
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <Button type="submit" variant="outlined">
@@ -210,6 +214,6 @@ export const UserProfile = () => {
                 </Box>
             </Box>
         </form>
-        </Box>
+        </Card>
     );
 };

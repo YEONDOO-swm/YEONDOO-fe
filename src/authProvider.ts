@@ -17,7 +17,6 @@ export const authProvider = {
       }
       else if (process.env.NODE_ENV === 'production'){
         api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
-        // api = `https://be.yeondoo.net/login`
       }
       return fetch(`${api}/api/login`, {
         method: 'POST',
