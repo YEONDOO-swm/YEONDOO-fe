@@ -44,16 +44,13 @@ export const PaperStorage = () => {
     const handleSearchKeyDown = (event: any) => {
         if (event.key === 'Enter'){
             event.preventDefault();
-            //setEnteredSearch(searchResults);
             window.location.href = `/home?query=${searchTerm}`
         }
     }
     
     const handleButtonClick = (event: any) => {
         event.preventDefault();
-        //setEnteredSearch(searchResults);
         window.location.href = `/home?query=${searchTerm}`
-        //performSearch();
     }
     
     return (
@@ -80,7 +77,7 @@ export const PaperStorage = () => {
                             {paper.authors?.length >1 ?paper.authors.join(', '):paper.authors} / {paper.year} / {paper.conference}
                         </Typography>
                         <Typography variant="body1">
-                            {paper.cites}
+                            cites: {paper.cites}
                         </Typography>
                     </Box>
                     <Box sx={{ margin:'0px 10px', width: '20vh' ,display: 'flex', flexDirection:'column', justifyContent: 'space-between', alignItems: 'flex-end'}}>

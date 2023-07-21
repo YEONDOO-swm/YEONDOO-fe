@@ -11,7 +11,7 @@ import { UserProfile } from './userProfile';
 import { useNavigate } from 'react-router-dom';
 import * as amplitude from '@amplitude/analytics-browser';
 import { PaperView } from './paperView';
-// import { isLoggedIn } from './authProvider';
+import { DarkTheme, MyTheme } from './myTheme';
 
 amplitude.init('fa2f5340585a6728ae2103fb05e56bec');
 
@@ -21,7 +21,7 @@ export const App = () => {
     return (
         <BrowserRouter>
             <Admin
-                authProvider={authProvider} layout={MyLayout} dataProvider={dataProvider}
+                authProvider={authProvider} layout={MyLayout} dataProvider={dataProvider} theme={MyTheme}
             >
                 {/* <Resource name="users" list={ListGuesser}></Resource> */}
                 {/* <Route path="/home" element={< Home />}/> */}
