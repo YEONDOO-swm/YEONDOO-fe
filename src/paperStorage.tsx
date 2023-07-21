@@ -26,7 +26,7 @@ export const PaperStorage = () => {
 
     const callGetApi = () => {
         console.log("call get api")
-        fetch(`${api}/api/paper/container`)
+        fetch(`${api}/api/container`)
             .then(response => response.json())
             .then(data => {
                 setPapersInStorage(data)
