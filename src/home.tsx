@@ -108,7 +108,7 @@ export const Home = () => {
         {searchResults && (<div>
   <Grid container spacing={2}>
     <Grid item xs={6}>
-      <Box sx={{ display:'flex', border: '1px solid #d8e6cd', margin: '10px', padding: '20px', height: '95%', borderRadius: '15px', backgroundColor: '#d8e6cd', 
+      <Card sx={{ display:'flex', border: '1px solid #d8e6cd', margin: '10px', padding: '20px', height: '95%', borderRadius: '15px', backgroundColor: '#d8e6cd', 
       overflowY: 'scroll',
       scrollbarWidth: 'thin',
       }}>
@@ -116,13 +116,13 @@ export const Home = () => {
           <QuestionAnswerIcon />
         </Box>
         {searchResults.answer}
-      </Box>
+      </Card>
     </Grid>
     <Grid item xs={6}>
       <CardContent sx={{ height: '75vh', margin: '0 30px 0 10px', padding: '10px', overflowY: 'scroll'}}>
         {searchResults.papers.map((paper: any) => (
-          <Box key={paper.paperId} sx={{ display: 'flex', justifyContent: 'center', marginBottom: '15px'}}>
-            <Container sx={{ border: '1px solid #DCDCDC', padding: '15px', borderRadius: '15px', backgroundColor: '#DCDCDC'}}>
+          <Card key={paper.paperId} sx={{ display: 'flex', justifyContent: 'center', marginBottom: '15px', border: '1px solid #DCDCDC', padding: '15px 5px', borderRadius: '15px', backgroundColor: '#DCDCDC'}}>
+            <Container>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignContent: 'center' }}>
               <Box sx={{ flexGrow: 1 }}>
                 <Typography variant="h6">{paper.title}</Typography>
@@ -145,7 +145,7 @@ export const Home = () => {
               </Box>
               {/* Add other details for the paper */}
             </Container>
-          </Box>
+          </Card>
         ))}
       </CardContent>
     </Grid>
