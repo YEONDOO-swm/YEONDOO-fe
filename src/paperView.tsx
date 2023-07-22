@@ -91,7 +91,7 @@ export const PaperView = () => {
         setEnteredSearchTermInPaper([...enteredSearchTermInPaper, searchTermInPaper])
         const query = new URLSearchParams(window.location.search);
         const paperId = query.get('paperid') || '';
-        fetch(`${api}/api/paper/${paperId}`,{
+        fetch(`${api}/api/paper/${paperId}?username=${username}`,{
             method: 'POST',
             headers : { 'Content-Type' : 'application/json' },
             body: JSON.stringify({question: searchTermInPaper})
