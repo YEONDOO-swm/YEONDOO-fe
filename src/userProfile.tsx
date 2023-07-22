@@ -109,6 +109,10 @@ export const UserProfile = () => {
             body: JSON.stringify(payload)
         })
         .then(response => {
+            if (!payload.keywords || payload.keywords.length === 0) {
+                notify("키워드가 입력되지 않았습니다. 키워드 입력 후 엔터를 눌러 주세요.", {type: 'error'})
+                throw new Error('유저 프로필 등록에 실패했습니다.');
+            }
             if (response.ok) {
                 if (!payload.keywords || payload.keywords.length === 0) {
                     notify("키워드가 입력되지 않았습니다. 키워드 입력 후 엔터를 눌러 주세요.", {type: 'error'})

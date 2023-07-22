@@ -8,10 +8,10 @@ import { Link } from 'react-router-dom';
 export const MyAppBar = () => (
     <AppBar>
         <TitlePortal />
-        <Box flex={0.6} /> 
-        <Link to="/home" style={{ textDecoration: 'none', color: 'white' }}>
-            <Typography variant='h6'> 🍀 Yeondoo </Typography>
-        </Link>
-        <Box flex={1} /> 
+        <Typography variant='h6' sx={{ width: '80%', display: 'flex', justifyContent: 'center' }}>
+            <Link to="/home" style={{ textDecoration: 'none', color: 'white' }}>
+                🍀 Yeondoo
+            </Link>
+        </Typography>
     </AppBar>
 );
