@@ -23,10 +23,11 @@ export const PaperStorage = () => {
 
     const [searchTerm, setSearchTerm] = useState("");
     const [papersInStorage, setPapersInStorage] = useState<any>("");
+    const username = sessionStorage.getItem("username");
 
     const callGetApi = () => {
         console.log("call get api")
-        fetch(`${api}/api/container`)
+        fetch(`${api}/api/container?username=${username}`)
             .then(response => response.json())
             .then(data => {
                 setPapersInStorage(data)

@@ -207,19 +207,39 @@ export const PaperView = () => {
                                 <Box sx={{ overflowY: 'scroll' }} ref={scrollContainerRef}>
                                     {paperHistory &&
                                     paperHistory.map((history: any, index: number) => (
-                                    <Box key={`history-${index}`}
-                                    sx={{ backgroundColor: '#FFFFFF', padding: '10px', marginBottom: '10px' }}>
+                                        <Box
+                                        key={`history-${index}`}
+                                        sx={{
+                                          display: 'flex',
+                                          alignItems: 'flex-start',
+                                          backgroundColor: '#FFFFFF',
+                                          padding: '10px',
+                                          marginBottom: '10px',
+                                          borderRadius: '10px',
+                                        }}
+                                      >
+                                          <Box sx={{ display: 'flex', alignItems: 'flex-start', marginRight: '10px' }}>
+                                            {history.who ? <Typography>👤</Typography> : <Typography>🍀</Typography>}
+                                        </Box>
+                                        
                                         <Typography variant="body1">{history.content}</Typography>
-                                    </Box>
+                                      </Box>
+                                      
                                     ))}
                                     {enteredSearchTermInPaper && searchResultsInPaper && enteredSearchTermInPaper.length === searchResultsInPaper.length && (
                                     <>
                                         {enteredSearchTermInPaper.map((term:any, index:number) => (
                                         <>
-                                            <Box sx={{ backgroundColor: '#FFFFFF', padding: '10px', marginBottom: '10px' }}>
+                                            <Box sx={{ display: 'flex', backgroundColor: '#FFFFFF', padding: '10px', marginBottom: '10px', borderRadius: '10px'}}>
+                                            <Box sx={{ display: 'flex', alignItems: 'flex-start', marginRight: '10px' }}>
+                                                <Typography>👤</Typography>
+                                            </Box>
                                             <Typography variant="body1">{term}</Typography>
                                             </Box> 
-                                            <Box sx={{ backgroundColor: '#FFFFFF', padding: '10px', marginBottom: '10px' }}>
+                                            <Box sx={{ display: 'flex', backgroundColor: '#FFFFFF', padding: '10px', marginBottom: '10px', borderRadius: '10px'}}>
+                                            <Box sx={{ display: 'flex', alignItems: 'flex-start', marginRight: '10px' }}>
+                                                <Typography>🍀</Typography>
+                                            </Box>
                                             <Typography variant="body1">{searchResultsInPaper[index]}</Typography>
                                             </Box>
                                         </>
