@@ -1,0 +1,17 @@
+.customTypography {
+    cursor: pointer;
+    text-align: center;
+    padding: 5px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2); /* Add a slight shadow to mimic blur */
+    transition: box-shadow 0.3s ease; /* Add a transition for a smooth effect */
+  }
+  
+.customTypography:hover {
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.4); /* Increase the shadow on hover */
+  }
+
+.currentPage {
+    background-color: white;
+}

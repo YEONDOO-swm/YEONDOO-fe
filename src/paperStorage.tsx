@@ -31,7 +31,7 @@ export const PaperStorage = () => {
             .then(response => response.json())
             .then(data => {
                 setPapersInStorage(data)
-                console.log(data)
+                // console.log(data)
             })
             .catch(error => {
                 console.error('논문 보관함 정보를 불러오는데 실패하였습니다: ', error)
@@ -69,8 +69,8 @@ export const PaperStorage = () => {
             sx={{width: "80%"}}
           />
           <Box sx={{height: '75vh', margin: '0 30px 0 10px', padding: '10px', overflowY: 'scroll'}}>
-            {Array.isArray(papersInStorage) && papersInStorage.map((paper:any) => (
-                <Card sx={{padding: '15px', borderRadius: '15px', margin: '15px', display: 'flex'}}>
+            {papersInStorage && papersInStorage.map((paper:any) => (
+                <Card sx={{padding: '15px', borderRadius: '15px', margin: '15px', display: 'flex', justifyContent:'space-between'}}>
                     <Box>
                         <Typography variant="h6">
                             {paper.title}

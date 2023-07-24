@@ -95,8 +95,6 @@ export const UserProfile = () => {
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        console.log(enteredKeywords);
-
         const payload = {
             username: sessionStorage.getItem('username'),
             studyField: customeField === '' ? researchField : customeField,

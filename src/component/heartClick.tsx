@@ -28,7 +28,7 @@ export const HeartClick = ({ currentItem, home, onUpdateLikes, callGetApi}: { cu
           payload = {
             username: sessionStorage.getItem('username'),
             paperId: paperId,
-            onoff: false
+            onoff: true
           }
         }
         else {
@@ -42,7 +42,7 @@ export const HeartClick = ({ currentItem, home, onUpdateLikes, callGetApi}: { cu
           payload = {
             username: sessionStorage.getItem('username'),
             paperId: paperId,
-            onoff: true
+            onoff: false
           }
         }
         setIsFavorite(!isFavorite);
