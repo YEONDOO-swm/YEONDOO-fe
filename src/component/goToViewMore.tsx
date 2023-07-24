@@ -11,5 +11,5 @@ export const GoToViewMore = (paperid: any) => {
         navigate(`/paper?paperid=${paperId}`)
       }
 
-    return (<Button variant ="contained" onClick={() => handleViewMore(paperid)}>자세히 보기</Button>)
+    return (<Button variant ="contained" onClick={() => handleViewMore(paperid.paperid)}>자세히 보기</Button>)
 }

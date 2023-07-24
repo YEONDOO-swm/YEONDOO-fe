@@ -7,11 +7,12 @@ import { Link } from 'react-router-dom';
 
 export const MyAppBar = () => (
     <AppBar>
-        <TitlePortal />
-        <Typography variant='h6' sx={{ width: '80%', display: 'flex', justifyContent: 'center' }}>
-            <Link to="/home" style={{ textDecoration: 'none', color: 'white' }}>
-                🍀 Yeondoo
-            </Link>
-        </Typography>
+      <TitlePortal />
+      <Typography variant='h6' >
+        <Link to="/home" style={{ textDecoration: 'none', color: 'white' }}>
+          <Box sx={{ margin: '0px 550px'}}>🍀 Yeondoo</Box>
+        </Link>
+      </Typography>
     </AppBar>
-);
+  );
+  

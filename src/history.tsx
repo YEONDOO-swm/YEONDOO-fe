@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Card, CardContent } from '@mui/material';
+import { Card, CardContent, Typography, Box } from '@mui/material';
 import { Title, useAuthenticated } from 'react-admin';
 import { useEffect, useState } from "react";
 import * as amplitude from '@amplitude/analytics-browser';
@@ -50,5 +50,14 @@ export const History = () => {
             middleBoxSx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
             sx={{width: "80%"}}
           />
+        <Typography variant="h5"> 히스토리 </Typography>
+        <Box sx={{ display: 'flex'}}>
+            <Box sx={{ width: '80%'}}></Box>
+            <Box sx={{ }}>
+                <Box>
+                    
+                </Box>
+            </Box>
+        </Box>
     </div>
 )};
