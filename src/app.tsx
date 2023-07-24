@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import * as amplitude from '@amplitude/analytics-browser';
 import { PaperView } from './paperView';
 import { DarkTheme, MyTheme } from './myTheme';
+import { Trash } from './trash';
 
 amplitude.init('fa2f5340585a6728ae2103fb05e56bec');
 
@@ -33,6 +34,7 @@ export const App = () => {
                     <Route path="/history" element={< History />}/>
                     <Route path="/userprofile" element={< UserProfile />}/>
                     <Route path="/paper" element={< PaperView />}/>
+                    <Route path="/history/trash" element={< Trash />} />
                 </CustomRoutes>
             </Admin>
         </BrowserRouter>

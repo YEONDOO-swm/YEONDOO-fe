@@ -70,7 +70,7 @@ export const PaperStorage = () => {
           />
           <Box sx={{height: '75vh', margin: '0 30px 0 10px', padding: '10px', overflowY: 'scroll'}}>
             {papersInStorage && papersInStorage.map((paper:any) => (
-                <Card sx={{padding: '15px', borderRadius: '15px', margin: '15px', display: 'flex'}}>
+                <Card sx={{padding: '15px', borderRadius: '15px', margin: '15px', display: 'flex', justifyContent:'space-between'}}>
                     <Box>
                         <Typography variant="h6">
                             {paper.title}
