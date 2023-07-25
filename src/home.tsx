@@ -128,7 +128,7 @@ export const Home = () => {
                 <Typography variant="h6">{paper.title}</Typography>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
-                <HeartClick currentItem={paper} home={true} onUpdateLikes={handleUpdateLikes}/>
+                <HeartClick currentItem={paper} home={true} onUpdateLikes={handleUpdateLikes} paperlike={paper.islike}/>
                 <Typography variant="body2" sx={{ margin: '10px 0' }}>
                   {paper.likes}
                 </Typography>

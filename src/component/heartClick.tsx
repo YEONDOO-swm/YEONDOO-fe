@@ -3,7 +3,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useState } from "react";
 
-export const HeartClick = ({ currentItem, home, onUpdateLikes, callGetApi}: { currentItem: any, home: boolean, onUpdateLikes?:any, callGetApi?: any }) => {
+export const HeartClick = ({ currentItem, home, onUpdateLikes, callGetApi, paperlike}: { currentItem: any, home: boolean, onUpdateLikes?:any, callGetApi?: any, paperlike?: any }) => {
     const [paperIdArray, setPaperIdArray] = useState<string[]>([]);
     const [isFavorite, setIsFavorite] = useState(false);
 
@@ -47,8 +47,6 @@ export const HeartClick = ({ currentItem, home, onUpdateLikes, callGetApi}: { cu
         }
         setIsFavorite(!isFavorite);
 
-        console.log(payload.onoff)
-
         if (home) {
           const newLikes = isFavorite ? currentItem.likes - 1 : currentItem.likes + 1;
           onUpdateLikes(currentItem.paperId, newLikes);
@@ -75,7 +73,7 @@ export const HeartClick = ({ currentItem, home, onUpdateLikes, callGetApi}: { cu
     return (
         <IconButton onClick={() => handleHeartClick(currentItem.paperId)}>
             {   home ?
-                (paperIdArray.includes(currentItem.paperId) ? (
+                (paperIdArray.includes(currentItem.paperId) || paperlike ? (
                 <FavoriteIcon sx={{margin: '0'}} color="error"/>
                 ) : (
                 <FavoriteBorderIcon />
