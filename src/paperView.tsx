@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Typography, Grid, Box, IconButton, TextField, InputAdornment, Icon } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import { Title, useAuthenticated } from 'react-admin';
+import { Title, useAuthenticated, useNotify } from 'react-admin';
 import { useParams } from "react-router";
 import { GoToArxiv } from "./component/goToArxiv";
 import SearchIcon from "@mui/icons-material/Search";
@@ -15,6 +15,8 @@ import { UserProfileCheck } from "./component/userProfileCheck";
 export const PaperView = () => {
     useAuthenticated();
     UserProfileCheck();
+
+    const notify = useNotify()
 
     const [searchTerm, setSearchTerm] = useState("");
     const [enteredSearchTermInPaper, setEnteredSearchTermInPaper] = useState<any>([]);
@@ -74,12 +76,20 @@ export const PaperView = () => {
     const handleSearchKeyDownInPaper = (event: any) => {
         if (event.key === 'Enter'){
             event.preventDefault();
+            if (searchTermInPaper === '') {
+                notify('질문을 입력해 주세요.', {type: 'error'})
+                return ;
+            }
             performSearchInPaper()
         }
     }
 
     const handleButtonClickInPaper = (event: any) => {
         event.preventDefault();
+        if (searchTermInPaper === '') {
+            notify('질문을 입력해 주세요.', {type: 'error'})
+            return ;
+        }
         performSearchInPaper();
     }
 
@@ -88,7 +98,6 @@ export const PaperView = () => {
     }
 
     const performSearchInPaper = async () => {
-        setEnteredSearchTermInPaper([...enteredSearchTermInPaper, searchTermInPaper])
         const query = new URLSearchParams(window.location.search);
         const paperId = query.get('paperid') || '';
         fetch(`${api}/api/paper/${paperId}?username=${username}`,{
@@ -98,6 +107,7 @@ export const PaperView = () => {
         })
         .then(response => response.json())
         .then(data => {
+            setEnteredSearchTermInPaper([...enteredSearchTermInPaper, searchTermInPaper])
             setSearchResultsInPaper([...searchResultsInPaper, data.answer])
             setSearchTermInPaper("")
         })
