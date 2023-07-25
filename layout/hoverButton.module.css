@@ -13,5 +13,6 @@
   }
 
 .currentPage {
-    background-color: white;
+    background-color: #92bb8e;
+    font-weight: bold;
 }

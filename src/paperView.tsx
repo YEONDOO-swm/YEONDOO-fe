@@ -171,12 +171,7 @@ export const PaperView = () => {
                             <GoToArxiv url={paperInfo.url} />
                             <Typography variant={sizeTitleInInfo} sx={{marginTop: '15px'}}>요약</Typography>
                             <Typography variant={sizeContentInInfo}> {paperInfo.summary} </Typography>
-                            <Typography variant={sizeTitleInInfo}>인사이트</Typography>
-                            <Box>
-                            {paperInfo.insights && paperInfo.insights.map((insight: string) => (
-                                <Typography variant={sizeContentInInfo}>{insight}</Typography>
-                            ))}
-                            </Box>
+                            
                             <Typography variant={sizeTitleInInfo}>질문</Typography>
                             <Box>
                             {paperInfo.questions && paperInfo.questions.map((question: any) => (
@@ -189,12 +184,7 @@ export const PaperView = () => {
                                 <Typography variant={sizeContentInInfo}>{subjectrecommend}</Typography>
                             ))}
                             </Box>
-                            <Typography variant={sizeTitleInInfo}>레퍼런스</Typography>
-                            <Box>
-                            {paperInfo.references && paperInfo.references.map((reference: any) => (
-                                <Typography variant={sizeContentInInfo}>{reference}</Typography>
-                            ))}
-                            </Box>
+                            
                         </Box>
                     </Box>
                     <Box width="50%" sx={{margin: '10px'}}>
