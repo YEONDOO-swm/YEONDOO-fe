@@ -9,6 +9,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import ContactSupportIcon from '@mui/icons-material/ContactSupport';
 import styles from '../layout/hoverButton.module.css'
 import { HistoryNav } from "./component/historyNav";
+import loadingStyle from "../layout/loading.module.css"
 
 export const History = () => {
     useAuthenticated();
@@ -27,17 +28,21 @@ export const History = () => {
     const [results, setResults] = useState<any>([])
     const [urlParam, setUrlParam] = useState('')
     const [eachQueryResult, setEachQueryResult] = useState<any>('')
+    const [loading, setLoading] = useState<boolean>(false)
     const navigate = useNavigate()
 
     useEffect(()=>{
+        setLoading(true)
      fetch(`${api}/api/history/search?username=${username}`)
         .then(response => response.json())
         .then(data => {
             setPapersInNav(data.papers)
             setResults(data.results)
+            setLoading(false)
         })
         .catch(error => {
             console.error('히스토리 정보를 가져오는데 실패하였습니다: ', error)
+            setLoading(false)
         })
 
         setEachQueryResult('')
@@ -111,6 +116,17 @@ export const History = () => {
             sx={{width: "80%"}}
           />
         <Typography variant="h5" sx={{ml: 1}}> 전체검색 히스토리 </Typography>
+        {loading?(
+            <Box sx={{ display: 'flex', height: '70vh'}} className={loadingStyle.loading}>
+                <Box sx={{ width: '80%', m: 2}}>
+                    <Card sx={{ p: 2, height: '10vh', backgroundColor: '#999999', opacity: '0.2', marginBottom: '15px'}}></Card>
+                    <Card sx={{ p: 2, height: '10vh', backgroundColor: '#999999', opacity: '0.2'}}></Card>
+                </Box>
+                <Card sx={{ ml: 'auto', mr: '20px', p: '30px 40px', display: 'flex', flexDirection: 'column',borderRadius: '10px', backgroundColor: '#999999', opacity: '0.2', height: '100%', width: '35vh', justifyContent:'space-between'}}>
+
+                </Card>
+            </Box>
+        ):(
         <Box sx={{ display: 'flex', height: '70vh'}}>
             <Box sx={{ width: '80%', m: 2}}>
                 { urlParam !== '' ? ( eachQueryResult && 
@@ -144,5 +160,6 @@ export const History = () => {
             </Box>
             <HistoryNav goToHistory={goToHistory} papersInNav={papersInNav} trash={false} />
         </Box>
+        )}
     </div>
 )};

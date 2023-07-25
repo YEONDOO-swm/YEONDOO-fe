@@ -8,6 +8,7 @@ import { SearchTap } from "./component/searchTap";
 import { Link, useNavigate } from 'react-router-dom';
 import styles from '../layout/hoverButton.module.css'
 import { HistoryNav } from "./component/historyNav";
+import loadingStyle from "../layout/loading.module.css"
 
 export const Trash = () => {
     useAuthenticated();
@@ -27,13 +28,20 @@ export const Trash = () => {
     const navigate = useNavigate()
     const [papersInTrash, setPapersInTrash] = useState<any>([])
     const [checkedItems, setCheckedItems] = useState<any>([])
+    const [loading, setLoading] = useState<boolean>(false)
 
     useEffect(()=>{
+        setLoading(true)
         fetch(`${api}/api/history/trash?username=${username}`)
         .then(response => response.json())
         .then(data => {
             setPapersInNav(data.papers)
             setPapersInTrash(data.trashcontainers)
+            setLoading(false)
+        })
+        .catch(error => {
+            console.log("휴지통 정보를 가져오는데 실패하였습니다: ", error)
+            setLoading(false)
         })
        },[checkedItems])
 
@@ -103,28 +111,47 @@ export const Trash = () => {
                 sx={{width: "80%"}}
             />
             <Typography variant="h5" sx={{ml: 1}}> 휴지통 </Typography>
-            <Box sx={{ display: 'flex', height: '70vh'}}>
-            <Box sx={{ width: '80%', m: 2}}>
-                <form onSubmit={handleSubmit} >
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end'}}>
-                        <Button variant="outlined" sx={{mr: 1}} onClick={handleCheckAllItems}> 전체선택 </Button>
-                        <Button type="submit" variant="contained"> 복구 </Button>
-                    </Box>
-                    {papersInTrash && ( papersInTrash.map((paper:any)=>(
-                        <Card key={paper.paperId} sx={{ mb: '10px'}}>
-                            <Checkbox color="success"
-                            checked={checkedItems.includes(paper.paperId)}
-                            sx={{ '& .MuiSvgIcon-root': { fontSize: 25 } }} 
-                            onChange={()=>{handleCheckBoxChange(paper.paperId)}}/> {paper.title}
+            {loading ? (
+                <Box sx={{ display: 'flex', height: '70vh'}} className={loadingStyle.loading}>
+                    <Box sx={{ width: '80%', m: 2}}>
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1}}>
+                            <Button variant="outlined" sx={{mr: 1}} onClick={handleCheckAllItems}> 전체선택 </Button>
+                            <Button type="submit" variant="contained"> 복구 </Button>
+                        </Box>
+                    
+                        <Card sx={{ mb: '10px', height: '5vh', backgroundColor: '#999999', opacity: '0.2'}}>
+
                         </Card>
-                    ))
+                    </Box>
+                    <Card sx={{ ml: 'auto', mr: '20px', p: '30px 40px', display: 'flex', flexDirection: 'column',borderRadius: '10px', backgroundColor: '#999999', opacity: '0.2', height: '100%', width: '35vh', justifyContent:'space-between'}}>
+
+                    </Card>
+                </Box>
+            ) : (
+                <Box sx={{ display: 'flex', height: '70vh'}}>
+                    <Box sx={{ width: '80%', m: 2}}>
+                        <form onSubmit={handleSubmit} >
+                            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1}}>
+                                <Button variant="outlined" sx={{mr: 1}} onClick={handleCheckAllItems}> 전체선택 </Button>
+                                <Button type="submit" variant="contained"> 복구 </Button>
+                            </Box>
+                            {papersInTrash && ( papersInTrash.map((paper:any)=>(
+                                <Card key={paper.paperId} sx={{ mb: '10px'}}>
+                                    <Checkbox color="success"
+                                    checked={checkedItems.includes(paper.paperId)}
+                                    sx={{ '& .MuiSvgIcon-root': { fontSize: 25 } }} 
+                                    onChange={()=>{handleCheckBoxChange(paper.paperId)}}/> {paper.title}
+                                </Card>
+                            ))
+                
+                            )}
+                        </form>
+                    </Box>
+                
+                    <HistoryNav goToHistory={()=>navigate('/history')} papersInNav={papersInNav} trash={true} />
+                </Box>
+            )}
         
-                    )}
-                </form>
-            </Box>
-            
-            <HistoryNav goToHistory={()=>navigate('/history')} papersInNav={papersInNav} trash={true} />
-        </Box>
         </div>
     )
 }

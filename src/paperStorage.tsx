@@ -8,6 +8,7 @@ import { GoToArxiv } from "./component/goToArxiv";
 import { GoToViewMore } from "./component/goToViewMore";
 import { UserProfileCheck } from "./component/userProfileCheck";
 import { HeartClick } from "./component/heartClick";
+import loadingStyle from "../layout/loading.module.css"
 
 export const PaperStorage = () => {
     useAuthenticated();
@@ -23,19 +24,21 @@ export const PaperStorage = () => {
 
     const [searchTerm, setSearchTerm] = useState("");
     const [papersInStorage, setPapersInStorage] = useState<any>("");
+    const [loading, setLoading] = useState<boolean>(false)
     const username = sessionStorage.getItem("username");
 
-    const callGetApi = () => {
+    const callGetApi = async () => {
         console.log("call get api")
-        fetch(`${api}/api/container?username=${username}`)
-            .then(response => response.json())
-            .then(data => {
-                setPapersInStorage(data)
-                // console.log(data)
-            })
-            .catch(error => {
-                console.error('논문 보관함 정보를 불러오는데 실패하였습니다: ', error)
-            })
+        setLoading(true)
+        try {
+            const response = await fetch(`${api}/api/container?username=${username}`)
+            const data = await response.json()
+            setPapersInStorage(data)
+            setLoading(false)
+        } catch (error) {
+            console.error('논문 보관함 정보를 불러오는데 실패하였습니다: ', error)
+            setLoading(false)
+        }
     }
 
     useEffect(() => {
@@ -68,29 +71,38 @@ export const PaperStorage = () => {
             middleBoxSx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
             sx={{width: "80%"}}
           />
-          <Box sx={{height: '75vh', margin: '0 30px 0 10px', padding: '10px', overflowY: 'scroll'}}>
-            {papersInStorage && papersInStorage.map((paper:any) => (
-                <Card sx={{padding: '15px', borderRadius: '15px', margin: '15px', display: 'flex', justifyContent:'space-between'}}>
-                    <Box>
-                        <Typography variant="h6">
-                            {paper.title}
-                        </Typography>
-                        <Typography variant="body1">
-                            {paper.authors?.length >1 ?paper.authors.join(', '):paper.authors} / {paper.year} / {paper.conference}
-                        </Typography>
-                        <Typography variant="body1">
-                            cites: {paper.cites}
-                        </Typography>
-                    </Box>
-                    <Box sx={{ margin:'0px 10px', width: '20vh' ,display: 'flex', flexDirection:'column', justifyContent: 'space-between', alignItems: 'flex-end'}}>
-                        <HeartClick currentItem={paper} home={false} callGetApi={callGetApi}/>
-                        <GoToArxiv url={paper.url}/>
-                        <Box sx={{height:'5px'}}></Box>
-                        <GoToViewMore paperid={paper.paperId} />
-                    </Box>
+          {loading?(
+            <Box sx={{height: '75vh', margin: '0 30px 0 10px', padding: '10px'}} className={loadingStyle.loading}>
+                <Card sx={{height: '15vh', padding: '15px', borderRadius: '15px', margin: '15px', display: 'flex', justifyContent:'space-between', backgroundColor: '#999999', opacity: '0.2'}}>
                 </Card>
-            ))}
-          </Box>
+                <Card sx={{height: '15vh', padding: '15px', borderRadius: '15px', margin: '15px', display: 'flex', justifyContent:'space-between', backgroundColor: '#999999', opacity: '0.2'}}>
+                </Card>
+            </Box>
+          ):(
+            <Box sx={{height: '75vh', margin: '0 30px 0 10px', padding: '10px', overflowY: 'scroll'}}>
+                {papersInStorage && papersInStorage.map((paper:any) => (
+                    <Card sx={{padding: '15px', borderRadius: '15px', margin: '15px', display: 'flex', justifyContent:'space-between'}}>
+                        <Box>
+                            <Typography variant="h6">
+                                {paper.title}
+                            </Typography>
+                            <Typography variant="body1">
+                                {paper.authors?.length >1 ?paper.authors.join(', '):paper.authors} / {paper.year} / {paper.conference}
+                            </Typography>
+                            <Typography variant="body1">
+                                cites: {paper.cites}
+                            </Typography>
+                        </Box>
+                        <Box sx={{ margin:'0px 10px', width: '20vh' ,display: 'flex', flexDirection:'column', justifyContent: 'space-between', alignItems: 'flex-end'}}>
+                            <HeartClick currentItem={paper} home={false} callGetApi={callGetApi}/>
+                            <GoToArxiv url={paper.url}/>
+                            <Box sx={{height:'5px'}}></Box>
+                            <GoToViewMore paperid={paper.paperId} />
+                        </Box>
+                    </Card>
+                ))}
+            </Box>
+          )}
 
     </div>
 )};

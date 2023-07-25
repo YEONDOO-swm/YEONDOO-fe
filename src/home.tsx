@@ -14,6 +14,7 @@ import { GoToArxiv } from "./component/goToArxiv";
 import { GoToViewMore } from "./component/goToViewMore";
 import { UserProfileCheck } from "./component/userProfileCheck";
 import { HeartClick } from "./component/heartClick";
+import loadingStyle from "../layout/loading.module.css"
 
 export const Home = () => {
     useAuthenticated();
@@ -33,6 +34,7 @@ export const Home = () => {
     const [enteredSearch, setEnteredSearch] = useState(""); 
     const [isFavorite, setIsFavorite] = useState(false);
     const [paperIdArray, setPaperIdArray] = useState<string[]>([]); 
+    const [loading, setLoading] = useState<boolean>(false);
 
     const searchInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -54,7 +56,7 @@ export const Home = () => {
 
   const performSearch = async () => {
       try {
-          
+          setLoading(true)
           const query= new URLSearchParams(window.location.search); 
           const performSearchTerm = query.get('query') || '';
           const response = await fetch(`${api}/api/homesearch?query=${performSearchTerm}&&username=${username}`);
@@ -63,6 +65,8 @@ export const Home = () => {
           setSearchResults(data);
       } catch (error) {
           console.error('검색 결과에서 오류가 발생했습니다.')
+      } finally {
+        setLoading(false)
       }
   };
 
@@ -105,14 +109,33 @@ export const Home = () => {
             middleBoxSx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
             sx={{width: "80%"}}
           />
-        {searchResults && (<div>
+          {loading ? (
+            <div className={loadingStyle.loading}>
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <Card sx={{ border: '1px solid #d8e6cd', margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: '#999999', opacity: '0.2'}}></Card>
+                </Grid>
+                <Grid item xs={6}>
+                  <CardContent sx={{ height: '75vh', margin: '0 30px 0 10px', padding: '10px'}}>
+                    <Card sx={{ height: '20vh', backgroundColor: '#999999', opacity: '0.2', borderRadius: '15px', marginBottom: '15px'}}>
+
+                    </Card>
+                    <Card sx={{ height: '20vh', backgroundColor: '#999999', opacity: '0.2', borderRadius: '15px',}}>
+
+                    </Card>
+                  </CardContent>
+                </Grid>
+              </Grid>
+            </div>
+          ) :
+        (searchResults && (<div>
   <Grid container spacing={2}>
     <Grid item xs={6}>
-      <Card sx={{ display:'flex', border: '1px solid #d8e6cd', margin: '10px', padding: '20px', height: '95%', borderRadius: '15px', backgroundColor: '#d8e6cd', 
+      <Card sx={{ display:'flex', border: '1px solid #d8e6cd', margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: '#d8e6cd', 
       overflowY: 'scroll',
       scrollbarWidth: 'thin',
       }}>
-        <Box sx={{height: '60vh', marginRight: '5px'}}>
+        <Box sx={{marginRight: '5px'}}>
           <QuestionAnswerIcon />
         </Box>
         {searchResults.answer}
@@ -150,7 +173,7 @@ export const Home = () => {
       </CardContent>
     </Grid>
   </Grid>
-</div>)}
+</div>))}
     </div>
     )
 };
