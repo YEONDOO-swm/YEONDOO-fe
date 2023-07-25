@@ -9,6 +9,7 @@ import { GoToViewMore } from "./component/goToViewMore";
 import { UserProfileCheck } from "./component/userProfileCheck";
 import { HeartClick } from "./component/heartClick";
 import loadingStyle from "../layout/loading.module.css"
+import scrollStyle from "../layout/scroll.module.css"
 
 export const PaperStorage = () => {
     useAuthenticated();
@@ -79,7 +80,7 @@ export const PaperStorage = () => {
                 </Card>
             </Box>
           ):(
-            <Box sx={{height: '75vh', margin: '0 30px 0 10px', padding: '10px', overflowY: 'scroll'}}>
+            <Box sx={{height: '75vh', margin: '0 30px 0 10px', padding: '10px', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
                 {papersInStorage && papersInStorage.map((paper:any) => (
                     <Card sx={{padding: '15px', borderRadius: '15px', margin: '15px', display: 'flex', justifyContent:'space-between'}}>
                         <Box>

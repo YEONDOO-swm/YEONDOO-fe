@@ -11,6 +11,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { UserProfileCheck } from "./component/userProfileCheck";
 import loadingStyle from "../layout/loading.module.css"
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import scrollStyle from "../layout/scroll.module.css"
 // TODO1: list 제한 걸기
 // TODO2: 스크롤
 
@@ -193,9 +194,8 @@ export const PaperView = () => {
                             <Box width="50%" sx={{margin: '10px'}}>
                                 <Typography variant="h6">정보</Typography>
                                 <Box sx={{ border: '1px solid #d8e6cd',  padding: '20px', height: '75vh', borderRadius: '15px', backgroundColor: '#d8e6cd', 
-                                    overflowY: 'scroll',
-                                    scrollbarWidth: 'thin',
-                                }}>
+                                    overflowY: 'scroll'
+                                }} className={scrollStyle.scrollBar}>
                                     <GoToArxiv url={paperInfo.url} />
                                     <Typography variant={sizeTitleInInfo} sx={{marginTop: '15px'}}>요약</Typography>
                                     <Typography variant={sizeContentInInfo}> {paperInfo.summary} </Typography>
@@ -222,7 +222,7 @@ export const PaperView = () => {
                                     <Box sx={{ border: '1px solid #DCDCDC',  padding: '20px', height: '75vh', borderRadius: '15px', backgroundColor: '#DCDCDC', 
                                     display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
                                     }}>
-                                        <Box sx={{ overflowY: 'scroll' }} ref={scrollContainerRef}>
+                                        <Box sx={{ overflowY: 'scroll' }} ref={scrollContainerRef} className={scrollStyle.scrollBar}>
                                             {paperHistory &&
                                             paperHistory.map((history: any, index: number) => (
                                                 <Box

@@ -9,6 +9,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import styles from '../layout/hoverButton.module.css'
 import { HistoryNav } from "./component/historyNav";
 import loadingStyle from "../layout/loading.module.css"
+import scrollStyle from "../layout/scroll.module.css"
 
 export const Trash = () => {
     useAuthenticated();
@@ -135,16 +136,18 @@ export const Trash = () => {
                                 <Button variant="outlined" sx={{mr: 1}} onClick={handleCheckAllItems}> 전체선택 </Button>
                                 <Button type="submit" variant="contained"> 복구 </Button>
                             </Box>
-                            {papersInTrash && ( papersInTrash.map((paper:any)=>(
-                                <Card key={paper.paperId} sx={{ mb: '10px'}}>
-                                    <Checkbox color="success"
-                                    checked={checkedItems.includes(paper.paperId)}
-                                    sx={{ '& .MuiSvgIcon-root': { fontSize: 25 } }} 
-                                    onChange={()=>{handleCheckBoxChange(paper.paperId)}}/> {paper.title}
-                                </Card>
-                            ))
-                
-                            )}
+                            <Box sx={{overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
+                                {papersInTrash && ( papersInTrash.map((paper:any)=>(
+                                    <Card key={paper.paperId} sx={{ mb: '10px'}}>
+                                        <Checkbox color="success"
+                                        checked={checkedItems.includes(paper.paperId)}
+                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 25 } }} 
+                                        onChange={()=>{handleCheckBoxChange(paper.paperId)}}/> {paper.title}
+                                    </Card>
+                                ))
+                    
+                                )}
+                            </Box>
                         </form>
                     </Box>
                 

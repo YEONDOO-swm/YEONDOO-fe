@@ -10,7 +10,7 @@ export const HistoryNav = ({goToHistory, papersInNav, trash} : {goToHistory: any
                 {/* <Link to="/history" replace style={{ textDecoration: 'none', color: 'black', marginRight: '10px' }}> */}
                     <Typography variant="h6" onClick={goToHistory} className={`${styles.customTypography} ${trash? null:styles.currentPage}`} sx={{mb:2}}> 검색결과 </Typography>
                 {/* </Link> */}
-                <Box sx={{ borderRadius: '15px', backgroundColor: 'white' , height: '80%'}}>
+                <Box sx={{ borderRadius: '15px', backgroundColor: 'white' , height: '48vh'}}>
                 <Box>
                     <Typography variant="h6" sx={{textAlign: 'center'}}> 논문보관함 </Typography>
                 </Box>
@@ -26,7 +26,7 @@ export const HistoryNav = ({goToHistory, papersInNav, trash} : {goToHistory: any
             </Box>
             </Box>
             <Link to="/history/trash" style={{ textDecoration: 'none', color: 'black' }}>
-                <Typography variant="h6" sx={{textAlign: 'center'}} className={`${styles.customTypography} ${!trash? null:styles.currentPage}`}> 휴지통 </Typography>
+                <Typography variant="h6" sx={{textAlign: 'center', marginTop: 2}} className={`${styles.customTypography} ${!trash? null:styles.currentPage}`}> 휴지통 </Typography>
             </Link>
         </Card>
     )

@@ -10,6 +10,7 @@ import ContactSupportIcon from '@mui/icons-material/ContactSupport';
 import styles from '../layout/hoverButton.module.css'
 import { HistoryNav } from "./component/historyNav";
 import loadingStyle from "../layout/loading.module.css"
+import scrollStyle from "../layout/scroll.module.css"
 
 export const History = () => {
     useAuthenticated();
@@ -128,7 +129,7 @@ export const History = () => {
             </Box>
         ):(
         <Box sx={{ display: 'flex', height: '70vh'}}>
-            <Box sx={{ width: '80%', m: 2}}>
+            <Box sx={{ width: '80%', m: 2, overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
                 { urlParam !== '' ? ( eachQueryResult && 
                     <Card sx={{ p: 2}}>
                         <Typography variant="h6"> {eachQueryResult.query} </Typography>
