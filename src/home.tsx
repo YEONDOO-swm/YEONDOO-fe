@@ -16,6 +16,7 @@ import { UserProfileCheck } from "./component/userProfileCheck";
 import { HeartClick } from "./component/heartClick";
 import loadingStyle from "../layout/loading.module.css";
 import scrollStyle from "../layout/scroll.module.css";
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 export const Home = () => {
     useAuthenticated();
@@ -46,7 +47,7 @@ export const Home = () => {
           window.location.href = `/home?query=${searchTerm}`
       }
   }
-
+  
   const handleButtonClick = (event: any) => {
       event.preventDefault();
       setEnteredSearch(searchResults);
@@ -111,13 +112,18 @@ export const Home = () => {
             sx={{width: "80%"}}
           />
           {loading ? (
-            <div className={loadingStyle.loading}>
+            <div >
               <Grid container spacing={2}>
                 <Grid item xs={6}>
-                  <Card sx={{ border: '1px solid #d8e6cd', margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: '#999999', opacity: '0.2'}}></Card>
+                  <Card sx={{ display: 'flex', border: '1px solid #d8e6cd', margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: '#d8e6cd', opacity: '0.7'}}>
+                    <Box sx={{marginRight: '5px'}}>
+                      <QuestionAnswerIcon />
+                    </Box>
+                    <MoreHorizIcon className={loadingStyle.loading}/>
+                  </Card>
                 </Grid>
                 <Grid item xs={6}>
-                  <CardContent sx={{ height: '75vh', margin: '0 30px 0 10px', padding: '10px'}}>
+                  <CardContent sx={{ height: '75vh', margin: '0 30px 0 10px', padding: '10px'}} className={loadingStyle.loading}>
                     <Card sx={{ height: '20vh', backgroundColor: '#999999', opacity: '0.2', borderRadius: '15px', marginBottom: '15px'}}>
 
                     </Card>
@@ -151,7 +157,7 @@ export const Home = () => {
                 <Typography variant="h6">{paper.title}</Typography>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
-                <HeartClick currentItem={paper} home={true} onUpdateLikes={handleUpdateLikes} paperlike={paper.islike}/>
+                <HeartClick currentItem={paper} onUpdateLikes={handleUpdateLikes} paperlike={paper.islike}/>
                 <Typography variant="body2" sx={{ margin: '10px 0' }}>
                   {paper.likes}
                 </Typography>

@@ -12,6 +12,7 @@ type SearchTapProps = {
   firstBoxSx?: SxProps;
   middleBoxSx?: SxProps;
   sx?: SxProps;
+  heightSx ?: SxProps;
 };
 
 export const SearchTap: React.FC<SearchTapProps> = ({
@@ -22,7 +23,8 @@ export const SearchTap: React.FC<SearchTapProps> = ({
   placeholder,
   firstBoxSx,
   middleBoxSx,
-  sx
+  sx,
+  heightSx
 }) => {
   const maxLengthLimit = 300
   const searchInputRef = React.useRef<HTMLInputElement | null>(null);
@@ -66,6 +68,7 @@ export const SearchTap: React.FC<SearchTapProps> = ({
                         </IconButton>
                     </InputAdornment>
                     ),
+                    sx: {...heightSx}
                 }}
                 />
         </Box>

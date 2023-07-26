@@ -106,29 +106,19 @@ export const History = () => {
 
     <div>
         <Title title="히스토리"/>
-        <SearchTap
-            searchTerm={searchTerm}
-            onChange={setSearchTerm}
-            onSearch={handleButtonClick}
-            onSearchKeyDown={handleSearchKeyDown}
-            placeholder="CNN과 관련된 논문을 찾아줘"
-            firstBoxSx={{ margin: '30px auto' }}
-            middleBoxSx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-            sx={{width: "80%"}}
-          />
+        <Box sx={{height: 50}}></Box>
         <Typography variant="h5" sx={{ml: 1}}> 전체검색 히스토리 </Typography>
         {loading?(
-            <Box sx={{ display: 'flex', height: '70vh'}} className={loadingStyle.loading}>
+            <Box sx={{ display: 'flex', height: '80vh'}} className={loadingStyle.loading}>
                 <Box sx={{ width: '80%', m: 2}}>
-                    <Card sx={{ p: 2, height: '10vh', backgroundColor: '#999999', opacity: '0.2', marginBottom: '15px'}}></Card>
-                    <Card sx={{ p: 2, height: '10vh', backgroundColor: '#999999', opacity: '0.2'}}></Card>
+                    <Card sx={{ p: 2, height: '20vh', backgroundColor: '#999999', opacity: '0.2', marginBottom: '15px'}}></Card>                  
                 </Box>
                 <Card sx={{ ml: 'auto', mr: '20px', p: '30px 40px', display: 'flex', flexDirection: 'column',borderRadius: '10px', backgroundColor: '#999999', opacity: '0.2', height: '100%', width: '35vh', justifyContent:'space-between'}}>
 
                 </Card>
             </Box>
         ):(
-        <Box sx={{ display: 'flex', height: '70vh'}}>
+        <Box sx={{ display: 'flex', height: '80vh'}}>
             <Box sx={{ width: '80%', m: 2, overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
                 { urlParam !== '' ? ( eachQueryResult && 
                     <Card sx={{ p: 2}}>

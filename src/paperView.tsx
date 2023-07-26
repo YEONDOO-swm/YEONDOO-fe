@@ -135,16 +135,7 @@ export const PaperView = () => {
     return (
         <div>
             <Title title="자세히보기" />
-            <SearchTap
-                searchTerm={searchTerm}
-                onChange={setSearchTerm}
-                onSearch={handleButtonClick}
-                onSearchKeyDown={handleSearchKeyDown}
-                placeholder="CNN과 관련된 논문을 찾아줘"
-                firstBoxSx={{ margin: '30px auto' }}
-                middleBoxSx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-                sx={{width: "80%"}}
-            />
+            
             {loading ? (<div className={loadingStyle.loading}>
               <Grid container spacing={2}>
                 <Grid item xs={6}>
@@ -156,7 +147,7 @@ export const PaperView = () => {
               </Grid>
             </div>) :(
                     <div>
-                    <Box sx={{margin: '12px'}}>
+                    <Box sx={{margin: '20px 12px'}}>
                         <Typography variant="h5">{paperInfo.title}</Typography>
                         { paperInfo.authors && (paperInfo.authors.length > 3 
                         ? (
@@ -193,7 +184,7 @@ export const PaperView = () => {
                         <Box display="flex" justifyContent="space-between">
                             <Box width="50%" sx={{margin: '10px'}}>
                                 <Typography variant="h6">정보</Typography>
-                                <Box sx={{ border: '1px solid #d8e6cd',  padding: '20px', height: '75vh', borderRadius: '15px', backgroundColor: '#d8e6cd', 
+                                <Card sx={{ border: '1px solid #d8e6cd',  padding: '20px', height: '75vh', borderRadius: '15px', backgroundColor: '#d8e6cd', 
                                     overflowY: 'scroll'
                                 }} className={scrollStyle.scrollBar}>
                                     <GoToArxiv url={paperInfo.url} />
@@ -213,7 +204,7 @@ export const PaperView = () => {
                                     ))}
                                     </Box>
                                     
-                                </Box>
+                                </Card>
                             </Box>
                             <Box width="50%" sx={{margin: '10px'}}>
                             {/* true: user(question) false: gpt (answer) */}
@@ -230,7 +221,7 @@ export const PaperView = () => {
                                                 sx={{
                                                 display: 'flex',
                                                 alignItems: 'flex-start',
-                                                backgroundColor: '#FFFFFF',
+                                                backgroundColor: history.who ? '#FFFFFF' : '#ededed',
                                                 padding: '10px',
                                                 marginBottom: '10px',
                                                 borderRadius: '10px',
@@ -254,7 +245,7 @@ export const PaperView = () => {
                                                     </Box>
                                                     <Typography variant="body1">{term}</Typography>
                                                     </Box> 
-                                                    <Box sx={{ display: 'flex', backgroundColor: '#FFFFFF', padding: '10px', marginBottom: '10px', borderRadius: '10px'}}>
+                                                    <Box sx={{ display: 'flex', backgroundColor: '#ededed', padding: '10px', marginBottom: '10px', borderRadius: '10px'}}>
                                                     <Box sx={{ display: 'flex', alignItems: 'flex-start', marginRight: '10px' }}>
                                                         <Typography>🍀</Typography>
                                                     </Box>

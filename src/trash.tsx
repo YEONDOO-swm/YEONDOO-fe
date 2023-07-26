@@ -101,25 +101,19 @@ export const Trash = () => {
     return (
         <div>
             <Title title="히스토리"/>
-            <SearchTap
-                searchTerm={searchTerm}
-                onChange={setSearchTerm}
-                onSearch={handleButtonClick}
-                onSearchKeyDown={handleSearchKeyDown}
-                placeholder="CNN과 관련된 논문을 찾아줘"
-                firstBoxSx={{ margin: '30px auto' }}
-                middleBoxSx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-                sx={{width: "80%"}}
-            />
+            <Box sx={{height: 50}}></Box>
             <Typography variant="h5" sx={{ml: 1}}> 휴지통 </Typography>
             {loading ? (
-                <Box sx={{ display: 'flex', height: '70vh'}} className={loadingStyle.loading}>
+                <Box sx={{ display: 'flex', height: '80vh'}} className={loadingStyle.loading}>
                     <Box sx={{ width: '80%', m: 2}}>
                         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1}}>
                             <Button variant="outlined" sx={{mr: 1}} onClick={handleCheckAllItems}> 전체선택 </Button>
                             <Button type="submit" variant="contained"> 복구 </Button>
                         </Box>
                     
+                        <Card sx={{ mb: '10px', height: '5vh', backgroundColor: '#999999', opacity: '0.2', marginBottom: '10px'}}>
+
+                        </Card>
                         <Card sx={{ mb: '10px', height: '5vh', backgroundColor: '#999999', opacity: '0.2'}}>
 
                         </Card>
@@ -129,7 +123,7 @@ export const Trash = () => {
                     </Card>
                 </Box>
             ) : (
-                <Box sx={{ display: 'flex', height: '70vh'}}>
+                <Box sx={{ display: 'flex', height: '80vh'}}>
                     <Box sx={{ width: '80%', m: 2}}>
                         <form onSubmit={handleSubmit} >
                             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1}}>
@@ -150,8 +144,9 @@ export const Trash = () => {
                             </Box>
                         </form>
                     </Box>
-                
-                    <HistoryNav goToHistory={()=>navigate('/history')} papersInNav={papersInNav} trash={true} />
+                    <Box sx={{justifyContent:'center', alignContent:'center'}}>
+                        <HistoryNav goToHistory={()=>navigate('/history')} papersInNav={papersInNav} trash={true} />
+                    </Box>
                 </Box>
             )}
         
