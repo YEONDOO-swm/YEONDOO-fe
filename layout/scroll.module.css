@@ -8,8 +8,7 @@
 
 .scrollBar::-webkit-scrollbar-thumb {
     height: 30%;
-    background: #adb79d;
-    
+    background: var(--tertiaryGreen);
     border-radius: 10px;
 }
 

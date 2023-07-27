@@ -2,10 +2,11 @@ import { Typography, Box, Card } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from '../../layout/hoverButton.module.css'
 import scroll from '../../layout/scroll.module.css'
+import { color } from '../../layout/color';
 
 export const HistoryNav = ({goToHistory, papersInNav, trash} : {goToHistory: any, papersInNav: any, trash: boolean}) => {
     return (
-        <Card sx={{ ml: 'auto', mr: '20px', p: '30px 40px', display: 'flex', flexDirection: 'column',borderRadius: '10px', backgroundColor: '#d8e6cd', height: '100%', justifyContent:'space-between'}}>
+        <Card sx={{ ml: 'auto', mr: '20px', p: '30px 40px', display: 'flex', flexDirection: 'column',borderRadius: '10px', backgroundColor: color.mainGreen, height: '100%', justifyContent:'space-between'}}>
             <Box sx={{ height: '80vh'}}>
                 {/* <Link to="/history" replace style={{ textDecoration: 'none', color: 'black', marginRight: '10px' }}> */}
                     <Typography variant="h6" onClick={goToHistory} className={`${styles.customTypography} ${trash? null:styles.currentPage}`} sx={{mb:2}}> 검색결과 </Typography>

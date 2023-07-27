@@ -17,6 +17,7 @@ import { HeartClick } from "./component/heartClick";
 import loadingStyle from "../layout/loading.module.css";
 import scrollStyle from "../layout/scroll.module.css";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import { color } from "../layout/color";
 
 export const Home = () => {
     useAuthenticated();
@@ -44,6 +45,7 @@ export const Home = () => {
       if (event.key === 'Enter'){
           event.preventDefault();
           setEnteredSearch(searchResults);
+          amplitude.track("Home에서 검색")
           window.location.href = `/home?query=${searchTerm}`
       }
   }
@@ -51,6 +53,7 @@ export const Home = () => {
   const handleButtonClick = (event: any) => {
       event.preventDefault();
       setEnteredSearch(searchResults);
+      amplitude.track("Home에서 검색")
       window.location.href = `/home?query=${searchTerm}`
   }
 
@@ -115,7 +118,7 @@ export const Home = () => {
             <div >
               <Grid container spacing={2}>
                 <Grid item xs={6}>
-                  <Card sx={{ display: 'flex', border: '1px solid #d8e6cd', margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: '#d8e6cd', opacity: '0.7'}}>
+                  <Card sx={{ display: 'flex', border: `1px solid ${color.mainGreen}`, margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: color.mainGreen, opacity: '0.7'}}>
                     <Box sx={{marginRight: '5px'}}>
                       <QuestionAnswerIcon />
                     </Box>
@@ -124,10 +127,10 @@ export const Home = () => {
                 </Grid>
                 <Grid item xs={6}>
                   <CardContent sx={{ height: '75vh', margin: '0 30px 0 10px', padding: '10px'}} className={loadingStyle.loading}>
-                    <Card sx={{ height: '20vh', backgroundColor: '#999999', opacity: '0.2', borderRadius: '15px', marginBottom: '15px'}}>
+                    <Card sx={{ height: '20vh', backgroundColor: color.loadingColor, opacity: '0.2', borderRadius: '15px', marginBottom: '15px'}}>
 
                     </Card>
-                    <Card sx={{ height: '20vh', backgroundColor: '#999999', opacity: '0.2', borderRadius: '15px',}}>
+                    <Card sx={{ height: '20vh', backgroundColor: color.loadingColor, opacity: '0.2', borderRadius: '15px',}}>
 
                     </Card>
                   </CardContent>
@@ -138,7 +141,7 @@ export const Home = () => {
         (searchResults && (<div>
   <Grid container spacing={2}>
     <Grid item xs={6}>
-      <Card sx={{ display:'flex', border: '1px solid #d8e6cd', margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: '#d8e6cd', 
+      <Card sx={{ display:'flex', border: `1px solid ${color.mainGreen}`, margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: color.mainGreen, 
       overflowY: 'scroll'
       }} className={scrollStyle.scrollBar}>
         <Box sx={{marginRight: '5px'}}>
@@ -150,7 +153,7 @@ export const Home = () => {
     <Grid item xs={6}>
       <CardContent sx={{ height: '75vh', margin: '0 30px 0 10px', padding: '10px', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
         {searchResults.papers.map((paper: any) => (
-          <Card key={paper.paperId} sx={{ display: 'flex', justifyContent: 'center', marginBottom: '15px', border: '1px solid #DCDCDC', padding: '15px 5px', borderRadius: '15px', backgroundColor: '#DCDCDC'}}>
+          <Card key={paper.paperId} sx={{ display: 'flex', justifyContent: 'center', marginBottom: '15px', border: `1px solid ${color.mainGrey}`, padding: '15px 5px', borderRadius: '15px', backgroundColor: color.mainGrey}}>
             <Container>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignContent: 'center' }}>
               <Box sx={{ flexGrow: 1 }}>

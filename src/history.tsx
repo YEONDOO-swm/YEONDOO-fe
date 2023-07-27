@@ -11,6 +11,7 @@ import styles from '../layout/hoverButton.module.css'
 import { HistoryNav } from "./component/historyNav";
 import loadingStyle from "../layout/loading.module.css"
 import scrollStyle from "../layout/scroll.module.css"
+import { color } from "../layout/color";
 
 export const History = () => {
     useAuthenticated();
@@ -72,7 +73,7 @@ export const History = () => {
     const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
-        amplitude.track("History Page Viewed");
+        amplitude.track("전체 검색 History Page Viewed");
     }, []);
 
     const handleSearchKeyDown = (event: any) => {
@@ -89,6 +90,7 @@ export const History = () => {
 
     const handleResultClick = (event: any, resultId: string) => {
         event.preventDefault();
+        amplitude.track("전체 검색 History List Clicked")
         window.location.href = `/history?resultid=${resultId}`
 
         // const query = new URLSearchParams(window.location.search);
@@ -111,9 +113,9 @@ export const History = () => {
         {loading?(
             <Box sx={{ display: 'flex', height: '80vh'}} className={loadingStyle.loading}>
                 <Box sx={{ width: '80%', m: 2}}>
-                    <Card sx={{ p: 2, height: '20vh', backgroundColor: '#999999', opacity: '0.2', marginBottom: '15px'}}></Card>                  
+                    <Card sx={{ p: 2, height: '20vh', backgroundColor: color.loadingColor, opacity: '0.2', marginBottom: '15px'}}></Card>                  
                 </Box>
-                <Card sx={{ ml: 'auto', mr: '20px', p: '30px 40px', display: 'flex', flexDirection: 'column',borderRadius: '10px', backgroundColor: '#999999', opacity: '0.2', height: '100%', width: '35vh', justifyContent:'space-between'}}>
+                <Card sx={{ ml: 'auto', mr: '20px', p: '30px 40px', display: 'flex', flexDirection: 'column',borderRadius: '10px', backgroundColor: color.loadingColor, opacity: '0.2', height: '100%', width: '35vh', justifyContent:'space-between'}}>
 
                 </Card>
             </Box>

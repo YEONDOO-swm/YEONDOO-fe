@@ -7,6 +7,7 @@ import { SearchTap } from '../src/component/searchTap';
 import { useState } from 'react';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
+import * as amplitude from '@amplitude/analytics-browser';
 
 
 
@@ -62,6 +63,7 @@ export const MyAppBar = () => {
     const handleSearchKeyDown = (event: any) => {
       if (event.key === 'Enter'){
           event.preventDefault();
+          amplitude.track("app bar 내 검색 이용")
           window.location.href = `/home?query=${searchTerm}`
         }
     }
@@ -75,11 +77,6 @@ export const MyAppBar = () => {
       }
       setSearchTerm(inputText);
     };
-    
-    const handleButtonClick = (event: any) => {
-        event.preventDefault();
-        window.location.href = `/home?query=${searchTerm}`
-    }
 
     return (<AppBar sx={{ height: 'fit-content'}}>
       <TitlePortal />

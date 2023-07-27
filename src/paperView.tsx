@@ -12,6 +12,9 @@ import { UserProfileCheck } from "./component/userProfileCheck";
 import loadingStyle from "../layout/loading.module.css"
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import scrollStyle from "../layout/scroll.module.css"
+import { color } from "../layout/color"
+import * as amplitude from '@amplitude/analytics-browser';
+
 // TODO1: list 제한 걸기
 // TODO2: 스크롤
 
@@ -47,6 +50,7 @@ export const PaperView = () => {
     };
 
     useEffect(() => {
+        amplitude.track('AI와 논문 읽기 Page Viewed')
         const query = new URLSearchParams(window.location.search);
         const paperId = query.get('paperid') || '';
 
@@ -84,6 +88,7 @@ export const PaperView = () => {
     const handleSearchKeyDownInPaper = (event: any) => {
         if (event.key === 'Enter'){
             event.preventDefault();
+            amplitude.track('논문 내 질의')
             if (searchTermInPaper === '') {
                 notify('질문을 입력해 주세요.', {type: 'error'})
                 return ;
@@ -94,6 +99,7 @@ export const PaperView = () => {
 
     const handleButtonClickInPaper = (event: any) => {
         event.preventDefault();
+        amplitude.track('논문 내 질의')
         if (searchTermInPaper === '') {
             notify('질문을 입력해 주세요.', {type: 'error'})
             return ;
@@ -102,11 +108,15 @@ export const PaperView = () => {
     }
 
     const handleViewMoreAuthors = () => {
+        amplitude.track('저자 더보기 Button Clicked')
         setIsExpanded(true)
     }
 
     const performSearchInPaper = async () => {
-        setEnteredSearchTermInPaper([...enteredSearchTermInPaper, searchTermInPaper])
+        if (searchTermInPaper != ''){
+            setEnteredSearchTermInPaper([...enteredSearchTermInPaper, searchTermInPaper])
+        }
+        setSearchTermInPaper("")
         const query = new URLSearchParams(window.location.search);
         const paperId = query.get('paperid') || '';
         await fetch(`${api}/api/paper/${paperId}?username=${username}`,{
@@ -117,7 +127,7 @@ export const PaperView = () => {
         .then(response => response.json())
         .then(data => {
             setSearchResultsInPaper([...searchResultsInPaper, data.answer])
-            setSearchTermInPaper("")
+            //setSearchTermInPaper("")
         })
         .catch(error => {
             console.error("논문 내 질문 오류")
@@ -139,10 +149,10 @@ export const PaperView = () => {
             {loading ? (<div className={loadingStyle.loading}>
               <Grid container spacing={2}>
                 <Grid item xs={6}>
-                  <Card sx={{ border: '1px solid #d8e6cd', margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: '#999999', opacity: '0.2'}}></Card>
+                  <Card sx={{ border: `1px solid ${color.loadingColor}`, margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: color.loadingColor, opacity: '0.2'}}></Card>
                 </Grid>
                 <Grid item xs={6}>
-                <Card sx={{ border: '1px solid #d8e6cd', margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: '#999999', opacity: '0.2'}}></Card>
+                <Card sx={{ border: `1px solid ${color.loadingColor}`, margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: color.loadingColor, opacity: '0.2'}}></Card>
                 </Grid>
               </Grid>
             </div>) :(
@@ -184,7 +194,7 @@ export const PaperView = () => {
                         <Box display="flex" justifyContent="space-between">
                             <Box width="50%" sx={{margin: '10px'}}>
                                 <Typography variant="h6">정보</Typography>
-                                <Card sx={{ border: '1px solid #d8e6cd',  padding: '20px', height: '75vh', borderRadius: '15px', backgroundColor: '#d8e6cd', 
+                                <Card sx={{ border: `1px solid ${color.mainGreen}`,  padding: '20px', height: '75vh', borderRadius: '15px', backgroundColor: color.mainGreen, 
                                     overflowY: 'scroll'
                                 }} className={scrollStyle.scrollBar}>
                                     <GoToArxiv url={paperInfo.url} />
@@ -210,7 +220,7 @@ export const PaperView = () => {
                             {/* true: user(question) false: gpt (answer) */}
                                 <Box>
                                     <Typography variant="h6">현 논문 내 질의</Typography>
-                                    <Box sx={{ border: '1px solid #DCDCDC',  padding: '20px', height: '75vh', borderRadius: '15px', backgroundColor: '#DCDCDC', 
+                                    <Box sx={{ border: `1px solid ${color.mainGrey}`,  padding: '20px', height: '75vh', borderRadius: '15px', backgroundColor: color.mainGrey, 
                                     display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
                                     }}>
                                         <Box sx={{ overflowY: 'scroll' }} ref={scrollContainerRef} className={scrollStyle.scrollBar}>
@@ -221,7 +231,7 @@ export const PaperView = () => {
                                                 sx={{
                                                 display: 'flex',
                                                 alignItems: 'flex-start',
-                                                backgroundColor: history.who ? '#FFFFFF' : '#ededed',
+                                                backgroundColor: history.who ? 'white' : color.secondaryGrey,
                                                 padding: '10px',
                                                 marginBottom: '10px',
                                                 borderRadius: '10px',
@@ -239,13 +249,13 @@ export const PaperView = () => {
                                             <>
                                                 {enteredSearchTermInPaper.map((term:any, index:number) => (
                                                 <>
-                                                    <Box sx={{ display: 'flex', backgroundColor: '#FFFFFF', padding: '10px', marginBottom: '10px', borderRadius: '10px'}}>
+                                                    <Box sx={{ display: 'flex', backgroundColor: "white", padding: '10px', marginBottom: '10px', borderRadius: '10px'}}>
                                                     <Box sx={{ display: 'flex', alignItems: 'flex-start', marginRight: '10px' }}>
                                                         <Typography>👤</Typography>
                                                     </Box>
                                                     <Typography variant="body1">{term}</Typography>
                                                     </Box> 
-                                                    <Box sx={{ display: 'flex', backgroundColor: '#ededed', padding: '10px', marginBottom: '10px', borderRadius: '10px'}}>
+                                                    <Box sx={{ display: 'flex', backgroundColor: color.secondaryGrey, padding: '10px', marginBottom: '10px', borderRadius: '10px'}}>
                                                     <Box sx={{ display: 'flex', alignItems: 'flex-start', marginRight: '10px' }}>
                                                         <Typography>🍀</Typography>
                                                     </Box>
