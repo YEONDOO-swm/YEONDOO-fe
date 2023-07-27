@@ -8,10 +8,12 @@
 
 .scrollBar::-webkit-scrollbar-thumb {
     height: 30%;
-    background: #d8e6cd;
+    background: #adb79d;
+    
     border-radius: 10px;
 }
 
 .scrollBar::-webkit-scrollbar-track {
-    background: #92bb8e;
+    /* background: #92bb8e; */
+    display: none;
 }

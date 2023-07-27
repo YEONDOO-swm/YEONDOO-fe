@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Card, CardContent, Box, Typography } from '@mui/material';
+import { Card, CardContent, Box, Typography, IconButton } from '@mui/material';
 import { Title, useAuthenticated } from 'react-admin';
 import * as amplitude from '@amplitude/analytics-browser';
 import { useEffect, useState } from "react";
@@ -8,6 +8,10 @@ import { GoToArxiv } from "./component/goToArxiv";
 import { GoToViewMore } from "./component/goToViewMore";
 import { UserProfileCheck } from "./component/userProfileCheck";
 import { HeartClick } from "./component/heartClick";
+import loadingStyle from "../layout/loading.module.css"
+import scrollStyle from "../layout/scroll.module.css"
+import ClearIcon from '@mui/icons-material/Clear';
+
 
 export const PaperStorage = () => {
     useAuthenticated();
@@ -23,19 +27,50 @@ export const PaperStorage = () => {
 
     const [searchTerm, setSearchTerm] = useState("");
     const [papersInStorage, setPapersInStorage] = useState<any>("");
+    const [loading, setLoading] = useState<boolean>(false)
     const username = sessionStorage.getItem("username");
+    const [paperIdArray, setPaperIdArray] = useState<string[]>([])
 
-    const callGetApi = () => {
+    const handleHeartClick = (paperId: any, paperTitle:any) => {
+        const isConfirmed = window.confirm(`정말 "${paperTitle}"을 논문보관함에서 삭제하시겠습니까?`)
+        if (!isConfirmed){
+            return
+        }
+        else {
+            setPaperIdArray(prevArray => [...prevArray, paperId])
+        }
+        
+        var payload = {
+            username: sessionStorage.getItem('username'),
+            paperId: paperId,
+            onoff: false
+        }
+
+        fetch(`${api}/api/paperlikeonoff`, {
+            method:'POST',
+            headers: { 'Content-Type' : 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(response => {
+            return response;
+        })
+        .catch(error => {
+            console.log("논문 보관함 삭제에 실패하였습니다", error)
+        })
+    }
+
+    const callGetApi = async () => {
         console.log("call get api")
-        fetch(`${api}/api/container?username=${username}`)
-            .then(response => response.json())
-            .then(data => {
-                setPapersInStorage(data)
-                // console.log(data)
-            })
-            .catch(error => {
-                console.error('논문 보관함 정보를 불러오는데 실패하였습니다: ', error)
-            })
+        setLoading(true)
+        try {
+            const response = await fetch(`${api}/api/container?username=${username}`)
+            const data = await response.json()
+            setPapersInStorage(data)
+            setLoading(false)
+        } catch (error) {
+            console.error('논문 보관함 정보를 불러오는데 실패하였습니다: ', error)
+            setLoading(false)
+        }
     }
 
     useEffect(() => {
@@ -58,39 +93,45 @@ export const PaperStorage = () => {
     return (
     <div>
         <Title title="논문보관함" />
-        <SearchTap
-            searchTerm={searchTerm}
-            onChange={setSearchTerm}
-            onSearch={handleButtonClick}
-            onSearchKeyDown={handleSearchKeyDown}
-            placeholder="CNN과 관련된 논문을 찾아줘"
-            firstBoxSx={{ margin: '30px auto' }}
-            middleBoxSx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-            sx={{width: "80%"}}
-          />
-          <Box sx={{height: '75vh', margin: '0 30px 0 10px', padding: '10px', overflowY: 'scroll'}}>
-            {papersInStorage && papersInStorage.map((paper:any) => (
-                <Card sx={{padding: '15px', borderRadius: '15px', margin: '15px', display: 'flex', justifyContent:'space-between'}}>
-                    <Box>
-                        <Typography variant="h6">
-                            {paper.title}
-                        </Typography>
-                        <Typography variant="body1">
-                            {paper.authors?.length >1 ?paper.authors.join(', '):paper.authors} / {paper.year} / {paper.conference}
-                        </Typography>
-                        <Typography variant="body1">
-                            cites: {paper.cites}
-                        </Typography>
-                    </Box>
-                    <Box sx={{ margin:'0px 10px', width: '20vh' ,display: 'flex', flexDirection:'column', justifyContent: 'space-between', alignItems: 'flex-end'}}>
-                        <HeartClick currentItem={paper} home={false} callGetApi={callGetApi}/>
-                        <GoToArxiv url={paper.url}/>
-                        <Box sx={{height:'5px'}}></Box>
-                        <GoToViewMore paperid={paper.paperId} />
-                    </Box>
+        <Box sx={{height: 50}}></Box>
+          {loading?(
+            <Box sx={{height: '75vh', margin: '0 30px 0 10px', padding: '10px'}} className={loadingStyle.loading}>
+                <Card sx={{height: '15vh', padding: '15px', borderRadius: '15px', margin: '15px', display: 'flex', justifyContent:'space-between', backgroundColor: '#999999', opacity: '0.2'}}>
                 </Card>
-            ))}
-          </Box>
+                <Card sx={{height: '15vh', padding: '15px', borderRadius: '15px', margin: '15px', display: 'flex', justifyContent:'space-between', backgroundColor: '#999999', opacity: '0.2'}}>
+                </Card>
+            </Box>
+          ):(
+            <Box sx={{height: '75vh', margin: '0 30px 0 10px', padding: '10px', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
+                {papersInStorage && papersInStorage.map((paper:any) => (
+                    !paperIdArray.includes(paper.paperId) && (
+                        <Card sx={{padding: '15px', borderRadius: '15px', margin: '15px', display: 'flex', justifyContent:'space-between'}}>
+                            <Box>
+                                <Typography variant="h6">
+                                    {paper.title}
+                                </Typography>
+                                <Typography variant="body1">
+                                    {paper.authors?.length >1 ?paper.authors.join(', '):paper.authors} / {paper.year} / {paper.conference}
+                                </Typography>
+                                <Typography variant="body1">
+                                    cites: {paper.cites}
+                                </Typography>
+                            </Box>
+                            <Box sx={{ margin:'0px 10px', width: '20vh' ,display: 'flex', flexDirection:'column', justifyContent: 'space-between', alignItems: 'flex-end'}}>
+                                {/* <HeartClick currentItem={paper} home={false} callGetApi={callGetApi}/> */}
+                                <IconButton onClick={()=> handleHeartClick(paper.paperId, paper.title)} >
+                                    <ClearIcon />
+                                </IconButton>
+                                
+                                <GoToArxiv url={paper.url}/>
+                                <Box sx={{height:'5px'}}></Box>
+                                <GoToViewMore paperid={paper.paperId} />
+                            </Box>
+                        </Card>
+                    )
+                ))}
+            </Box>
+          )}
 
     </div>
 )};
