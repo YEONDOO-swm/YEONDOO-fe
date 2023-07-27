@@ -42,7 +42,7 @@ export const Home = () => {
     const searchInputRef = useRef<HTMLInputElement | null>(null);
 
     const handleSearchKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter'){
+      if (event.key === 'Enter' && event.nativeEvent.isComposing === false){
           event.preventDefault();
           setEnteredSearch(searchResults);
           amplitude.track("Home에서 검색")
@@ -169,7 +169,7 @@ export const Home = () => {
               <Typography variant="body2"> {paper.authors.slice(0,3).join(", ")} / {paper.year} / {paper.conference} / cites: {paper.cites} </Typography>
               <Box sx = {{margin: "15px 0 0 0" , display: 'flex'}}>
                 {/* <Button variant="contained" onClick={() => handleViewPaper(paper.url) }>논문 보기</Button> */}
-                <GoToArxiv url={paper.url} />
+                <GoToArxiv url={paper.url} paperId={paper.paperId}/>
 
                 <Box sx={{width: '15px'}}></Box>
                 {/* <Button variant ="contained" onClick={() => handleViewMore(paper.paperId)}>자세히 보기</Button> */}

@@ -33,7 +33,7 @@ export const Trash = () => {
     const [loading, setLoading] = useState<boolean>(false)
 
     useEffect(()=>{
-        amplitude.track('휴지통 Page Viewed')
+        amplitude.track('관심 해제된 논문 Page Viewed')
         setLoading(true)
         fetch(`${api}/api/history/trash?username=${username}`)
         .then(response => response.json())
@@ -43,7 +43,7 @@ export const Trash = () => {
             setLoading(false)
         })
         .catch(error => {
-            console.log("휴지통 정보를 가져오는데 실패하였습니다: ", error)
+            console.log("관심 해제된 논문 정보를 가져오는데 실패하였습니다: ", error)
             setLoading(false)
         })
        },[checkedItems])
@@ -105,7 +105,7 @@ export const Trash = () => {
         <div>
             <Title title="히스토리"/>
             <Box sx={{height: 50}}></Box>
-            <Typography variant="h5" sx={{ml: 1}}> 휴지통 </Typography>
+            <Typography variant="h5" sx={{ml: 1}}> 관심 해제된 논문 </Typography>
             {loading ? (
                 <Box sx={{ display: 'flex', height: '80vh'}} className={loadingStyle.loading}>
                     <Box sx={{ width: '80%', m: 2}}>

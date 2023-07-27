@@ -61,7 +61,7 @@ export const MyAppBar = () => {
     const maxLengthLimit = 300
 
     const handleSearchKeyDown = (event: any) => {
-      if (event.key === 'Enter'){
+      if (event.key === 'Enter' && event.nativeEvent.isComposing === false){
           event.preventDefault();
           amplitude.track("app bar 내 검색 이용")
           window.location.href = `/home?query=${searchTerm}`

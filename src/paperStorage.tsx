@@ -33,11 +33,12 @@ export const PaperStorage = () => {
     const [paperIdArray, setPaperIdArray] = useState<string[]>([])
 
     const handleHeartClick = (paperId: any, paperTitle:any) => {
-        const isConfirmed = window.confirm(`정말 "${paperTitle}"을 논문보관함에서 삭제하시겠습니까?`)
+        const isConfirmed = window.confirm(`정말 "${paperTitle}"을 관심 논문에서 삭제하시겠습니까?`)
         if (!isConfirmed){
             return
         }
         else {
+            amplitude.track("관심 논문 페이지에서 삭제",{paperId: paperId})
             setPaperIdArray(prevArray => [...prevArray, paperId])
         }
         
@@ -56,7 +57,7 @@ export const PaperStorage = () => {
             return response;
         })
         .catch(error => {
-            console.log("논문 보관함 삭제에 실패하였습니다", error)
+            console.log("관심 논문 삭제에 실패하였습니다", error)
         })
     }
 
@@ -69,13 +70,13 @@ export const PaperStorage = () => {
             setPapersInStorage(data)
             setLoading(false)
         } catch (error) {
-            console.error('논문 보관함 정보를 불러오는데 실패하였습니다: ', error)
+            console.error('관심 논문 정보를 불러오는데 실패하였습니다: ', error)
             setLoading(false)
         }
     }
 
     useEffect(() => {
-        amplitude.track("논문보관함 Page Viewed");
+        amplitude.track("관심 논문 Page Viewed");
         callGetApi()
     }, []);
 
@@ -93,7 +94,7 @@ export const PaperStorage = () => {
     
     return (
     <div>
-        <Title title="논문보관함" />
+        <Title title="관심 논문" />
         <Box sx={{height: 50}}></Box>
           {loading?(
             <Box sx={{height: '75vh', margin: '0 30px 0 10px', padding: '10px'}} className={loadingStyle.loading}>
@@ -124,7 +125,7 @@ export const PaperStorage = () => {
                                     <ClearIcon />
                                 </IconButton>
                                 
-                                <GoToArxiv url={paper.url}/>
+                                <GoToArxiv url={paper.url} paperId={paper.paperId}/>
                                 <Box sx={{height:'5px'}}></Box>
                                 <GoToViewMore paperid={paper.paperId} />
                             </Box>

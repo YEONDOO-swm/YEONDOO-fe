@@ -3,9 +3,9 @@ import * as amplitude from '@amplitude/analytics-browser';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import * as React from "react";
 
-export const GoToArxiv = (url: any) => {
+export const GoToArxiv = ({url, paperId}: {url: any, paperId: any}) => {
     const handleViewPaper = (url: any) => {
-        amplitude.track("논문 보기 Clicked");
+        amplitude.track("논문 보기 Clicked", {paperId: paperId});
         window.open(url, "home")
     }
     return (

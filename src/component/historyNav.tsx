@@ -27,7 +27,7 @@ export const HistoryNav = ({goToHistory, papersInNav, trash} : {goToHistory: any
             </Box>
             </Box>
             <Link to="/history/trash" style={{ textDecoration: 'none', color: 'black' }}>
-                <Typography variant="h6" sx={{textAlign: 'center', marginTop: 2}} className={`${styles.customTypography} ${!trash? null:styles.currentPage}`}> 휴지통 </Typography>
+                <Typography variant="h6" sx={{textAlign: 'center', marginTop: 2}} className={`${styles.customTypography} ${!trash? null:styles.currentPage}`}> 관심 해제된 논문 </Typography>
             </Link>
         </Card>
     )
