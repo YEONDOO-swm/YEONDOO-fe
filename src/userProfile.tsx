@@ -5,6 +5,7 @@ import { Box, Button, FormControl, InputLabel, Select, SelectChangeEvent, Typogr
 import CloseIcon from '@mui/icons-material/Close';
 import * as amplitude from '@amplitude/analytics-browser';
 import styles from '../layout/input.module.css'
+import { color } from '../layout/color';
 
 
 export const UserProfile = () => {
@@ -31,7 +32,7 @@ export const UserProfile = () => {
     const username = sessionStorage.getItem('username');
 
     useEffect(() => {
-        amplitude.track("UserProfile Page Viewed");
+        amplitude.track("유저 프로필 Page Viewed");
         const checkUserName = sessionStorage.getItem('username')
         if (checkUserName){
             setUserName(checkUserName)
@@ -138,7 +139,7 @@ export const UserProfile = () => {
     // console.log(fields)
 
     return (
-        <Card sx={{ height: '80vh', maxWidth: 500, margin: '30px auto', padding: '3rem', backgroundColor: '#DCDCDC', borderRadius: '20px' , border: '1px solid #DCDCDC'}}>
+        <Card sx={{ height: '80vh', maxWidth: 500, margin: '30px auto', padding: '3rem', backgroundColor: color.mainGrey, borderRadius: '20px' , border: `1px solid ${color.mainGrey}`}}>
             <Title title="Register"/>
         {/* <Typography variant="h4" sx={{ marginBottom: '1rem' }}>Profile</Typography> */}
         <form onSubmit={handleSubmit} >

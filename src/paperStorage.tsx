@@ -11,6 +11,7 @@ import { HeartClick } from "./component/heartClick";
 import loadingStyle from "../layout/loading.module.css"
 import scrollStyle from "../layout/scroll.module.css"
 import ClearIcon from '@mui/icons-material/Clear';
+import { color } from '../layout/color'
 
 
 export const PaperStorage = () => {
@@ -74,7 +75,7 @@ export const PaperStorage = () => {
     }
 
     useEffect(() => {
-        amplitude.track("PaperStorage Page Viewed");
+        amplitude.track("논문보관함 Page Viewed");
         callGetApi()
     }, []);
 
@@ -96,9 +97,9 @@ export const PaperStorage = () => {
         <Box sx={{height: 50}}></Box>
           {loading?(
             <Box sx={{height: '75vh', margin: '0 30px 0 10px', padding: '10px'}} className={loadingStyle.loading}>
-                <Card sx={{height: '15vh', padding: '15px', borderRadius: '15px', margin: '15px', display: 'flex', justifyContent:'space-between', backgroundColor: '#999999', opacity: '0.2'}}>
+                <Card sx={{height: '15vh', padding: '15px', borderRadius: '15px', margin: '15px', display: 'flex', justifyContent:'space-between', backgroundColor: color.loadingColor, opacity: '0.2'}}>
                 </Card>
-                <Card sx={{height: '15vh', padding: '15px', borderRadius: '15px', margin: '15px', display: 'flex', justifyContent:'space-between', backgroundColor: '#999999', opacity: '0.2'}}>
+                <Card sx={{height: '15vh', padding: '15px', borderRadius: '15px', margin: '15px', display: 'flex', justifyContent:'space-between', backgroundColor: color.loadingColor, opacity: '0.2'}}>
                 </Card>
             </Box>
           ):(

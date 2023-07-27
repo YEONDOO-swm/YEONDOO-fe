@@ -7,7 +7,6 @@ export const GoToViewMore = (paperid: any) => {
     const navigate = useNavigate()
 
     const handleViewMore = (paperId: any) => {
-        amplitude.track("자세히 보기 Clicked")
         navigate(`/paper?paperid=${paperId}`)
       }
 

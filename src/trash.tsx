@@ -10,6 +10,7 @@ import styles from '../layout/hoverButton.module.css'
 import { HistoryNav } from "./component/historyNav";
 import loadingStyle from "../layout/loading.module.css"
 import scrollStyle from "../layout/scroll.module.css"
+import { color } from "../layout/color";
 
 export const Trash = () => {
     useAuthenticated();
@@ -32,6 +33,7 @@ export const Trash = () => {
     const [loading, setLoading] = useState<boolean>(false)
 
     useEffect(()=>{
+        amplitude.track('휴지통 Page Viewed')
         setLoading(true)
         fetch(`${api}/api/history/trash?username=${username}`)
         .then(response => response.json())
@@ -62,6 +64,7 @@ export const Trash = () => {
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        amplitude.track('복구 버튼 Clicked')
         console.log(checkedItems)
         if (checkedItems.length === 0){
             notify("복구할 논문을 선택해주세요", {type: 'error'})
@@ -111,14 +114,14 @@ export const Trash = () => {
                             <Button type="submit" variant="contained"> 복구 </Button>
                         </Box>
                     
-                        <Card sx={{ mb: '10px', height: '5vh', backgroundColor: '#999999', opacity: '0.2', marginBottom: '10px'}}>
+                        <Card sx={{ mb: '10px', height: '5vh', backgroundColor: color.loadingColor, opacity: '0.2', marginBottom: '10px'}}>
 
                         </Card>
-                        <Card sx={{ mb: '10px', height: '5vh', backgroundColor: '#999999', opacity: '0.2'}}>
+                        <Card sx={{ mb: '10px', height: '5vh', backgroundColor: color.loadingColor, opacity: '0.2'}}>
 
                         </Card>
                     </Box>
-                    <Card sx={{ ml: 'auto', mr: '20px', p: '30px 40px', display: 'flex', flexDirection: 'column',borderRadius: '10px', backgroundColor: '#999999', opacity: '0.2', height: '100%', width: '35vh', justifyContent:'space-between'}}>
+                    <Card sx={{ ml: 'auto', mr: '20px', p: '30px 40px', display: 'flex', flexDirection: 'column',borderRadius: '10px', backgroundColor: color.loadingColor, opacity: '0.2', height: '100%', width: '35vh', justifyContent:'space-between'}}>
 
                     </Card>
                 </Box>

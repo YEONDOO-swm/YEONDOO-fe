@@ -1,3 +1,12 @@
+:root {
+  --loadingColor: #999999;
+  --mainGreen: #d8e6cd;
+  --secondaryGreen: #92bb8e;
+  --tertiaryGreen: #adb79d;
+  --mainGrey: #DCDCDC;
+  --secondaryGrey: #ededed;
+}
+
 .customTypography {
     cursor: pointer;
     text-align: center;
@@ -10,10 +19,10 @@
   
 .customTypography:hover {
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.4); /* Increase the shadow on hover */
-    background-color: #ededed;
+    background-color: var(--secondaryGrey);
   }
 
 .currentPage {
-    background-color: #92bb8e;
+    background-color: var(--secondaryGreen);
     font-weight: bold;
 }
