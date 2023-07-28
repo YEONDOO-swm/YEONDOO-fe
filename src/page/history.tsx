@@ -142,8 +142,8 @@ export const History = () => {
                     
                 ) : 
                 (results && results.map((result: any) => (
-                    <Card key={result.resultId} sx={{ p:2, mb: 1}}>
-                        <Box onClick={()=>handleResultClick(event, result.resultId)} sx={{ display: 'flex', alignItems: 'flex-start'}}>
+                    <Card key={result.resultid} sx={{ p:2, mb: 1}}>
+                        <Box onClick={()=>handleResultClick(event, result.resultid)} sx={{ display: 'flex', alignItems: 'flex-start'}}>
                             <ContactSupportIcon sx={{mr:1}}/>
                             <Typography sx={{cursor: 'pointer'}}> {result.query} </Typography>
                         </Box>

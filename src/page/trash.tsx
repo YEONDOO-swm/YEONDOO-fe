@@ -31,6 +31,7 @@ export const Trash = () => {
     const [papersInTrash, setPapersInTrash] = useState<any>([])
     const [checkedItems, setCheckedItems] = useState<any>([])
     const [loading, setLoading] = useState<boolean>(false)
+    const [isSubmitted, setIsSubmitted] = useState<boolean>(false)
 
     useEffect(()=>{
         amplitude.track('관심 해제된 논문 Page Viewed')
@@ -46,7 +47,7 @@ export const Trash = () => {
             console.log("관심 해제된 논문 정보를 가져오는데 실패하였습니다: ", error)
             setLoading(false)
         })
-       },[checkedItems])
+       },[isSubmitted])
 
     const handleSearchKeyDown = (event: any) => {
         if (event.key === 'Enter'){
@@ -65,7 +66,7 @@ export const Trash = () => {
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         amplitude.track('복구 버튼 Clicked')
-        console.log(checkedItems)
+        // console.log(checkedItems)
         if (checkedItems.length === 0){
             notify("복구할 논문을 선택해주세요", {type: 'error'})
         }
@@ -80,12 +81,14 @@ export const Trash = () => {
                 console.log("복구하는데 오류가 발생하였습니다: ", error)
             })
             setCheckedItems([])
+            setIsSubmitted(!isSubmitted)
         }
     }
 
     const handleCheckBoxChange = (paperId: string) => {
         if (checkedItems.includes(paperId)){
             setCheckedItems(checkedItems.filter((paper: any) => paper !== paperId))
+            
         } else {
             setCheckedItems([...checkedItems, paperId])
         }
@@ -93,12 +96,18 @@ export const Trash = () => {
 
     const handleCheckAllItems = () => { 
         var allItemList: string[] = []
+        var isCheckedAll = true
         for (var i=0; i<papersInTrash.length; i++){
+            allItemList.push(papersInTrash[i].paperId)        
             if (!checkedItems.includes(papersInTrash[i].paperId)){
-                allItemList.push(papersInTrash[i].paperId)
+                isCheckedAll = false
             }
         }
-        setCheckedItems(allItemList)
+        if (isCheckedAll) {
+            setCheckedItems([])
+        } else{
+            setCheckedItems(allItemList)
+        }
     }
 
     return (
@@ -110,8 +119,8 @@ export const Trash = () => {
                 <Box sx={{ display: 'flex', height: '80vh'}} className={loadingStyle.loading}>
                     <Box sx={{ width: '80%', m: 2}}>
                         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1}}>
-                            <Button variant="outlined" sx={{mr: 1}} onClick={handleCheckAllItems}> 전체선택 </Button>
-                            <Button type="submit" variant="contained"> 복구 </Button>
+                            <Button variant="outlined" sx={{mr: 1}} onClick={handleCheckAllItems} disabled> 전체선택 </Button>
+                            <Button type="submit" variant="contained" disabled> 복구 </Button>
                         </Box>
                     
                         <Card sx={{ mb: '10px', height: '5vh', backgroundColor: color.loadingColor, opacity: '0.2', marginBottom: '10px'}}>

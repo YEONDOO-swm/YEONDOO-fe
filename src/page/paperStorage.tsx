@@ -48,6 +48,8 @@ export const PaperStorage = () => {
             onoff: false
         }
 
+        console.log(payload)
+
         fetch(`${api}/api/paperlikeonoff`, {
             method:'POST',
             headers: { 'Content-Type' : 'application/json' },
@@ -59,6 +61,7 @@ export const PaperStorage = () => {
         .catch(error => {
             console.log("관심 논문 삭제에 실패하였습니다", error)
         })
+        callGetApi()
     }
 
     const callGetApi = async () => {
@@ -105,7 +108,7 @@ export const PaperStorage = () => {
             </Box>
           ):(
             <Box sx={{height: '75vh', margin: '0 30px 0 10px', padding: '10px', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
-                {papersInStorage && papersInStorage.map((paper:any) => (
+                {papersInStorage ? papersInStorage.map((paper:any) => (
                     !paperIdArray.includes(paper.paperId) && (
                         <Card sx={{padding: '15px', borderRadius: '15px', margin: '15px', display: 'flex', justifyContent:'space-between'}}>
                             <Box>
@@ -131,7 +134,7 @@ export const PaperStorage = () => {
                             </Box>
                         </Card>
                     )
-                ))}
+                )):<>관심 논문이 없습니다.</>}
             </Box>
           )}
 
