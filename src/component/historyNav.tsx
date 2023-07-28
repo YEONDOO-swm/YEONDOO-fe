@@ -1,8 +1,8 @@
 import { Typography, Box, Card } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
-import styles from '../../layout/hoverButton.module.css'
-import scroll from '../../layout/scroll.module.css'
-import { color } from '../../layout/color';
+import styles from '../layout/hoverButton.module.css'
+import scroll from '../layout/scroll.module.css'
+import { color } from '../layout/color';
 
 export const HistoryNav = ({goToHistory, papersInNav, trash} : {goToHistory: any, papersInNav: any, trash: boolean}) => {
     return (
@@ -27,7 +27,7 @@ export const HistoryNav = ({goToHistory, papersInNav, trash} : {goToHistory: any
             </Box>
             </Box>
             <Link to="/history/trash" style={{ textDecoration: 'none', color: 'black' }}>
-                <Typography variant="h6" sx={{textAlign: 'center', marginTop: 2}} className={`${styles.customTypography} ${!trash? null:styles.currentPage}`}> 휴지통 </Typography>
+                <Typography variant="h6" sx={{textAlign: 'center', marginTop: 2}} className={`${styles.customTypography} ${!trash? null:styles.currentPage}`}> 관심 해제된 논문 </Typography>
             </Link>
         </Card>
     )

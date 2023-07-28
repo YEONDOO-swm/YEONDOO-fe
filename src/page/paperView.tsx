@@ -1,14 +1,14 @@
 import * as React from "react"
-import { SearchTap } from "./component/searchTap";
+import { SearchTap } from "../component/searchTap";
 import { useState, useEffect, useRef } from "react";
 import { Typography, Grid, Box, IconButton, TextField, InputAdornment, Icon, Card, CardContent } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { Title, useAuthenticated, useNotify } from 'react-admin';
 import { useParams } from "react-router";
-import { GoToArxiv } from "./component/goToArxiv";
+import { GoToArxiv } from "../component/goToArxiv";
 import SearchIcon from "@mui/icons-material/Search";
-import { UserProfileCheck } from "./component/userProfileCheck";
+import { UserProfileCheck } from "../component/userProfileCheck";
 import loadingStyle from "../layout/loading.module.css"
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import scrollStyle from "../layout/scroll.module.css"
@@ -50,9 +50,9 @@ export const PaperView = () => {
     };
 
     useEffect(() => {
-        amplitude.track('AI와 논문 읽기 Page Viewed')
         const query = new URLSearchParams(window.location.search);
         const paperId = query.get('paperid') || '';
+        amplitude.track('AI와 논문 읽기 Page Viewed', {paperId: paperId})
 
         setLoading(true)
         
@@ -73,22 +73,13 @@ export const PaperView = () => {
         scrollContainerRef.current?.scrollTo(0, scrollContainerRef.current.scrollHeight);
       }, [paperHistory, enteredSearchTermInPaper, searchResultsInPaper]);
     
-    const handleSearchKeyDown = (event: any) => {
-        if (event.key === 'Enter'){
-            event.preventDefault();
-            window.location.href = `/home?query=${searchTerm}`
-        }
-    }
-    
-    const handleButtonClick = (event: any) => {
-        event.preventDefault();
-        window.location.href = `/home?query=${searchTerm}`
-    }
 
     const handleSearchKeyDownInPaper = (event: any) => {
-        if (event.key === 'Enter'){
+        if (event.key === 'Enter' && event.nativeEvent.isComposing === false){
             event.preventDefault();
-            amplitude.track('논문 내 질의')
+            const query = new URLSearchParams(window.location.search);
+            const paperId = query.get('paperid') || '';
+            amplitude.track('논문 내 질의', {paperId: paperId})
             if (searchTermInPaper === '') {
                 notify('질문을 입력해 주세요.', {type: 'error'})
                 return ;
@@ -99,7 +90,9 @@ export const PaperView = () => {
 
     const handleButtonClickInPaper = (event: any) => {
         event.preventDefault();
-        amplitude.track('논문 내 질의')
+        const query = new URLSearchParams(window.location.search);
+        const paperId = query.get('paperid') || '';
+        amplitude.track('논문 내 질의', {paperId: paperId})
         if (searchTermInPaper === '') {
             notify('질문을 입력해 주세요.', {type: 'error'})
             return ;
@@ -108,13 +101,15 @@ export const PaperView = () => {
     }
 
     const handleViewMoreAuthors = () => {
-        amplitude.track('저자 더보기 Button Clicked')
+        const query = new URLSearchParams(window.location.search);
+        const paperId = query.get('paperid') || '';
+        amplitude.track('저자 더보기 Button Clicked', {paperId: paperId})
         setIsExpanded(true)
     }
 
     const performSearchInPaper = async () => {
         if (searchTermInPaper != ''){
-            setEnteredSearchTermInPaper([...enteredSearchTermInPaper, searchTermInPaper])
+            setEnteredSearchTermInPaper([...enteredSearchTermInPaper, searchTermInPaper])      
         }
         setSearchTermInPaper("")
         const query = new URLSearchParams(window.location.search);
@@ -197,7 +192,7 @@ export const PaperView = () => {
                                 <Card sx={{ border: `1px solid ${color.mainGreen}`,  padding: '20px', height: '75vh', borderRadius: '15px', backgroundColor: color.mainGreen, 
                                     overflowY: 'scroll'
                                 }} className={scrollStyle.scrollBar}>
-                                    <GoToArxiv url={paperInfo.url} />
+                                    <GoToArxiv url={paperInfo.url} paperId={paperInfo.paperId}/>
                                     <Typography variant={sizeTitleInInfo} sx={{marginTop: '15px'}}>요약</Typography>
                                     <Typography variant={sizeContentInInfo}> {paperInfo.summary} </Typography>
                                     

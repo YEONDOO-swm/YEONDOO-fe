@@ -3,7 +3,7 @@ import { AppBar, TitlePortal, useNotify } from 'react-admin';
 import Box from '@mui/material/Box';
 import { Typography, styled, alpha } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { SearchTap } from '../src/component/searchTap';
+import { SearchTap } from '../component/searchTap';
 import { useState } from 'react';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
@@ -61,7 +61,7 @@ export const MyAppBar = () => {
     const maxLengthLimit = 300
 
     const handleSearchKeyDown = (event: any) => {
-      if (event.key === 'Enter'){
+      if (event.key === 'Enter' && event.nativeEvent.isComposing === false){
           event.preventDefault();
           amplitude.track("app bar 내 검색 이용")
           window.location.href = `/home?query=${searchTerm}`

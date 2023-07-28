@@ -7,7 +7,7 @@ import HistoryIcon from '@mui/icons-material/History';
 export const Mymenu = () => (
     <Menu>
         < Menu.Item to="/home" primaryText="Home" leftIcon = {<HomeIcon />} />
-        < Menu.Item to="/paperStorage" primaryText="논문보관함" leftIcon = {<StorageIcon />} />
+        < Menu.Item to="/paperStorage" primaryText="관심 논문" leftIcon = {<StorageIcon />} />
         < Menu.Item to="/history" primaryText="히스토리" leftIcon = {<HistoryIcon />} />
         {/* < Menu.ResourceItem name="users" /> */}
     </Menu>

@@ -11,6 +11,7 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 // TypeScript users must reference the type: `AuthProvider`
 export const authProvider = {
     login: ({ username, password }:any) => {
+      amplitude.setUserId(username)
       var api ='';
       if (process.env.NODE_ENV === 'development'){
         api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
@@ -47,6 +48,7 @@ export const authProvider = {
     },
     // called when the user clicks on the logout button
     logout: () => {
+      amplitude.reset()
       amplitude.track("Login Page Viewed");
       sessionStorage.removeItem('username');
       return Promise.resolve();
