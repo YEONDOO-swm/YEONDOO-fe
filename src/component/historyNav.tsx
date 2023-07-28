@@ -1,8 +1,8 @@
 import { Typography, Box, Card } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
-import styles from '../../layout/hoverButton.module.css'
-import scroll from '../../layout/scroll.module.css'
-import { color } from '../../layout/color';
+import styles from '../layout/hoverButton.module.css'
+import scroll from '../layout/scroll.module.css'
+import { color } from '../layout/color';
 
 export const HistoryNav = ({goToHistory, papersInNav, trash} : {goToHistory: any, papersInNav: any, trash: boolean}) => {
     return (

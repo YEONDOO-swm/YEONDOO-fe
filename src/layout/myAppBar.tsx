@@ -3,7 +3,7 @@ import { AppBar, TitlePortal, useNotify } from 'react-admin';
 import Box from '@mui/material/Box';
 import { Typography, styled, alpha } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { SearchTap } from '../src/component/searchTap';
+import { SearchTap } from '../component/searchTap';
 import { useState } from 'react';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';

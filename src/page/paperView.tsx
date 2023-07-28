@@ -1,14 +1,14 @@
 import * as React from "react"
-import { SearchTap } from "./component/searchTap";
+import { SearchTap } from "../component/searchTap";
 import { useState, useEffect, useRef } from "react";
 import { Typography, Grid, Box, IconButton, TextField, InputAdornment, Icon, Card, CardContent } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { Title, useAuthenticated, useNotify } from 'react-admin';
 import { useParams } from "react-router";
-import { GoToArxiv } from "./component/goToArxiv";
+import { GoToArxiv } from "../component/goToArxiv";
 import SearchIcon from "@mui/icons-material/Search";
-import { UserProfileCheck } from "./component/userProfileCheck";
+import { UserProfileCheck } from "../component/userProfileCheck";
 import loadingStyle from "../layout/loading.module.css"
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import scrollStyle from "../layout/scroll.module.css"

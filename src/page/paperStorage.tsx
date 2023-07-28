@@ -3,11 +3,11 @@ import { Card, CardContent, Box, Typography, IconButton } from '@mui/material';
 import { Title, useAuthenticated } from 'react-admin';
 import * as amplitude from '@amplitude/analytics-browser';
 import { useEffect, useState } from "react";
-import { SearchTap } from "./component/searchTap";
-import { GoToArxiv } from "./component/goToArxiv";
-import { GoToViewMore } from "./component/goToViewMore";
-import { UserProfileCheck } from "./component/userProfileCheck";
-import { HeartClick } from "./component/heartClick";
+import { SearchTap } from "../component/searchTap";
+import { GoToArxiv } from "../component/goToArxiv";
+import { GoToViewMore } from "../component/goToViewMore";
+import { UserProfileCheck } from "../component/userProfileCheck";
+import { HeartClick } from "../component/heartClick";
 import loadingStyle from "../layout/loading.module.css"
 import scrollStyle from "../layout/scroll.module.css"
 import ClearIcon from '@mui/icons-material/Clear';

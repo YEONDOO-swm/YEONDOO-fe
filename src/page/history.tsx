@@ -3,12 +3,12 @@ import { Card, CardContent, Typography, Box } from '@mui/material';
 import { Title, useAuthenticated } from 'react-admin';
 import { useEffect, useState } from "react";
 import * as amplitude from '@amplitude/analytics-browser';
-import { UserProfileCheck } from "./component/userProfileCheck";
-import { SearchTap } from "./component/searchTap";
+import { UserProfileCheck } from "../component/userProfileCheck";
+import { SearchTap } from "../component/searchTap";
 import { Link, useNavigate } from 'react-router-dom';
 import ContactSupportIcon from '@mui/icons-material/ContactSupport';
 import styles from '../layout/hoverButton.module.css'
-import { HistoryNav } from "./component/historyNav";
+import { HistoryNav } from "../component/historyNav";
 import loadingStyle from "../layout/loading.module.css"
 import scrollStyle from "../layout/scroll.module.css"
 import { color } from "../layout/color";

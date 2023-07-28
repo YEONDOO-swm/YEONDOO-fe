@@ -3,16 +3,16 @@ import { dataProvider } from './dataProvider';
 import { authProvider } from './authProvider';
 import React from 'react';
 import { Route, Navigate, BrowserRouter } from "react-router-dom";
-import { Home } from './home';
-import { PaperStorage } from './paperStorage';
-import { History } from './history';
-import { MyLayout } from '../layout/myLayout';
-import { UserProfile } from './userProfile';
+import { Home } from './page/home';
+import { PaperStorage } from './page/paperStorage';
+import { History } from './page/history';
+import { MyLayout } from './layout/myLayout';
+import { UserProfile } from './page/userProfile';
 import { useNavigate } from 'react-router-dom';
 import * as amplitude from '@amplitude/analytics-browser';
-import { PaperView } from './paperView';
-import { DarkTheme, MyTheme } from './myTheme';
-import { Trash } from './trash';
+import { PaperView } from './page/paperView';
+import { DarkTheme, MyTheme } from './layout/myTheme';
+import { Trash } from './page/trash';
 
 amplitude.init('fa2f5340585a6728ae2103fb05e56bec');
 
@@ -22,7 +22,7 @@ export const App = () => {
     return (
         <BrowserRouter>
             <Admin
-                authProvider={authProvider} layout={MyLayout} dataProvider={dataProvider} theme={MyTheme}
+                authProvider={authProvider} layout={MyLayout} theme={MyTheme}
             >
                 {/* <Resource name="users" list={ListGuesser}></Resource> */}
                 {/* <Route path="/home" element={< Home />}/> */}

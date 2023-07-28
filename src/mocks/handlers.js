@@ -1,9 +1,9 @@
 import { rest } from 'msw';
-import fields from '../json/fields.json'
-import searchResults from '../json/searchResult.json'
-import paperLike from '../json/paperLike.json'
-import viewMore from '../json/viewMore.json'
-import paperStorage from '../json/paperStorage.json'
+import fields from './json/fields.json'
+import searchResults from './json/searchResult.json'
+import paperLike from './json/paperLike.json'
+import viewMore from './json/viewMore.json'
+import paperStorage from './json/paperStorage.json'
 
 const users = [
     { id: 1, username: 'john', password: '1' },
