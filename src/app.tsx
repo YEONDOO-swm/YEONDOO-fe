@@ -14,7 +14,11 @@ import { PaperView } from './page/paperView';
 import { DarkTheme, MyTheme } from './layout/myTheme';
 import { Trash } from './page/trash';
 
-amplitude.init('fa2f5340585a6728ae2103fb05e56bec');
+amplitude.init('fa2f5340585a6728ae2103fb05e56bec', {
+    defaultTracking: {
+        pageViews: false
+    }
+});
 
 // import 시 파일 대소문자확인
 // 파일 이름 컨벤션 정의

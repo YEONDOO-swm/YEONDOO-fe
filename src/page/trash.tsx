@@ -40,7 +40,7 @@ export const Trash = () => {
         .then(response => response.json())
         .then(data => {
             setPapersInNav(data.papers)
-            setPapersInTrash(data.trashcontainers)
+            setPapersInTrash(data.trashContainers)
             setLoading(false)
         })
         .catch(error => {

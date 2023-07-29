@@ -45,7 +45,7 @@ export const PaperStorage = () => {
         var payload = {
             username: sessionStorage.getItem('username'),
             paperId: paperId,
-            onoff: false
+            on: false
         }
 
         console.log(payload)
