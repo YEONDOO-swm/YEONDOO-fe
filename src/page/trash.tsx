@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Card, CardContent, Typography, Box, Checkbox, Button } from '@mui/material';
+import { Card, CardContent, Typography, Box, Checkbox, Button, getPaperUtilityClass } from '@mui/material';
 import { Title, useAuthenticated, useNotify } from 'react-admin';
 import { useEffect, useState } from "react";
 import * as amplitude from '@amplitude/analytics-browser';
@@ -114,10 +114,12 @@ export const Trash = () => {
         <div>
             <Title title="히스토리"/>
             <Box sx={{height: 50}}></Box>
-            <Typography variant="h5" sx={{ml: 1}}> 관심 해제된 논문 </Typography>
             {loading ? (
-                <Box sx={{ display: 'flex', height: '80vh'}} className={loadingStyle.loading}>
-                    <Box sx={{ width: '80%', m: 2}}>
+                <Box sx={{ height: '80vh'}} className={loadingStyle.loading}>
+                    <Box sx={{}}>
+                        <HistoryNav page="trash" />
+                    </Box>
+                    <Box sx={{ width: '90%', m: 2}}>
                         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1}}>
                             <Button variant="outlined" sx={{mr: 1}} onClick={handleCheckAllItems} disabled> 전체선택 </Button>
                             <Button type="submit" variant="contained" disabled> 복구 </Button>
@@ -130,13 +132,15 @@ export const Trash = () => {
 
                         </Card>
                     </Box>
-                    <Card sx={{ ml: 'auto', mr: '20px', p: '30px 40px', display: 'flex', flexDirection: 'column',borderRadius: '10px', backgroundColor: color.loadingColor, opacity: '0.2', height: '100%', width: '35vh', justifyContent:'space-between'}}>
-
-                    </Card>
+                    
                 </Box>
             ) : (
-                <Box sx={{ display: 'flex', height: '80vh'}}>
-                    <Box sx={{ width: '80%', m: 2}}>
+                
+                <Box sx={{  height: '80vh'}}>
+                    <Box sx={{}}>
+                        <HistoryNav page="trash" />
+                    </Box>
+                    <Box sx={{ width: '90%', m: 2}}>
                         <form onSubmit={handleSubmit} >
                             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1}}>
                                 <Button variant="outlined" sx={{mr: 1}} onClick={handleCheckAllItems}> 전체선택 </Button>
@@ -156,9 +160,7 @@ export const Trash = () => {
                             </Box>
                         </form>
                     </Box>
-                    <Box sx={{justifyContent:'center', alignContent:'center'}}>
-                        <HistoryNav goToHistory={()=>navigate('/history')} papersInNav={papersInNav} trash={true} />
-                    </Box>
+                    
                 </Box>
             )}
         

@@ -13,6 +13,7 @@ import * as amplitude from '@amplitude/analytics-browser';
 import { PaperView } from './page/paperView';
 import { DarkTheme, MyTheme } from './layout/myTheme';
 import { Trash } from './page/trash';
+import { HistoryPaper } from './page/historyPaper';
 
 amplitude.init('fa2f5340585a6728ae2103fb05e56bec', {
     defaultTracking: {
@@ -38,6 +39,7 @@ export const App = () => {
                     <Route path="/history" element={< History />}/>
                     <Route path="/userprofile" element={< UserProfile />}/>
                     <Route path="/paper" element={< PaperView />}/>
+                    <Route path="/history/paper" element={< HistoryPaper />} />
                     <Route path="/history/trash" element={< Trash />} />
                 </CustomRoutes>
             </Admin>

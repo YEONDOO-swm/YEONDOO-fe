@@ -80,22 +80,22 @@ export const MyAppBar = () => {
 
     return (<AppBar sx={{ height: 'fit-content'}}>
       <TitlePortal />
-      <Typography variant='h6' >
-        
-        <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="전체 검색"
-              value={searchTerm}
-              onChange={handleChange}
-              onKeyDown={handleSearchKeyDown}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search>
-      </Typography>
-      
+      {location.pathname !== '/home' && (
+        <Typography variant='h6' >
+          <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="전체 검색"
+                value={searchTerm}
+                onChange={handleChange}
+                onKeyDown={handleSearchKeyDown}
+                inputProps={{ 'aria-label': 'search' }}
+              />
+            </Search>
+        </Typography>
+      )}
     </AppBar> )
 };
   
