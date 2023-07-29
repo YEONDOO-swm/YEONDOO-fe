@@ -34,8 +34,9 @@ export const History = () => {
     const navigate = useNavigate()
 
     useEffect(()=>{
+        amplitude.track("전체 검색 History Page Viewed");
         setLoading(true)
-     fetch(`${api}/api/history/search?username=${username}`)
+        fetch(`${api}/api/history/search?username=${username}`)
         .then(response => response.json())
         .then(data => {
             setPapersInNav(data.papers)
@@ -72,10 +73,6 @@ export const History = () => {
 
     const [searchTerm, setSearchTerm] = useState("");
 
-    useEffect(() => {
-        amplitude.track("전체 검색 History Page Viewed");
-    }, []);
-
     const handleSearchKeyDown = (event: any) => {
         if (event.key === 'Enter'){
             event.preventDefault();
@@ -98,32 +95,26 @@ export const History = () => {
         // console.log(resultid)
         // setUrlParam(resultid)
     }
-
-    const goToHistory = () => {
-        navigate('/history')
-        setUrlParam('')
-    }
     
     return (
 
     <div>
         <Title title="히스토리"/>
         <Box sx={{height: 50}}></Box>
-        <Typography variant="h5" sx={{ml: 1}}> 전체검색 히스토리 </Typography>
         {loading?(
-            <Box sx={{ display: 'flex', height: '80vh'}} className={loadingStyle.loading}>
-                <Box sx={{ width: '80%', m: 2}}>
+            <Box sx={{ height: '80vh'}} className={loadingStyle.loading}>
+                <HistoryNav page="totalSearch" />
+                <Box sx={{ width: '90%', m: 2}}>
                     <Card sx={{ p: 2, height: '20vh', backgroundColor: color.loadingColor, opacity: '0.2', marginBottom: '15px'}}></Card>                  
                 </Box>
-                <Card sx={{ ml: 'auto', mr: '20px', p: '30px 40px', display: 'flex', flexDirection: 'column',borderRadius: '10px', backgroundColor: color.loadingColor, opacity: '0.2', height: '100%', width: '35vh', justifyContent:'space-between'}}>
-
-                </Card>
+                
             </Box>
         ):(
-        <Box sx={{ display: 'flex', height: '80vh'}}>
-            <Box sx={{ width: '80%', m: 2, overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
+        <Box sx={{ height: '80vh'}}>
+            <HistoryNav page="totalSearch" />
+            <Box sx={{ width: '90%', m: 2, overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
                 { urlParam !== '' ? ( eachQueryResult && 
-                    <Card sx={{ p: 2}}>
+                    <Card sx={{ p: 2, backgroundColor: color.secondaryGrey }}>
                         <Typography variant="h6"> {eachQueryResult.query} </Typography>
                         <Typography> {eachQueryResult.answer} </Typography>
                         <br />
@@ -142,8 +133,8 @@ export const History = () => {
                     
                 ) : 
                 (results && results.map((result: any) => (
-                    <Card key={result.resultid} sx={{ p:2, mb: 1}}>
-                        <Box onClick={()=>handleResultClick(event, result.resultid)} sx={{ display: 'flex', alignItems: 'flex-start'}}>
+                    <Card key={result.rid} sx={{ p:2, mb: 1}}>
+                        <Box onClick={()=>handleResultClick(event, result.rid)} sx={{ display: 'flex', alignItems: 'flex-start'}}>
                             <ContactSupportIcon sx={{mr:1}}/>
                             <Typography sx={{cursor: 'pointer'}}> {result.query} </Typography>
                         </Box>
@@ -151,7 +142,7 @@ export const History = () => {
                 )))
                 }
             </Box>
-            <HistoryNav goToHistory={goToHistory} papersInNav={papersInNav} trash={false} />
+            
         </Box>
         )}
     </div>

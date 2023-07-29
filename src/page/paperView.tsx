@@ -59,8 +59,8 @@ export const PaperView = () => {
         fetch(`${api}/api/paper/${paperId}?username=${username}`)
             .then(response => response.json())
             .then(data => {
-                setPaperInfo(data.paperinfo)
-                setPaperHistory(data.paperhistory)
+                setPaperInfo(data.paperInfo)
+                setPaperHistory(data.paperHistory)
                 setLoading(false)
             })
             .catch(error => {
@@ -204,8 +204,8 @@ export const PaperView = () => {
                                     </Box>
                                     <Typography variant={sizeTitleInInfo}>향후 연구주제 추천</Typography>
                                     <Box>
-                                    {paperInfo.subjectrecommends && paperInfo.subjectrecommends.map((subjectrecommend: any) => (
-                                        <Typography variant={sizeContentInInfo}>{subjectrecommend}</Typography>
+                                    {paperInfo.subjectRecommends && paperInfo.subjectRecommends.map((subjectRecommend: any) => (
+                                        <Typography variant={sizeContentInInfo}>{subjectRecommend}</Typography>
                                     ))}
                                     </Box>
                                     

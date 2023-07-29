@@ -45,7 +45,7 @@ export const PaperStorage = () => {
         var payload = {
             username: sessionStorage.getItem('username'),
             paperId: paperId,
-            onoff: false
+            on: false
         }
 
         console.log(payload)
@@ -61,7 +61,7 @@ export const PaperStorage = () => {
         .catch(error => {
             console.log("관심 논문 삭제에 실패하였습니다", error)
         })
-        callGetApi()
+        //callGetApi()
     }
 
     const callGetApi = async () => {

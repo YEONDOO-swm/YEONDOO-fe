@@ -33,7 +33,7 @@ export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentIt
           payload = {
             username: sessionStorage.getItem('username'),
             paperId: paperId,
-            onoff: false
+            on: false
           }
           onUpdateLikes(currentItem.paperId, currentItem.likes - 1)
         }
@@ -43,7 +43,7 @@ export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentIt
           payload = {
             username: sessionStorage.getItem('username'),
             paperId: paperId,
-            onoff: true
+            on: true
           }
           onUpdateLikes(currentItem.paperId, currentItem.likes + 1);
         }
