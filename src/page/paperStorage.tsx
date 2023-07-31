@@ -110,7 +110,7 @@ export const PaperStorage = () => {
             <Box sx={{height: '75vh', margin: '0 30px 0 10px', padding: '10px', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
                 {papersInStorage ? papersInStorage.map((paper:any) => (
                     !paperIdArray.includes(paper.paperId) && (
-                        <Card sx={{padding: '15px', borderRadius: '15px', margin: '15px', display: 'flex', justifyContent:'space-between'}}>
+                        <Card key={paper.paperId} sx={{padding: '15px', borderRadius: '15px', margin: '15px', display: 'flex', justifyContent:'space-between'}}>
                             <Box>
                                 <Typography variant="h6">
                                     {paper.title}

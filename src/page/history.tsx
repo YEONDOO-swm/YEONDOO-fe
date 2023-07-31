@@ -119,7 +119,7 @@ export const History = () => {
                         <Typography> {eachQueryResult.answer} </Typography>
                         <br />
                         <b>reference:</b> {eachQueryResult.papers.map((paper:any, index:number) =>(
-                            <Box>
+                            <Box key={index}>
                                 [{index + 1}] {paper.title} (
                                 {paper.authors.map((author: any) => (
                                     author

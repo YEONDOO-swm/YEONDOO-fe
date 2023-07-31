@@ -109,7 +109,7 @@ export const PaperView = () => {
 
     const performSearchInPaper = async () => {
         if (searchTermInPaper != ''){
-            setEnteredSearchTermInPaper([...enteredSearchTermInPaper, searchTermInPaper])      
+            setEnteredSearchTermInPaper((prevEnteredSearchTerm: any)=>[...prevEnteredSearchTerm, searchTermInPaper])      
         }
         setSearchTermInPaper("")
         const query = new URLSearchParams(window.location.search);
@@ -121,7 +121,7 @@ export const PaperView = () => {
         })
         .then(response => response.json())
         .then(data => {
-            setSearchResultsInPaper([...searchResultsInPaper, data.answer])
+            setSearchResultsInPaper((prevSearchResults: any) => [...prevSearchResults, data.answer])
             //setSearchTermInPaper("")
         })
         .catch(error => {
@@ -166,8 +166,9 @@ export const PaperView = () => {
                             ) : (
                                 <Box sx={{display: 'flex',alignItems: 'flex-end', marginTop: '10px'}}>
                                     <Box> 
-                                        {paperInfo.authors.map((author: any) => (
+                                        {paperInfo.authors.map((author: any, index: number) => (
                                             <Typography
+                                            key={index}
                                             variant="body1"
                                             sx={{ marginRight: '10px' }}
                                             >
@@ -193,19 +194,23 @@ export const PaperView = () => {
                                     overflowY: 'scroll'
                                 }} className={scrollStyle.scrollBar}>
                                     <GoToArxiv url={paperInfo.url} paperId={paperInfo.paperId}/>
-                                    <Typography variant={sizeTitleInInfo} sx={{marginTop: '15px'}}>요약</Typography>
-                                    <Typography variant={sizeContentInInfo}> {paperInfo.summary} </Typography>
+                                    <Typography variant={sizeTitleInInfo}>핵심 인사이트</Typography>
+                                    <Box>
+                                    {paperInfo.insights && paperInfo.insights.map((insight: string) => (
+                                        <Typography variant={sizeContentInInfo}>{insight}</Typography>
+                                    ))}
+                                    </Box>
                                     
                                     <Typography variant={sizeTitleInInfo}>질문</Typography>
                                     <Box>
-                                    {paperInfo.questions && paperInfo.questions.map((question: any) => (
-                                        <Typography variant={sizeContentInInfo}>{question}</Typography>
+                                    {paperInfo.questions && paperInfo.questions.map((question: any, index: number) => (
+                                        <Typography key={index} variant={sizeContentInInfo}>{question}</Typography>
                                     ))}
                                     </Box>
                                     <Typography variant={sizeTitleInInfo}>향후 연구주제 추천</Typography>
                                     <Box>
-                                    {paperInfo.subjectRecommends && paperInfo.subjectRecommends.map((subjectRecommend: any) => (
-                                        <Typography variant={sizeContentInInfo}>{subjectRecommend}</Typography>
+                                    {paperInfo.subjectRecommends && paperInfo.subjectRecommends.map((subjectRecommend: any, index: number) => (
+                                        <Typography key={index} variant={sizeContentInInfo}>{subjectRecommend}</Typography>
                                     ))}
                                     </Box>
                                     
@@ -243,7 +248,7 @@ export const PaperView = () => {
                                             {enteredSearchTermInPaper && searchResultsInPaper && (
                                             <>
                                                 {enteredSearchTermInPaper.map((term:any, index:number) => (
-                                                <>
+                                                <div key={index}>
                                                     <Box sx={{ display: 'flex', backgroundColor: "white", padding: '10px', marginBottom: '10px', borderRadius: '10px'}}>
                                                     <Box sx={{ display: 'flex', alignItems: 'flex-start', marginRight: '10px' }}>
                                                         <Typography>👤</Typography>
@@ -260,7 +265,7 @@ export const PaperView = () => {
                                                     <Typography variant="body1">{searchResultsInPaper[index]}</Typography>
                                                     )}
                                                     </Box>
-                                                </>
+                                                </div>
                                                 ))}
                                             </>
                                             )}
