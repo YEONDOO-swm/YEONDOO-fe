@@ -14,6 +14,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import scrollStyle from "../layout/scroll.module.css"
 import { color } from "../layout/color"
 import * as amplitude from '@amplitude/analytics-browser';
+import CopyClick from "../component/copyClick";
 
 // TODO1: list 제한 걸기
 // TODO2: 스크롤
@@ -238,10 +239,14 @@ export const PaperView = () => {
                                                 }}
                                             >
                                                 <Box sx={{ display: 'flex', alignItems: 'flex-start', marginRight: '10px' }}>
-                                                    {history.who ? <Typography>👤</Typography> : <Typography>🍀</Typography>}
+                                                    {history.who ? <Typography>👤</Typography> : 
+                                                        <Box sx={{justifyContent:'space-between'}}>
+                                                            <Typography>🍀</Typography>
+                                                            
+                                                        </Box>}
                                                 </Box>
                                                 
-                                                <Typography variant="body1">{history.content}</Typography>
+                                                <Typography variant="body1">{history.content}{history.who? null:<Box sx={{display: 'flex'}}><Box sx={{width: 1}}></Box><CopyClick contents={history.content}/></Box>}</Typography>
                                             </Box>
                                             
                                             ))}
@@ -262,7 +267,10 @@ export const PaperView = () => {
                                                     {index>=searchResultsInPaper.length?(
                                                         <Typography variant="body1" className={loadingStyle.loading}> <MoreHorizIcon /> </Typography>
                                                     ):(
-                                                    <Typography variant="body1">{searchResultsInPaper[index]}</Typography>
+                                                        <Box sx={{display: 'flex', flexDirection: 'column'}}>
+                                                            <Typography variant="body1">{searchResultsInPaper[index]}</Typography>
+                                                            <Box sx={{display: 'flex'}}><Box sx={{width: 1}}></Box><CopyClick contents={searchResultsInPaper[index]}/></Box>
+                                                        </Box>
                                                     )}
                                                     </Box>
                                                 </div>

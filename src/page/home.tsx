@@ -4,11 +4,12 @@ import { Grid, Box, Container, InputAdornment, TextField, IconButton, Typography
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useState, useEffect, useRef, KeyboardEvent, MouseEvent } from "react";
 import SearchIcon from "@mui/icons-material/Search";
-import { Title, useAuthenticated } from 'react-admin';
+import { Title, useAuthenticated, useNotify } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
 import * as amplitude from '@amplitude/analytics-browser';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { SearchTap } from "../component/searchTap";
 import { GoToArxiv } from "../component/goToArxiv";
 import { GoToViewMore } from "../component/goToViewMore";
@@ -18,10 +19,12 @@ import loadingStyle from "../layout/loading.module.css";
 import scrollStyle from "../layout/scroll.module.css";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { color } from "../layout/color";
+import CopyClick from "../component/copyClick";
 
 export const Home = () => {
     useAuthenticated();
     const navigate = useNavigate();
+    const notify = useNotify();
     UserProfileCheck();
 
     var api = '';
@@ -89,6 +92,11 @@ export const Home = () => {
     }));
   };
 
+  const handleCopy = (copyContents:any) => {
+    navigator.clipboard.writeText(copyContents)
+    notify('내용이 복사되었습니다.', {type:'success'})
+  };
+
   useEffect(() => {
     amplitude.track("Home Page Viewed");
     searchInputRef.current?.focus();
@@ -118,10 +126,8 @@ export const Home = () => {
             <div >
               <Grid container spacing={2}>
                 <Grid item xs={6}>
-                  <Card sx={{ display: 'flex', border: `1px solid ${color.mainGreen}`, margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: color.mainGreen, opacity: '0.7'}}>
-                    <Box sx={{marginRight: '5px'}}>
-                      <QuestionAnswerIcon />
-                    </Box>
+                  <Card sx={{ display: 'flex', alignItems: 'flex-start', border: `1px solid ${color.mainGreen}`, margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: color.mainGreen, opacity: '0.7'}}>
+                  <Typography sx={{fontSize: "20px"}}>🍀</Typography>
                     <MoreHorizIcon className={loadingStyle.loading}/>
                   </Card>
                 </Grid>
@@ -141,13 +147,15 @@ export const Home = () => {
         (searchResults && (<div>
   <Grid container spacing={2}>
     <Grid item xs={6}>
-      <Card sx={{ display:'flex', border: `1px solid ${color.mainGreen}`, margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: color.mainGreen, 
+      <Card sx={{ display:'flex', alignItems: 'flex-start', border: `1px solid ${color.mainGreen}`, margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: color.mainGreen, 
       overflowY: 'scroll'
       }} className={scrollStyle.scrollBar}>
-        <Box sx={{marginRight: '5px'}}>
-          <QuestionAnswerIcon />
+        <Typography sx={{fontSize: "20px", mr: 1}}>🍀</Typography>
+        {/* <CopyClick contents={searchResults.answer} /> */}
+        <Box sx={{display: 'flex', flexDirection:'column'}}>
+          {searchResults.answer}
+          <Box sx={{display: 'flex'}}><Box sx={{width: 1}}></Box><CopyClick contents={searchResults.answer}/></Box>
         </Box>
-        {searchResults.answer}
       </Card>
     </Grid>
     <Grid item xs={6}>
