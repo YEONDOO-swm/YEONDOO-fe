@@ -14,6 +14,7 @@ import { PaperView } from './page/paperView';
 import { DarkTheme, MyTheme } from './layout/myTheme';
 import { Trash } from './page/trash';
 import { HistoryPaper } from './page/historyPaper';
+import ChannelService from './channelTalk/channelService';
 
 amplitude.init('fa2f5340585a6728ae2103fb05e56bec', {
     defaultTracking: {
@@ -24,6 +25,10 @@ amplitude.init('fa2f5340585a6728ae2103fb05e56bec', {
 // import 시 파일 대소문자확인
 // 파일 이름 컨벤션 정의
 export const App = () => { 
+    ChannelService.loadScript();
+    ChannelService.boot({
+        "pluginKey": "3ba503c9-c95d-4119-b1a6-fa80b408507f", // fill your plugin key
+      });
     return (
         <BrowserRouter>
             <Admin

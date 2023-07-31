@@ -57,8 +57,8 @@ export const HistoryPaper = () => {
                 <Box sx={{ height: '80vh'}}>
                     <HistoryNav page="historyInPaper" />
                     <Box sx={{ width: '90%', m: 2, overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
-                        {searchHistory && searchHistory.map((item: any) =>
-                            (<Card sx={{ p: item.who?"8px 15px 15px 15px":2, mb: 1}}>
+                        {searchHistory && searchHistory.map((item: any, index:number) =>
+                            (<Card key={index} sx={{ p: item.who?"8px 15px 15px 15px":2, mb: 1}}>
                                 {item.who && <Typography sx={{fontSize: "10px", borderRadius: '20px', p:"0 10px", backgroundColor: color.secondaryGrey, display: 'inline-block'}}> {item.title} </Typography>}
                                 <Box sx= {{ display: 'flex', alignItems: 'flex-start'}}>
                                     <Box sx={{mr:1}}>

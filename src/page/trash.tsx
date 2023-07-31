@@ -71,7 +71,7 @@ export const Trash = () => {
             notify("복구할 논문을 선택해주세요", {type: 'error'})
         }
         else {
-            fetch(`${api}/api/history/trash`, {
+            fetch(`${api}/api/history/trash?username=${username}`, {
                 method: 'POST',
                 headers: { 'Content-Type' : 'application/json' },
                 body: JSON.stringify(checkedItems)
@@ -90,7 +90,7 @@ export const Trash = () => {
             setCheckedItems(checkedItems.filter((paper: any) => paper !== paperId))
             
         } else {
-            setCheckedItems([...checkedItems, paperId])
+            setCheckedItems((prevCheckedItems: any) => [...prevCheckedItems, paperId])
         }
     }
 
