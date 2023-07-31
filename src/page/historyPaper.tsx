@@ -54,22 +54,60 @@ export const HistoryPaper = () => {
                 
             </Box>
             ):(
-                <Box sx={{ height: '80vh'}}>
-                    <HistoryNav page="historyInPaper" />
-                    <Box sx={{ width: '90%', m: 2, overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
-                        {searchHistory && searchHistory.map((item: any, index:number) =>
-                            (<Card key={index} sx={{ p: item.who?"8px 15px 15px 15px":2, mb: 1}}>
-                                {item.who && <Typography sx={{fontSize: "10px", borderRadius: '20px', p:"0 10px", backgroundColor: color.secondaryGrey, display: 'inline-block'}}> {item.title} </Typography>}
-                                <Box sx= {{ display: 'flex', alignItems: 'flex-start'}}>
-                                    <Box sx={{mr:1}}>
-                                        {item.who ? <Typography>👤</Typography> : <Typography>🍀</Typography>}
-                                    </Box>
-                                    <Typography> {item.content} </Typography>
-                                </Box>
-                            </Card>)
-                        )}
-                    </Box>
-                </Box>
+                <Box sx={{ height: '80vh' }}>
+  <HistoryNav page="historyInPaper" />
+  <Box sx={{ width: '90%', m: 2, overflowY: 'scroll' }} className={scrollStyle.scrollBar}>
+    {searchHistory &&
+      searchHistory.reduce((acc: any[], item: any, index: number) => {
+        if (index % 2 === 0) {
+          const nextItem = searchHistory[index + 1];
+          if (nextItem) {
+            acc.push([
+              {
+                id: index,
+                content: item.content,
+                title: item.title,
+                who: item.who,
+              },
+              {
+                id: index + 1,
+                content: nextItem.content,
+                title: nextItem.title,
+                who: nextItem.who,
+              },
+            ]);
+          } else {
+            acc.push([
+              {
+                id: index,
+                content: item.content,
+                title: item.title,
+                who: item.who,
+              },
+            ]);
+          }
+        }
+        return acc;
+      }, []).map((mergedItems: any[], mergedIndex: number) => (
+        <Card key={mergedIndex} sx={{ p: 2, mb: 1 }}>
+          
+            <Typography sx={{ fontSize: '10px', borderRadius: '20px', p: '0 10px', marginBottom: '5px', backgroundColor: color.secondaryGrey, display: 'inline-block' }}>          
+                {mergedItems[0].title}
+            </Typography>
+          
+          {mergedItems.map((item: any) => (
+            <Box key={item.id} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+              <Box sx={{ mr: 1 }}>
+                {item.who ? <Typography>👤</Typography> : <Typography>🍀</Typography>}
+              </Box>
+              <Typography> {item.content} </Typography>
+            </Box>
+          ))}
+        </Card>
+      ))}
+  </Box>
+</Box>
+
             )}
         </Box>
     )
