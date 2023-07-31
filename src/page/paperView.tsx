@@ -194,8 +194,12 @@ export const PaperView = () => {
                                     overflowY: 'scroll'
                                 }} className={scrollStyle.scrollBar}>
                                     <GoToArxiv url={paperInfo.url} paperId={paperInfo.paperId}/>
-                                    <Typography variant={sizeTitleInInfo} sx={{marginTop: '15px'}}>요약</Typography>
-                                    <Typography variant={sizeContentInInfo}> {paperInfo.summary} </Typography>
+                                    <Typography variant={sizeTitleInInfo}>핵심 인사이트</Typography>
+                                    <Box>
+                                    {paperInfo.insights && paperInfo.insights.map((insight: string) => (
+                                        <Typography variant={sizeContentInInfo}>{insight}</Typography>
+                                    ))}
+                                    </Box>
                                     
                                     <Typography variant={sizeTitleInInfo}>질문</Typography>
                                     <Box>
