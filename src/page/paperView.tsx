@@ -15,6 +15,7 @@ import scrollStyle from "../layout/scroll.module.css"
 import { color } from "../layout/color"
 import * as amplitude from '@amplitude/analytics-browser';
 import CopyClick from "../component/copyClick";
+import { HeartClick } from "../component/heartClick";
 
 // TODO1: list 제한 걸기
 // TODO2: 스크롤
@@ -156,7 +157,8 @@ export const PaperView = () => {
               </Grid>
             </div>) :(
                     <div>
-                    <Box sx={{margin: '20px 12px'}}>
+                    <Box sx={{display: 'flex', justifyContent: 'space-between',margin: '20px 12px'}}>
+                    <Box sx={{}}>
                         <Typography variant="h5">{paperInfo.title}</Typography>
                         { paperInfo.authors && (paperInfo.authors.length > 3 
                         ? (
@@ -190,9 +192,13 @@ export const PaperView = () => {
                         {/* <Typography variant="h6">{paperInfo.authors && (paperInfo.authors.length > 3 ? paperInfo.authors.slice(0, 3).join(", ") : paperInfo.authors.join(", "))}</Typography> */}
                         <Typography variant="body1">{paperInfo.year} / {paperInfo.conference} / cites: {paperInfo.cites}</Typography>
                     </Box>
+                    <Box sx={{}}>
+                        <HeartClick currentItem={paperInfo} paperlike={paperInfo.isLike} />
+                    </Box>
+                    </Box>
                     <div>
                         <Box display="flex" justifyContent="space-between">
-                            <Box width="50%" sx={{margin: '10px'}}>
+                            <Box width="50%" sx={{margin: '0 10px 10px 10px'}}>
                                 <Typography variant="h6">정보</Typography>
                                 <Card sx={{ border: `1px solid ${color.mainGreen}`,  padding: '20px', height: '75vh', borderRadius: '15px', backgroundColor: color.mainGreen, 
                                     overflowY: 'scroll'
@@ -230,28 +236,26 @@ export const PaperView = () => {
                                         <Box sx={{ overflowY: 'scroll' }} ref={scrollContainerRef} className={scrollStyle.scrollBar}>
                                             {paperHistory &&
                                             paperHistory.map((history: any, index: number) => (
-                                                <Box
+                                            <Box
                                                 key={`history-${index}`}
                                                 sx={{
-                                                display: 'flex',
-                                                alignItems: 'flex-start',
                                                 backgroundColor: history.who ? 'white' : color.secondaryGrey,
                                                 padding: '10px',
                                                 marginBottom: '10px',
                                                 borderRadius: '10px',
                                                 }}
                                             >
-                                                <Box sx={{ display: 'flex', alignItems: 'flex-start', marginRight: '10px' }}>
-                                                    {history.who ? <Typography>👤</Typography> : 
-                                                            <Typography>🍀</Typography>
+                                                <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                                                    {history.who ? <Typography sx={{mr: '10px'}}>👤</Typography> : 
+                                                            <Typography sx={{mr: '10px'}}>🍀</Typography>
                                                         }
+                                                    {history.content}
                                                 </Box>
                                                 
-                                                <Box>{history.content}{history.who? null:
+                                                {history.who? null:
                                                     <Box sx={{display: 'flex', flexDirection: 'row-reverse'}}>
                                                         <CopyClick contents={history.content}/>
                                                     </Box>}
-                                                </Box>
                                             </Box>
                                             
                                             ))}

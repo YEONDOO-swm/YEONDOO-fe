@@ -34,7 +34,7 @@ export const HistoryNav = ({page} : {page: any}) => {
     
     
     return (
-        <Box sx={{ display: 'flex', m: 2}}>
+        <Box sx={{ display: 'flex', mx: 2}}>
             <Typography variant="h6" 
             sx={{mr: 2}} 
             onClick={handleNavigateToHistory} 
