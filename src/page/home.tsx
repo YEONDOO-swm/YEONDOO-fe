@@ -156,15 +156,19 @@ export const Home = () => {
         (searchResults && (<div>
   <Grid container spacing={2}>
     <Grid item xs={6}>
-      <Card sx={{ display:'flex', alignItems: 'flex-start', border: `1px solid ${color.mainGreen}`, margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: color.mainGreen, 
+      <Card sx={{ justifyContent: 'space-between', border: `1px solid ${color.mainGreen}`, margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: color.mainGreen, 
       overflowY: 'scroll'
       }} className={scrollStyle.scrollBar}>
+        <Box sx={{display: 'flex', alignItems: 'flex-start'}}>
+
         <Typography sx={{fontSize: "20px", mr: 1}}>🍀</Typography>
         {/* <CopyClick contents={searchResults.answer} /> */}
-        <Box sx={{display: 'flex', flexDirection:'column'}}>
+        {/* <Box sx={{display: 'flex', flexDirection:'column'}}> */}
           {searchResults.answer}
-          <Box sx={{display: 'flex'}}><Box sx={{width: 1}}></Box><CopyClick contents={searchResults.answer}/></Box>
         </Box>
+          
+        {/* </Box> */}
+        <Box sx={{display: 'flex', flexDirection: 'row-reverse'}}><CopyClick contents={searchResults.answer}/></Box>
       </Card>
     </Grid>
     <Grid item xs={6}>
