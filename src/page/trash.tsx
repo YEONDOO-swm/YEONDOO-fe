@@ -34,7 +34,10 @@ export const Trash = () => {
     const [isSubmitted, setIsSubmitted] = useState<boolean>(false)
 
     useEffect(()=>{
-        amplitude.track('관심 해제된 논문 Page Viewed')
+        if (process.env.NODE_ENV === 'production') {
+            
+            amplitude.track('관심 해제된 논문 Page Viewed')
+        }
         setLoading(true)
         fetch(`${api}/api/history/trash?username=${username}`)
         .then(response => response.json())
@@ -65,7 +68,6 @@ export const Trash = () => {
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        amplitude.track('복구 버튼 Clicked')
         // console.log(checkedItems)
         if (checkedItems.length === 0){
             notify("복구할 논문을 선택해주세요", {type: 'error'})
@@ -82,6 +84,9 @@ export const Trash = () => {
             })
             setCheckedItems([])
             setIsSubmitted(!isSubmitted)
+            if (process.env.NODE_ENV === 'production') {
+                amplitude.track('복구 Button Clicked')
+            }
         }
     }
 

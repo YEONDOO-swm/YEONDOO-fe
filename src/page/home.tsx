@@ -48,7 +48,10 @@ export const Home = () => {
       if (event.key === 'Enter' && event.nativeEvent.isComposing === false){
           event.preventDefault();
           setEnteredSearch(searchResults);
-          amplitude.track("Home에서 검색")
+          if (process.env.NODE_ENV === 'production') {
+            
+            amplitude.track("Home에서 검색")
+          }
           window.location.href = `/home?query=${searchTerm}`
       }
   }
@@ -56,7 +59,10 @@ export const Home = () => {
   const handleButtonClick = (event: any) => {
       event.preventDefault();
       setEnteredSearch(searchResults);
-      amplitude.track("Home에서 검색")
+      if (process.env.NODE_ENV === 'production') {
+            
+        amplitude.track("Home에서 검색")
+      }
       window.location.href = `/home?query=${searchTerm}`
   }
 
@@ -98,7 +104,10 @@ export const Home = () => {
   };
 
   useEffect(() => {
-    amplitude.track("Home Page Viewed");
+    if (process.env.NODE_ENV === 'production') {
+            
+      amplitude.track("Home Page Viewed");
+    }
     searchInputRef.current?.focus();
     // console.log(window.location.search)
     const query = new URLSearchParams(window.location.search);

@@ -25,7 +25,10 @@ export const HistoryPaper = () => {
     const [searchHistory, setSearchHistory] = useState<any>("")
 
     useEffect(() => {
-        amplitude.track("논문 내 질의 히스토리 Page Viewed")
+        if (process.env.NODE_ENV === 'production') {
+            
+            amplitude.track("논문 내 질의 히스토리 Page Viewed")
+        }
         setLoading(true)
         fetch(`${api}/api/history/search/paper?username=${username}`)
         .then(response => response.json())

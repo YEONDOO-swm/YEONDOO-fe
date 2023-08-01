@@ -5,7 +5,9 @@ import * as React from "react";
 
 export const GoToArxiv = ({url, paperId}: {url: any, paperId: any}) => {
     const handleViewPaper = (url: any) => {
-        amplitude.track("논문 보기 Clicked", {paperId: paperId});
+        if (process.env.NODE_ENV === 'production'){
+            amplitude.track("Arxiv Clicked", {paperId: paperId});
+        }
         console.log(url)
         window.open(url, "home")
     }

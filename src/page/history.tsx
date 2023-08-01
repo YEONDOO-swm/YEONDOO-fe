@@ -34,7 +34,10 @@ export const History = () => {
     const navigate = useNavigate()
 
     useEffect(()=>{
-        amplitude.track("전체 검색 History Page Viewed");
+        if (process.env.NODE_ENV === 'production') {
+            
+            amplitude.track("전체 검색 히스토리 Page Viewed");
+        }
         setLoading(true)
         fetch(`${api}/api/history/search?username=${username}`)
         .then(response => response.json())
@@ -87,7 +90,10 @@ export const History = () => {
 
     const handleResultClick = (event: any, resultId: string) => {
         event.preventDefault();
-        amplitude.track("전체 검색 History List Clicked")
+        if (process.env.NODE_ENV === 'production') {
+            
+            amplitude.track("전체 검색 히스토리 List Clicked")
+        }
         window.location.href = `/history?resultid=${resultId}`
 
         // const query = new URLSearchParams(window.location.search);
