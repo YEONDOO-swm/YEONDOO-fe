@@ -112,7 +112,7 @@ export const Home = () => {
     // console.log(window.location.search)
     const query = new URLSearchParams(window.location.search);
     const searchTermParam = query.get('query') || '';
-    if (searchTermParam1) {
+    if (searchTermParam) {
       setSearchTerm(searchTermParam);
       performSearch();
     }
