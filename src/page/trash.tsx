@@ -31,7 +31,8 @@ export const Trash = () => {
     const [papersInTrash, setPapersInTrash] = useState<any>([])
     const [checkedItems, setCheckedItems] = useState<any>([])
     const [loading, setLoading] = useState<boolean>(false)
-    const [isSubmitted, setIsSubmitted] = useState<boolean>(false)
+    //const [isSubmitted, setIsSubmitted] = useState<boolean>(false)
+    const [submittedItems, setSubmittedItems] = useState<any>([])
 
     useEffect(()=>{
         if (process.env.NODE_ENV === 'production') {
@@ -50,7 +51,7 @@ export const Trash = () => {
             console.log("관심 해제된 논문 정보를 가져오는데 실패하였습니다: ", error)
             setLoading(false)
         })
-       },[isSubmitted])
+       },[])
 
     const handleSearchKeyDown = (event: any) => {
         if (event.key === 'Enter'){
@@ -82,8 +83,10 @@ export const Trash = () => {
             .catch(error => {
                 console.log("복구하는데 오류가 발생하였습니다: ", error)
             })
+            setSubmittedItems(checkedItems)
             setCheckedItems([])
-            setIsSubmitted(!isSubmitted)
+            //setIsSubmitted(!isSubmitted)
+
             if (process.env.NODE_ENV === 'production') {
                 amplitude.track('복구 Button Clicked')
             }
@@ -153,6 +156,7 @@ export const Trash = () => {
                             </Box>
                             <Box sx={{overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
                                 {papersInTrash && ( papersInTrash.map((paper:any)=>(
+                                    !submittedItems.includes(paper.paperId) &&
                                     <Card key={paper.paperId} sx={{ mb: '10px'}}>
                                         <Checkbox color="success"
                                         checked={checkedItems.includes(paper.paperId)}
