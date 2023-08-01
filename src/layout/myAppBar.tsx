@@ -63,7 +63,9 @@ export const MyAppBar = () => {
     const handleSearchKeyDown = (event: any) => {
       if (event.key === 'Enter' && event.nativeEvent.isComposing === false){
           event.preventDefault();
-          amplitude.track("app bar 내 검색 이용")
+          if (process.env.NODE_ENV === 'production') {
+            amplitude.track("app bar 내 검색 이용")
+          }
           window.location.href = `/home?query=${searchTerm}`
         }
     }

@@ -53,7 +53,10 @@ export const PaperView = () => {
     useEffect(() => {
         const query = new URLSearchParams(window.location.search);
         const paperId = query.get('paperid') || '';
-        amplitude.track('AI와 논문 읽기 Page Viewed', {paperId: paperId})
+        if (process.env.NODE_ENV === 'production') {
+            
+            amplitude.track('AI와 논문 읽기 Page Viewed', {paperId: paperId})
+        }
 
         setLoading(true)
         

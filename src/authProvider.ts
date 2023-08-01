@@ -11,13 +11,15 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 // TypeScript users must reference the type: `AuthProvider`
 export const authProvider = {
     login: ({ username, password }:any) => {
-      amplitude.setUserId(username)
+      
       var api ='';
       if (process.env.NODE_ENV === 'development'){
         api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
       }
       else if (process.env.NODE_ENV === 'production'){
         api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
+        amplitude.track("Login");
+        amplitude.setUserId(username)
       }
       return fetch(`${api}/api/login`, {
         method: 'POST',
@@ -48,9 +50,16 @@ export const authProvider = {
     },
     // called when the user clicks on the logout button
     logout: () => {
-      amplitude.reset()
-      amplitude.track("Login Page Viewed");
+      // const amp = async () => {
+      //   await amplitude.track("Logout");
+      //   await amplitude.reset()
+      // }
+      // amp()
+      if (process.env.NODE_ENV === 'production'){
+        amplitude.track("Logout");
+      }
       sessionStorage.removeItem('username');
+      //amplitude.reset()
       return Promise.resolve();
     },
     // called when the API returns an error

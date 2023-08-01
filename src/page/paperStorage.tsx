@@ -38,7 +38,10 @@ export const PaperStorage = () => {
             return
         }
         else {
-            amplitude.track("관심 논문 페이지에서 삭제",{paperId: paperId})
+            if (process.env.NODE_ENV === 'production') {
+            
+                amplitude.track("관심 논문 페이지에서 삭제",{paperId: paperId})
+            }
             setPaperIdArray(prevArray => [...prevArray, paperId])
         }
         
@@ -79,7 +82,10 @@ export const PaperStorage = () => {
     }
 
     useEffect(() => {
-        amplitude.track("관심 논문 Page Viewed");
+        if (process.env.NODE_ENV === 'production') {
+            
+            amplitude.track("관심 논문 Page Viewed");
+        }
         callGetApi()
     }, []);
 

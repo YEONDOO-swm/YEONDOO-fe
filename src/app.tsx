@@ -20,7 +20,8 @@ import RouteChangeTracker from './routeChangeTracker';
 
 amplitude.init('fa2f5340585a6728ae2103fb05e56bec', {
     defaultTracking: {
-        pageViews: false
+        pageViews: false,
+        formInteractions: false,
     }
 });
 
