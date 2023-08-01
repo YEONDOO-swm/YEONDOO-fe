@@ -17,10 +17,7 @@ Sentry.init({
     dsn: "https://50877628c33666f49b979b6bcfbf12d1@o4505627412987904.ingest.sentry.io/4505627415150592",
     environment: 'production',
     integrations: [
-      new Sentry.BrowserTracing({
-        // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
-        tracePropagationTargets: ["https://yeondoo.net"],
-      }),
+      new Sentry.BrowserTracing(),
       new Sentry.Replay(),
     ],
     // Performance Monitoring
