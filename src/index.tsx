@@ -16,7 +16,6 @@ ReactGA.initialize('G-Q44DBL2GVC')
 
 Sentry.init({
     dsn: "https://50877628c33666f49b979b6bcfbf12d1@o4505627412987904.ingest.sentry.io/4505627415150592",
-    environment: 'production',
     integrations: [
       new Sentry.BrowserTracing(),
       new Sentry.Replay(),
