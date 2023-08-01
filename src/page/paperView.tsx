@@ -200,8 +200,8 @@ export const PaperView = () => {
                                     <GoToArxiv url={paperInfo.url} paperId={paperInfo.paperId}/>
                                     <Typography variant={sizeTitleInInfo}>핵심 인사이트</Typography>
                                     <Box>
-                                    {paperInfo.insights && paperInfo.insights.map((insight: string) => (
-                                        <Typography variant={sizeContentInInfo}>{insight}</Typography>
+                                    {paperInfo.insights && paperInfo.insights.map((insight: string, index: number) => (
+                                        <Typography key={index} variant={sizeContentInInfo}>{insight}</Typography>
                                     ))}
                                     </Box>
                                     
@@ -247,11 +247,11 @@ export const PaperView = () => {
                                                         }
                                                 </Box>
                                                 
-                                                <Typography variant="body1">{history.content}{history.who? null:
+                                                <Box>{history.content}{history.who? null:
                                                     <Box sx={{display: 'flex', flexDirection: 'row-reverse'}}>
                                                         <CopyClick contents={history.content}/>
                                                     </Box>}
-                                                </Typography>
+                                                </Box>
                                             </Box>
                                             
                                             ))}
@@ -276,7 +276,7 @@ export const PaperView = () => {
                                                                 <Typography variant="body1">{searchResultsInPaper[index]}</Typography>                 
                                                             )}
                                                         </Box>
-                                                        <Box sx={{display: 'flex', flexDirection: 'row-reverse'}}><CopyClick contents={searchResultsInPaper[index]}/></Box>
+                                                        {index>= searchResultsInPaper.length?null:<Box sx={{display: 'flex', flexDirection: 'row-reverse'}}><CopyClick contents={searchResultsInPaper[index]}/></Box>}
                                                     </Box>
                                                     
                                                 </div>

@@ -51,8 +51,6 @@ export const PaperStorage = () => {
             on: false
         }
 
-        console.log(payload)
-
         fetch(`${api}/api/paperlikeonoff`, {
             method:'POST',
             headers: { 'Content-Type' : 'application/json' },
@@ -68,7 +66,6 @@ export const PaperStorage = () => {
     }
 
     const callGetApi = async () => {
-        console.log("call get api")
         setLoading(true)
         try {
             const response = await fetch(`${api}/api/container?username=${username}`)

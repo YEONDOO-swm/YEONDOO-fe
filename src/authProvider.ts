@@ -30,7 +30,6 @@ export const authProvider = {
         if (response.status === 200) {
           sessionStorage.setItem("username", username);
           return response.json().then((data) => {
-            console.log(data['isFirst'])
             if (data.isFirst) {
               localStorage.setItem('isFirst', 'true')
               return Promise.resolve({ redirectTo: '/userprofile' });
