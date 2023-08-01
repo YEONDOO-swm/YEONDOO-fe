@@ -243,13 +243,15 @@ export const PaperView = () => {
                                             >
                                                 <Box sx={{ display: 'flex', alignItems: 'flex-start', marginRight: '10px' }}>
                                                     {history.who ? <Typography>👤</Typography> : 
-                                                        <Box sx={{justifyContent:'space-between'}}>
                                                             <Typography>🍀</Typography>
-                                                            
-                                                        </Box>}
+                                                        }
                                                 </Box>
                                                 
-                                                <Typography variant="body1">{history.content}{history.who? null:<Box sx={{display: 'flex'}}><Box sx={{width: 1}}></Box><CopyClick contents={history.content}/></Box>}</Typography>
+                                                <Typography variant="body1">{history.content}{history.who? null:
+                                                    <Box sx={{display: 'flex', flexDirection: 'row-reverse'}}>
+                                                        <CopyClick contents={history.content}/>
+                                                    </Box>}
+                                                </Typography>
                                             </Box>
                                             
                                             ))}
@@ -258,24 +260,25 @@ export const PaperView = () => {
                                                 {enteredSearchTermInPaper.map((term:any, index:number) => (
                                                 <div key={index}>
                                                     <Box sx={{ display: 'flex', backgroundColor: "white", padding: '10px', marginBottom: '10px', borderRadius: '10px'}}>
-                                                    <Box sx={{ display: 'flex', alignItems: 'flex-start', marginRight: '10px' }}>
-                                                        <Typography>👤</Typography>
-                                                    </Box>
-                                                    <Typography variant="body1">{term}</Typography>
-                                                    </Box> 
-                                                    <Box sx={{ display: 'flex', backgroundColor: color.secondaryGrey, padding: '10px', marginBottom: '10px', borderRadius: '10px'}}>
-                                                    <Box sx={{ display: 'flex', alignItems: 'flex-start', marginRight: '10px' }}>
-                                                        <Typography>🍀</Typography>
-                                                    </Box>
-                                                    {index>=searchResultsInPaper.length?(
-                                                        <Typography variant="body1" className={loadingStyle.loading}> <MoreHorizIcon /> </Typography>
-                                                    ):(
-                                                        <Box sx={{display: 'flex', flexDirection: 'column'}}>
-                                                            <Typography variant="body1">{searchResultsInPaper[index]}</Typography>
-                                                            <Box sx={{display: 'flex'}}><Box sx={{width: 1}}></Box><CopyClick contents={searchResultsInPaper[index]}/></Box>
+                                                        <Box sx={{ display: 'flex', alignItems: 'flex-start', marginRight: '10px' }}>
+                                                            <Typography>👤</Typography>
                                                         </Box>
-                                                    )}
+                                                        <Typography variant="body1">{term}</Typography>
+                                                    </Box> 
+                                                    <Box sx={{ backgroundColor: color.secondaryGrey, padding: '10px', marginBottom: '10px', borderRadius: '10px'}}>
+                                                        <Box sx={{display: 'flex', alignItems: 'flex-start'}}>
+                                                            <Box sx={{ marginRight: '10px' }}>
+                                                                <Typography>🍀</Typography>
+                                                            </Box>
+                                                            {index>=searchResultsInPaper.length?(
+                                                                <Typography variant="body1" className={loadingStyle.loading}> <MoreHorizIcon /> </Typography>
+                                                            ):(
+                                                                <Typography variant="body1">{searchResultsInPaper[index]}</Typography>                 
+                                                            )}
+                                                        </Box>
+                                                        <Box sx={{display: 'flex', flexDirection: 'row-reverse'}}><CopyClick contents={searchResultsInPaper[index]}/></Box>
                                                     </Box>
+                                                    
                                                 </div>
                                                 ))}
                                             </>
