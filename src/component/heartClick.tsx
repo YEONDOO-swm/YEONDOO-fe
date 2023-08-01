@@ -37,7 +37,10 @@ export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentIt
             paperId: paperId,
             on: false
           }
-          onUpdateLikes(currentItem.paperId, currentItem.likes - 1)
+          if (onUpdateLikes){
+
+            onUpdateLikes(currentItem.paperId, currentItem.likes - 1)
+          }
         }
         else {
           if (process.env.NODE_ENV === 'production') {
@@ -49,7 +52,10 @@ export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentIt
             paperId: paperId,
             on: true
           }
-          onUpdateLikes(currentItem.paperId, currentItem.likes + 1);
+          if (onUpdateLikes){
+
+            onUpdateLikes(currentItem.paperId, currentItem.likes + 1);
+          }
         }
    
         fetch(`${api}/api/paperlikeonoff`, {

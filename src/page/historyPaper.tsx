@@ -49,16 +49,16 @@ export const HistoryPaper = () => {
             {loading?(
                 <Box sx={{ height: '80vh'}} className={loadingStyle.loading}>
                 <HistoryNav page="historyInPaper" />
-                <Box sx={{ width: '90%', m: 2}}>
-                    <Card sx={{ p: 2, height: '10vh', backgroundColor: color.loadingColor, opacity: '0.2', marginBottom: '15px'}}></Card>                  
-                    <Card sx={{ p: 2, height: '10vh', backgroundColor: color.loadingColor, opacity: '0.2', marginBottom: '15px'}}></Card>                  
+                <Box sx={{ m: 2, p:1, height: '75vh'}}>
+                    <Card sx={{ p: 2, mb: 1, height: '15vh', backgroundColor: color.loadingColor, opacity: '0.2'}}></Card>                  
+                    <Card sx={{ p: 2, mb: 1, height: '15vh', backgroundColor: color.loadingColor, opacity: '0.2'}}></Card>                  
                 </Box>
                 
             </Box>
             ):(
                 <Box sx={{ height: '80vh' }}>
   <HistoryNav page="historyInPaper" />
-  <Box sx={{ width: '90%', m: 2, overflowY: 'scroll' }} className={scrollStyle.scrollBar}>
+  <Box sx={{ m: 2, p:1, height: '75vh', overflowY: 'scroll' }} className={scrollStyle.scrollBar}>
     {searchHistory &&
       searchHistory.reduce((acc: any[], item: any, index: number) => {
         if (index % 2 === 0) {
@@ -91,7 +91,7 @@ export const HistoryPaper = () => {
         }
         return acc;
       }, []).map((mergedItems: any[], mergedIndex: number) => (
-        <Card key={mergedIndex} sx={{ p: 2, mb: 1 }}>
+        <Card key={mergedIndex} sx={{ p: 2, mb: 1, pt:1 }}>
           
             <Typography sx={{ fontSize: '10px', borderRadius: '20px', p: '0 10px', marginBottom: '5px', backgroundColor: color.secondaryGrey, display: 'inline-block' }}>          
                 {mergedItems[0].title}

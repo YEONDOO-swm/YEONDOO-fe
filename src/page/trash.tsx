@@ -127,7 +127,7 @@ export const Trash = () => {
                     <Box sx={{}}>
                         <HistoryNav page="trash" />
                     </Box>
-                    <Box sx={{ width: '90%', m: 2}}>
+                    <Box sx={{ m: 2}}>
                         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1}}>
                             <Button variant="outlined" sx={{mr: 1}} onClick={handleCheckAllItems} disabled> 전체선택 </Button>
                             <Button type="submit" variant="contained" disabled> 복구 </Button>
@@ -148,13 +148,13 @@ export const Trash = () => {
                     <Box sx={{}}>
                         <HistoryNav page="trash" />
                     </Box>
-                    <Box sx={{ width: '90%', m: 2}}>
+                    <Box sx={{ m: 2}}>
                         <form onSubmit={handleSubmit} >
                             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1}}>
                                 <Button variant="outlined" sx={{mr: 1}} onClick={handleCheckAllItems}> 전체선택 </Button>
                                 <Button type="submit" variant="contained"> 복구 </Button>
                             </Box>
-                            <Box sx={{overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
+                            <Box sx={{height: '70vh', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
                                 {papersInTrash && ( papersInTrash.map((paper:any)=>(
                                     !submittedItems.includes(paper.paperId) &&
                                     <Card key={paper.paperId} sx={{ mb: '10px'}}>

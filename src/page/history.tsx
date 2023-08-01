@@ -12,6 +12,7 @@ import { HistoryNav } from "../component/historyNav";
 import loadingStyle from "../layout/loading.module.css"
 import scrollStyle from "../layout/scroll.module.css"
 import { color } from "../layout/color";
+import { S } from "msw/lib/glossary-de6278a9";
 
 export const History = () => {
     useAuthenticated();
@@ -110,15 +111,15 @@ export const History = () => {
         {loading?(
             <Box sx={{ height: '80vh'}} className={loadingStyle.loading}>
                 <HistoryNav page="totalSearch" />
-                <Box sx={{ width: '90%', m: 2}}>
-                    <Card sx={{ p: 2, height: '20vh', backgroundColor: color.loadingColor, opacity: '0.2', marginBottom: '15px'}}></Card>                  
+                <Box sx={{ m: 2, p: 1}}>
+                    <Card sx={{ p: 2, height: '20vh', backgroundColor: color.loadingColor, opacity: '0.2'}}></Card>                  
                 </Box>
                 
             </Box>
         ):(
         <Box sx={{ height: '80vh'}}>
             <HistoryNav page="totalSearch" />
-            <Box sx={{ width: '90%', m: 2, overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
+            <Box sx={{  m: 2, p:1, height: '75vh', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
                 { urlParam !== '' ? ( eachQueryResult && 
                     <Card sx={{ p: 2, backgroundColor: color.secondaryGrey }}>
                         <Typography variant="h6"> {eachQueryResult.query} </Typography>

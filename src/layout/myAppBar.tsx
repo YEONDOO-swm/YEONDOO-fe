@@ -80,10 +80,10 @@ export const MyAppBar = () => {
       setSearchTerm(inputText);
     };
 
-    return (<AppBar sx={{ height: 'fit-content'}}>
+    return (<AppBar >
       <TitlePortal />
       {location.pathname !== '/home' && (
-        <Typography variant='h6' >
+        <Typography variant='h6' sx={{mx: 2}}>
           <Search>
               <SearchIconWrapper>
                 <SearchIcon />
