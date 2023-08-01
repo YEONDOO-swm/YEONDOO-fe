@@ -33,7 +33,6 @@ export const HistoryPaper = () => {
         fetch(`${api}/api/history/search/paper?username=${username}`)
         .then(response => response.json())
         .then(data => {
-            console.log(data)
             setSearchHistory(data)
             setLoading(false)
         })
