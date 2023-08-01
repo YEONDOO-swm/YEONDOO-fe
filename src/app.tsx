@@ -15,6 +15,8 @@ import { DarkTheme, MyTheme } from './layout/myTheme';
 import { Trash } from './page/trash';
 import { HistoryPaper } from './page/historyPaper';
 import ChannelService from './channelTalk/channelService';
+import ReactGA from "react-ga4"
+import RouteChangeTracker from './routeChangeTracker';
 
 amplitude.init('fa2f5340585a6728ae2103fb05e56bec', {
     defaultTracking: {
@@ -29,8 +31,10 @@ export const App = () => {
     ChannelService.boot({
         "pluginKey": "3ba503c9-c95d-4119-b1a6-fa80b408507f", // fill your plugin key
       });
+
+    RouteChangeTracker()
     return (
-        <BrowserRouter>
+        
             <Admin
                 authProvider={authProvider} layout={MyLayout} theme={MyTheme}
             >
@@ -48,6 +52,6 @@ export const App = () => {
                     <Route path="/history/trash" element={< Trash />} />
                 </CustomRoutes>
             </Admin>
-        </BrowserRouter>
+        
 )};
     
