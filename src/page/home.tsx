@@ -37,9 +37,9 @@ export const Home = () => {
     
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResults, setSearchResults] = useState<any>("");
-    const [enteredSearch, setEnteredSearch] = useState(""); 
-    const [isFavorite, setIsFavorite] = useState(false);
-    const [paperIdArray, setPaperIdArray] = useState<string[]>([]); 
+    //const [enteredSearch, setEnteredSearch] = useState(""); 
+    //const [isFavorite, setIsFavorite] = useState(false);
+    //const [paperIdArray, setPaperIdArray] = useState<string[]>([]); 
     const [loading, setLoading] = useState<boolean>(false);
 
     const searchInputRef = useRef<HTMLInputElement | null>(null);
@@ -47,7 +47,11 @@ export const Home = () => {
     const handleSearchKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
       if (event.key === 'Enter' && event.nativeEvent.isComposing === false){
           event.preventDefault();
-          setEnteredSearch(searchResults);
+          if (!searchTerm) {
+            notify("검색어를 입력해주세요", {type: 'error'})
+            return
+          }
+          //setEnteredSearch(searchResults);
           if (process.env.NODE_ENV === 'production') {
             
             amplitude.track("Home에서 검색")
@@ -58,7 +62,11 @@ export const Home = () => {
   
   const handleButtonClick = (event: any) => {
       event.preventDefault();
-      setEnteredSearch(searchResults);
+      if (!searchTerm) {
+        notify("검색어를 입력해주세요", {type: 'error'})
+        return
+      }
+      //setEnteredSearch(searchResults);
       if (process.env.NODE_ENV === 'production') {
             
         amplitude.track("Home에서 검색")
@@ -116,7 +124,7 @@ export const Home = () => {
       setSearchTerm(searchTermParam);
       performSearch();
     }
-  }, [location, paperIdArray]);
+  }, [location]);
 
     return (
     <div style={{height: '50vh'}}>
@@ -187,7 +195,7 @@ export const Home = () => {
                 </Typography>
               </Box>
             </Box>
-              <Typography variant="body2"> {paper.authors.slice(0,3).join(", ")} / {paper.year} / {paper.conference} / cites: {paper.cites} </Typography>
+              <Typography variant="body2"> {paper.authors.slice(0,3).join(", ")} / Arxiv 제출: {paper.year} / 컨퍼런스 제출: {paper.conference} / cites: {paper.cites} </Typography>
               <Box sx = {{margin: "15px 0 0 0" , display: 'flex'}}>
                 {/* <Button variant="contained" onClick={() => handleViewPaper(paper.url) }>논문 보기</Button> */}
                 <GoToArxiv url={paper.url} paperId={paper.paperId}/>

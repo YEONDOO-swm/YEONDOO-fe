@@ -144,7 +144,7 @@ export const PaperView = () => {
 
     return (
         <div>
-            <Title title="자세히보기" />
+            <Title title="AI와 논문읽기" />
             
             {loading ? (<div className={loadingStyle.loading}>
               <Grid container spacing={2}>
@@ -159,7 +159,10 @@ export const PaperView = () => {
                     <div>
                     <Box sx={{display: 'flex', justifyContent: 'space-between',margin: '20px 12px'}}>
                     <Box sx={{}}>
-                        <Typography variant="h5">{paperInfo.title}</Typography>
+                        <Box sx={{display: 'flex'}}>
+                            <Typography variant="h5" sx={{mr: 2}}>{paperInfo.title}</Typography>
+                            <GoToArxiv url={paperInfo.url} paperId={paperInfo.paperId}/>
+                        </Box>
                         { paperInfo.authors && (paperInfo.authors.length > 3 
                         ? (
                             !isExpanded ? (
@@ -190,7 +193,7 @@ export const PaperView = () => {
                         )           
                         : <Typography variant="body1"> {paperInfo.authors.join(", ")} </Typography>) }
                         {/* <Typography variant="h6">{paperInfo.authors && (paperInfo.authors.length > 3 ? paperInfo.authors.slice(0, 3).join(", ") : paperInfo.authors.join(", "))}</Typography> */}
-                        <Typography variant="body1">{paperInfo.year} / {paperInfo.conference} / cites: {paperInfo.cites}</Typography>
+                        <Typography variant="body1"> Arxiv 제출: {paperInfo.year} / 컨퍼런스 제출: {paperInfo.conference} / cites: {paperInfo.cites}</Typography>
                     </Box>
                     <Box sx={{}}>
                         <HeartClick currentItem={paperInfo} paperlike={paperInfo.isLike} />
@@ -200,33 +203,33 @@ export const PaperView = () => {
                         <Box display="flex" justifyContent="space-between">
                             <Box width="50%" sx={{margin: '0 10px 10px 10px'}}>
                                 <Typography variant="h6">정보</Typography>
-                                <Card sx={{ border: `1px solid ${color.mainGreen}`,  padding: '20px', height: '75vh', borderRadius: '15px', backgroundColor: color.mainGreen, 
+                                <Card sx={{ border: `1px solid ${color.mainGreen}`, padding: '20px', height: '75vh', borderRadius: '15px', backgroundColor: color.mainGreen, 
                                     overflowY: 'scroll'
                                 }} className={scrollStyle.scrollBar}>
-                                    <GoToArxiv url={paperInfo.url} paperId={paperInfo.paperId}/>
-                                    <Typography variant={sizeTitleInInfo}>핵심 인사이트</Typography>
-                                    <Box>
-                                    {paperInfo.insights && paperInfo.insights.map((insight: string, index: number) => (
-                                        <Typography key={index} variant={sizeContentInInfo}>{insight}</Typography>
-                                    ))}
+                                    <Box>   
+                                        <Typography variant={sizeTitleInInfo}>핵심 인사이트</Typography>
+                                        <Box>
+                                        {paperInfo.insights && paperInfo.insights.map((insight: string, index: number) => (
+                                            <Typography key={index} variant={sizeContentInInfo}>{insight}</Typography>
+                                        ))}
+                                        </Box>
+                                        
+                                        <Typography variant={sizeTitleInInfo}>질문</Typography>
+                                        <Box>
+                                        {paperInfo.questions && paperInfo.questions.map((question: any, index: number) => (
+                                            <Typography key={index} variant={sizeContentInInfo}>{question}</Typography>
+                                        ))}
+                                        </Box>
+                                        <Typography variant={sizeTitleInInfo}>향후 연구주제 추천</Typography>
+                                        <Box>
+                                        {paperInfo.subjectRecommends && paperInfo.subjectRecommends.map((subjectRecommend: any, index: number) => (
+                                            <Typography key={index} variant={sizeContentInInfo}>{subjectRecommend}</Typography>
+                                        ))}
+                                        </Box>
                                     </Box>
-                                    
-                                    <Typography variant={sizeTitleInInfo}>질문</Typography>
-                                    <Box>
-                                    {paperInfo.questions && paperInfo.questions.map((question: any, index: number) => (
-                                        <Typography key={index} variant={sizeContentInInfo}>{question}</Typography>
-                                    ))}
-                                    </Box>
-                                    <Typography variant={sizeTitleInInfo}>향후 연구주제 추천</Typography>
-                                    <Box>
-                                    {paperInfo.subjectRecommends && paperInfo.subjectRecommends.map((subjectRecommend: any, index: number) => (
-                                        <Typography key={index} variant={sizeContentInInfo}>{subjectRecommend}</Typography>
-                                    ))}
-                                    </Box>
-                                    
                                 </Card>
                             </Box>
-                            <Box width="50%" sx={{margin: '10px'}}>
+                            <Box width="50%" sx={{margin: '0 10px 10px 10px'}}>
                             {/* true: user(question) false: gpt (answer) */}
                                 <Box>
                                     <Typography variant="h6">현 논문 내 질의</Typography>

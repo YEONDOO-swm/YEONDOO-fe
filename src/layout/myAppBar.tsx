@@ -63,6 +63,10 @@ export const MyAppBar = () => {
     const handleSearchKeyDown = (event: any) => {
       if (event.key === 'Enter' && event.nativeEvent.isComposing === false){
           event.preventDefault();
+          if (!searchTerm) {
+            notify("검색어를 입력해주세요", {type: 'error'})
+            return
+          }
           if (process.env.NODE_ENV === 'production') {
             amplitude.track("app bar 내 검색 이용")
           }
