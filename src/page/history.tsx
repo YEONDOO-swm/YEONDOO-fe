@@ -128,9 +128,13 @@ export const History = () => {
                         <b>reference:</b> {eachQueryResult.papers.map((paper:any, index:number) =>(
                             <Box key={index}>
                                 [{index + 1}] {paper.title} (
-                                {paper.authors.map((author: any) => (
-                                    author
-                                ))}, {paper.year}, {paper.conference}, cites: {paper.cites})
+                                {paper.authors.map((author: any, index: number) => (
+                                    <React.Fragment key={`author-${index}`}>
+                                        {index > 0 && ", "}
+                                        {author}
+                                    </React.Fragment>
+                                    
+                                ))} / Arxiv 제출: {paper.year} / 컨퍼런스 제출: {paper.conference} / cites: {paper.cites})
                                 <Typography >
                                     <a href={paper.url} target="_blank" rel="noopener noreferrer">{paper.url}</a>
                                 </Typography>
