@@ -16,7 +16,7 @@
       "--no-sandbox",
       "--disable-setuid-sandbox"
     ],
-    "inclue": ["/", "/home", "/paperstorage", "/history", "/userprofile", "/paper", "/history/paper", "/history/trash"]
+    "include": ["/", "/home", "/paperstorage", "/history", "/userprofile", "/paper", "/history/paper", "/history/trash"]
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.1.2",
@@ -58,5 +58,5 @@
   "msw": {
     "workerDirectory": "public"
   },
-  "homepage": "https://yeondoo.net/home"
+  "homepage": "."
 }
