@@ -12,6 +12,8 @@ import loadingStyle from "../layout/loading.module.css"
 import scrollStyle from "../layout/scroll.module.css"
 import ClearIcon from '@mui/icons-material/Clear';
 import { color } from '../layout/color'
+import { Helmet } from "react-helmet-async";
+import MetaTag from "../SEOMetaTag";
 
 
 export const PaperStorage = () => {
@@ -100,6 +102,7 @@ export const PaperStorage = () => {
     
     return (
     <div>
+        <MetaTag title="관심 논문" description="사용자가 선택한 관심 논문 리스트를 볼 수 있습니다." keywords="히스토리, 논문, AI, 관심 논문, 찜"/>
         <Title title="관심 논문" />
         <Box sx={{height: 50}}></Box>
           {loading?(
