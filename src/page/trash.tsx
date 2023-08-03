@@ -11,6 +11,7 @@ import { HistoryNav } from "../component/historyNav";
 import loadingStyle from "../layout/loading.module.css"
 import scrollStyle from "../layout/scroll.module.css"
 import { color } from "../layout/color";
+import MetaTag from "../SEOMetaTag";
 
 export const Trash = () => {
     useAuthenticated();
@@ -120,6 +121,7 @@ export const Trash = () => {
 
     return (
         <div>
+            <MetaTag title="관심 해제된 논문" description="사용자가 관심 해제한 논문의 리스트를 볼 수 있고, 복구할 수 있습니다." keywords="히스토리, 관심 해제, 복구, 논문"/>
             <Title title="히스토리"/>
             <Box sx={{height: 50}}></Box>
             {loading ? (

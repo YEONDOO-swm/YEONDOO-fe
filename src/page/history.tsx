@@ -13,6 +13,7 @@ import loadingStyle from "../layout/loading.module.css"
 import scrollStyle from "../layout/scroll.module.css"
 import { color } from "../layout/color";
 import { S } from "msw/lib/glossary-de6278a9";
+import MetaTag from "../SEOMetaTag";
 
 export const History = () => {
     useAuthenticated();
@@ -106,6 +107,7 @@ export const History = () => {
     return (
 
     <div>
+        <MetaTag title="전체 검색 히스토리" description="사용자가 전체 검색했던 내용을 보고, 찾을 수 있습니다." keywords="히스토리, 검색결과, 검색, 전체검색"/>
         <Title title="히스토리"/>
         <Box sx={{height: 50}}></Box>
         {loading?(

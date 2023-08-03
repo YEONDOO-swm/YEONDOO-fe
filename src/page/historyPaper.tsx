@@ -7,6 +7,7 @@ import loadingStyle from "../layout/loading.module.css"
 import scrollStyle from "../layout/scroll.module.css"
 import { color } from "../layout/color";
 import * as amplitude from '@amplitude/analytics-browser';
+import MetaTag from '../SEOMetaTag';
 
 export const HistoryPaper = () => {
     useAuthenticated();
@@ -44,6 +45,7 @@ export const HistoryPaper = () => {
     }, [])
     return (
         <Box>
+            <MetaTag title="논문 내 질의 히스토리" description="사용자가 했던 모든 논문 내 질의를 보고, 찾을 수 있습니다." keywords="히스토리, 논문, 논문 내 질의, AI, AI와 함께 논문읽기"/>
             <Title title="히스토리" />
             <Box sx={{height: 50}}></Box>
             {loading?(

@@ -20,6 +20,7 @@ import scrollStyle from "../layout/scroll.module.css";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { color } from "../layout/color";
 import CopyClick from "../component/copyClick";
+import MetaTag from "../SEOMetaTag";
 
 export const Home = () => {
     useAuthenticated();
@@ -149,6 +150,7 @@ export const Home = () => {
 
     return (
     <div style={{height: '50vh'}}>
+        <MetaTag title="연두" description="궁금한 개념 질문 또는 논문 제목 검색을 하면 답변과 관련 논문을 제공합니다." keywords="논문, 검색, 질문, 개념, gpt"/>
         <Title title="Home" />
         <Box sx={{display: 'flex', margin: '30px auto', justifyContent: 'center', alignItems: 'center'}}>
           {/* <FormControl sx={{mr: 2, width: '150px'}}>

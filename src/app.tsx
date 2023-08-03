@@ -17,6 +17,8 @@ import { HistoryPaper } from './page/historyPaper';
 import ChannelService from './channelTalk/channelService';
 import ReactGA from "react-ga4"
 import RouteChangeTracker from './routeChangeTracker';
+import { Helmet } from 'react-helmet-async';
+import MetaTag from './SEOMetaTag'
 
 amplitude.init('fa2f5340585a6728ae2103fb05e56bec', {
     defaultTracking: {
@@ -28,14 +30,17 @@ amplitude.init('fa2f5340585a6728ae2103fb05e56bec', {
 // import 시 파일 대소문자확인
 // 파일 이름 컨벤션 정의
 export const App = () => { 
-    
-
     RouteChangeTracker()
     return (
-        
+        <>
+            {/* <Helmet>
+                <title>연두</title>
+            </Helmet> */}
+            <MetaTag title="연두" description="연두는 논문을 작성하는 데 어려움을 느끼는 사람들을 위해 대화형 검색, 질의 서비스를 제공합니다." keywords="논문, AI, 인공지능, 머신러닝, 검색, 질의, gpt, 논문 내 질의"/>
             <Admin
                 authProvider={authProvider} layout={MyLayout} theme={MyTheme}
             >
+                
                 {/* <Resource name="users" list={ListGuesser}></Resource> */}
                 {/* <Route path="/home" element={< Home />}/> */}
                 <CustomRoutes>
@@ -50,6 +55,7 @@ export const App = () => {
                     <Route path="/history/trash" element={< Trash />} />
                 </CustomRoutes>
             </Admin>
+        </>
         
 )};
     

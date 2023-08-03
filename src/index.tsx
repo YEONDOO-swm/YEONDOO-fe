@@ -8,6 +8,8 @@ import ReactGA from 'react-ga4'
 import * as Sentry from '@sentry/react'
 import ChannelService from './channelTalk/channelService';
 
+import { HelmetProvider } from 'react-helmet-async';
+
 if (process.env.NODE_ENV === 'development') {
     worker.start();
   }
@@ -35,7 +37,9 @@ Sentry.init({
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>
         <BrowserRouter>
-            <App />
+            <HelmetProvider>
+                <App />
+            </HelmetProvider>
         </BrowserRouter>
     </React.StrictMode>
 );
