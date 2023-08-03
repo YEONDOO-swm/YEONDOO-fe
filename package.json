@@ -12,6 +12,10 @@
   },
   "reactSnap": {
     "source" : "./dist",
+    "puppeteerArgs": [
+      "--no-sandbox",
+      "--disable-setuid-sandbox"
+    ],
     "inclue": ["/", "/home", "/paperstorage", "/history", "/userprofile", "/paper", "/history/paper", "/history/trash"]
   },
   "dependencies": {
