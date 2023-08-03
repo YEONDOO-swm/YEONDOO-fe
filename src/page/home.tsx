@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Card, CardContent } from '@mui/material';
+import { Card, CardContent, FormControl, InputLabel, MenuItem, Select, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { Grid, Box, Container, InputAdornment, TextField, IconButton, Typography, Button } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useState, useEffect, useRef, KeyboardEvent, MouseEvent } from "react";
@@ -36,6 +36,7 @@ export const Home = () => {
     }
     
     const [searchTerm, setSearchTerm] = useState("");
+    const [searchType, setSearchType] = useState("1");
     const [searchResults, setSearchResults] = useState<any>("");
     //const [enteredSearch, setEnteredSearch] = useState(""); 
     //const [isFavorite, setIsFavorite] = useState(false);
@@ -51,12 +52,19 @@ export const Home = () => {
             notify("검색어를 입력해주세요", {type: 'error'})
             return
           }
+          if (!searchType) {
+            notify("검색 유형을 선택해주세요", {type: 'error'})
+            return
+          }
           //setEnteredSearch(searchResults);
           if (process.env.NODE_ENV === 'production') {
             
             amplitude.track("Home에서 검색")
           }
-          window.location.href = `/home?query=${searchTerm}`
+          //console.log(searchType)
+          
+
+          window.location.href = `/home?query=${searchTerm}&type=${searchType}`
       }
   }
   
@@ -66,12 +74,16 @@ export const Home = () => {
         notify("검색어를 입력해주세요", {type: 'error'})
         return
       }
+      if (!searchType) {
+        notify("검색 유형을 선택해주세요", {type: 'error'})
+        return
+      }
       //setEnteredSearch(searchResults);
       if (process.env.NODE_ENV === 'production') {
             
         amplitude.track("Home에서 검색")
       }
-      window.location.href = `/home?query=${searchTerm}`
+      window.location.href = `/home?query=${searchTerm}&type=${searchType}`
   }
 
   const username = sessionStorage.getItem("username");
@@ -81,7 +93,8 @@ export const Home = () => {
           setLoading(true)
           const query= new URLSearchParams(window.location.search); 
           const performSearchTerm = query.get('query') || '';
-          const response = await fetch(`${api}/api/homesearch?query=${performSearchTerm}&&username=${username}`);
+          const performSearchType = query.get('type') || '';
+          const response = await fetch(`${api}/api/homesearch?query=${performSearchTerm}&username=${username}&searchType=${performSearchType}`);
           const data = await response.json();
 
           setSearchResults(data);
@@ -111,6 +124,12 @@ export const Home = () => {
     notify('내용이 복사되었습니다.', {type:'success'})
   };
 
+  const handleChangeSearchType = (event: React.MouseEvent<HTMLElement>,
+    newType: string) => {
+    //setSearchType(event.target.value)
+    setSearchType(newType)
+  }
+
   useEffect(() => {
     if (process.env.NODE_ENV === 'production') {
             
@@ -120,8 +139,10 @@ export const Home = () => {
     // console.log(window.location.search)
     const query = new URLSearchParams(window.location.search);
     const searchTermParam = query.get('query') || '';
-    if (searchTermParam) {
+    const searchTypeParam = query.get('type') || '';
+    if (searchTermParam && searchTypeParam) {
       setSearchTerm(searchTermParam);
+      setSearchType(searchTypeParam)
       performSearch();
     }
   }, [location]);
@@ -129,16 +150,41 @@ export const Home = () => {
     return (
     <div style={{height: '50vh'}}>
         <Title title="Home" />
-          <SearchTap
-            searchTerm={searchTerm}
-            onChange={setSearchTerm}
-            onSearch={handleButtonClick}
-            onSearchKeyDown={handleSearchKeyDown}
-            placeholder="CNN과 관련된 논문을 찾아줘"
-            firstBoxSx={{ margin: '30px auto' }}
-            middleBoxSx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-            sx={{width: "80%"}}
-          />
+        <Box sx={{display: 'flex', margin: '30px auto', justifyContent: 'center', alignItems: 'center'}}>
+          {/* <FormControl sx={{mr: 2, width: '150px'}}>
+            <InputLabel>검색 유형</InputLabel>
+            <Select
+              value={searchType}
+              label="검색 유형"
+              onChange={handleChangeSearchType}
+            >
+
+              <MenuItem value={1}>논문 제목 검색</MenuItem>
+              <MenuItem value={2}>개념 설명</MenuItem>
+
+            </Select>
+          </FormControl> */}
+          <ToggleButtonGroup
+            color="primary"
+            value={searchType}
+            exclusive
+            onChange={handleChangeSearchType}
+            aria-label="Platform"
+            sx={{mr: 2}}>
+              <ToggleButton value="1">논문 제목 검색</ToggleButton>
+              <ToggleButton value="2">개념 질문</ToggleButton>
+            </ToggleButtonGroup>
+            <SearchTap
+              searchTerm={searchTerm}
+              onChange={setSearchTerm}
+              onSearch={handleButtonClick}
+              onSearchKeyDown={handleSearchKeyDown}
+              placeholder="CNN과 관련된 논문을 찾아줘"
+              firstBoxSx={{ width: '70%'  }}
+              middleBoxSx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+              sx={{width: "100%"}} />
+        </Box>
+          
           {loading ? (
             <div >
               <Grid container spacing={2}>

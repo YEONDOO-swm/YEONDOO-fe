@@ -5,7 +5,8 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "sitemap": "babel-node src/sitemapGenerator.js"
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.1.2",
@@ -24,6 +25,7 @@
     "react-dom": "^18.2.0",
     "react-ga4": "^2.1.0",
     "react-router-dom": "^6.14.1",
+    "react-router-sitemap": "^1.2.0",
     "styled-components": "^6.0.5",
     "update": "^0.7.4"
   },
@@ -32,6 +34,10 @@
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
     "@vitejs/plugin-react": "^4.0.3",
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-register": "^6.26.0",
     "msw": "^1.2.2",
     "typescript": "^5.1.6",
     "vite": "^4.4.2"
