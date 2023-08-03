@@ -6,7 +6,8 @@
     "build": "vite build",
     "serve": "vite preview",
     "type-check": "tsc --noEmit",
-    "sitemap": "babel-node src/sitemapGenerator.js"
+    "sitemap": "babel-node src/sitemapGenerator.js",
+    "predeploy": "npm run sitemap"
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.1.2",
@@ -30,6 +31,7 @@
     "update": "^0.7.4"
   },
   "devDependencies": {
+    "@babel/register": "^7.22.5",
     "@types/node": "^20.4.1",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",

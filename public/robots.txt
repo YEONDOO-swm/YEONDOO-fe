@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://yeondoo.net/sitemap.xml
