@@ -2,7 +2,7 @@ import * as React from 'react';
 import { AppBar, TitlePortal, useNotify } from 'react-admin';
 import Box from '@mui/material/Box';
 import { Typography, styled, alpha,  ToggleButtonGroup } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { SearchTap } from '../component/searchTap';
 import { useState } from 'react';
 import InputBase from '@mui/material/InputBase';
@@ -68,6 +68,7 @@ export const MyAppBar = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [searchType, setSearchType] = useState("1");
     const notify = useNotify()
+    const navigate = useNavigate()
     const maxLengthLimit = 300
 
     const handleSearchKeyDown = (event: any) => {
@@ -84,7 +85,8 @@ export const MyAppBar = () => {
           if (process.env.NODE_ENV === 'production') {
             amplitude.track("app bar 내 검색 이용")
           }
-          window.location.href = `/home?query=${searchTerm}&type=${searchType}`
+          navigate(`/home?query=${searchTerm}&type=${searchType}`)
+          //window.location.href = `/home?query=${searchTerm}&type=${searchType}&appbar=${1}`
         }
     }
 

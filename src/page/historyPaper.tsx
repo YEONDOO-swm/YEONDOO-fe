@@ -8,6 +8,7 @@ import scrollStyle from "../layout/scroll.module.css"
 import { color } from "../layout/color";
 import * as amplitude from '@amplitude/analytics-browser';
 import MetaTag from '../SEOMetaTag';
+import { Link } from 'react-router-dom';
 
 export const HistoryPaper = () => {
     useAuthenticated();
@@ -72,12 +73,14 @@ export const HistoryPaper = () => {
                 content: item.content,
                 title: item.title,
                 who: item.who,
+                paperId: item.paperId
               },
               {
                 id: index + 1,
                 content: nextItem.content,
                 title: nextItem.title,
                 who: nextItem.who,
+                paperId: nextItem.paperId
               },
             ]);
           } else {
@@ -87,27 +90,34 @@ export const HistoryPaper = () => {
                 content: item.content,
                 title: item.title,
                 who: item.who,
+                paperId: item.paperId
               },
             ]);
           }
         }
         return acc;
       }, []).map((mergedItems: any[], mergedIndex: number) => (
-        <Card key={mergedIndex} sx={{ p: 2, mb: 1, pt:1 }}>
-          
-            <Typography sx={{ fontSize: '10px', borderRadius: '20px', p: '0 10px', marginBottom: '5px', backgroundColor: color.secondaryGrey, display: 'inline-block' }}>          
-                {mergedItems[0].title}
-            </Typography>
-          
-          {mergedItems.map((item: any) => (
-            <Box key={item.id} sx={{ display: 'flex', alignItems: 'flex-start' }}>
-              <Box sx={{ mr: 1 }}>
-                {item.who ? <Typography>👤</Typography> : <Typography>🍀</Typography>}
-              </Box>
-              <Typography> {item.content} </Typography>
-            </Box>
-          ))}
-        </Card>
+        <Link to={`/paper?paperid=${mergedItems[0].paperId}`} style={{ textDecoration: 'none', color: 'black' }}>
+            <Card key={mergedIndex} sx={{ p: 2, mb: 1, pt:1 }}>
+            
+                <Typography sx={{ fontSize: '10px', borderRadius: '20px', p: '0 10px', marginBottom: '5px', backgroundColor: color.secondaryGrey, display: 'inline-block' }}>          
+                    {mergedItems[0].title}
+                </Typography>
+                
+                {mergedItems.map((item: any) => (
+                    
+                    
+                        <Box key={item.id} sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                        <Box sx={{ mr: 1 }}>
+                            {item.who ? <Typography>👤</Typography> : <Typography>🍀</Typography>}
+                        </Box>
+                        <Typography> {item.content} </Typography>
+                        </Box>
+                    
+                ))}
+                
+            </Card>
+        </Link>
       ))}
   </Box>
 </Box>

@@ -132,6 +132,7 @@ export const Home = () => {
   }
 
   useEffect(() => {
+    console.log(location)
     if (process.env.NODE_ENV === 'production') {
             
       amplitude.track("Home Page Viewed");
@@ -141,9 +142,10 @@ export const Home = () => {
     const query = new URLSearchParams(window.location.search);
     const searchTermParam = query.get('query') || '';
     const searchTypeParam = query.get('type') || '';
+    //const appBarParam = query.get('appbar') || '';
     if (searchTermParam && searchTypeParam) {
       setSearchTerm(searchTermParam);
-      setSearchType(searchTypeParam)
+      setSearchType(searchTypeParam);
       performSearch();
     }
   }, [location]);
