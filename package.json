@@ -11,6 +11,7 @@
     "predeploy": "npm run sitemap"
   },
   "reactSnap": {
+    "source" : "./dist",
     "inclue": ["/", "/home", "/paperstorage", "/history", "/userprofile", "/paper", "/history/paper", "/history/trash"]
   },
   "dependencies": {
