@@ -4,10 +4,14 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "postbuild": "react-snap",
     "serve": "vite preview",
     "type-check": "tsc --noEmit",
     "sitemap": "babel-node src/sitemapGenerator.js",
     "predeploy": "npm run sitemap"
+  },
+  "reactSnap": {
+    "inclue": ["/", "/home", "/paperstorage", "/history", "/userprofile", "/paper", "/history/paper", "/history/trash"]
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.1.2",
@@ -27,6 +31,7 @@
     "react-ga4": "^2.1.0",
     "react-router-dom": "^6.14.1",
     "react-router-sitemap": "^1.2.0",
+    "react-snap": "^1.23.0",
     "styled-components": "^6.0.5",
     "update": "^0.7.4"
   },

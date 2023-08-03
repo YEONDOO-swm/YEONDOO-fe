@@ -9,6 +9,7 @@ import * as Sentry from '@sentry/react'
 import ChannelService from './channelTalk/channelService';
 
 import { HelmetProvider } from 'react-helmet-async';
+import { hydrate, render } from 'react-dom';
 
 if (process.env.NODE_ENV === 'development') {
     worker.start();
@@ -34,7 +35,8 @@ Sentry.init({
         "pluginKey": "3ba503c9-c95d-4119-b1a6-fa80b408507f", // fill your plugin key
       });
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+const rootElement = document.getElementById('root');
+const app = (
     <React.StrictMode>
         <BrowserRouter>
             <HelmetProvider>
@@ -42,4 +44,13 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
             </HelmetProvider>
         </BrowserRouter>
     </React.StrictMode>
+)
+ReactDOM.createRoot(rootElement as HTMLElement).render(
+    app
 );
+
+if (rootElement?.hasChildNodes()) {
+    hydrate(app, rootElement);
+  } else {
+    render(app, rootElement);
+  }
