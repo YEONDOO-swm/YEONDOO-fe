@@ -18,7 +18,7 @@ const RouteChangeTracker = () => {
       const pageTitleMap: { [key: string]: string } = {
         '/home': '홈페이지',
         '/history': '전체 검색 히스토리 페이지',
-        '/history/trash': '관심 해제 논문 페이지',
+        '/historytrash': '관심 해제 논문 페이지',
         '/historypaper': '논문 내 질의 히스토리 페이지',
         '/userprofile': '유저 프로필 페이지',
         '/paperstorage': '논문보관함 페이지',

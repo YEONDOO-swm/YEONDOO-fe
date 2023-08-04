@@ -86,6 +86,7 @@ export const MyAppBar = () => {
             amplitude.track("app bar 내 검색 이용")
           }
           navigate(`/home?query=${searchTerm}&type=${searchType}`)
+          setSearchTerm('')
           //window.location.href = `/home?query=${searchTerm}&type=${searchType}&appbar=${1}`
         }
     }

@@ -52,7 +52,7 @@ export const App = () => {
                     <Route path="/userprofile" element={< UserProfile />}/>
                     <Route path="/paper" element={< PaperView />}/>
                     <Route path="/historypaper" element={< HistoryPaper />} />
-                    <Route path="/history/trash" element={< Trash />} />
+                    <Route path="/historytrash" element={< Trash />} />
                 </CustomRoutes>
             </Admin>
         </>
