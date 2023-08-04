@@ -23,7 +23,7 @@
       "/userprofile",
       "/paper",
       "/historypaper",
-      "/history/trash"
+      "/historytrash"
     ]
   },
   "dependencies": {

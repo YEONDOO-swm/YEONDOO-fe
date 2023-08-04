@@ -26,8 +26,8 @@ export const HistoryNav = ({page} : {page: any}) => {
 
     const handleNavigateToTrash = () => {
         const path = location.pathname
-        navigate('/history/trash')
-        if (path === '/history/trash'){
+        navigate('/historytrash')
+        if (path === '/historytrash'){
             window.location.reload()
         }
     }
