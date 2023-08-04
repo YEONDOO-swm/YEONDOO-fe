@@ -9,7 +9,7 @@ export default (
         <Route path="/history" />
         <Route path="/userprofile" />
         <Route path="/paper" />
-        <Route path="/history/paper" />
+        <Route path="/historypaper" />
         <Route path="/history/trash"  />
         
     </Route>

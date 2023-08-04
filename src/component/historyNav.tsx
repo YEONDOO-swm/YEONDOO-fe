@@ -18,8 +18,8 @@ export const HistoryNav = ({page} : {page: any}) => {
 
     const handleNavigateToSearchInPaper = () => {
         const path = location.pathname
-        navigate('/history/paper')
-        if (path === '/history/paper'){
+        navigate('/historypaper')
+        if (path === '/historypaper'){
             window.location.reload()
         }
     }
