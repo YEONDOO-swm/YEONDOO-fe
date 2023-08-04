@@ -64,8 +64,9 @@ export const Home = () => {
           }
           //console.log(searchType)
           
-
-          window.location.href = `/home?query=${searchTerm}&type=${searchType}`
+          navigate(`/home?query=${searchTerm}&type=${searchType}`)
+          performSearch()
+          //window.location.href = `/home?query=${searchTerm}&type=${searchType}`
       }
   }
   
@@ -84,7 +85,15 @@ export const Home = () => {
             
         amplitude.track("Home에서 검색")
       }
-      window.location.href = `/home?query=${searchTerm}&type=${searchType}`
+      // if (process.env.NODE_ENV === 'development'){
+      //   window.location.href = `http://localhost:5173/home?query=${searchTerm}&type=${searchType}`
+      // }
+      // else if (process.env.NODE_ENV === 'production'){
+      //   window.location.href = `https://yeondoo.net/home?query=${searchTerm}&type=${searchType}`
+      // }
+      navigate(`/home?query=${searchTerm}&type=${searchType}`)
+      performSearch()
+      //window.location.href = `/home?query=${searchTerm}&type=${searchType}`
   }
 
   const username = sessionStorage.getItem("username");

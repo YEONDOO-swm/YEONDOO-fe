@@ -54,18 +54,6 @@ export const Trash = () => {
         })
        },[])
 
-    const handleSearchKeyDown = (event: any) => {
-        if (event.key === 'Enter'){
-            event.preventDefault();
-            window.location.href = `/home?query=${searchTerm}`
-        }
-    }
-    
-    const handleButtonClick = (event: any) => {
-        event.preventDefault();
-        window.location.href = `/home?query=${searchTerm}`
-    }
-
     const notify = useNotify()
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {

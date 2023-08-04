@@ -34,6 +34,7 @@ export const History = () => {
     const [eachQueryResult, setEachQueryResult] = useState<any>('')
     const [loading, setLoading] = useState<boolean>(false)
     const navigate = useNavigate()
+    const [urlLocation, setUrlLocation] = useState<boolean>(false)
 
     useEffect(()=>{
         if (process.env.NODE_ENV === 'production') {
@@ -66,7 +67,7 @@ export const History = () => {
                 setEachQueryResult(data)
             })
         }
-    },[])
+    },[urlLocation])
 
     var api = '';
     if (process.env.NODE_ENV === 'development'){
@@ -76,19 +77,6 @@ export const History = () => {
       api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
     }
 
-    const [searchTerm, setSearchTerm] = useState("");
-
-    const handleSearchKeyDown = (event: any) => {
-        if (event.key === 'Enter'){
-            event.preventDefault();
-            window.location.href = `/home?query=${searchTerm}`
-        }
-    }
-    
-    const handleButtonClick = (event: any) => {
-        event.preventDefault();
-        window.location.href = `/home?query=${searchTerm}`
-    }
 
     const handleResultClick = (event: any, resultId: string) => {
         event.preventDefault();
@@ -96,9 +84,11 @@ export const History = () => {
             
             amplitude.track("전체 검색 히스토리 List Clicked")
         }
-        window.location.href = `/history?resultid=${resultId}`
+        navigate(`/history?resultid=${resultId}`)
+        setUrlLocation(!urlLocation)
+        //window.location.href = `/history?resultid=${resultId}`
 
-        // const query = new URLSearchParams(window.location.search);
+        // const query = new URLSearchParams(ation.search);
         // const resultid = query.get('resultid') || ''
         // console.log(resultid)
         // setUrlParam(resultid)

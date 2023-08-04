@@ -87,18 +87,6 @@ export const PaperStorage = () => {
         }
         callGetApi()
     }, []);
-
-    const handleSearchKeyDown = (event: any) => {
-        if (event.key === 'Enter'){
-            event.preventDefault();
-            window.location.href = `/home?query=${searchTerm}`
-        }
-    }
-    
-    const handleButtonClick = (event: any) => {
-        event.preventDefault();
-        window.location.href = `/home?query=${searchTerm}`
-    }
     
     return (
     <div>
