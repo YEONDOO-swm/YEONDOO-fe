@@ -47,8 +47,9 @@ export const Home = () => {
     const searchInputRef = useRef<HTMLInputElement | null>(null);
 
     const handleSearchKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter' && event.nativeEvent.isComposing === false){
-          event.preventDefault();
+      if (!loading && event.key === 'Enter' && event.nativeEvent.isComposing === false){
+        console.log("in!") 
+        event.preventDefault();
           if (!searchTerm) {
             notify("검색어를 입력해주세요", {type: 'error'})
             return
@@ -71,6 +72,9 @@ export const Home = () => {
   }
   
   const handleButtonClick = (event: any) => {
+      if (loading) {
+        return
+      }
       event.preventDefault();
       if (!searchTerm) {
         notify("검색어를 입력해주세요", {type: 'error'})
@@ -129,15 +133,12 @@ export const Home = () => {
     }));
   };
 
-  const handleCopy = (copyContents:any) => {
-    navigator.clipboard.writeText(copyContents)
-    notify('내용이 복사되었습니다.', {type:'success'})
-  };
 
   const handleChangeSearchType = (event: React.MouseEvent<HTMLElement>,
     newType: string) => {
     //setSearchType(event.target.value)
     setSearchType(newType)
+    setSearchTerm('')
   }
 
   useEffect(() => {
@@ -192,7 +193,7 @@ export const Home = () => {
               onChange={setSearchTerm}
               onSearch={handleButtonClick}
               onSearchKeyDown={handleSearchKeyDown}
-              placeholder="CNN과 관련된 논문을 찾아줘"
+              placeholder={searchType=='1'?"Attention is all you need":"Transformer가 뭐야?"}
               firstBoxSx={{ width: '70%'  }}
               middleBoxSx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
               sx={{width: "100%"}} />

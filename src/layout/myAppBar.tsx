@@ -62,7 +62,6 @@ const ToggleButton = styled(MuiToggleButton)({
 });
 
 
-
 export const MyAppBar = () => {
 
     const [searchTerm, setSearchTerm] = useState("");

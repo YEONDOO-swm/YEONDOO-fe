@@ -139,7 +139,7 @@ export const PaperView = () => {
         setIsExpanded(false)
     }
 
-    const sizeTitleInInfo = "h6"
+    const sizeTitleInInfo = "body1"
     const sizeContentInInfo = "body1"
 
 
@@ -208,21 +208,21 @@ export const PaperView = () => {
                                     overflowY: 'scroll'
                                 }} className={scrollStyle.scrollBar}>
                                     <Box>   
-                                        <Typography variant={sizeTitleInInfo}>핵심 인사이트</Typography>
-                                        <Box>
+                                        <Typography variant={sizeTitleInInfo} sx={{fontWeight: 'bold'}}>핵심 인사이트</Typography>
+                                        <Box sx={{mb: 2, marginLeft: '5px'}}>
                                         {paperInfo.insights && paperInfo.insights.map((insight: string, index: number) => (
                                             <Typography key={index} variant={sizeContentInInfo}>{insight}</Typography>
                                         ))}
                                         </Box>
                                         
-                                        <Typography variant={sizeTitleInInfo}>질문</Typography>
-                                        <Box>
+                                        <Typography variant={sizeTitleInInfo} sx={{fontWeight: 'bold'}}>질문</Typography>
+                                        <Box sx={{mb: 2, marginLeft: '5px'}}>
                                         {paperInfo.questions && paperInfo.questions.map((question: any, index: number) => (
                                             <Typography key={index} variant={sizeContentInInfo}>{question}</Typography>
                                         ))}
                                         </Box>
-                                        <Typography variant={sizeTitleInInfo}>향후 연구주제 추천</Typography>
-                                        <Box>
+                                        <Typography variant={sizeTitleInInfo} sx={{fontWeight: 'bold'}}>향후 연구주제 추천</Typography>
+                                        <Box sx={{mb: 2, marginLeft: '5px'}}>
                                         {paperInfo.subjectRecommends && paperInfo.subjectRecommends.map((subjectRecommend: any, index: number) => (
                                             <Typography key={index} variant={sizeContentInInfo}>{subjectRecommend}</Typography>
                                         ))}
