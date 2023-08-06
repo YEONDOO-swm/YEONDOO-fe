@@ -17,6 +17,7 @@ import * as amplitude from '@amplitude/analytics-browser';
 import CopyClick from "../component/copyClick";
 import { HeartClick } from "../component/heartClick";
 import MetaTag from "../SEOMetaTag";
+import ScoreSlider from "../component/scoreSlider";
 
 // TODO1: list 제한 걸기
 // TODO2: 스크롤
@@ -253,13 +254,20 @@ export const PaperView = () => {
                                                     {history.who ? <Typography sx={{mr: '10px'}}>👤</Typography> : 
                                                             <Typography sx={{mr: '10px'}}>🍀</Typography>
                                                         }
-                                                    {history.content}
+                                                    <Box>
+                                                        {history.content}
+                                                        {history.who? null:
+                                                        <Box sx={{display: 'flex', flexDirection: 'row-reverse'}}>
+                                                            <CopyClick contents={history.content}/>
+                                                            
+                                                        </Box>}
+                                                        {history.who? null:
+                                                        <ScoreSlider id={history.id} score={history.score}/>}
+                                                        
+                                                    </Box>
+                                                    
                                                 </Box>
                                                 
-                                                {history.who? null:
-                                                    <Box sx={{display: 'flex', flexDirection: 'row-reverse'}}>
-                                                        <CopyClick contents={history.content}/>
-                                                    </Box>}
                                             </Box>
                                             
                                             ))}
@@ -278,13 +286,17 @@ export const PaperView = () => {
                                                             <Box sx={{ marginRight: '10px' }}>
                                                                 <Typography>🍀</Typography>
                                                             </Box>
-                                                            {index>=searchResultsInPaper.length?(
-                                                                <Typography variant="body1" className={loadingStyle.loading}> <MoreHorizIcon /> </Typography>
-                                                            ):(
-                                                                <Typography variant="body1">{searchResultsInPaper[index]}</Typography>                 
-                                                            )}
+                                                            <Box>
+                                                                {index>=searchResultsInPaper.length?(
+                                                                    <Typography variant="body1" className={loadingStyle.loading}> <MoreHorizIcon /> </Typography>
+                                                                ):(
+                                                                    <Typography variant="body1">{searchResultsInPaper[index]}</Typography>                 
+                                                                )}
+                                                                {index>= searchResultsInPaper.length?null:<Box sx={{display: 'flex', flexDirection: 'row-reverse'}}><CopyClick contents={searchResultsInPaper[index]}/></Box>}
+                                                            <ScoreSlider />
+                                                            </Box>
                                                         </Box>
-                                                        {index>= searchResultsInPaper.length?null:<Box sx={{display: 'flex', flexDirection: 'row-reverse'}}><CopyClick contents={searchResultsInPaper[index]}/></Box>}
+                                                        
                                                     </Box>
                                                     
                                                 </div>

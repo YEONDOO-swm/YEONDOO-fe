@@ -21,6 +21,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { color } from "../layout/color";
 import CopyClick from "../component/copyClick";
 import MetaTag from "../SEOMetaTag";
+import ScoreSlider from "../component/scoreSlider";
 
 export const Home = () => {
     useAuthenticated();
@@ -43,6 +44,7 @@ export const Home = () => {
     //const [isFavorite, setIsFavorite] = useState(false);
     //const [paperIdArray, setPaperIdArray] = useState<string[]>([]); 
     const [loading, setLoading] = useState<boolean>(false);
+    //const [sliderText, setSliderText] = useState<any>();
 
     const searchInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -229,14 +231,17 @@ export const Home = () => {
       }} className={scrollStyle.scrollBar}>
         <Box sx={{display: 'flex', alignItems: 'flex-start'}}>
 
-        <Typography sx={{fontSize: "20px", mr: 1}}>🍀</Typography>
-        {/* <CopyClick contents={searchResults.answer} /> */}
-        {/* <Box sx={{display: 'flex', flexDirection:'column'}}> */}
-          {searchResults.answer}
+          <Typography sx={{fontSize: "20px", mr: 1}}>🍀</Typography>
+          {/* <CopyClick contents={searchResults.answer} /> */}
+          {/* <Box sx={{display: 'flex', flexDirection:'column'}}> */}
+          <Box sx={{display: 'flex', flexDirection:'column'}}>
+          {searchResults.answer} 
+          <Box sx={{display: 'flex', flexDirection: 'row-reverse'}}><CopyClick contents={searchResults.answer}/></Box>
+          <ScoreSlider/>
+          </Box>
         </Box>
-          
         {/* </Box> */}
-        <Box sx={{display: 'flex', flexDirection: 'row-reverse'}}><CopyClick contents={searchResults.answer}/></Box>
+        
       </Card>
     </Grid>
     <Grid item xs={6}>
