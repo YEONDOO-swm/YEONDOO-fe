@@ -50,6 +50,7 @@ export const SearchTap: React.FC<SearchTapProps> = ({
                 <TextField
                 id="search"
                 type="search"
+                multiline
                 inputProps={{
                   maxLength: maxLengthLimit,
                 }}

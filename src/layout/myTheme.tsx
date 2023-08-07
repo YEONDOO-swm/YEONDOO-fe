@@ -19,7 +19,7 @@ export const MyTheme = {
     },
     typography: {
         // Use the system font instead of the default Roboto font.
-        fontFamily: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Arial', 'sans-serif'].join(','),
+        fontFamily: ['Inter', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Arial', 'sans-serif'].join(','),
     },
 };
 

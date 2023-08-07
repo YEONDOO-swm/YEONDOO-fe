@@ -1,14 +1,15 @@
 import * as React from "react";
-import { Card, CardContent } from '@mui/material';
+import { Card, CardContent, FormControl, InputLabel, MenuItem, Select, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { Grid, Box, Container, InputAdornment, TextField, IconButton, Typography, Button } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useState, useEffect, useRef, KeyboardEvent, MouseEvent } from "react";
 import SearchIcon from "@mui/icons-material/Search";
-import { Title, useAuthenticated } from 'react-admin';
+import { Title, useAuthenticated, useNotify } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
 import * as amplitude from '@amplitude/analytics-browser';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { SearchTap } from "../component/searchTap";
 import { GoToArxiv } from "../component/goToArxiv";
 import { GoToViewMore } from "../component/goToViewMore";
@@ -18,10 +19,14 @@ import loadingStyle from "../layout/loading.module.css";
 import scrollStyle from "../layout/scroll.module.css";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { color } from "../layout/color";
+import CopyClick from "../component/copyClick";
+import MetaTag from "../SEOMetaTag";
+import ScoreSlider from "../component/scoreSlider";
 
 export const Home = () => {
     useAuthenticated();
     const navigate = useNavigate();
+    const notify = useNotify();
     UserProfileCheck();
 
     var api = '';
@@ -33,28 +38,68 @@ export const Home = () => {
     }
     
     const [searchTerm, setSearchTerm] = useState("");
+    const [searchType, setSearchType] = useState("1");
     const [searchResults, setSearchResults] = useState<any>("");
-    const [enteredSearch, setEnteredSearch] = useState(""); 
-    const [isFavorite, setIsFavorite] = useState(false);
-    const [paperIdArray, setPaperIdArray] = useState<string[]>([]); 
+    //const [enteredSearch, setEnteredSearch] = useState(""); 
+    //const [isFavorite, setIsFavorite] = useState(false);
+    //const [paperIdArray, setPaperIdArray] = useState<string[]>([]); 
     const [loading, setLoading] = useState<boolean>(false);
+    //const [sliderText, setSliderText] = useState<any>();
 
     const searchInputRef = useRef<HTMLInputElement | null>(null);
 
     const handleSearchKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter' && event.nativeEvent.isComposing === false){
-          event.preventDefault();
-          setEnteredSearch(searchResults);
-          amplitude.track("Home에서 검색")
-          window.location.href = `/home?query=${searchTerm}`
+      if (!loading && event.key === 'Enter' && event.nativeEvent.isComposing === false){
+        //console.log("in!") 
+        event.preventDefault();
+          if (!searchTerm) {
+            notify("검색어를 입력해주세요", {type: 'error'})
+            return
+          }
+          if (!searchType) {
+            notify("검색 유형을 선택해주세요", {type: 'error'})
+            return
+          }
+          //setEnteredSearch(searchResults);
+          if (process.env.NODE_ENV === 'production') {
+            
+            amplitude.track("Home에서 검색")
+          }
+          //console.log(searchType)
+          
+          navigate(`/home?query=${searchTerm}&type=${searchType}`)
+          performSearch()
+          //window.location.href = `/home?query=${searchTerm}&type=${searchType}`
       }
   }
   
   const handleButtonClick = (event: any) => {
+      if (loading) {
+        return
+      }
       event.preventDefault();
-      setEnteredSearch(searchResults);
-      amplitude.track("Home에서 검색")
-      window.location.href = `/home?query=${searchTerm}`
+      if (!searchTerm) {
+        notify("검색어를 입력해주세요", {type: 'error'})
+        return
+      }
+      if (!searchType) {
+        notify("검색 유형을 선택해주세요", {type: 'error'})
+        return
+      }
+      //setEnteredSearch(searchResults);
+      if (process.env.NODE_ENV === 'production') {
+            
+        amplitude.track("Home에서 검색")
+      }
+      // if (process.env.NODE_ENV === 'development'){
+      //   window.location.href = `http://localhost:5173/home?query=${searchTerm}&type=${searchType}`
+      // }
+      // else if (process.env.NODE_ENV === 'production'){
+      //   window.location.href = `https://yeondoo.net/home?query=${searchTerm}&type=${searchType}`
+      // }
+      navigate(`/home?query=${searchTerm}&type=${searchType}`)
+      performSearch()
+      //window.location.href = `/home?query=${searchTerm}&type=${searchType}`
   }
 
   const username = sessionStorage.getItem("username");
@@ -64,7 +109,8 @@ export const Home = () => {
           setLoading(true)
           const query= new URLSearchParams(window.location.search); 
           const performSearchTerm = query.get('query') || '';
-          const response = await fetch(`${api}/api/homesearch?query=${performSearchTerm}&&username=${username}`);
+          const performSearchType = query.get('type') || '';
+          const response = await fetch(`${api}/api/homesearch?query=${performSearchTerm}&username=${username}&searchType=${performSearchType}`);
           const data = await response.json();
 
           setSearchResults(data);
@@ -89,39 +135,78 @@ export const Home = () => {
     }));
   };
 
+
+  const handleChangeSearchType = (event: React.MouseEvent<HTMLElement>,
+    newType: string) => {
+    //setSearchType(event.target.value)
+    setSearchType(newType)
+    setSearchTerm('')
+  }
+
   useEffect(() => {
-    amplitude.track("Home Page Viewed");
+    //console.log(location)
+    if (process.env.NODE_ENV === 'production') {
+            
+      amplitude.track("Home Page Viewed");
+    }
     searchInputRef.current?.focus();
     // console.log(window.location.search)
     const query = new URLSearchParams(window.location.search);
     const searchTermParam = query.get('query') || '';
-    if (searchTermParam) {
+    const searchTypeParam = query.get('type') || '';
+    //const appBarParam = query.get('appbar') || '';
+    if (searchTermParam && searchTypeParam) {
       setSearchTerm(searchTermParam);
+      setSearchType(searchTypeParam);
       performSearch();
     }
-  }, [location, paperIdArray]);
+  }, [location]);
 
     return (
     <div style={{height: '50vh'}}>
+        <MetaTag title="연두" description="궁금한 개념 질문 또는 논문 제목 검색을 하면 답변과 관련 논문을 제공합니다." keywords="논문, 검색, 질문, 개념, gpt"/>
         <Title title="Home" />
-          <SearchTap
-            searchTerm={searchTerm}
-            onChange={setSearchTerm}
-            onSearch={handleButtonClick}
-            onSearchKeyDown={handleSearchKeyDown}
-            placeholder="CNN과 관련된 논문을 찾아줘"
-            firstBoxSx={{ margin: '30px auto' }}
-            middleBoxSx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-            sx={{width: "80%"}}
-          />
+        <Box sx={{display: 'flex', margin: '30px auto', justifyContent: 'center', alignItems: 'center'}}>
+          {/* <FormControl sx={{mr: 2, width: '150px'}}>
+            <InputLabel>검색 유형</InputLabel>
+            <Select
+              value={searchType}
+              label="검색 유형"
+              onChange={handleChangeSearchType}
+            >
+
+              <MenuItem value={1}>논문 제목 검색</MenuItem>
+              <MenuItem value={2}>개념 설명</MenuItem>
+
+            </Select>
+          </FormControl> */}
+          <ToggleButtonGroup
+            color="primary"
+            value={searchType}
+            exclusive
+            onChange={handleChangeSearchType}
+            aria-label="Platform"
+            sx={{mr: 2}}>
+              <ToggleButton value="1">논문 제목 검색</ToggleButton>
+              <ToggleButton value="2">개념 질문</ToggleButton>
+            </ToggleButtonGroup>
+            <SearchTap
+              searchTerm={searchTerm}
+              onChange={setSearchTerm}
+              onSearch={handleButtonClick}
+              onSearchKeyDown={handleSearchKeyDown}
+              placeholder={searchType=='1'?"Attention is all you need":"Transformer가 뭐야?"}
+              firstBoxSx={{ width: '70%'  }}
+              middleBoxSx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+              sx={{width: "100%"}} />
+        </Box>
+          
           {loading ? (
             <div >
               <Grid container spacing={2}>
                 <Grid item xs={6}>
-                  <Card sx={{ display: 'flex', border: `1px solid ${color.mainGreen}`, margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: color.mainGreen, opacity: '0.7'}}>
-                    <Box sx={{marginRight: '5px'}}>
-                      <QuestionAnswerIcon />
-                    </Box>
+                  <Card sx={{ display: 'flex', alignItems: 'flex-start', border: `1px solid ${color.mainGreen}`, margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: color.mainGreen, opacity: '0.7'}}>
+                  <Typography sx={{fontSize: "20px"}}>🍀</Typography>
                     <MoreHorizIcon className={loadingStyle.loading}/>
                   </Card>
                 </Grid>
@@ -141,13 +226,29 @@ export const Home = () => {
         (searchResults && (<div>
   <Grid container spacing={2}>
     <Grid item xs={6}>
-      <Card sx={{ display:'flex', border: `1px solid ${color.mainGreen}`, margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: color.mainGreen, 
+      <Card sx={{ justifyContent: 'space-between', border: `1px solid ${color.mainGreen}`, margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: color.mainGreen, 
       overflowY: 'scroll'
       }} className={scrollStyle.scrollBar}>
-        <Box sx={{marginRight: '5px'}}>
-          <QuestionAnswerIcon />
+        <Box sx={{display: 'flex', alignItems: 'flex-start'}}>
+
+          <Typography sx={{fontSize: "20px", mr: 1}}>🍀</Typography>
+          {/* <CopyClick contents={searchResults.answer} /> */}
+          {/* <Box sx={{display: 'flex', flexDirection:'column'}}> */}
+          <Box sx={{display: 'flex', flexDirection:'column'}}>
+            {searchResults.answer} 
+            <Box sx={{display: 'flex', flexDirection: 'row-reverse', mt: 1}}>
+              <Box sx={{ml: 1}}>
+                <CopyClick contents={searchResults.answer}/>
+              </Box>
+              <ScoreSlider id={searchResults.id}/>
+            </Box>
+            {/* <Box sx={{display:'flex', width: '100%'}}>
+              <ScoreSlider/>
+            </Box> */}
+          </Box>
         </Box>
-        {searchResults.answer}
+        {/* </Box> */}
+        
       </Card>
     </Grid>
     <Grid item xs={6}>
@@ -166,7 +267,7 @@ export const Home = () => {
                 </Typography>
               </Box>
             </Box>
-              <Typography variant="body2"> {paper.authors.slice(0,3).join(", ")} / {paper.year} / {paper.conference} / cites: {paper.cites} </Typography>
+              <Typography variant="body2"> {paper.authors.slice(0,3).join(", ")} / Arxiv 제출: {paper.year} / 컨퍼런스 제출: {paper.conference} / cites: {paper.cites} </Typography>
               <Box sx = {{margin: "15px 0 0 0" , display: 'flex'}}>
                 {/* <Button variant="contained" onClick={() => handleViewPaper(paper.url) }>논문 보기</Button> */}
                 <GoToArxiv url={paper.url} paperId={paper.paperId}/>

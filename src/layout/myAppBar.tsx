@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { AppBar, TitlePortal, useNotify } from 'react-admin';
 import Box from '@mui/material/Box';
-import { Typography, styled, alpha } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Typography, styled, alpha,  ToggleButtonGroup } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
 import { SearchTap } from '../component/searchTap';
 import { useState } from 'react';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import * as amplitude from '@amplitude/analytics-browser';
+import MuiToggleButton from "@mui/material/ToggleButton";
 
 
 
@@ -53,18 +54,39 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+const ToggleButton = styled(MuiToggleButton)({
+  "&.Mui-selected, &.Mui-selected:hover": {
+    color: "white",
+    // backgroundColor: '#00ff00'
+  }
+});
+
 
 export const MyAppBar = () => {
 
     const [searchTerm, setSearchTerm] = useState("");
+    const [searchType, setSearchType] = useState("1");
     const notify = useNotify()
+    const navigate = useNavigate()
     const maxLengthLimit = 300
 
     const handleSearchKeyDown = (event: any) => {
       if (event.key === 'Enter' && event.nativeEvent.isComposing === false){
           event.preventDefault();
-          amplitude.track("app bar 내 검색 이용")
-          window.location.href = `/home?query=${searchTerm}`
+          if (!searchTerm) {
+            notify("검색어를 입력해주세요", {type: 'error'})
+            return
+          }
+          if (!searchType) {
+            notify("검색 유형을 선택해주세요", {type: 'error'})
+            return
+          }
+          if (process.env.NODE_ENV === 'production') {
+            amplitude.track("app bar 내 검색 이용")
+          }
+          navigate(`/home?query=${searchTerm}&type=${searchType}`)
+          setSearchTerm('')
+          //window.location.href = `/home?query=${searchTerm}&type=${searchType}&appbar=${1}`
         }
     }
 
@@ -78,24 +100,43 @@ export const MyAppBar = () => {
       setSearchTerm(inputText);
     };
 
-    return (<AppBar sx={{ height: 'fit-content'}}>
+    const handleChangeSearchType = (event: React.MouseEvent<HTMLElement>,
+      newType: string) => {
+      setSearchType(newType)
+    }
+
+    return (<AppBar >
       <TitlePortal />
-      <Typography variant='h6' >
-        
-        <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="전체 검색"
-              value={searchTerm}
-              onChange={handleChange}
-              onKeyDown={handleSearchKeyDown}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search>
-      </Typography>
-      
+      {location.pathname !== '/home' && (
+        <>
+          <ToggleButtonGroup
+          size="small"
+          sx={{backgroundColor: alpha('#FFFFFF', 0.25),
+          }}
+          value={searchType}
+          exclusive
+          onChange={handleChangeSearchType}
+          
+          >  
+            <ToggleButton value="1" >논문 제목 검색</ToggleButton>
+            <ToggleButton value="2" sx={{}}>개념 질문</ToggleButton>
+          </ToggleButtonGroup>
+          <Typography variant='h6' sx={{mx: 2}}>
+            <Search>
+                <SearchIconWrapper>
+                  <SearchIcon />
+                </SearchIconWrapper>
+                <StyledInputBase
+                  placeholder="전체 검색"
+                  value={searchTerm}
+                  onChange={handleChange}
+                  onKeyDown={handleSearchKeyDown}
+                  inputProps={{ 'aria-label': 'search' }}
+                />
+              </Search>
+          </Typography>
+        </>
+      )}
     </AppBar> )
 };
   

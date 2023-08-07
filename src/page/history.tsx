@@ -12,6 +12,8 @@ import { HistoryNav } from "../component/historyNav";
 import loadingStyle from "../layout/loading.module.css"
 import scrollStyle from "../layout/scroll.module.css"
 import { color } from "../layout/color";
+import { S } from "msw/lib/glossary-de6278a9";
+import MetaTag from "../SEOMetaTag";
 
 export const History = () => {
     useAuthenticated();
@@ -32,10 +34,15 @@ export const History = () => {
     const [eachQueryResult, setEachQueryResult] = useState<any>('')
     const [loading, setLoading] = useState<boolean>(false)
     const navigate = useNavigate()
+    const [urlLocation, setUrlLocation] = useState<boolean>(false)
 
     useEffect(()=>{
+        if (process.env.NODE_ENV === 'production') {
+            
+            amplitude.track("전체 검색 히스토리 Page Viewed");
+        }
         setLoading(true)
-     fetch(`${api}/api/history/search?username=${username}`)
+        fetch(`${api}/api/history/search?username=${username}`)
         .then(response => response.json())
         .then(data => {
             setPapersInNav(data.papers)
@@ -60,7 +67,7 @@ export const History = () => {
                 setEachQueryResult(data)
             })
         }
-    },[])
+    },[urlLocation])
 
     var api = '';
     if (process.env.NODE_ENV === 'development'){
@@ -70,69 +77,56 @@ export const History = () => {
       api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
     }
 
-    const [searchTerm, setSearchTerm] = useState("");
-
-    useEffect(() => {
-        amplitude.track("전체 검색 History Page Viewed");
-    }, []);
-
-    const handleSearchKeyDown = (event: any) => {
-        if (event.key === 'Enter'){
-            event.preventDefault();
-            window.location.href = `/home?query=${searchTerm}`
-        }
-    }
-    
-    const handleButtonClick = (event: any) => {
-        event.preventDefault();
-        window.location.href = `/home?query=${searchTerm}`
-    }
 
     const handleResultClick = (event: any, resultId: string) => {
         event.preventDefault();
-        amplitude.track("전체 검색 History List Clicked")
-        window.location.href = `/history?resultid=${resultId}`
+        if (process.env.NODE_ENV === 'production') {
+            
+            amplitude.track("전체 검색 히스토리 List Clicked")
+        }
+        navigate(`/history?resultid=${resultId}`)
+        setUrlLocation(!urlLocation)
+        //window.location.href = `/history?resultid=${resultId}`
 
-        // const query = new URLSearchParams(window.location.search);
+        // const query = new URLSearchParams(ation.search);
         // const resultid = query.get('resultid') || ''
         // console.log(resultid)
         // setUrlParam(resultid)
-    }
-
-    const goToHistory = () => {
-        navigate('/history')
-        setUrlParam('')
     }
     
     return (
 
     <div>
+        <MetaTag title="전체 검색 히스토리" description="사용자가 전체 검색했던 내용을 보고, 찾을 수 있습니다." keywords="히스토리, 검색결과, 검색, 전체검색"/>
         <Title title="히스토리"/>
         <Box sx={{height: 50}}></Box>
-        <Typography variant="h5" sx={{ml: 1}}> 전체검색 히스토리 </Typography>
         {loading?(
-            <Box sx={{ display: 'flex', height: '80vh'}} className={loadingStyle.loading}>
-                <Box sx={{ width: '80%', m: 2}}>
-                    <Card sx={{ p: 2, height: '20vh', backgroundColor: color.loadingColor, opacity: '0.2', marginBottom: '15px'}}></Card>                  
+            <Box sx={{ height: '80vh'}} className={loadingStyle.loading}>
+                <HistoryNav page="totalSearch" />
+                <Box sx={{ m: 2, p: 1}}>
+                    <Card sx={{ p: 2, height: '20vh', backgroundColor: color.loadingColor, opacity: '0.2'}}></Card>                  
                 </Box>
-                <Card sx={{ ml: 'auto', mr: '20px', p: '30px 40px', display: 'flex', flexDirection: 'column',borderRadius: '10px', backgroundColor: color.loadingColor, opacity: '0.2', height: '100%', width: '35vh', justifyContent:'space-between'}}>
-
-                </Card>
+                
             </Box>
         ):(
-        <Box sx={{ display: 'flex', height: '80vh'}}>
-            <Box sx={{ width: '80%', m: 2, overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
+        <Box sx={{ height: '80vh'}}>
+            <HistoryNav page="totalSearch" />
+            <Box sx={{  m: 2, p:1, height: '75vh', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
                 { urlParam !== '' ? ( eachQueryResult && 
-                    <Card sx={{ p: 2}}>
+                    <Card sx={{ p: 2, backgroundColor: color.secondaryGrey }}>
                         <Typography variant="h6"> {eachQueryResult.query} </Typography>
                         <Typography> {eachQueryResult.answer} </Typography>
                         <br />
                         <b>reference:</b> {eachQueryResult.papers.map((paper:any, index:number) =>(
-                            <Box>
+                            <Box key={index}>
                                 [{index + 1}] {paper.title} (
-                                {paper.authors.map((author: any) => (
-                                    author
-                                ))}, {paper.year}, {paper.conference}, cites: {paper.cites})
+                                {paper.authors.map((author: any, index: number) => (
+                                    <React.Fragment key={`author-${index}`}>
+                                        {index > 0 && ", "}
+                                        {author}
+                                    </React.Fragment>
+                                    
+                                ))} / Arxiv 제출: {paper.year} / 컨퍼런스 제출: {paper.conference} / cites: {paper.cites})
                                 <Typography >
                                     <a href={paper.url} target="_blank" rel="noopener noreferrer">{paper.url}</a>
                                 </Typography>
@@ -151,7 +145,7 @@ export const History = () => {
                 )))
                 }
             </Box>
-            <HistoryNav goToHistory={goToHistory} papersInNav={papersInNav} trash={false} />
+            
         </Box>
         )}
     </div>

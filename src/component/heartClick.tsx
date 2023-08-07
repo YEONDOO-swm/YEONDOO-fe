@@ -21,7 +21,9 @@ export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentIt
     const handleHeartClick = (paperId:any) => {
         var payload
         if (paperIdArray.includes(paperId) || isPaperLike) {
-          amplitude.track("찜 버튼 취소",{paperId: paperId})
+          if (process.env.NODE_ENV === 'production') {
+            amplitude.track("찜 버튼 취소",{paperId: paperId})
+          }
           setIsPaperLike(false)
           for (var i = 0; i<paperIdArray.length; i++){
             if (paperIdArray[i] === paperId) {
@@ -35,17 +37,25 @@ export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentIt
             paperId: paperId,
             on: false
           }
-          onUpdateLikes(currentItem.paperId, currentItem.likes - 1)
+          if (onUpdateLikes){
+
+            onUpdateLikes(currentItem.paperId, currentItem.likes - 1)
+          }
         }
         else {
-          amplitude.track("찜 버튼 Clicked", {paperId: paperId})
+          if (process.env.NODE_ENV === 'production') {
+            amplitude.track("찜 버튼 Clicked", {paperId: paperId})
+          }
           setPaperIdArray(prevArray => [...prevArray, paperId]);
           payload = {
             username: sessionStorage.getItem('username'),
             paperId: paperId,
             on: true
           }
-          onUpdateLikes(currentItem.paperId, currentItem.likes + 1);
+          if (onUpdateLikes){
+
+            onUpdateLikes(currentItem.paperId, currentItem.likes + 1);
+          }
         }
    
         fetch(`${api}/api/paperlikeonoff`, {

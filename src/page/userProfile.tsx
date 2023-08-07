@@ -32,7 +32,10 @@ export const UserProfile = () => {
     const username = sessionStorage.getItem('username');
 
     useEffect(() => {
-        amplitude.track("유저 프로필 Page Viewed");
+        if (process.env.NODE_ENV === 'production') {
+
+            amplitude.track("유저 프로필 Page Viewed");
+        }
         const checkUserName = sessionStorage.getItem('username')
         if (checkUserName){
             setUserName(checkUserName)
@@ -59,7 +62,7 @@ export const UserProfile = () => {
     };
 
     const handleKeywordsKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-        if(event.key === 'Enter' ||  event.key === ' ') {
+        if((event.key === 'Enter' ||  event.key === ' ') && event.nativeEvent.isComposing === false) {
             event.preventDefault();
             if (enteredKeywords.length >=3 ){   
                 notify("키워드는 3개까지 입력할 수 있습니다.", {type: 'error'});
@@ -130,6 +133,9 @@ export const UserProfile = () => {
         })
         // console.log('연구분야: ', researchField);
         // console.log('키워드: ', keywords);
+        if (process.env.NODE_ENV === 'production') {
+            
+        }
         amplitude.track("유저 프로필 제출 Clicked");
         localStorage.setItem("userprofile", "exists");
     };
