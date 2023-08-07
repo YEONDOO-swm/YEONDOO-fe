@@ -157,7 +157,7 @@ export const PaperStorage = () => {
                     </Dialog> 
                 {papersInStorage ? papersInStorage.map((paper:any) => (
                     !paperIdArray.includes(paper.paperId) && (
-                            <Card key={paper.paperId} sx={{padding: '15px', borderRadius: '15px', margin: '15px'}}>
+                            <Card key={paper.paperId} sx={{padding: '15px 10px 18px 25px', borderRadius: '15px', margin: '15px'}}>
                                 <Box sx={{display: 'flex', justifyContent:'space-between'}}>
                                     <Box>
                                         <Typography variant="h6">
