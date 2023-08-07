@@ -22,6 +22,8 @@ import { color } from "../layout/color";
 import CopyClick from "../component/copyClick";
 import MetaTag from "../SEOMetaTag";
 import ScoreSlider from "../component/scoreSlider";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 export const Home = () => {
     useAuthenticated();
@@ -44,6 +46,7 @@ export const Home = () => {
     //const [isFavorite, setIsFavorite] = useState(false);
     //const [paperIdArray, setPaperIdArray] = useState<string[]>([]); 
     const [loading, setLoading] = useState<boolean>(false);
+    const [expandedPaperArray, setExpandedPaperArray] = useState<any>([])
     //const [sliderText, setSliderText] = useState<any>();
 
     const searchInputRef = useRef<HTMLInputElement | null>(null);
@@ -141,6 +144,15 @@ export const Home = () => {
     //setSearchType(event.target.value)
     setSearchType(newType)
     setSearchTerm('')
+    setSearchResults('')
+  }
+
+  const handleViewMoreAbstract = (paperId: any) => {
+    setExpandedPaperArray((prevPaper: any)=> [...prevPaper, paperId])
+  }
+
+  const handleViewLessAbstract = (paperId: any) => {
+    setExpandedPaperArray(expandedPaperArray.filter((paper: any) => paper !== paperId))
   }
 
   useEffect(() => {
@@ -202,28 +214,87 @@ export const Home = () => {
         </Box>
           
           {loading ? (
-            <div >
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <Card sx={{ display: 'flex', alignItems: 'flex-start', border: `1px solid ${color.mainGreen}`, margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: color.mainGreen, opacity: '0.7'}}>
-                  <Typography sx={{fontSize: "20px"}}>🍀</Typography>
-                    <MoreHorizIcon className={loadingStyle.loading}/>
-                  </Card>
-                </Grid>
-                <Grid item xs={6}>
-                  <CardContent sx={{ height: '75vh', margin: '0 30px 0 10px', padding: '10px'}} className={loadingStyle.loading}>
-                    <Card sx={{ height: '20vh', backgroundColor: color.loadingColor, opacity: '0.2', borderRadius: '15px', marginBottom: '15px'}}>
-
+            (searchType ==='1'?(
+              <Box className={loadingStyle.loading} sx={{margin: '0 30px 0 10px'}}>
+              <Card sx={{ display: 'flex', justifyContent: 'center', marginBottom: '15px', border: `1px solid ${color.loadingColor}`, height: '20vh', borderRadius: '15px', backgroundColor: color.loadingColor, opacity: '0.2'}} >
+              </Card>
+              <Card sx={{ display: 'flex', justifyContent: 'center', marginBottom: '15px', border: `1px solid ${color.mainGrey}`, height: '20vh', borderRadius: '15px', backgroundColor: color.loadingColor, opacity: '0.2'}} >
+              </Card>
+              </Box>
+            ):(
+              <div >
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <Card sx={{ display: 'flex', alignItems: 'flex-start', border: `1px solid ${color.mainGreen}`, margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: color.mainGreen, opacity: '0.7'}}>
+                    <Typography sx={{fontSize: "20px"}}>🍀</Typography>
+                      <MoreHorizIcon className={loadingStyle.loading}/>
                     </Card>
-                    <Card sx={{ height: '20vh', backgroundColor: color.loadingColor, opacity: '0.2', borderRadius: '15px',}}>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <CardContent sx={{ height: '75vh', margin: '0 30px 0 10px', padding: '10px'}} className={loadingStyle.loading}>
+                      <Card sx={{ height: '20vh', backgroundColor: color.loadingColor, opacity: '0.2', borderRadius: '15px', marginBottom: '15px'}}>
 
-                    </Card>
-                  </CardContent>
+                      </Card>
+                      <Card sx={{ height: '20vh', backgroundColor: color.loadingColor, opacity: '0.2', borderRadius: '15px',}}>
+
+                      </Card>
+                    </CardContent>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </div>
+              </div>
+            ))
           ) :
-        (searchResults && (<div>
+        (searchResults && (searchType==='1'?(
+          <Box sx={{height: '75vh', margin: '0 30px 0 10px', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
+            {searchResults.papers.map((paper: any) => (
+          <Card key={paper.paperId} sx={{ marginBottom: '15px', border: `1px solid ${color.mainGrey}`, padding: '15px 25px', pb: '18px', borderRadius: '15px', backgroundColor: color.mainGrey}}>
+            
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignContent: 'center' }}>
+              <Box sx={{ flexGrow: 1 }}>
+                <Typography variant="h6">{paper.title}</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
+                <HeartClick currentItem={paper} onUpdateLikes={handleUpdateLikes} paperlike={paper.isLike}/>
+                <Typography variant="body2" sx={{ margin: '10px 0' }}>
+                  {paper.likes}
+                </Typography>
+              </Box>
+            </Box>
+              <Typography variant="body2"> {paper.authors.slice(0,3).join(", ")} / Arxiv 제출: {paper.year} / 컨퍼런스 제출: {paper.conference} / cites: {paper.cites} </Typography>
+              <Typography variant="body2" sx={{fontWeight: 'bold', display: 'inline'}}>Abstract: </Typography>
+              {paper.summary && paper.summary.length > 400 ? (
+                !expandedPaperArray.includes(paper.paperId) ? (
+                  <Typography variant="body2" sx={{ display: 'inline' }}>
+                    {paper.summary.slice(0, 400)}... <span onClick={() => handleViewMoreAbstract(paper.paperId)} style={{color: color.appbarGreen, borderBottom: `1px solid ${color.appbarGreen}`, cursor: 'pointer'}}>▼ More</span>
+                    {/* <IconButton onClick={()=>handleViewMoreAbstract(paper.paperId)} sx={{  }}>
+                      <ExpandMoreIcon />
+                    </IconButton> */}
+                  </Typography>
+                ) : (
+                      <Typography variant="body2" sx={{display: 'inline'}}>{paper.summary}<span onClick={() => handleViewLessAbstract(paper.paperId)} style={{color: color.appbarGreen, borderBottom: `1px solid ${color.appbarGreen}`, cursor: 'pointer' }}>▲ Less</span>
+                      {/* <IconButton onClick={() => handleViewLessAbstract(paper.paperId)}>
+                        <ExpandLessIcon />
+                    </IconButton> */}
+                    </Typography>
+                )
+              ): (
+                <Box>
+                  <Typography variant="body2">{paper.summary}</Typography>
+                </Box>  
+              )}
+              <Box sx = {{margin: "15px 0 0 0" , display: 'flex'}}>
+                {/* <Button variant="contained" onClick={() => handleViewPaper(paper.url) }>논문 보기</Button> */}
+                <GoToArxiv url={paper.url} paperId={paper.paperId}/>
+
+                <Box sx={{width: '15px'}}></Box>
+                {/* <Button variant ="contained" onClick={() => handleViewMore(paper.paperId)}>자세히 보기</Button> */}
+                <GoToViewMore paperid={paper.paperId} />
+              </Box>
+              {/* Add other details for the paper */}
+            
+          </Card>))}
+          </Box>
+        ):(<div>
   <Grid container spacing={2}>
     <Grid item xs={6}>
       <Card sx={{ justifyContent: 'space-between', border: `1px solid ${color.mainGreen}`, margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: color.mainGreen, 
@@ -232,8 +303,6 @@ export const Home = () => {
         <Box sx={{display: 'flex', alignItems: 'flex-start'}}>
 
           <Typography sx={{fontSize: "20px", mr: 1}}>🍀</Typography>
-          {/* <CopyClick contents={searchResults.answer} /> */}
-          {/* <Box sx={{display: 'flex', flexDirection:'column'}}> */}
           <Box sx={{display: 'flex', flexDirection:'column'}}>
             {searchResults.answer} 
             <Box sx={{display: 'flex', flexDirection: 'row-reverse', mt: 1}}>
@@ -242,19 +311,14 @@ export const Home = () => {
               </Box>
               <ScoreSlider id={searchResults.id}/>
             </Box>
-            {/* <Box sx={{display:'flex', width: '100%'}}>
-              <ScoreSlider/>
-            </Box> */}
           </Box>
         </Box>
-        {/* </Box> */}
-        
       </Card>
     </Grid>
     <Grid item xs={6}>
-      <CardContent sx={{ height: '75vh', margin: '0 30px 0 10px', padding: '10px', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
+      <Box sx={{ height: '75vh', margin: '0 30px 0 10px', padding: '10px', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
         {searchResults.papers.map((paper: any) => (
-          <Card key={paper.paperId} sx={{ display: 'flex', justifyContent: 'center', marginBottom: '15px', border: `1px solid ${color.mainGrey}`, padding: '15px 5px', borderRadius: '15px', backgroundColor: color.mainGrey}}>
+          <Card key={paper.paperId} sx={{ display: 'flex', justifyContent: 'center', marginBottom: '15px', border: `1px solid ${color.mainGrey}`, padding: '15px 0', borderRadius: '15px', backgroundColor: color.mainGrey}}>
             <Container>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignContent: 'center' }}>
               <Box sx={{ flexGrow: 1 }}>
@@ -280,10 +344,10 @@ export const Home = () => {
             </Container>
           </Card>
         ))}
-      </CardContent>
+      </Box>
     </Grid>
   </Grid>
-</div>))}
+</div>)))}
     </div>
     )
 };
