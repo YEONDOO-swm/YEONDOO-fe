@@ -157,8 +157,6 @@ export const PaperStorage = () => {
                     </Dialog> 
                 {papersInStorage ? papersInStorage.map((paper:any) => (
                     !paperIdArray.includes(paper.paperId) && (
-                        <>
-                           
                             <Card key={paper.paperId} sx={{padding: '15px', borderRadius: '15px', margin: '15px'}}>
                                 <Box sx={{display: 'flex', justifyContent:'space-between'}}>
                                     <Box>
@@ -185,7 +183,7 @@ export const PaperStorage = () => {
                                     <GoToViewMore paperid={paper.paperId} />
                                 </Box>
                             </Card>
-                        </>
+                        
                     )
                 )):<>관심 논문이 없습니다.</>}
             </Box>

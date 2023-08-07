@@ -97,8 +97,8 @@ export const HistoryPaper = () => {
         }
         return acc;
       }, []).map((mergedItems: any[], mergedIndex: number) => (
-        <Link to={`/paper?paperid=${mergedItems[0].paperId}`} style={{ textDecoration: 'none', color: 'black' }}>
-            <Card key={mergedIndex} sx={{ p: 2, mb: 1, pt:1 }}>
+        <Link to={`/paper?paperid=${mergedItems[0].paperId}`} key={mergedIndex} style={{ textDecoration: 'none', color: 'black' }}>
+            <Card  sx={{ p: 2, mb: 1, pt:1 }}>
             
                 <Typography sx={{ fontSize: '10px', borderRadius: '20px', p: '0 10px', marginBottom: '5px', backgroundColor: color.secondaryGrey, display: 'inline-block' }}>          
                     {mergedItems[0].title}

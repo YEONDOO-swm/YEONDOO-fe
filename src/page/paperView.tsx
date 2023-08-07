@@ -37,6 +37,7 @@ export const PaperView = () => {
     const [paperHistory, setPaperHistory] = useState<any>('');
     const [searchTermInPaper, setSearchTermInPaper] = useState("");
     const [searchResultsInPaper, setSearchResultsInPaper] = useState<any>([])
+    const [searchResultsId, setSearchResultsId] = useState<any>([])
     const [loading, setLoading] = useState<boolean>(false)
 
     const scrollContainerRef = useRef<HTMLDivElement | null>(null);
@@ -112,6 +113,7 @@ export const PaperView = () => {
         const paperId = query.get('paperid') || '';
         amplitude.track('저자 더보기 Button Clicked', {paperId: paperId})
         setIsExpanded(true)
+        //console.log()
     }
 
     const performSearchInPaper = async () => {
@@ -128,7 +130,8 @@ export const PaperView = () => {
         })
         .then(response => response.json())
         .then(data => {
-            setSearchResultsInPaper((prevSearchResults: any) => [...prevSearchResults, data.answer])
+            setSearchResultsInPaper((prevSearchResults: any) => [...prevSearchResults, data])
+            
             //setSearchTermInPaper("")
         })
         .catch(error => {
@@ -257,12 +260,14 @@ export const PaperView = () => {
                                                     <Box>
                                                         {history.content}
                                                         {history.who? null:
-                                                        <Box sx={{display: 'flex', flexDirection: 'row-reverse'}}>
-                                                            <CopyClick contents={history.content}/>
-                                                            
+                                                        <Box sx={{display: 'flex', flexDirection: 'row-reverse', mt: 1}}>
+                                                            <Box sx={{ml: 1}}>
+                                                                <CopyClick contents={history.content}/>
+                                                            </Box>
+                                                            <ScoreSlider id={history.id} score={history.score} paper={true}/>
                                                         </Box>}
-                                                        {history.who? null:
-                                                        <ScoreSlider id={history.id} score={history.score}/>}
+                                                        {/* {history.who? null:
+                                                        <ScoreSlider id={history.id} score={history.score} paper={true}/>} */}
                                                         
                                                     </Box>
                                                     
@@ -275,6 +280,7 @@ export const PaperView = () => {
                                             <>
                                                 {enteredSearchTermInPaper.map((term:any, index:number) => (
                                                 <div key={index}>
+                                                    
                                                     <Box sx={{ display: 'flex', backgroundColor: "white", padding: '10px', marginBottom: '10px', borderRadius: '10px'}}>
                                                         <Box sx={{ display: 'flex', alignItems: 'flex-start', marginRight: '10px' }}>
                                                             <Typography>👤</Typography>
@@ -287,13 +293,21 @@ export const PaperView = () => {
                                                                 <Typography>🍀</Typography>
                                                             </Box>
                                                             <Box>
+                                                            
                                                                 {index>=searchResultsInPaper.length?(
                                                                     <Typography variant="body1" className={loadingStyle.loading}> <MoreHorizIcon /> </Typography>
                                                                 ):(
-                                                                    <Typography variant="body1">{searchResultsInPaper[index]}</Typography>                 
+                                                                    <Typography variant="body1">{searchResultsInPaper[index].answer}</Typography>                 
                                                                 )}
-                                                                {index>= searchResultsInPaper.length?null:<Box sx={{display: 'flex', flexDirection: 'row-reverse'}}><CopyClick contents={searchResultsInPaper[index]}/></Box>}
-                                                            <ScoreSlider />
+                                                                
+                                                                {index>= searchResultsInPaper.length?null:
+                                                                <Box sx={{display: 'flex', flexDirection: 'row-reverse', mt: 1}}>
+                                                                    <Box sx={{ml: 1}}>
+                                                                        <CopyClick contents={searchResultsInPaper[index].answer}/>
+                                                                    </Box>
+                                                                    <ScoreSlider id={searchResultsInPaper[index].id} paper={true}/>
+                                                                </Box>}
+                                                            
                                                             </Box>
                                                         </Box>
                                                         

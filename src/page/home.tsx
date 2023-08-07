@@ -50,7 +50,7 @@ export const Home = () => {
 
     const handleSearchKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
       if (!loading && event.key === 'Enter' && event.nativeEvent.isComposing === false){
-        console.log("in!") 
+        //console.log("in!") 
         event.preventDefault();
           if (!searchTerm) {
             notify("검색어를 입력해주세요", {type: 'error'})
@@ -144,7 +144,7 @@ export const Home = () => {
   }
 
   useEffect(() => {
-    console.log(location)
+    //console.log(location)
     if (process.env.NODE_ENV === 'production') {
             
       amplitude.track("Home Page Viewed");
@@ -235,9 +235,16 @@ export const Home = () => {
           {/* <CopyClick contents={searchResults.answer} /> */}
           {/* <Box sx={{display: 'flex', flexDirection:'column'}}> */}
           <Box sx={{display: 'flex', flexDirection:'column'}}>
-          {searchResults.answer} 
-          <Box sx={{display: 'flex', flexDirection: 'row-reverse'}}><CopyClick contents={searchResults.answer}/></Box>
-          <ScoreSlider/>
+            {searchResults.answer} 
+            <Box sx={{display: 'flex', flexDirection: 'row-reverse', mt: 1}}>
+              <Box sx={{ml: 1}}>
+                <CopyClick contents={searchResults.answer}/>
+              </Box>
+              <ScoreSlider id={searchResults.id}/>
+            </Box>
+            {/* <Box sx={{display:'flex', width: '100%'}}>
+              <ScoreSlider/>
+            </Box> */}
           </Box>
         </Box>
         {/* </Box> */}
