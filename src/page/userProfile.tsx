@@ -62,7 +62,7 @@ export const UserProfile = () => {
     };
 
     const handleKeywordsKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-        if(event.key === 'Enter' ||  event.key === ' ') {
+        if((event.key === 'Enter' ||  event.key === ' ') && event.nativeEvent.isComposing === false) {
             event.preventDefault();
             if (enteredKeywords.length >=3 ){   
                 notify("키워드는 3개까지 입력할 수 있습니다.", {type: 'error'});

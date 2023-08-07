@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Card, CardContent, Box, Typography, IconButton } from '@mui/material';
+import { Card, CardContent, Box, Typography, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
 import { Title, useAuthenticated } from 'react-admin';
 import * as amplitude from '@amplitude/analytics-browser';
 import { useEffect, useState } from "react";
@@ -28,25 +28,57 @@ export const PaperStorage = () => {
       api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
     }
 
-    const [searchTerm, setSearchTerm] = useState("");
+    const [open, setOpen] = useState<boolean>(false)
     const [papersInStorage, setPapersInStorage] = useState<any>("");
     const [loading, setLoading] = useState<boolean>(false)
     const username = sessionStorage.getItem("username");
     const [paperIdArray, setPaperIdArray] = useState<string[]>([])
 
+    const [curPaperId, setCurPaperId] = useState<any>('')
+    const [curPaperTitle, setCurPaperTitle] = useState<any>('')
+
     const handleHeartClick = (paperId: any, paperTitle:any) => {
-        const isConfirmed = window.confirm(`정말 "${paperTitle}"을 관심 논문에서 삭제하시겠습니까?`)
-        if (!isConfirmed){
-            return
-        }
-        else {
-            if (process.env.NODE_ENV === 'production') {
+        setOpen(true)
+        setCurPaperId(paperId)
+        setCurPaperTitle(paperTitle)
+        // const isConfirmed = window.confirm(`정말 "${paperTitle}"을 관심 논문에서 삭제하시겠습니까?`)
+        // if (!isConfirmed){
+        //     return
+        // }
+        // else {
+        //     if (process.env.NODE_ENV === 'production') {
             
-                amplitude.track("관심 논문 페이지에서 삭제",{paperId: paperId})
-            }
-            setPaperIdArray(prevArray => [...prevArray, paperId])
-        }
+        //         amplitude.track("관심 논문 페이지에서 삭제",{paperId: paperId})
+        //     }
+        //     setPaperIdArray(prevArray => [...prevArray, paperId])
+        // }
         
+        // var payload = {
+        //     username: sessionStorage.getItem('username'),
+        //     paperId: paperId,
+        //     on: false
+        // }
+
+        // fetch(`${api}/api/paperlikeonoff`, {
+        //     method:'POST',
+        //     headers: { 'Content-Type' : 'application/json' },
+        //     body: JSON.stringify(payload)
+        // })
+        // .then(response => {
+        //     return response;
+        // })
+        // .catch(error => {
+        //     console.log("관심 논문 삭제에 실패하였습니다", error)
+        // })
+        
+    }
+    const handleCancel = (paperId: any) => {
+        if (process.env.NODE_ENV === 'production') {
+            
+            amplitude.track("관심 논문 페이지에서 삭제",{paperId: paperId})
+        }
+        setPaperIdArray(prevArray => [...prevArray, paperId])
+
         var payload = {
             username: sessionStorage.getItem('username'),
             paperId: paperId,
@@ -64,7 +96,7 @@ export const PaperStorage = () => {
         .catch(error => {
             console.log("관심 논문 삭제에 실패하였습니다", error)
         })
-        //callGetApi()
+        setOpen(false)
     }
 
     const callGetApi = async () => {
@@ -102,31 +134,56 @@ export const PaperStorage = () => {
             </Box>
           ):(
             <Box sx={{height: '75vh', margin: '0 30px 0 10px', padding: '10px', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
+                 <Dialog
+                    open={open}
+                    onClose={()=>setOpen(false)}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">
+                            {"연두"}
+                        </DialogTitle>
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                            정말 "{curPaperTitle}"을 관심 논문에서 삭제하시겠습니까?
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={()=>setOpen(false)}>아니오</Button>
+                            <Button onClick={()=>handleCancel(curPaperId)} autoFocus>
+                            예
+                            </Button>
+                        </DialogActions>
+                    </Dialog> 
                 {papersInStorage ? papersInStorage.map((paper:any) => (
                     !paperIdArray.includes(paper.paperId) && (
-                        <Card key={paper.paperId} sx={{padding: '15px', borderRadius: '15px', margin: '15px', display: 'flex', justifyContent:'space-between'}}>
-                            <Box>
-                                <Typography variant="h6">
-                                    {paper.title}
-                                </Typography>
-                                <Typography variant="body1">
-                                    {paper.authors?.length >1 ?paper.authors.join(', '):paper.authors} / Arxiv 제출: {paper.year} / 컨퍼런스 제출: {paper.conference}
-                                </Typography>
-                                <Typography variant="body1">
-                                    cites: {paper.cites}
-                                </Typography>
-                            </Box>
-                            <Box sx={{ margin:'0px 10px', width: '20vh' ,display: 'flex', flexDirection:'column', justifyContent: 'space-between', alignItems: 'flex-end'}}>
-                                {/* <HeartClick currentItem={paper} home={false} callGetApi={callGetApi}/> */}
-                                <IconButton onClick={()=> handleHeartClick(paper.paperId, paper.title)} >
-                                    <ClearIcon />
-                                </IconButton>
-                                
-                                <GoToArxiv url={paper.url} paperId={paper.paperId}/>
-                                <Box sx={{height:'5px'}}></Box>
-                                <GoToViewMore paperid={paper.paperId} />
-                            </Box>
-                        </Card>
+                            <Card key={paper.paperId} sx={{padding: '15px', borderRadius: '15px', margin: '15px'}}>
+                                <Box sx={{display: 'flex', justifyContent:'space-between'}}>
+                                    <Box>
+                                        <Typography variant="h6">
+                                            {paper.title}
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            {paper.authors?.length >1 ?paper.authors.join(', '):paper.authors} / Arxiv 제출: {paper.year} / 컨퍼런스 제출: {paper.conference}
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            cites: {paper.cites}
+                                        </Typography>
+                                    </Box>
+                                    <Box sx={{ margin:'0px 10px', display: 'flex', flexDirection:'column', justifyContent: 'space-between', alignItems: 'flex-end'}}> 
+                                        {/* <HeartClick currentItem={paper} home={false} callGetApi={callGetApi}/> */}
+                                        <IconButton onClick={()=> handleHeartClick(paper.paperId, paper.title)} >
+                                            <ClearIcon />
+                                        </IconButton>
+                                    </Box> 
+                                </Box>
+                                <Box sx={{display: 'flex', mt: 1}}>
+                                    <GoToArxiv url={paper.url} paperId={paper.paperId}/>
+                                        <Box sx={{width:'15px'}}></Box>
+                                    <GoToViewMore paperid={paper.paperId} />
+                                </Box>
+                            </Card>
+                        
                     )
                 )):<>관심 논문이 없습니다.</>}
             </Box>

@@ -8,7 +8,7 @@ const RouteChangeTracker = () => {
   const [initialized, setInitialized] = useState<boolean>(false);
 
   useEffect(() => {
-    ReactGA.initialize('G-Q44DBL2GVC');
+    ReactGA.gtag('initialize', 'G-Q44DBL2GVC');
     setInitialized(true);
   }, []);
 
@@ -29,11 +29,11 @@ const RouteChangeTracker = () => {
       // Get the page title from the mapping based on the current URL
       const pageTitle = pageTitleMap[location.pathname] || location.pathname;
 
-      ReactGA.send({ page: location.pathname, title: pageTitle });
+      ReactGA.gtag('config', 'G-Q44DBL2GVC', { page_path: location.pathname, page_title: pageTitle })
     }
   }, [initialized, location]);
 
-  return null; // This component doesn't render anything, so return null
+  //return null; // This component doesn't render anything, so return null
 };
 
 export default RouteChangeTracker;

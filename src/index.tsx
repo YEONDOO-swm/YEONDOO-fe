@@ -9,11 +9,12 @@ import * as Sentry from '@sentry/react'
 import ChannelService from './channelTalk/channelService';
 
 import { HelmetProvider } from 'react-helmet-async';
-import { hydrate, render } from 'react-dom';
+import { hydrateRoot } from 'react-dom/client';
+import { render } from 'react-dom';
 
-if (process.env.NODE_ENV === 'development') {
-    worker.start();
-  }
+// if (process.env.NODE_ENV === 'development') {
+//     worker.start();
+//   }
 
 ReactGA.initialize('G-Q44DBL2GVC')
 
@@ -45,12 +46,12 @@ const app = (
         </BrowserRouter>
     </React.StrictMode>
 )
-ReactDOM.createRoot(rootElement as HTMLElement).render(
-    app
-);
+let root = ReactDOM.createRoot(rootElement as HTMLElement);
 
 if (rootElement?.hasChildNodes()) {
-    hydrate(app, rootElement);
-  } else {
-    render(app, rootElement);
-  }
+    // 이미 child nodes가 있는 경우, 기존 root를 사용하여 업데이트
+    root.render(app);
+} else {
+    // child nodes가 없는 경우, root를 render로 초기화
+    root.render(app);
+}

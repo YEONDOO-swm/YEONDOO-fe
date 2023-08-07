@@ -21,6 +21,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { color } from "../layout/color";
 import CopyClick from "../component/copyClick";
 import MetaTag from "../SEOMetaTag";
+import ScoreSlider from "../component/scoreSlider";
 
 export const Home = () => {
     useAuthenticated();
@@ -43,12 +44,14 @@ export const Home = () => {
     //const [isFavorite, setIsFavorite] = useState(false);
     //const [paperIdArray, setPaperIdArray] = useState<string[]>([]); 
     const [loading, setLoading] = useState<boolean>(false);
+    //const [sliderText, setSliderText] = useState<any>();
 
     const searchInputRef = useRef<HTMLInputElement | null>(null);
 
     const handleSearchKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter' && event.nativeEvent.isComposing === false){
-          event.preventDefault();
+      if (!loading && event.key === 'Enter' && event.nativeEvent.isComposing === false){
+        //console.log("in!") 
+        event.preventDefault();
           if (!searchTerm) {
             notify("검색어를 입력해주세요", {type: 'error'})
             return
@@ -71,6 +74,9 @@ export const Home = () => {
   }
   
   const handleButtonClick = (event: any) => {
+      if (loading) {
+        return
+      }
       event.preventDefault();
       if (!searchTerm) {
         notify("검색어를 입력해주세요", {type: 'error'})
@@ -129,19 +135,16 @@ export const Home = () => {
     }));
   };
 
-  const handleCopy = (copyContents:any) => {
-    navigator.clipboard.writeText(copyContents)
-    notify('내용이 복사되었습니다.', {type:'success'})
-  };
 
   const handleChangeSearchType = (event: React.MouseEvent<HTMLElement>,
     newType: string) => {
     //setSearchType(event.target.value)
     setSearchType(newType)
+    setSearchTerm('')
   }
 
   useEffect(() => {
-    console.log(location)
+    //console.log(location)
     if (process.env.NODE_ENV === 'production') {
             
       amplitude.track("Home Page Viewed");
@@ -192,7 +195,7 @@ export const Home = () => {
               onChange={setSearchTerm}
               onSearch={handleButtonClick}
               onSearchKeyDown={handleSearchKeyDown}
-              placeholder="CNN과 관련된 논문을 찾아줘"
+              placeholder={searchType=='1'?"Attention is all you need":"Transformer가 뭐야?"}
               firstBoxSx={{ width: '70%'  }}
               middleBoxSx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
               sx={{width: "100%"}} />
@@ -228,14 +231,24 @@ export const Home = () => {
       }} className={scrollStyle.scrollBar}>
         <Box sx={{display: 'flex', alignItems: 'flex-start'}}>
 
-        <Typography sx={{fontSize: "20px", mr: 1}}>🍀</Typography>
-        {/* <CopyClick contents={searchResults.answer} /> */}
-        {/* <Box sx={{display: 'flex', flexDirection:'column'}}> */}
-          {searchResults.answer}
+          <Typography sx={{fontSize: "20px", mr: 1}}>🍀</Typography>
+          {/* <CopyClick contents={searchResults.answer} /> */}
+          {/* <Box sx={{display: 'flex', flexDirection:'column'}}> */}
+          <Box sx={{display: 'flex', flexDirection:'column'}}>
+            {searchResults.answer} 
+            <Box sx={{display: 'flex', flexDirection: 'row-reverse', mt: 1}}>
+              <Box sx={{ml: 1}}>
+                <CopyClick contents={searchResults.answer}/>
+              </Box>
+              <ScoreSlider id={searchResults.id}/>
+            </Box>
+            {/* <Box sx={{display:'flex', width: '100%'}}>
+              <ScoreSlider/>
+            </Box> */}
+          </Box>
         </Box>
-          
         {/* </Box> */}
-        <Box sx={{display: 'flex', flexDirection: 'row-reverse'}}><CopyClick contents={searchResults.answer}/></Box>
+        
       </Card>
     </Grid>
     <Grid item xs={6}>

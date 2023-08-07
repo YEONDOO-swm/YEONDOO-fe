@@ -17,6 +17,7 @@ import * as amplitude from '@amplitude/analytics-browser';
 import CopyClick from "../component/copyClick";
 import { HeartClick } from "../component/heartClick";
 import MetaTag from "../SEOMetaTag";
+import ScoreSlider from "../component/scoreSlider";
 
 // TODO1: list 제한 걸기
 // TODO2: 스크롤
@@ -36,6 +37,7 @@ export const PaperView = () => {
     const [paperHistory, setPaperHistory] = useState<any>('');
     const [searchTermInPaper, setSearchTermInPaper] = useState("");
     const [searchResultsInPaper, setSearchResultsInPaper] = useState<any>([])
+    const [searchResultsId, setSearchResultsId] = useState<any>([])
     const [loading, setLoading] = useState<boolean>(false)
 
     const scrollContainerRef = useRef<HTMLDivElement | null>(null);
@@ -111,6 +113,7 @@ export const PaperView = () => {
         const paperId = query.get('paperid') || '';
         amplitude.track('저자 더보기 Button Clicked', {paperId: paperId})
         setIsExpanded(true)
+        //console.log()
     }
 
     const performSearchInPaper = async () => {
@@ -127,7 +130,8 @@ export const PaperView = () => {
         })
         .then(response => response.json())
         .then(data => {
-            setSearchResultsInPaper((prevSearchResults: any) => [...prevSearchResults, data.answer])
+            setSearchResultsInPaper((prevSearchResults: any) => [...prevSearchResults, data])
+            
             //setSearchTermInPaper("")
         })
         .catch(error => {
@@ -139,7 +143,7 @@ export const PaperView = () => {
         setIsExpanded(false)
     }
 
-    const sizeTitleInInfo = "h6"
+    const sizeTitleInInfo = "body1"
     const sizeContentInInfo = "body1"
 
 
@@ -208,21 +212,21 @@ export const PaperView = () => {
                                     overflowY: 'scroll'
                                 }} className={scrollStyle.scrollBar}>
                                     <Box>   
-                                        <Typography variant={sizeTitleInInfo}>핵심 인사이트</Typography>
-                                        <Box>
+                                        <Typography variant={sizeTitleInInfo} sx={{fontWeight: 'bold'}}>핵심 인사이트</Typography>
+                                        <Box sx={{mb: 2, marginLeft: '5px'}}>
                                         {paperInfo.insights && paperInfo.insights.map((insight: string, index: number) => (
                                             <Typography key={index} variant={sizeContentInInfo}>{insight}</Typography>
                                         ))}
                                         </Box>
                                         
-                                        <Typography variant={sizeTitleInInfo}>질문</Typography>
-                                        <Box>
+                                        <Typography variant={sizeTitleInInfo} sx={{fontWeight: 'bold'}}>질문</Typography>
+                                        <Box sx={{mb: 2, marginLeft: '5px'}}>
                                         {paperInfo.questions && paperInfo.questions.map((question: any, index: number) => (
                                             <Typography key={index} variant={sizeContentInInfo}>{question}</Typography>
                                         ))}
                                         </Box>
-                                        <Typography variant={sizeTitleInInfo}>향후 연구주제 추천</Typography>
-                                        <Box>
+                                        <Typography variant={sizeTitleInInfo} sx={{fontWeight: 'bold'}}>향후 연구주제 추천</Typography>
+                                        <Box sx={{mb: 2, marginLeft: '5px'}}>
                                         {paperInfo.subjectRecommends && paperInfo.subjectRecommends.map((subjectRecommend: any, index: number) => (
                                             <Typography key={index} variant={sizeContentInInfo}>{subjectRecommend}</Typography>
                                         ))}
@@ -253,13 +257,22 @@ export const PaperView = () => {
                                                     {history.who ? <Typography sx={{mr: '10px'}}>👤</Typography> : 
                                                             <Typography sx={{mr: '10px'}}>🍀</Typography>
                                                         }
-                                                    {history.content}
+                                                    <Box>
+                                                        {history.content}
+                                                        {history.who? null:
+                                                        <Box sx={{display: 'flex', flexDirection: 'row-reverse', mt: 1}}>
+                                                            <Box sx={{ml: 1}}>
+                                                                <CopyClick contents={history.content}/>
+                                                            </Box>
+                                                            <ScoreSlider id={history.id} score={history.score} paper={true}/>
+                                                        </Box>}
+                                                        {/* {history.who? null:
+                                                        <ScoreSlider id={history.id} score={history.score} paper={true}/>} */}
+                                                        
+                                                    </Box>
+                                                    
                                                 </Box>
                                                 
-                                                {history.who? null:
-                                                    <Box sx={{display: 'flex', flexDirection: 'row-reverse'}}>
-                                                        <CopyClick contents={history.content}/>
-                                                    </Box>}
                                             </Box>
                                             
                                             ))}
@@ -267,6 +280,7 @@ export const PaperView = () => {
                                             <>
                                                 {enteredSearchTermInPaper.map((term:any, index:number) => (
                                                 <div key={index}>
+                                                    
                                                     <Box sx={{ display: 'flex', backgroundColor: "white", padding: '10px', marginBottom: '10px', borderRadius: '10px'}}>
                                                         <Box sx={{ display: 'flex', alignItems: 'flex-start', marginRight: '10px' }}>
                                                             <Typography>👤</Typography>
@@ -278,13 +292,25 @@ export const PaperView = () => {
                                                             <Box sx={{ marginRight: '10px' }}>
                                                                 <Typography>🍀</Typography>
                                                             </Box>
-                                                            {index>=searchResultsInPaper.length?(
-                                                                <Typography variant="body1" className={loadingStyle.loading}> <MoreHorizIcon /> </Typography>
-                                                            ):(
-                                                                <Typography variant="body1">{searchResultsInPaper[index]}</Typography>                 
-                                                            )}
+                                                            <Box>
+                                                            
+                                                                {index>=searchResultsInPaper.length?(
+                                                                    <Typography variant="body1" className={loadingStyle.loading}> <MoreHorizIcon /> </Typography>
+                                                                ):(
+                                                                    <Typography variant="body1">{searchResultsInPaper[index].answer}</Typography>                 
+                                                                )}
+                                                                
+                                                                {index>= searchResultsInPaper.length?null:
+                                                                <Box sx={{display: 'flex', flexDirection: 'row-reverse', mt: 1}}>
+                                                                    <Box sx={{ml: 1}}>
+                                                                        <CopyClick contents={searchResultsInPaper[index].answer}/>
+                                                                    </Box>
+                                                                    <ScoreSlider id={searchResultsInPaper[index].id} paper={true}/>
+                                                                </Box>}
+                                                            
+                                                            </Box>
                                                         </Box>
-                                                        {index>= searchResultsInPaper.length?null:<Box sx={{display: 'flex', flexDirection: 'row-reverse'}}><CopyClick contents={searchResultsInPaper[index]}/></Box>}
+                                                        
                                                     </Box>
                                                     
                                                 </div>
