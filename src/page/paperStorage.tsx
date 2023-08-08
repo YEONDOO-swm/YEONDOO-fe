@@ -149,7 +149,7 @@ export const PaperStorage = () => {
                             </DialogContentText>
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={()=>setOpen(false)}>아니오</Button>
+                            <Button onClick={()=>setOpen1(false)}>아니오</Button>
                             <Button onClick={()=>handleCancel(curPaperId)} autoFocus>
                             예
                             </Button>
