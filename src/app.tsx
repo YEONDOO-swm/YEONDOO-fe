@@ -29,8 +29,10 @@ amplitude.init('fa2f5340585a6728ae2103fb05e56bec', {
 
 // import 시 파일 대소문자확인
 // 파일 이름 컨벤션 정의
-export const App = () => { 
-    RouteChangeTracker()
+export const App = () => {
+    if (process.env.NODE_ENV === 'production'){
+        RouteChangeTracker()
+    }
     return (
         <>
             {/* <Helmet>
