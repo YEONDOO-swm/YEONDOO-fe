@@ -260,10 +260,10 @@ export const PaperView = () => {
                                                     {history.who ? <Typography sx={{mr: '10px'}}>👤</Typography> : 
                                                             <Typography sx={{mr: '10px'}}>🍀</Typography>
                                                         }
-                                                    <Box>
+                                                    <Box sx={{width: '100%'}}>
                                                         {history.content}
                                                         {history.who? null:
-                                                        <Box sx={{display: 'flex', flexDirection: 'row-reverse', mt: 1}}>
+                                                        <Box sx={{ display: 'flex', flexDirection: 'row-reverse', mt: 1}}>
                                                             <Box sx={{ml: 1}}>
                                                                 <CopyClick contents={history.content}/>
                                                             </Box>
@@ -295,7 +295,7 @@ export const PaperView = () => {
                                                             <Box sx={{ marginRight: '10px' }}>
                                                                 <Typography>🍀</Typography>
                                                             </Box>
-                                                            <Box>
+                                                            <Box sx={{width: '100%'}}>
                                                             
                                                                 {index>=searchResultsInPaper.length?(
                                                                     <Typography variant="body1" className={loadingStyle.loading}> <MoreHorizIcon /> </Typography>
