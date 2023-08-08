@@ -24,6 +24,7 @@ import MetaTag from "../SEOMetaTag";
 import ScoreSlider from "../component/scoreSlider";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import * as Sentry from '@Sentry/react';
 
 export const Home = () => {
     useAuthenticated();
@@ -119,6 +120,7 @@ export const Home = () => {
           setSearchResults(data);
       } catch (error) {
           console.error('검색 결과에서 오류가 발생했습니다.')
+          Sentry.captureException(error)
       } finally {
         setLoading(false)
       }

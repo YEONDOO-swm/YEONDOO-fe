@@ -6,7 +6,7 @@ import { response } from 'msw';
 import { useAuthenticated } from 'ra-core';
 import { useEffect, useState } from 'react';
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-
+import * as Sentry from '@Sentry/react';
 
 // TypeScript users must reference the type: `AuthProvider`
 export const authProvider = {
@@ -44,6 +44,7 @@ export const authProvider = {
       })
       .catch((error) => {
         console.error('로그인 에러:', error);
+        Sentry.captureException(error);
         throw error;
       });
     },

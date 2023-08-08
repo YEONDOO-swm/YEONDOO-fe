@@ -9,6 +9,7 @@ import { color } from "../layout/color";
 import * as amplitude from '@amplitude/analytics-browser';
 import MetaTag from '../SEOMetaTag';
 import { Link } from 'react-router-dom';
+import * as Sentry from '@Sentry/react';
 
 export const HistoryPaper = () => {
     useAuthenticated();
@@ -40,6 +41,7 @@ export const HistoryPaper = () => {
         })
         .catch(error => {
             console.error('논문 내 질의 히스토리 정보를 가져오는데 실패하였습니다: ', error)
+            Sentry.captureException(error)
             setLoading(false)
         })
 

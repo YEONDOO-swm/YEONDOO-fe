@@ -5,6 +5,7 @@ import * as amplitude from '@amplitude/analytics-browser';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useState } from "react";
+import * as Sentry from '@Sentry/react';
 
 export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentItem: any, onUpdateLikes?:any, paperlike?: any }) => {
     const [paperIdArray, setPaperIdArray] = useState<string[]>([]);
@@ -69,6 +70,7 @@ export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentIt
         )
         .catch(error => {
           console.error("찜 버튼 에러: ", error)
+          Sentry.captureException(error)
         })
       }
     

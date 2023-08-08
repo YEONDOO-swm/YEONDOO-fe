@@ -2,6 +2,8 @@ import { Box, Slider, Typography } from '@mui/material'
 import React from 'react'
 import { color } from "../layout/color";
 import CampaignIcon from '@mui/icons-material/Campaign';
+import * as Sentry from '@Sentry/react';
+
 
 function valuetext(value: number) {
     return `${value}점`;
@@ -80,11 +82,17 @@ function ScoreSlider({id, score, paper}: {id: any, score?:any, paper?:boolean}) 
               headers : { 'Content-Type' : 'application/json' },
               body: JSON.stringify(payload)
           })
+          .catch(error => {
+            Sentry.captureException(error)
+          })
         } else {
           fetch(`${api}/api/home/result/score?username=${username}`, {
             method: 'POST',
             headers : { 'Content-Type' : 'application/json' },
             body: JSON.stringify(payload)
+        })
+        .catch(error => {
+          Sentry.captureException(error)
         })
         }
         //.then(response => response)
