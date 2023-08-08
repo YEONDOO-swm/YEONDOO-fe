@@ -14,6 +14,7 @@ import scrollStyle from "../layout/scroll.module.css"
 import { color } from "../layout/color";
 import { S } from "msw/lib/glossary-de6278a9";
 import MetaTag from "../SEOMetaTag";
+import * as Sentry from '@Sentry/react';
 
 export const History = () => {
     useAuthenticated();
@@ -51,6 +52,7 @@ export const History = () => {
         })
         .catch(error => {
             console.error('히스토리 정보를 가져오는데 실패하였습니다: ', error)
+            Sentry.captureException(error)
             setLoading(false)
         })
 
@@ -65,6 +67,9 @@ export const History = () => {
             .then(response => response.json())
             .then(data => {
                 setEachQueryResult(data)
+            })
+            .catch(error => {
+                Sentry.captureException(error)
             })
         }
     },[urlLocation])

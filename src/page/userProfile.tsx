@@ -7,6 +7,7 @@ import * as amplitude from '@amplitude/analytics-browser';
 import styles from '../layout/input.module.css'
 import { color } from '../layout/color';
 import MetaTag from '../SEOMetaTag';
+import * as Sentry from '@Sentry/react';
 
 
 export const UserProfile = () => {
@@ -51,6 +52,7 @@ export const UserProfile = () => {
             })
             .catch(error => {
                 console.error('fields를 불러오는 데 실패하였습니다.');
+                Sentry.captureException(error)
             })
     }, []);
 
@@ -131,6 +133,7 @@ export const UserProfile = () => {
         })
         .catch(error => {
             console.error('유저 프로필 에러:', error)
+            Sentry.captureException(error)
         })
         // console.log('연구분야: ', researchField);
         // console.log('키워드: ', keywords);

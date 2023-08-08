@@ -18,6 +18,7 @@ import CopyClick from "../component/copyClick";
 import { HeartClick } from "../component/heartClick";
 import MetaTag from "../SEOMetaTag";
 import ScoreSlider from "../component/scoreSlider";
+import * as Sentry from '@Sentry/react';
 
 // TODO1: list 제한 걸기
 // TODO2: 스크롤
@@ -73,6 +74,7 @@ export const PaperView = () => {
             })
             .catch(error => {
                 console.error('논문 정보를 불러오는 데 실패하였습니다:', error)
+                Sentry.captureException(error)
                 setLoading(false)
             })
     }, [])
@@ -136,6 +138,7 @@ export const PaperView = () => {
         })
         .catch(error => {
             console.error("논문 내 질문 오류")
+            Sentry.captureException(error)
         })
     }
 

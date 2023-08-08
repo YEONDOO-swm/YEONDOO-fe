@@ -12,6 +12,7 @@ import loadingStyle from "../layout/loading.module.css"
 import scrollStyle from "../layout/scroll.module.css"
 import { color } from "../layout/color";
 import MetaTag from "../SEOMetaTag";
+import * as Sentry from '@Sentry/react';
 
 export const Trash = () => {
     useAuthenticated();
@@ -50,6 +51,7 @@ export const Trash = () => {
         })
         .catch(error => {
             console.log("관심 해제된 논문 정보를 가져오는데 실패하였습니다: ", error)
+            Sentry.captureException(error)
             setLoading(false)
         })
        },[])
@@ -71,6 +73,7 @@ export const Trash = () => {
             .then(response => response)
             .catch(error => {
                 console.log("복구하는데 오류가 발생하였습니다: ", error)
+                Sentry.captureException(error)
             })
             setSubmittedItems(checkedItems)
             setCheckedItems([])

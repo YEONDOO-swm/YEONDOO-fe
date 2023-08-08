@@ -14,6 +14,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { color } from '../layout/color'
 import { Helmet } from "react-helmet-async";
 import MetaTag from "../SEOMetaTag";
+import * as Sentry from '@Sentry/react';
 
 
 export const PaperStorage = () => {
@@ -95,6 +96,7 @@ export const PaperStorage = () => {
         })
         .catch(error => {
             console.log("관심 논문 삭제에 실패하였습니다", error)
+            Sentry.captureException(error)
         })
         setOpen(false)
     }
@@ -108,6 +110,7 @@ export const PaperStorage = () => {
             setLoading(false)
         } catch (error) {
             console.error('관심 논문 정보를 불러오는데 실패하였습니다: ', error)
+            Sentry.captureException(error)
             setLoading(false)
         }
     }
