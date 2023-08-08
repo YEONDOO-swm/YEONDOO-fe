@@ -18,7 +18,7 @@ import CopyClick from "../component/copyClick";
 import { HeartClick } from "../component/heartClick";
 import MetaTag from "../SEOMetaTag";
 import ScoreSlider from "../component/scoreSlider";
-import * as Sentry from '@Sentry/react';
+import * as Sentry from '@sentry/react';
 
 // TODO1: list 제한 걸기
 // TODO2: 스크롤

@@ -14,7 +14,7 @@ import scrollStyle from "../layout/scroll.module.css"
 import { color } from "../layout/color";
 import { S } from "msw/lib/glossary-de6278a9";
 import MetaTag from "../SEOMetaTag";
-import * as Sentry from '@Sentry/react';
+import * as Sentry from '@sentry/react';
 
 export const History = () => {
     useAuthenticated();

@@ -5,7 +5,7 @@ import { App } from './app';
 import { worker } from './mocks/browser';
 import { BrowserRouter } from 'react-router-dom';
 import ReactGA from 'react-ga4'
-import * as Sentry from '@Sentry/react'
+import * as Sentry from '@sentry/react'
 import ChannelService from './channelTalk/channelService';
 
 import { HelmetProvider } from 'react-helmet-async';

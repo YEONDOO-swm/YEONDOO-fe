@@ -6,7 +6,7 @@ import { response } from 'msw';
 import { useAuthenticated } from 'ra-core';
 import { useEffect, useState } from 'react';
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import * as Sentry from '@Sentry/react';
+import * as Sentry from '@sentry/react';
 
 // TypeScript users must reference the type: `AuthProvider`
 export const authProvider = {

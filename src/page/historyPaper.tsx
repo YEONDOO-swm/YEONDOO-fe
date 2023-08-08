@@ -9,7 +9,7 @@ import { color } from "../layout/color";
 import * as amplitude from '@amplitude/analytics-browser';
 import MetaTag from '../SEOMetaTag';
 import { Link } from 'react-router-dom';
-import * as Sentry from '@Sentry/react';
+import * as Sentry from '@sentry/react';
 
 export const HistoryPaper = () => {
     useAuthenticated();

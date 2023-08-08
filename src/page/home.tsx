@@ -24,7 +24,7 @@ import MetaTag from "../SEOMetaTag";
 import ScoreSlider from "../component/scoreSlider";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import * as Sentry from '@Sentry/react';
+import * as Sentry from '@sentry/react';
 
 export const Home = () => {
     useAuthenticated();

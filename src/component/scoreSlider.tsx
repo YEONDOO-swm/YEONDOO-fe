@@ -2,7 +2,7 @@ import { Box, Slider, Typography } from '@mui/material'
 import React from 'react'
 import { color } from "../layout/color";
 import CampaignIcon from '@mui/icons-material/Campaign';
-import * as Sentry from '@Sentry/react';
+import * as Sentry from '@sentry/react';
 
 
 function valuetext(value: number) {

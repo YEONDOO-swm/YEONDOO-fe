@@ -12,7 +12,7 @@ import loadingStyle from "../layout/loading.module.css"
 import scrollStyle from "../layout/scroll.module.css"
 import { color } from "../layout/color";
 import MetaTag from "../SEOMetaTag";
-import * as Sentry from '@Sentry/react';
+import * as Sentry from '@sentry/react';
 
 export const Trash = () => {
     useAuthenticated();

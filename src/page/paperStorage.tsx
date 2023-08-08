@@ -14,7 +14,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { color } from '../layout/color'
 import { Helmet } from "react-helmet-async";
 import MetaTag from "../SEOMetaTag";
-import * as Sentry from '@Sentry/react';
+import * as Sentry from '@sentry/react';
 
 
 export const PaperStorage = () => {

@@ -7,7 +7,7 @@ import * as amplitude from '@amplitude/analytics-browser';
 import styles from '../layout/input.module.css'
 import { color } from '../layout/color';
 import MetaTag from '../SEOMetaTag';
-import * as Sentry from '@Sentry/react';
+import * as Sentry from '@sentry/react';
 
 
 export const UserProfile = () => {
