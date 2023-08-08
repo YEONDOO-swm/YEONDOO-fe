@@ -114,6 +114,10 @@ export const Home = () => {
           const query= new URLSearchParams(window.location.search); 
           const performSearchTerm = query.get('query') || '';
           const performSearchType = query.get('type') || '';
+          if (performSearchType === '2') {
+            setSearchResults('type2')
+            return
+          }
           const response = await fetch(`${api}/api/homesearch?query=${performSearchTerm}&username=${username}&searchType=${performSearchType}`);
           const data = await response.json();
 
@@ -297,7 +301,13 @@ export const Home = () => {
           </Card>))}
           </Box>
         ):(<div>
-  <Grid container spacing={2}>
+          <Card sx={{ margin: 20, p:5, textAlign: 'center', backgroundColor: color.mainGreen}}>
+            <Typography variant="h6" sx={{justifyContent: 'center' , mb: 2}}>
+              🚧 기능 개발 중입니다...
+            </Typography>
+            논문 제목 검색을 사용해주세요.
+          </Card>
+  {/* <Grid container spacing={2}>
     <Grid item xs={6}>
       <Card sx={{ justifyContent: 'space-between', border: `1px solid ${color.mainGreen}`, margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: color.mainGreen, 
       overflowY: 'scroll'
@@ -335,20 +345,20 @@ export const Home = () => {
             </Box>
               <Typography variant="body2"> {paper.authors.slice(0,3).join(", ")} / Arxiv 제출: {paper.year} / 컨퍼런스 제출: {paper.conference} / cites: {paper.cites} </Typography>
               <Box sx = {{margin: "15px 0 0 0" , display: 'flex'}}>
-                {/* <Button variant="contained" onClick={() => handleViewPaper(paper.url) }>논문 보기</Button> */}
+                
                 <GoToArxiv url={paper.url} paperId={paper.paperId}/>
 
                 <Box sx={{width: '15px'}}></Box>
-                {/* <Button variant ="contained" onClick={() => handleViewMore(paper.paperId)}>자세히 보기</Button> */}
+                
                 <GoToViewMore paperid={paper.paperId} />
               </Box>
-              {/* Add other details for the paper */}
+              
             </Container>
           </Card>
         ))}
       </Box>
     </Grid>
-  </Grid>
+  </Grid> */}
 </div>)))}
     </div>
     )
