@@ -363,7 +363,7 @@ export const Home = () => {
 </div>))
 : (
   <Box sx={{m:3}}>
-    {/* <Typography> 검색 결과가 없습니다.</Typography> */}
+    <Typography> 검색 결과가 없습니다.</Typography>
   </Box>
 ))}
     </div>
