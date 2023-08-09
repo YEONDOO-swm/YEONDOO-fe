@@ -167,7 +167,7 @@ export const PaperStorage = () => {
                                             {paper.title}
                                         </Typography>
                                         <Typography variant="body1">
-                                            {paper.authors?.length >1 ?paper.authors.join(', '):paper.authors} / Arxiv 제출: {paper.year} / 컨퍼런스 제출: {paper.conference}
+                                            {paper.authors?.length >1 ?paper.authors.join(', '):paper.authors} / 
                                         </Typography>
                                         <Typography variant="body1">
                                             cites: {paper.cites}

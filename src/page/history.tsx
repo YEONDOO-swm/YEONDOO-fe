@@ -131,7 +131,7 @@ export const History = () => {
                                         {author}
                                     </React.Fragment>
                                     
-                                ))} / Arxiv 제출: {paper.year} / 컨퍼런스 제출: {paper.conference} / cites: {paper.cites})
+                                ))} / Arxiv 제출: {paper.year} )
                                 <Typography >
                                     <a href={paper.url} target="_blank" rel="noopener noreferrer">{paper.url}</a>
                                 </Typography>

@@ -201,7 +201,7 @@ export const PaperView = () => {
                         )           
                         : <Typography variant="body1"> {paperInfo.authors.join(", ")} </Typography>) }
                         {/* <Typography variant="h6">{paperInfo.authors && (paperInfo.authors.length > 3 ? paperInfo.authors.slice(0, 3).join(", ") : paperInfo.authors.join(", "))}</Typography> */}
-                        <Typography variant="body1"> Arxiv 제출: {paperInfo.year} / 컨퍼런스 제출: {paperInfo.conference} / cites: {paperInfo.cites}</Typography>
+                        <Typography variant="body1"> Arxiv 제출: {paperInfo.year} </Typography>
                     </Box>
                     <Box sx={{}}>
                         <HeartClick currentItem={paperInfo} paperlike={paperInfo.isLike} />
