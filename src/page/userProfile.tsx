@@ -74,7 +74,7 @@ export const UserProfile = () => {
     const handleKeywordsKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
         if((event.key === 'Enter' ||  event.key === ' ') && event.nativeEvent.isComposing === false) {
             event.preventDefault();
-            const keywordRegex = /^[A-Za-z0-9가-힣 ]{1,30}/
+            const keywordRegex = /^[A-Za-z0-9가-힣 _&-]{1,30}$/
             if (!keywordRegex.test(keywords)){
                 notify("키워드는 영어, 한글, 숫자만 가능합니다.")
                 return
@@ -120,7 +120,7 @@ export const UserProfile = () => {
             studyField: customeField === '' ? researchField : customeField,
             keywords: enteredKeywords
         }
-        const customeFieldRegexp = /^[A-Za-z0-9가-힣 ,]{1,100}/
+        const customeFieldRegexp = /^[A-Za-z0-9가-힣 ,_&-]{1,100}$/
         if (payload.studyField === customeField && !customeFieldRegexp.test(customeField)) {
             notify('연구 분야는 영어, 숫자, 한글만 입력할 수 있습니다.')
             return
