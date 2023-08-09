@@ -167,9 +167,16 @@ export const Trash = () => {
                     </Box>
                     
                 </Box>)
-                : ( <Typography sx={{m:3}}>
+                : ( 
+                <Box sx={{  height: '80vh'}}>
+                    <Box sx={{}}>
+                        <HistoryNav page="trash" />
+                    </Box>
+                    <Typography sx={{m:3}}>
                     "관심 해제한 논문이 없습니다."
-                </Typography>)
+                    </Typography>
+                </Box>
+                )
             )}
         
         </div>
