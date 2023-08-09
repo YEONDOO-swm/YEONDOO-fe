@@ -266,7 +266,7 @@ export const Home = () => {
                 </Typography>
               </Box>
             </Box>
-              <Typography variant="body2"> {paper.authors.slice(0,3).join(", ")} / Arxiv 제출: {paper.year} </Typography>
+              <Typography variant="body2"> {paper.authors.slice(0,3).join(", ")} / {paper.year} </Typography>
               <Typography variant="body2" sx={{fontWeight: 'bold', display: 'inline'}}>Abstract: </Typography>
               {paper.summary && paper.summary.length > 400 ? (
                 !expandedPaperArray.includes(paper.paperId) ? (

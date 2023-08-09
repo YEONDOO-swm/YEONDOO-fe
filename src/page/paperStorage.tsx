@@ -167,11 +167,11 @@ export const PaperStorage = () => {
                                             {paper.title}
                                         </Typography>
                                         <Typography variant="body1">
-                                            {paper.authors?.length >1 ?paper.authors.join(', '):paper.authors} / 
+                                            {paper.authors?.length >1 ?paper.authors.join(', '):paper.authors} / {paper.year}
                                         </Typography>
-                                        <Typography variant="body1">
+                                        {/* <Typography variant="body1">
                                             cites: {paper.cites}
-                                        </Typography>
+                                        </Typography> */}
                                     </Box>
                                     <Box sx={{ margin:'0px 10px', display: 'flex', flexDirection:'column', justifyContent: 'space-between', alignItems: 'flex-end'}}> 
                                         {/* <HeartClick currentItem={paper} home={false} callGetApi={callGetApi}/> */}

@@ -167,7 +167,7 @@ export const PaperView = () => {
                     <div>
                     <Box sx={{display: 'flex', justifyContent: 'space-between',margin: '20px 12px'}}>
                     <Box sx={{}}>
-                        <Box sx={{display: 'flex'}}>
+                        <Box sx={{display: 'flex', alignItems: 'flex-start'}}>
                             <Typography variant="h5" sx={{mr: 2}}>{paperInfo.title}</Typography>
                             <GoToArxiv url={paperInfo.url} paperId={paperInfo.paperId}/>
                         </Box>
@@ -201,7 +201,7 @@ export const PaperView = () => {
                         )           
                         : <Typography variant="body1"> {paperInfo.authors.join(", ")} </Typography>) }
                         {/* <Typography variant="h6">{paperInfo.authors && (paperInfo.authors.length > 3 ? paperInfo.authors.slice(0, 3).join(", ") : paperInfo.authors.join(", "))}</Typography> */}
-                        <Typography variant="body1"> Arxiv 제출: {paperInfo.year} </Typography>
+                        <Typography variant="body1"> {paperInfo.year} </Typography>
                     </Box>
                     <Box sx={{}}>
                         <HeartClick currentItem={paperInfo} paperlike={paperInfo.isLike} />
