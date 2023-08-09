@@ -251,7 +251,10 @@ export const Home = () => {
               </div>
             ))
           ) :
-        ((searchResults && searchResults.answer !== "아니아니아니") ? (searchType==='1'?(
+          
+          
+        ( 
+          (searchResults.answer && searchResults.answer !== "아니아니아니") && (searchType==='1'?(
           <Box sx={{height: '75vh', margin: '0 30px 0 10px', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
             {searchResults.papers.map((paper: any) => (
           <Card key={paper.paperId} sx={{ marginBottom: '15px', border: `1px solid ${color.mainGrey}`, padding: '15px 25px', pb: '18px', borderRadius: '15px', backgroundColor: color.mainGrey}}>
@@ -361,11 +364,7 @@ export const Home = () => {
     </Grid>
   </Grid> */}
 </div>))
-: (
-  <Box sx={{m:3}}>
-    <Typography> 검색 결과가 없습니다.</Typography>
-  </Box>
-))}
+ )}
     </div>
     )
 };
