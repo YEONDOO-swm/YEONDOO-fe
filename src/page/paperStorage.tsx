@@ -158,7 +158,7 @@ export const PaperStorage = () => {
                             </Button>
                         </DialogActions>
                     </Dialog> 
-                {papersInStorage ? papersInStorage.map((paper:any) => (
+                {(papersInStorage && papersInStorage.length>0) ? papersInStorage.map((paper:any) => (
                     !paperIdArray.includes(paper.paperId) && (
                             <Card key={paper.paperId} sx={{padding: '15px 10px 18px 25px', borderRadius: '15px', margin: '15px'}}>
                                 <Box sx={{display: 'flex', justifyContent:'space-between'}}>
@@ -188,7 +188,7 @@ export const PaperStorage = () => {
                             </Card>
                         
                     )
-                )):<>관심 논문이 없습니다.</>}
+                )):<Typography sx={{m:3}}>관심 논문이 없습니다.</Typography>}
             </Box>
           )}
 
