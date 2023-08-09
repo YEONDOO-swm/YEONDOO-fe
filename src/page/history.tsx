@@ -120,9 +120,10 @@ export const History = () => {
                 { urlParam !== '' ? ( eachQueryResult && 
                     <Card sx={{ p: 2, backgroundColor: color.secondaryGrey }}>
                         <Typography variant="h6"> {eachQueryResult.query} </Typography>
-                        <Typography> {eachQueryResult.answer} </Typography>
+                        {/* <Typography> {eachQueryResult.answer} </Typography> */}
                         <br />
-                        <b>reference:</b> {eachQueryResult.papers.map((paper:any, index:number) =>(
+                        {/* <b>reference:</b>  */}
+                        {eachQueryResult.papers.map((paper:any, index:number) =>(
                             <Box key={index}>
                                 [{index + 1}] {paper.title} (
                                 {paper.authors.map((author: any, index: number) => (
