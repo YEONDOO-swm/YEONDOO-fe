@@ -173,7 +173,7 @@ export const Trash = () => {
                         <HistoryNav page="trash" />
                     </Box>
                     <Typography sx={{m:3}}>
-                    "관심 해제한 논문이 없습니다."
+                    관심 해제한 논문이 없습니다.
                     </Typography>
                 </Box>
                 )

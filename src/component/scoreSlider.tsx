@@ -107,7 +107,7 @@ function ScoreSlider({id, score, paper}: {id: any, score?:any, paper?:boolean}) 
             <Slider
                 size='small'
                 aria-label="Score"
-                defaultValue={score===null?5:score}
+                defaultValue={score===null||!score?5:score}
                 marks={marks}
                 getAriaValueText={valuetext}
                 valueLabelDisplay="auto"

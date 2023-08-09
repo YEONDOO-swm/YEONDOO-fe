@@ -155,6 +155,9 @@ export const PaperView = () => {
             <MetaTag title="AI와 논문읽기" description="AI가 제공한 논문의 핵심 인사이트, 질문, 향후 연구주제 추천을 볼 수 있고, 직접 AI에게 논문에 대해서 궁금한 내용을 질문할 수 있습니다." keywords="논문, AI, 질문, 핵심 인사이트, 질문, 향후 연구주제 추천, 현 논문 내 질의, gpt"/>
             <Title title="AI와 논문읽기" />
             {loading ? (<div className={loadingStyle.loading}>
+            <Box sx={{m:2, p:3, color: color.loadingColor, opacity: '0.8'}}>
+                <Typography>1분 정도 소요될 수 있습니다.</Typography>
+            </Box>
               <Grid container spacing={2}>
                 <Grid item xs={6}>
                   <Card sx={{ border: `1px solid ${color.loadingColor}`, margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: color.loadingColor, opacity: '0.2'}}></Card>
