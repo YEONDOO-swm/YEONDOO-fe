@@ -61,21 +61,30 @@ export const UserProfile = () => {
     };
 
     const handleKeywordsChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setKeywords(event.target.value);
+        
+        
+        if (keywords.length > 30){
+            notify("키워드는 30글자 이하로 입력해주세요.")
+            setKeywords(event.target.value);
+        } else {
+            setKeywords(event.target.value);
+        }
     };
 
     const handleKeywordsKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-        if((event.key === 'Enter' ||  event.key === ' ') && event.nativeEvent.isComposing === false) {
+        if((event.key === 'Enter' ) && event.nativeEvent.isComposing === false) {
             event.preventDefault();
+            const keywordRegex = /^[A-Za-z0-9가-힣 _&-]{1,30}$/
+            if (!keywordRegex.test(keywords)){
+                notify("키워드는 영어, 한글, 숫자만 가능합니다.")
+                return
+            }
             if (enteredKeywords.length >=3 ){   
                 notify("키워드는 3개까지 입력할 수 있습니다.", {type: 'error'});
                 setKeywords("");
             } else if (keywords === ''){
                 notify("키워드를 입력해주세요", {type: 'info'})
-            } else if (keywords.length > 50) {
-                notify("키워드는 50글자 이하로 입력해주세요.")
-                setKeywords("");
-            }
+            } 
             else {
                 setEnteredKeywords(prevKeywords => [...prevKeywords, keywords]);
                 setKeywords("");
@@ -92,9 +101,13 @@ export const UserProfile = () => {
     }
 
     const handleCustomFieldChange = (event: ChangeEvent<HTMLInputElement>) => {
-        if (customeField.length > 50){
-            notify("연구분야는 50글자 이하로 입력해주세요.")
+        if (customeField.length > 100){
+            notify("연구분야는 100글자 이하로 입력해주세요.")
         }
+        // const fieldRegex = /^[A-Za-z0-9가-힣 ,]{1,100}/;
+        // if (!fieldRegex.test(customeField)) {
+        //     notify("연구분야는 영어, 한글만 가능합니다")
+        // }
         setCustomeField(event.target.value);
     }
 
@@ -106,6 +119,11 @@ export const UserProfile = () => {
             username: sessionStorage.getItem('username'),
             studyField: customeField === '' ? researchField : customeField,
             keywords: enteredKeywords
+        }
+        const customeFieldRegexp = /^[A-Za-z0-9가-힣 ,_&-]{1,100}$/
+        if (payload.studyField === customeField && !customeFieldRegexp.test(customeField)) {
+            notify('연구 분야는 영어, 숫자, 한글만 입력할 수 있습니다.')
+            return
         }
         
         fetch(`${api}/api/userprofile`, {

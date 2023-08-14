@@ -120,9 +120,10 @@ export const History = () => {
                 { urlParam !== '' ? ( eachQueryResult && 
                     <Card sx={{ p: 2, backgroundColor: color.secondaryGrey }}>
                         <Typography variant="h6"> {eachQueryResult.query} </Typography>
-                        <Typography> {eachQueryResult.answer} </Typography>
+                        {/* <Typography> {eachQueryResult.answer} </Typography> */}
                         <br />
-                        <b>reference:</b> {eachQueryResult.papers.map((paper:any, index:number) =>(
+                        {/* <b>reference:</b>  */}
+                        {eachQueryResult.papers.map((paper:any, index:number) =>(
                             <Box key={index}>
                                 [{index + 1}] {paper.title} (
                                 {paper.authors.map((author: any, index: number) => (
@@ -131,7 +132,7 @@ export const History = () => {
                                         {author}
                                     </React.Fragment>
                                     
-                                ))} / Arxiv 제출: {paper.year} / 컨퍼런스 제출: {paper.conference} / cites: {paper.cites})
+                                ))} /  {paper.year} )
                                 <Typography >
                                     <a href={paper.url} target="_blank" rel="noopener noreferrer">{paper.url}</a>
                                 </Typography>
