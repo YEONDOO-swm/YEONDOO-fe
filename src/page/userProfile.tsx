@@ -72,7 +72,7 @@ export const UserProfile = () => {
     };
 
     const handleKeywordsKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-        if((event.key === 'Enter' ||  event.key === ' ') && event.nativeEvent.isComposing === false) {
+        if((event.key === 'Enter' ) && event.nativeEvent.isComposing === false) {
             event.preventDefault();
             const keywordRegex = /^[A-Za-z0-9가-힣 _&-]{1,30}$/
             if (!keywordRegex.test(keywords)){
