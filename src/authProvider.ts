@@ -48,7 +48,7 @@ export const authProvider = {
               return Promise.resolve({ redirectTo: '/userprofile' });
             } else {
               localStorage.setItem('isFirst', 'false')
-              return Promise.resolve({ redirectTo: '/' });
+              return Promise.resolve({ redirectTo: '/home' });
             }
           })
         } else {
@@ -90,9 +90,18 @@ export const authProvider = {
         return Promise.reject();
       } 
       else if (localStorage.getItem('isFirst')==='true') {
+        if (window.location.pathname === '/login') {
+          window.location.href= `/userprofile`
+        }
         return Promise.resolve({ redirectTo: '/userprofile' });
       }
       else {
+        console.log('heyey')
+        if (window.location.pathname === '/login') {
+          window.location.href= `/home`
+          return Promise.resolve({ redirectTo: '/home'})
+        }
+        //window.location.href= `/home`
         return Promise.resolve();
       }
     }, 
