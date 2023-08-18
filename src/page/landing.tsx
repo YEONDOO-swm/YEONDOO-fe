@@ -19,9 +19,8 @@ export const Landing = () => {
             <Typography variant= 'h3'>
                 색다른 연구를 경험해보세요.
             </Typography>
-            <Box sx={{width: '100%'}}>
-
-                <Button variant='outlined' sx={{mt: 2, display: 'flex', flexDirection: 'row-reverse'}} onClick={goToLogin}>
+            <Box sx={{width: '100%', display: 'flex', justifyContent: 'flex-end', mt: 2}}>
+                <Button variant='outlined' onClick={goToLogin}>
                     Login
                 </Button>
             </Box>
