@@ -2,7 +2,7 @@
   "name": "react-admin",
   "private": true,
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --force",
     "build": "vite build",
     "postbuild": "react-snap",
     "serve": "vite preview",

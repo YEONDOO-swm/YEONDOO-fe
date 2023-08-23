@@ -24,7 +24,7 @@ import MetaTag from "../SEOMetaTag";
 import ScoreSlider from "../component/scoreSlider";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import * as Sentry from '@Sentry/react';
+import * as Sentry from '@sentry/react';
 
 export const Home = () => {
     useAuthenticated();
@@ -48,6 +48,7 @@ export const Home = () => {
     //const [paperIdArray, setPaperIdArray] = useState<string[]>([]); 
     const [loading, setLoading] = useState<boolean>(false);
     const [expandedPaperArray, setExpandedPaperArray] = useState<any>([])
+    const [isSearched, setIsSearched] = useState<boolean>(false)
     //const [sliderText, setSliderText] = useState<any>();
 
     const searchInputRef = useRef<HTMLInputElement | null>(null);
@@ -114,6 +115,10 @@ export const Home = () => {
           const query= new URLSearchParams(window.location.search); 
           const performSearchTerm = query.get('query') || '';
           const performSearchType = query.get('type') || '';
+          if (performSearchType === '2') {
+            setSearchResults('type2')
+            return
+          }
           const response = await fetch(`${api}/api/homesearch?query=${performSearchTerm}&username=${username}&searchType=${performSearchType}`);
           const data = await response.json();
 
@@ -246,7 +251,7 @@ export const Home = () => {
               </div>
             ))
           ) :
-        (searchResults && (searchType==='1'?(
+        (searchResults && ((searchResults.answer !== "아니아니아니") ? (searchType==='1'?(
           <Box sx={{height: '75vh', margin: '0 30px 0 10px', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
             {searchResults.papers.map((paper: any) => (
           <Card key={paper.paperId} sx={{ marginBottom: '15px', border: `1px solid ${color.mainGrey}`, padding: '15px 25px', pb: '18px', borderRadius: '15px', backgroundColor: color.mainGrey}}>
@@ -262,7 +267,7 @@ export const Home = () => {
                 </Typography>
               </Box>
             </Box>
-              <Typography variant="body2"> {paper.authors.slice(0,3).join(", ")} / Arxiv 제출: {paper.year} / 컨퍼런스 제출: {paper.conference} / cites: {paper.cites} </Typography>
+              <Typography variant="body2"> {paper.authors.slice(0,3).join(", ")} / {paper.year} </Typography>
               <Typography variant="body2" sx={{fontWeight: 'bold', display: 'inline'}}>Abstract: </Typography>
               {paper.summary && paper.summary.length > 400 ? (
                 !expandedPaperArray.includes(paper.paperId) ? (
@@ -297,7 +302,13 @@ export const Home = () => {
           </Card>))}
           </Box>
         ):(<div>
-  <Grid container spacing={2}>
+          <Card sx={{ margin: 20, p:5, textAlign: 'center', backgroundColor: color.mainGreen}}>
+            <Typography variant="h6" sx={{justifyContent: 'center' , mb: 2}}>
+              🚧 기능 개발 중입니다...
+            </Typography>
+            논문 제목 검색을 사용해주세요.
+          </Card>
+  {/* <Grid container spacing={2}>
     <Grid item xs={6}>
       <Card sx={{ justifyContent: 'space-between', border: `1px solid ${color.mainGreen}`, margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: color.mainGreen, 
       overflowY: 'scroll'
@@ -333,23 +344,28 @@ export const Home = () => {
                 </Typography>
               </Box>
             </Box>
-              <Typography variant="body2"> {paper.authors.slice(0,3).join(", ")} / Arxiv 제출: {paper.year} / 컨퍼런스 제출: {paper.conference} / cites: {paper.cites} </Typography>
+              <Typography variant="body2"> {paper.authors.slice(0,3).join(", ")} / {paper.year}  </Typography>
               <Box sx = {{margin: "15px 0 0 0" , display: 'flex'}}>
-                {/* <Button variant="contained" onClick={() => handleViewPaper(paper.url) }>논문 보기</Button> */}
+                
                 <GoToArxiv url={paper.url} paperId={paper.paperId}/>
 
                 <Box sx={{width: '15px'}}></Box>
-                {/* <Button variant ="contained" onClick={() => handleViewMore(paper.paperId)}>자세히 보기</Button> */}
+                
                 <GoToViewMore paperid={paper.paperId} />
               </Box>
-              {/* Add other details for the paper */}
+              
             </Container>
           </Card>
         ))}
       </Box>
     </Grid>
-  </Grid>
-</div>)))}
+  </Grid> */}
+</div>))
+: (
+  <Box sx={{m:3}}>
+    <Typography> 검색 결과가 없습니다.</Typography>
+  </Box>
+)))}
     </div>
     )
 };

@@ -18,7 +18,7 @@ import CopyClick from "../component/copyClick";
 import { HeartClick } from "../component/heartClick";
 import MetaTag from "../SEOMetaTag";
 import ScoreSlider from "../component/scoreSlider";
-import * as Sentry from '@Sentry/react';
+import * as Sentry from '@sentry/react';
 
 // TODO1: list 제한 걸기
 // TODO2: 스크롤
@@ -155,6 +155,9 @@ export const PaperView = () => {
             <MetaTag title="AI와 논문읽기" description="AI가 제공한 논문의 핵심 인사이트, 질문, 향후 연구주제 추천을 볼 수 있고, 직접 AI에게 논문에 대해서 궁금한 내용을 질문할 수 있습니다." keywords="논문, AI, 질문, 핵심 인사이트, 질문, 향후 연구주제 추천, 현 논문 내 질의, gpt"/>
             <Title title="AI와 논문읽기" />
             {loading ? (<div className={loadingStyle.loading}>
+            <Box sx={{m:2, p:3, color: color.loadingColor, opacity: '0.8'}}>
+                <Typography>1분 정도 소요될 수 있습니다.</Typography>
+            </Box>
               <Grid container spacing={2}>
                 <Grid item xs={6}>
                   <Card sx={{ border: `1px solid ${color.loadingColor}`, margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: color.loadingColor, opacity: '0.2'}}></Card>
@@ -167,7 +170,7 @@ export const PaperView = () => {
                     <div>
                     <Box sx={{display: 'flex', justifyContent: 'space-between',margin: '20px 12px'}}>
                     <Box sx={{}}>
-                        <Box sx={{display: 'flex'}}>
+                        <Box sx={{display: 'flex', alignItems: 'flex-start'}}>
                             <Typography variant="h5" sx={{mr: 2}}>{paperInfo.title}</Typography>
                             <GoToArxiv url={paperInfo.url} paperId={paperInfo.paperId}/>
                         </Box>
@@ -201,7 +204,7 @@ export const PaperView = () => {
                         )           
                         : <Typography variant="body1"> {paperInfo.authors.join(", ")} </Typography>) }
                         {/* <Typography variant="h6">{paperInfo.authors && (paperInfo.authors.length > 3 ? paperInfo.authors.slice(0, 3).join(", ") : paperInfo.authors.join(", "))}</Typography> */}
-                        <Typography variant="body1"> Arxiv 제출: {paperInfo.year} / 컨퍼런스 제출: {paperInfo.conference} / cites: {paperInfo.cites}</Typography>
+                        <Typography variant="body1"> {paperInfo.year} </Typography>
                     </Box>
                     <Box sx={{}}>
                         <HeartClick currentItem={paperInfo} paperlike={paperInfo.isLike} />
@@ -260,10 +263,10 @@ export const PaperView = () => {
                                                     {history.who ? <Typography sx={{mr: '10px'}}>👤</Typography> : 
                                                             <Typography sx={{mr: '10px'}}>🍀</Typography>
                                                         }
-                                                    <Box>
+                                                    <Box sx={{width: '100%'}}>
                                                         {history.content}
                                                         {history.who? null:
-                                                        <Box sx={{display: 'flex', flexDirection: 'row-reverse', mt: 1}}>
+                                                        <Box sx={{ display: 'flex', flexDirection: 'row-reverse', mt: 1}}>
                                                             <Box sx={{ml: 1}}>
                                                                 <CopyClick contents={history.content}/>
                                                             </Box>
@@ -295,7 +298,7 @@ export const PaperView = () => {
                                                             <Box sx={{ marginRight: '10px' }}>
                                                                 <Typography>🍀</Typography>
                                                             </Box>
-                                                            <Box>
+                                                            <Box sx={{width: '100%'}}>
                                                             
                                                                 {index>=searchResultsInPaper.length?(
                                                                     <Typography variant="body1" className={loadingStyle.loading}> <MoreHorizIcon /> </Typography>
