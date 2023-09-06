@@ -37,10 +37,10 @@ Sentry.init({
 
 
 
-  ChannelService.loadScript();
-    ChannelService.boot({
-        "pluginKey": "3ba503c9-c95d-4119-b1a6-fa80b408507f", // fill your plugin key
-      });
+//   ChannelService.loadScript();
+//     ChannelService.boot({
+//         "pluginKey": "3ba503c9-c95d-4119-b1a6-fa80b408507f", // fill your plugin key
+//       });
 
 const rootElement = document.getElementById('root');
 const app = (
