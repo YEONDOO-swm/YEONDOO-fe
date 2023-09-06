@@ -21,6 +21,7 @@ import { Helmet } from 'react-helmet-async';
 import MetaTag from './SEOMetaTag'
 import { Landing } from './page/landing'
 import { Login } from './page/login';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 amplitude.init('fa2f5340585a6728ae2103fb05e56bec', {
     defaultTracking: {
@@ -36,14 +37,14 @@ export const App = () => {
         RouteChangeTracker()
     }
     return (
-        <>
+        <GoogleOAuthProvider clientId="499303710660-ps4rmdcpmci178dbaqro07ial11bevlj.apps.googleusercontent.com">
             {/* <Helmet>
                 <title>연두</title>
             </Helmet> */}
             <MetaTag title="연두" description="연두는 논문을 작성하는 데 어려움을 느끼는 사람들을 위해 대화형 검색, 질의 서비스를 제공합니다." keywords="논문, AI, 인공지능, 머신러닝, 검색, 질의, gpt, 논문 내 질의"/>
             
             <Admin
-                authProvider={authProvider} layout={MyLayout} theme={MyTheme} loginPage={Login}
+                authProvider={authProvider} layout={MyLayout} theme={MyTheme} 
             >
                 
                 {/* <Resource name="users" list={ListGuesser}></Resource> */}
@@ -63,7 +64,7 @@ export const App = () => {
                     <Route path="/historytrash" element={< Trash />} />
                 </CustomRoutes>
             </Admin>
-        </>
+        </GoogleOAuthProvider>
         
 )};
     
