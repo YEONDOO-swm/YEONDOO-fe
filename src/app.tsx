@@ -44,7 +44,7 @@ export const App = () => {
             <MetaTag title="연두" description="연두는 논문을 작성하는 데 어려움을 느끼는 사람들을 위해 대화형 검색, 질의 서비스를 제공합니다." keywords="논문, AI, 인공지능, 머신러닝, 검색, 질의, gpt, 논문 내 질의"/>
             
             <Admin
-                authProvider={authProvider} layout={MyLayout} theme={MyTheme} 
+                authProvider={authProvider} layout={MyLayout} theme={MyTheme} loginPage={Login}
             >
                 
                 {/* <Resource name="users" list={ListGuesser}></Resource> */}
