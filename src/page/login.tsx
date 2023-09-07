@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google'
-import { jwtDecode } from 'jwt-decode'
+//import { jwt_decode } from 'jwt-decode'
 import { useGoogleLogin } from '@react-oauth/google';
-import { Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 
 export const Login = () => {
     var api = '';
@@ -15,15 +15,21 @@ export const Login = () => {
 
     const login = useGoogleLogin({
         onSuccess: tokenResponse => {
-            console.log(tokenResponse)
-            fetch(`${api}/api/login`, {
+            
+            console.log(tokenResponse.code)
+
+            const payload = {
+                authCode: tokenResponse.code
+            }
+            fetch(`${api}/api/login/google`, {
                 method: 'POST',
                 headers: { 'Content-Type' : 'application/json' },
-                body: JSON.stringify(tokenResponse)
+                body: JSON.stringify(payload)
             })
-            .then((response) => {
-                console.log(response);
-              })
+            .then((response) => response.json())
+            .then(data => {
+                console.log(data)
+            })
             .catch(error => {
                 console.log(error)
             })
@@ -49,10 +55,13 @@ export const Login = () => {
                 cookiePolicy={'single_host_origin'}
                 />
         </GoogleOAuthProvider> */}
-
-        <Button variant='contained' onClick={() => login()} >
-            구글로 로그인하기
-        </Button>
+        <Box sx={{display:'flex'}}>
+            <Box>
+                <Button variant='contained' onClick={() => login()} >
+                    구글로 로그인하기
+                </Button>
+            </Box>
+        </Box>
 
     </React.Fragment>
   )
