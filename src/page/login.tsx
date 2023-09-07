@@ -5,8 +5,34 @@ import { useGoogleLogin } from '@react-oauth/google';
 import { Button } from '@mui/material';
 
 export const Login = () => {
+    var api = '';
+    if (process.env.NODE_ENV === 'development'){
+      api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
+    }
+    else if (process.env.NODE_ENV === 'production'){
+      api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
+    }
+
     const login = useGoogleLogin({
-        onSuccess: tokenResponse => console.log(tokenResponse),
+        onSuccess: tokenResponse => {
+            console.log(tokenResponse)
+            fetch(`${api}/api/login`, {
+                method: 'POST',
+                headers: { 'Content-Type' : 'application/json' },
+                body: JSON.stringify(tokenResponse)
+            })
+            .then((response) => {
+                console.log(response);
+              })
+            .catch(error => {
+                console.log(error)
+            })
+        },
+        onError: (errorResponse) => {
+        console.error(errorResponse);
+        },
+        flow: "auth-code",
+        //cookiePolicy: 'single_host_origin'
       });
   return (
     <React.Fragment>
@@ -20,6 +46,7 @@ export const Login = () => {
                 onError={() => {
                     console.log('Login Failed');
                 }}
+                cookiePolicy={'single_host_origin'}
                 />
         </GoogleOAuthProvider> */}
 
