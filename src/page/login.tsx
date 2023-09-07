@@ -30,6 +30,7 @@ export const Login = () => {
             .then((response) => response.json())
             .then(data => {
                 console.log(data)
+                window.location.href = "/home"
             })
             .catch(error => {
                 console.log(error)
@@ -45,7 +46,7 @@ export const Login = () => {
   return (
     <React.Fragment>
 
-        <GoogleOAuthProvider clientId="499303710660-ps4rmdcpmci178dbaqro07ial11bevlj.apps.googleusercontent.com">
+        {/* <GoogleOAuthProvider clientId="499303710660-ps4rmdcpmci178dbaqro07ial11bevlj.apps.googleusercontent.com">
             <GoogleLogin
                 buttonText="google"
                 onSuccess={credentialResponse => {
@@ -57,7 +58,7 @@ export const Login = () => {
                 cookiePolicy={'single_host_origin'}
                 redirect_uri='postmessage'
                 />
-        </GoogleOAuthProvider>
+        </GoogleOAuthProvider> */}
         <Box sx={{height: '100vh', display:'flex', justifyContent: 'center', alignItems:"center", backgroundColor: color.mainGreen}}>
             <Box sx={{height: '30vh', width: '40vh', backgroundColor: 'white', borderRadius: '13px', p:3}}>
                 <Typography variant="h4" sx={{fontWeight: 'bold'}}>
