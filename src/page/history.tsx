@@ -15,10 +15,11 @@ import { color } from "../layout/color";
 import { S } from "msw/lib/glossary-de6278a9";
 import MetaTag from "../SEOMetaTag";
 import * as Sentry from '@sentry/react';
+import { getCookie } from "../cookie";
 
 export const History = () => {
     useAuthenticated();
-    UserProfileCheck();
+    //UserProfileCheck();
 
     var api = '';
     if (process.env.NODE_ENV === 'development'){
@@ -43,7 +44,11 @@ export const History = () => {
             amplitude.track("전체 검색 히스토리 Page Viewed");
         }
         setLoading(true)
-        fetch(`${api}/api/history/search?username=${username}`)
+        fetch(`${api}/api/history/search?username=${username}`, {
+            headers: {
+                "X_AUTH_TOKEN": getCookie('jwt')
+            }
+        })
         .then(response => response.json())
         .then(data => {
             setPapersInNav(data.papers)
@@ -63,7 +68,11 @@ export const History = () => {
 
         if (resultid !== ''){
             setUrlParam(resultid)
-            fetch(`${api}/api/history/search/result/${resultid}?username=${username}`)
+            fetch(`${api}/api/history/search/result/${resultid}?username=${username}`,{
+                headers: {
+                    "X_AUTH_TOKEN": getCookie('jwt')
+                }
+            })
             .then(response => response.json())
             .then(data => {
                 setEachQueryResult(data)

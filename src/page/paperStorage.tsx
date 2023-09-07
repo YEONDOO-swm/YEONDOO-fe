@@ -15,11 +15,12 @@ import { color } from '../layout/color'
 import { Helmet } from "react-helmet-async";
 import MetaTag from "../SEOMetaTag";
 import * as Sentry from '@sentry/react';
+import { getCookie } from "../cookie";
 
 
 export const PaperStorage = () => {
     useAuthenticated();
-    UserProfileCheck();
+    //UserProfileCheck();
 
     var api = '';
     if (process.env.NODE_ENV === 'development'){
@@ -88,7 +89,8 @@ export const PaperStorage = () => {
 
         fetch(`${api}/api/paperlikeonoff`, {
             method:'POST',
-            headers: { 'Content-Type' : 'application/json' },
+            headers: { 'Content-Type' : 'application/json',
+        'X_AUTH_TOKEN': getCookie('jwt') },
             body: JSON.stringify(payload)
         })
         .then(response => {
@@ -104,7 +106,11 @@ export const PaperStorage = () => {
     const callGetApi = async () => {
         setLoading(true)
         try {
-            const response = await fetch(`${api}/api/container?username=${username}`)
+            const response = await fetch(`${api}/api/container?username=${username}`, {
+                headers: {
+                    "X_AUTH_TOKEN": getCookie('jwt')
+                }
+            })
             const data = await response.json()
             setPapersInStorage(data)
             setLoading(false)

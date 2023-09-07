@@ -22,6 +22,8 @@ import MetaTag from './SEOMetaTag'
 import { Landing } from './page/landing'
 import { Login } from './page/login';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { CookiesProvider } from 'react-cookie'
+import { PersonalInfo } from './page/personalInfo';
 
 amplitude.init('fa2f5340585a6728ae2103fb05e56bec', {
     defaultTracking: {
@@ -41,29 +43,33 @@ export const App = () => {
             {/* <Helmet>
                 <title>연두</title>
             </Helmet> */}
-            <MetaTag title="연두" description="연두는 논문을 작성하는 데 어려움을 느끼는 사람들을 위해 대화형 검색, 질의 서비스를 제공합니다." keywords="논문, AI, 인공지능, 머신러닝, 검색, 질의, gpt, 논문 내 질의"/>
-            
-            <Admin
-                authProvider={authProvider} layout={MyLayout} theme={MyTheme} loginPage={Login}
-            >
+            <CookiesProvider>
+                <MetaTag title="연두" description="연두는 논문을 작성하는 데 어려움을 느끼는 사람들을 위해 대화형 검색, 질의 서비스를 제공합니다." keywords="논문, AI, 인공지능, 머신러닝, 검색, 질의, gpt, 논문 내 질의"/>
                 
-                {/* <Resource name="users" list={ListGuesser}></Resource> */}
-                {/* <Route path="/home" element={< Home />}/> */}
-                <CustomRoutes noLayout>
-                    <Route path="/" element={< Landing />} />
-                </CustomRoutes>
-                <CustomRoutes>
-                    {/* <Route path="/" element={<Navigate to="/home" replace />} /> */}
+                <Admin
+                    authProvider={authProvider} layout={MyLayout} theme={MyTheme} loginPage={Login}
+                >
                     
-                    <Route path="/home" element={< Home />}/>
-                    <Route path="/paperstorage" element={< PaperStorage/>}/>
-                    <Route path="/history" element={< History />}/>
-                    <Route path="/userprofile" element={< UserProfile />}/>
-                    <Route path="/paper" element={< PaperView />}/>
-                    <Route path="/historypaper" element={< HistoryPaper />} />
-                    <Route path="/historytrash" element={< Trash />} />
-                </CustomRoutes>
-            </Admin>
+                    {/* <Resource name="users" list={ListGuesser}></Resource> */}
+                    {/* <Route path="/home" element={< Home />}/> */}
+                    <CustomRoutes noLayout>
+                        <Route path="/" element={< Landing />} />
+                        <Route path='/personalinfo' element={< PersonalInfo />} />
+                    </CustomRoutes>
+                    <CustomRoutes>
+                        {/* <Route path="/" element={<Navigate to="/home" replace />} /> */}
+                        
+                        <Route path="/home" element={< Home />}/>
+                        <Route path="/paperstorage" element={< PaperStorage/>}/>
+                        <Route path="/history" element={< History />}/>
+                        <Route path="/userprofile" element={< UserProfile />}/>
+                        <Route path="/paper" element={< PaperView />}/>
+                        <Route path="/historypaper" element={< HistoryPaper />} />
+                        <Route path="/historytrash" element={< Trash />} />
+                        
+                    </CustomRoutes>
+                </Admin>
+            </CookiesProvider>
         </GoogleOAuthProvider>
         
 )};

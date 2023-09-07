@@ -19,13 +19,14 @@ import { HeartClick } from "../component/heartClick";
 import MetaTag from "../SEOMetaTag";
 import ScoreSlider from "../component/scoreSlider";
 import * as Sentry from '@sentry/react';
+import { getCookie } from "../cookie";
 
 // TODO1: list 제한 걸기
 // TODO2: 스크롤
 
 export const PaperView = () => {
     useAuthenticated();
-    UserProfileCheck();
+    //UserProfileCheck();
 
     const notify = useNotify()
 
@@ -65,7 +66,11 @@ export const PaperView = () => {
 
         setLoading(true)
         
-        fetch(`${api}/api/paper/${paperId}?username=${username}`)
+        fetch(`${api}/api/paper/${paperId}?username=${username}`,{
+            headers: {
+                "X_AUTH_TOKEN": getCookie('jwt')
+            }
+        })
             .then(response => response.json())
             .then(data => {
                 setPaperInfo(data.paperInfo)
@@ -127,7 +132,8 @@ export const PaperView = () => {
         const paperId = query.get('paperid') || '';
         await fetch(`${api}/api/paper/${paperId}?username=${username}`,{
             method: 'POST',
-            headers : { 'Content-Type' : 'application/json' },
+            headers : { 'Content-Type' : 'application/json',
+        'X_AUTH_TOKEN': getCookie('jwt') },
             body: JSON.stringify({question: searchTermInPaper})
         })
         .then(response => response.json())

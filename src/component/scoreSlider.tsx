@@ -3,6 +3,7 @@ import React from 'react'
 import { color } from "../layout/color";
 import CampaignIcon from '@mui/icons-material/Campaign';
 import * as Sentry from '@sentry/react';
+import { getCookie } from '../cookie';
 
 
 function valuetext(value: number) {
@@ -79,7 +80,8 @@ function ScoreSlider({id, score, paper}: {id: any, score?:any, paper?:boolean}) 
         if (paper){
           fetch(`${api}/api/paper/result/score?username=${username}`, {
               method: 'POST',
-              headers : { 'Content-Type' : 'application/json' },
+              headers : { 'Content-Type' : 'application/json',
+            'X_AUTH_TOKEN': getCookie('jwt') },
               body: JSON.stringify(payload)
           })
           .catch(error => {
@@ -88,7 +90,8 @@ function ScoreSlider({id, score, paper}: {id: any, score?:any, paper?:boolean}) 
         } else {
           fetch(`${api}/api/home/result/score?username=${username}`, {
             method: 'POST',
-            headers : { 'Content-Type' : 'application/json' },
+            headers : { 'Content-Type' : 'application/json',
+                        'X_AUTH_TOKEN': getCookie('jwt')},
             body: JSON.stringify(payload)
         })
         .catch(error => {

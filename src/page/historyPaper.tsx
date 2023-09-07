@@ -10,10 +10,11 @@ import * as amplitude from '@amplitude/analytics-browser';
 import MetaTag from '../SEOMetaTag';
 import { Link } from 'react-router-dom';
 import * as Sentry from '@sentry/react';
+import { getCookie } from '../cookie';
 
 export const HistoryPaper = () => {
     useAuthenticated();
-    UserProfileCheck();
+    //UserProfileCheck();
 
     var api = '';
     if (process.env.NODE_ENV === 'development'){
@@ -33,7 +34,11 @@ export const HistoryPaper = () => {
             amplitude.track("논문 내 질의 히스토리 Page Viewed")
         }
         setLoading(true)
-        fetch(`${api}/api/history/search/paper?username=${username}`)
+        fetch(`${api}/api/history/search/paper?username=${username}`,{
+          headers: {
+            "X_AUTH_TOKEN": getCookie('jwt')
+        }
+        })
         .then(response => response.json())
         .then(data => {
             setSearchHistory(data)

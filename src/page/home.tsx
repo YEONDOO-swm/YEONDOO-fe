@@ -25,12 +25,13 @@ import ScoreSlider from "../component/scoreSlider";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import * as Sentry from '@sentry/react';
+import { getCookie } from "../cookie";
 
 export const Home = () => {
     useAuthenticated();
     const navigate = useNavigate();
     const notify = useNotify();
-    UserProfileCheck();
+    //UserProfileCheck();
 
     var api = '';
     if (process.env.NODE_ENV === 'development'){
@@ -119,7 +120,11 @@ export const Home = () => {
             setSearchResults('type2')
             return
           }
-          const response = await fetch(`${api}/api/homesearch?query=${performSearchTerm}&username=${username}&searchType=${performSearchType}`);
+          const response = await fetch(`${api}/api/homesearch?query=${performSearchTerm}&username=${username}&searchType=${performSearchType}`, {
+            headers: {
+              "X_AUTH_TOKEN": getCookie('jwt')
+          }
+          });
           const data = await response.json();
 
           setSearchResults(data);

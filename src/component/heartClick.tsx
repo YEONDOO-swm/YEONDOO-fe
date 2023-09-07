@@ -6,6 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useState } from "react";
 import * as Sentry from '@sentry/react';
+import { getCookie } from "../cookie";
 
 export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentItem: any, onUpdateLikes?:any, paperlike?: any }) => {
     const [paperIdArray, setPaperIdArray] = useState<string[]>([]);
@@ -61,7 +62,8 @@ export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentIt
    
         fetch(`${api}/api/paperlikeonoff`, {
           method: 'POST',
-          headers: { 'Content-Type' : 'application/json' },
+          headers: { 'Content-Type' : 'application/json',
+                      'X_AUTH_TOKEN' : getCookie('jwt') },
           body: JSON.stringify(payload)
         })
         .then(response => {

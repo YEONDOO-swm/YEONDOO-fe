@@ -8,6 +8,7 @@ import styles from '../layout/input.module.css'
 import { color } from '../layout/color';
 import MetaTag from '../SEOMetaTag';
 import * as Sentry from '@sentry/react';
+import { getCookie } from '../cookie';
 
 
 export const UserProfile = () => {
@@ -43,7 +44,11 @@ export const UserProfile = () => {
             setUserName(checkUserName)
         }   
         // fetch fields from API
-        fetch(`${api}/api/userprofile/${username}`)
+        fetch(`${api}/api/userprofile/${username}`, {
+            headers: {
+                "X_AUTH_TOKEN": getCookie('jwt')
+            }
+        })
             .then(response => response.json())
             .then(data => {
                 // console.log(data.username)
@@ -128,7 +133,8 @@ export const UserProfile = () => {
         
         fetch(`${api}/api/userprofile`, {
             method: 'POST',
-            headers: { 'Content-Type' : 'application/json' },
+            headers: { 'Content-Type' : 'application/json' ,
+        'X_AUTH_TOKEN': getCookie('jwt')},
             body: JSON.stringify(payload)
         })
         .then(response => {

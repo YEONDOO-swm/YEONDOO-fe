@@ -8,6 +8,8 @@ import { useEffect, useState } from 'react';
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import * as Sentry from '@sentry/react';
 import { useNotify } from "react-admin";
+import { setCookie, getCookie, removeCookie } from './cookie';
+
 
 // TypeScript users must reference the type: `AuthProvider`
 export const authProvider = {
@@ -71,7 +73,9 @@ export const authProvider = {
       if (process.env.NODE_ENV === 'production'){
         amplitude.track("Logout");
       }
-      sessionStorage.removeItem('username');
+      //sessionStorage.removeItem('username');
+      removeCookie('username')
+      removeCookie('jwt')
       //amplitude.reset()
       return Promise.resolve();
     },
@@ -86,17 +90,16 @@ export const authProvider = {
     // called when the user navigates to a new location, to check for authentication
     checkAuth: () => {
       //const navigate = useNavigate()
-      if (!sessionStorage.getItem('username')) {
+      if (!getCookie('username')) {
         return Promise.reject();
       } 
-      else if (localStorage.getItem('isFirst')==='true') {
-        if (window.location.pathname === '/login') {
-          window.location.href= `/userprofile`
-        }
-        return Promise.resolve({ redirectTo: '/userprofile' });
-      }
+      // else if (localStorage.getItem('isFirst')==='true') {
+      //   if (window.location.pathname === '/login') {
+      //     window.location.href= `/userprofile`
+      //   }
+      //   return Promise.resolve({ redirectTo: '/userprofile' });
+      // }
       else {
-        console.log('heyey')
         if (window.location.pathname === '/login') {
           window.location.href= `/home`
           return Promise.resolve({ redirectTo: '/home'})
@@ -109,7 +112,7 @@ export const authProvider = {
     getPermissions: () => Promise.resolve(),
     getIdentity: () => {
           return Promise.resolve({
-              fullName: sessionStorage.getItem('username'),
+              fullName: getCookie('username'),
           });
       },
     
