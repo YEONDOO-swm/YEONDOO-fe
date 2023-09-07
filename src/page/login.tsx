@@ -2,8 +2,9 @@ import React, { useEffect } from 'react'
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google'
 //import { jwt_decode } from 'jwt-decode'
 import { useGoogleLogin } from '@react-oauth/google';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Card, Paper, Typography } from '@mui/material';
 import { color } from '../layout/color'
+import { setCookie, getCookie, removeCookie } from '../cookie';
 
 export const Login = () => {
     var api = '';
@@ -17,7 +18,7 @@ export const Login = () => {
     const login = useGoogleLogin({
         onSuccess: tokenResponse => {
             
-            console.log(tokenResponse.code)
+            console.log(tokenResponse)
 
             const payload = {
                 authCode: tokenResponse.code
@@ -27,9 +28,18 @@ export const Login = () => {
                 headers: { 'Content-Type' : 'application/json' },
                 body: JSON.stringify(payload)
             })
-            .then((response) => response.json())
+            .then((response) => {
+                let jwtToken = response.headers.get("X_AUTH_TOKEN")
+                if (jwtToken) {
+                    setCookie('jwt', jwtToken)
+                }
+                return response.json()
+            })
             .then(data => {
                 console.log(data)
+                //sessionStorage.setItem('username', data.jwt)
+                setCookie('username', data.username)
+                
                 window.location.href = "/home"
             })
             .catch(error => {
@@ -60,17 +70,20 @@ export const Login = () => {
                 />
         </GoogleOAuthProvider> */}
         <Box sx={{height: '100vh', display:'flex', justifyContent: 'center', alignItems:"center", backgroundColor: color.mainGreen}}>
-            <Box sx={{height: '30vh', width: '40vh', backgroundColor: 'white', borderRadius: '13px', p:3}}>
-                <Typography variant="h4" sx={{fontWeight: 'bold'}}>
+            <Card sx={{height: '18vh', width: '40vh', backgroundColor: 'white', borderRadius: '13px', p:3}}>
+                <Typography variant="h4" sx={{fontWeight: 'bold', textAlign: 'center', mb: 2}}>
                     Login
                 </Typography>
-                {/* <Box sx={{border: '1px solid'}} onClick={()=>login()}>
+                <Box sx={{ width: '100%', display: 'flex', alignItems: 'center'}}>
+                    <Paper variant='outlined' sx={{width: '100%', p:1, display: 'flex', alignItems: 'center', "&:hover": {bgcolor: color.secondaryGrey}}} onClick={()=>login()}>
+                        <img src='https://static-00.iconduck.com/assets.00/google-icon-2048x2048-czn3g8x8.png' width="20px" height="20px"></img>
+                        <Typography sx={{ml: 1}}>구글로 로그인하기</Typography>
+                    </Paper>
+                </Box>
+                {/* <Button variant='contained' onClick={() => login()} >
                     구글로 로그인하기
-                </Box> */}
-                <Button variant='contained' onClick={() => login()} >
-                    구글로 로그인하기
-                </Button>
-            </Box>
+                </Button> */}
+            </Card>
         </Box>
 
     </React.Fragment>

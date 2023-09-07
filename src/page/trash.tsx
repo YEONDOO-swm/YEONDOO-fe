@@ -13,10 +13,11 @@ import scrollStyle from "../layout/scroll.module.css"
 import { color } from "../layout/color";
 import MetaTag from "../SEOMetaTag";
 import * as Sentry from '@sentry/react';
+import { getCookie } from "../cookie";
 
 export const Trash = () => {
     useAuthenticated();
-    UserProfileCheck();
+    //UserProfileCheck();
 
     var api = '';
     if (process.env.NODE_ENV === 'development'){
@@ -42,7 +43,11 @@ export const Trash = () => {
             amplitude.track('관심 해제된 논문 Page Viewed')
         }
         setLoading(true)
-        fetch(`${api}/api/history/trash?username=${username}`)
+        fetch(`${api}/api/history/trash?username=${username}`, {
+            headers: {
+                "X_AUTH_TOKEN": getCookie('jwt')
+            }
+        })
         .then(response => response.json())
         .then(data => {
             setPapersInNav(data.papers)
@@ -67,7 +72,8 @@ export const Trash = () => {
         else {
             fetch(`${api}/api/history/trash?username=${username}`, {
                 method: 'POST',
-                headers: { 'Content-Type' : 'application/json' },
+                headers: { 'Content-Type' : 'application/json' ,
+            'X_AUTH_TOKEN' : getCookie('jwt')},
                 body: JSON.stringify(checkedItems)
             })
             .then(response => response)
