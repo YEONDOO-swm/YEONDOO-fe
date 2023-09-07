@@ -2,7 +2,8 @@ import React, { useEffect } from 'react'
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google'
 //import { jwt_decode } from 'jwt-decode'
 import { useGoogleLogin } from '@react-oauth/google';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
+import { color } from '../layout/color'
 
 export const Login = () => {
     var api = '';
@@ -29,6 +30,7 @@ export const Login = () => {
             .then((response) => response.json())
             .then(data => {
                 console.log(data)
+                window.location.href = "/home"
             })
             .catch(error => {
                 console.log(error)
@@ -38,6 +40,7 @@ export const Login = () => {
         console.error(errorResponse);
         },
         flow: "auth-code",
+        redirect_uri: 'postmessage'
         //cookiePolicy: 'single_host_origin'
       });
   return (
@@ -53,10 +56,17 @@ export const Login = () => {
                     console.log('Login Failed');
                 }}
                 cookiePolicy={'single_host_origin'}
+                redirect_uri='postmessage'
                 />
         </GoogleOAuthProvider> */}
-        <Box sx={{display:'flex'}}>
-            <Box>
+        <Box sx={{height: '100vh', display:'flex', justifyContent: 'center', alignItems:"center", backgroundColor: color.mainGreen}}>
+            <Box sx={{height: '30vh', width: '40vh', backgroundColor: 'white', borderRadius: '13px', p:3}}>
+                <Typography variant="h4" sx={{fontWeight: 'bold'}}>
+                    Login
+                </Typography>
+                {/* <Box sx={{border: '1px solid'}} onClick={()=>login()}>
+                    구글로 로그인하기
+                </Box> */}
                 <Button variant='contained' onClick={() => login()} >
                     구글로 로그인하기
                 </Button>
