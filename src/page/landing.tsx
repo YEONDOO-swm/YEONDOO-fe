@@ -1,14 +1,45 @@
 import { Box, Button, Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import MetaTag from '../SEOMetaTag'
+import styles from '../layout/landing.module.css'
+import 'https://flackr.github.io/scroll-timeline/dist/scroll-timeline.js';
+//import './scroll-timeline.js'
+import { Animated } from 'react-web-animation'
 
 
 export const Landing = () => {
     const navigate = useNavigate()
+    const [direction, setDirection] = useState('down'); // Initialize direction state
     const goToLogin = () => {
         navigate(`/login`)
     }
+
+    const airplane = document.querySelector('.airplane');
+        const airplaneScrollTimeline = document.querySelector('.airplane_scroll_timeline');
+        const prevScrollY = { current: -1 };
+
+    const getKeyFrames =() => {
+        return [
+            { offsetDistance: '100%', offset: 0 },
+            { offsetDistance: '47%', offset: 0.4 },
+            { offsetDistance: '47%', offset: 0.58 },
+            { offsetDistance: '0%', offset: 1 },
+        ];
+    }
+ 
+    const getTiming = ( duration:any ) => {
+        return {
+            fill: 'both',
+            timeline: new ScrollTimeline({
+              scrollOffsets: [
+                { target: airplaneScrollTimeline, edge: 'start', threshold: 1 },
+                { target: airplaneScrollTimeline, edge: 'end', threshold: 1 },
+              ],
+            }),
+        };
+    }
+
   return (
     // <Box sx={{width: '100%', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
     //     <MetaTag title="연두" description="연두를 통해 특별한 연구 경험을 느껴보세요." keywords="연두, yeondoo, 논문, 논문 내 질의, 질의, gpt, 논문 gpt" />
@@ -39,9 +70,9 @@ export const Landing = () => {
     rel="stylesheet"
   />
   <link rel="stylesheet" href="./main.css" />
-  <div className="wrap">
-    <header className="header">
-      <h1 className="main-copy">Enjoy Your Flight!</h1>
+  <div className={styles.wrap}>
+    <header className={styles.header}>
+      <h1 className={styles.main_copy}>Enjoy Your Flight!</h1>
       <p>
         <a href="https://github.com/flackr/scroll-timeline">
           scroll-timeline.js
@@ -59,55 +90,58 @@ export const Landing = () => {
         reiciendis maxime!
       </p>
     </header>
-    <div className="airstrip airstrip-a" />
-    <div className="airstrip airstrip-b" />
-    <section className="gallery-timeline">
+    <div className={`${styles.airstrip} ${styles.airstrip_a}`} />
+    <div className={`${styles.airstrip} ${styles.airstrip_b}`} />
+    <section className={styles.gallery_timeline}>
       {/* 제주도 */}
-      <figure className="jeju">
-        <img src="images/jeju.svg" alt="제주도" />
+      <figure className={styles.jeju}>
+        <img src="../../images/jeju.svg" alt="제주도" />
       </figure>
       {/* 갤러리 */}
-      <div className="gallery">
-        <div className="gallery-item">
-          <figure className="gallery-photo">
-            <img src="images/photo/photo01.jpg" alt="" />
+      <div className={styles.gallery}>
+        <div className={styles.gallery_item}>
+          <figure className={styles.gallery_photo}>
+            <img src="../../images/photo/photo01.jpg" alt="" />
           </figure>
         </div>
-        <div className="gallery-item">
-          <figure className="gallery-photo">
-            <img src="images/photo/photo02.jpg" alt="" />
+        <div className={styles.gallery_item}>
+          <figure className={styles.gallery_photo}>
+            <img src="../../images/photo/photo02.jpg" alt="" />
           </figure>
         </div>
-        <div className="gallery-item">
-          <figure className="gallery-photo">
-            <img src="images/photo/photo03.jpg" alt="" />
+        <div className={styles.gallery_item}>
+          <figure className={styles.gallery_photo}>
+            <img src="../../images/photo/photo03.jpg" alt="" />
           </figure>
         </div>
-        <div className="gallery-item">
-          <figure className="gallery-photo">
-            <img src="images/photo/photo04.jpg" alt="" />
+        <div className={styles.gallery_item}>
+          <figure className={styles.gallery_photo}>
+            <img src="../../images/photo/photo04.jpg" alt="" />
           </figure>
         </div>
-        <div className="gallery-item">
-          <figure className="gallery-photo">
-            <img src="images/photo/photo05.jpg" alt="" />
+        <div className={styles.gallery_item}>
+          <figure className={styles.gallery_photo}>
+            <img src="../../images/photo/photo05.jpg" alt="" />
           </figure>
         </div>
       </div>
     </section>
-    <section className="airplane-scroll-timeline">
-      <div className="track a">
-        <img className="airplane" src="images/airplane.svg" alt="" />
+    <section className={styles.airplane_scroll_timeline}>
+      <div className={`${styles.track}`}>
+        <Animated.div keyframes={getKeyFrames()}
+        timing={getTiming(3000)}>
+            <img className={styles.airplane} src="../../images/airplane.svg" alt=""/>
+        </Animated.div>
         <svg
           className="flight-path-svg"
           viewBox="0 0 1047.79 4304.71"
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            className="flight-path"
+            className={styles.flight_path}
             d="m523.89,4304.71v-102.65c0-380.2-349.01-699.56-349.01-699.56-444.83-376.4,250.93-486.65,250.93-486.65,444.83-102.65,557.68-250.93,557.68-250.93,283.93-319.37-486.96-646.34-486.96-646.34-258.91-112.16-314.04-296.55-314.04-296.55C-5.24,1295.45,395.39,1206.1,502.03,1255.07c65,29.84,105.64,109.85,90,179.91-35.06,157.03-234.66,151.32-234.66,151.32-287.05,0-340.67-193.9-340.67-193.9-85.15-285.15,215.21-534.18,215.21-534.18,309.81-245.7,291.98-636.53,291.98-636.53V0"
           />
-          <g className="hello-jeju">
+          <g className={styles.hello_jeju}>
             <path
               className="cls-2"
               d="m239.51,1492.31l-11.33,2.83-4.93-19.74-16.79,4.2,4.93,19.74-11.4,2.85-11.82-47.28,11.4-2.85,4.69,18.77,16.79-4.2-4.69-18.77,11.33-2.83,11.82,47.28Z"
@@ -148,24 +182,24 @@ export const Landing = () => {
         </svg>
       </div>
     </section>
-    <section className="page-content">
-      <div className="text-block" style={{ right: "10%", top: "25%" }}>
+    <section className={styles.page_content}>
+      <div className={styles.text_block} style={{ right: "10%", top: "25%" }}>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Id aspernatur
         explicabo doloremque ex earum deleniti itaque repellendus labore placeat
         laboriosam?
       </div>
-      <div className="text-block" style={{ right: "20%", top: "80%" }}>
+      <div className={styles.text_block} style={{ right: "20%", top: "80%" }}>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Id aspernatur
         explicabo doloremque ex earum deleniti itaque repellendus labore placeat
         laboriosam?
       </div>
-      <div className="text-block" style={{ left: 0, top: "90%", width: "30%" }}>
+      <div className={styles.text_block} style={{ left: 0, top: "90%", width: "30%" }}>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Id aspernatur
         explicabo doloremque ex earum deleniti itaque repellendus labore placeat
         laboriosam?
       </div>
       <div
-        className="text-block"
+        className={styles.text_block}
         style={{ left: 0, top: "98%", width: "100%", textAlign: "center" }}
       >
         Bye Bye

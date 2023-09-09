@@ -20,7 +20,7 @@ body {
 	background: dodgerblue;
 }
 
-a {
+.a_tag {
 	color: gold;
 }
 
@@ -29,6 +29,12 @@ a {
 	/* overflow: hidden을 하면 sticky가 제대로 동작 안하는 버그가 있음 */
 	/* 따라서 contain: paint를 사용 */
 	contain: paint;
+	background: green;
+	font-size: 20px;
+	font-family: Roboto;
+	line-height: 1.6;
+	color: white;
+
 }
 
 .header {
@@ -36,7 +42,7 @@ a {
 	padding: 2rem;
 }
 
-.main-copy {
+.main_copy {
 	font-size: 3rem;
 }
 
@@ -49,15 +55,15 @@ a {
 	background: white;
 }
 
-.airstrip-a {
+.airstrip_a {
 	left: calc(42% - 3px);
 }
 
-.airstrip-b {
+.airstrip_b {
 	left: calc(58% - 3px);
 }
 
-.page-content {
+.page_content {
 	position: absolute;
 	left: 50vw;
 	top: 0;
@@ -69,7 +75,7 @@ a {
 	/* background: rgba(255,0,0,0.5); */
 }
 
-.text-block {
+.text_block {
 	position: absolute;
 	width: 50%;
 }
@@ -77,11 +83,11 @@ a {
 
 
 /* airplane timeline */
-.airplane-scroll-timeline {
+.airplane_scroll_timeline {
 	position: relative;
 	height: calc(4315px + 2000px - 100vh);
 	margin: 200px 0;
-	border: 10px dashed yellow;
+	/* border: 10px dashed yellow; */
 }
 
 .airplane {
@@ -110,14 +116,14 @@ a {
 	/* background: rgba(255,255,0,0.2); */
 }
 
-.flight-path {
+.flight_path {
 	fill: none;
 	stroke: white;
 	stroke-width: 7;
 	stroke-dasharray: 14;
 }
 
-.hello-jeju {
+.hello_jeju {
 	fill: white;
 	transform-origin: 388px 1431px;
 	will-change: transform, opacity;
@@ -126,13 +132,13 @@ a {
 
 
 /* gallery-timeline */
-.gallery-timeline {
+.gallery_timeline {
 	position: absolute;
 	left: 3%;
 	top: 2350px;
 	width: 94%;
 	height: 2000px;
-	border: 10px dashed MediumAquaMarine;
+	/* border: 10px dashed MediumAquaMarine; */
 }
 
 .jeju {
@@ -156,13 +162,13 @@ a {
 	/* border: 10px dashed deeppink; */
 }
 
-.gallery-item {
+.gallery_item {
 	width: 70vw;
 	flex-shrink: 0;
 	/* border: 10px solid rgba(255, 255, 255, 0.3); */
 }
 
-.gallery-photo {
+.gallery_photo {
 	overflow: hidden;
 	width: 50%;
 	margin: auto;
