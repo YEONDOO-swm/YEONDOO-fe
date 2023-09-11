@@ -29,7 +29,7 @@ export const Login = () => {
                 body: JSON.stringify(payload)
             })
             .then((response) => {
-                let jwtToken = response.headers.get("X_AUTH_TOKEN")
+                let jwtToken = response.headers.get("X_auth_token")
                 console.log(jwtToken)
                 if (jwtToken) {
                     setCookie('jwt', jwtToken)
@@ -41,7 +41,7 @@ export const Login = () => {
                 //sessionStorage.setItem('username', data.jwt)
                 setCookie('username', data.username)
                 
-                window.location.href = "/home"
+                //window.location.href = "/home"
             })
             .catch(error => {
                 console.log(error)
