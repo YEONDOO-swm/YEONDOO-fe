@@ -29,16 +29,14 @@ export const Login = () => {
                 body: JSON.stringify(payload)
             })
             .then((response) => {
-                let jwtToken = response.headers.get('gauth')
-                let jwtToken2 = response.headers.get('Gauth')
+                let jwtToken = response.headers.get('Gauth')
                 console.log(response.headers)
-                console.log(jwtToken)
-                console.log("Gauth", jwtToken2)
+                let a = response.headers.get('Content-Type')
+                console.log('Content-Type', a)
+                console.log('Date', response.headers.get('Date'))
+                console.log("Gauth", jwtToken)
                 if (jwtToken) {
                     setCookie('jwt', jwtToken)
-                }
-                if (jwtToken2) {
-                    setCookie('jwt2', jwtToken2)
                 }
                 return response.json()
             })
