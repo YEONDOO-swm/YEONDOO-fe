@@ -30,9 +30,14 @@ export const Login = () => {
             })
             .then((response) => {
                 let jwtToken = response.headers.get('gauth')
+                let jwtToken2 = response.headers.get('Gauth')
                 console.log(jwtToken)
+                console.log("Gauth", jwtToken2)
                 if (jwtToken) {
                     setCookie('jwt', jwtToken)
+                }
+                if (jwtToken2) {
+                    setCookie('jwt2', jwtToken2)
                 }
                 return response.json()
             })
