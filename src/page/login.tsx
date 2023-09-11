@@ -29,18 +29,18 @@ export const Login = () => {
                 body: JSON.stringify(payload)
             })
             .then((response) => {
-                // let jwtToken = response.headers.get('X-Auth-Token')
-                // //console.log(jwtToken)
-                // if (jwtToken) {
-                //     setCookie('jwt', jwtToken)
-                // }
+                let jwtToken = response.headers.get('gauth')
+                console.log(jwtToken)
+                if (jwtToken) {
+                    setCookie('jwt', jwtToken)
+                }
                 return response.json()
             })
             .then(data => {
                 console.log(data)
                 //sessionStorage.setItem('username', data.jwt)
                 setCookie('username', data.username)
-                setCookie('jwt', data.X_Auth_Token)
+                setCookie('jwt', data.gauth)
                 //window.location.href = "/home"
             })
             .catch(error => {
