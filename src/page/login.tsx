@@ -31,6 +31,7 @@ export const Login = () => {
             .then((response) => {
                 let jwtToken = response.headers.get('gauth')
                 let jwtToken2 = response.headers.get('Gauth')
+                console.log(response.headers)
                 console.log(jwtToken)
                 console.log("Gauth", jwtToken2)
                 if (jwtToken) {
