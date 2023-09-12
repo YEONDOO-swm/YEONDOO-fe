@@ -90,25 +90,23 @@ export const Landing = () => {
         </Box>
           </Section>
           <Section>
-            <Box sx={{height: '100vh', bgcolor: color.appbarGreen}}>
-              <Box sx={{display: 'flex', mx: 10}}>
-                <Box sx={{mt: 8, my: 5, display: 'flex', justifyContent: 'space-around', width: '100%'}}>
-                  <Box>
-                    <img src='../images/home.png' width="600px" className={styles.images}/>
-                  </Box>
+            <Box sx={{height: '100vh', bgcolor: color.appbarGreen, flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+              <Box sx={{height: '50vh', display: 'flex', alignItems: 'center'}}>
+                <Box sx={{display: 'flex', justifyContent: 'space-around', width: '100%'}}>
 
+                  <img src='../images/home.png' width="40%" className={styles.images}/>
                   <Box className={styles.texts} sx={{height: '300', diplay: 'flex', flexDirection:'column', justifyContent: 'center', margin: 'auto 0'}}>
                     Search papers you want
                   </Box>
                 </Box>
               </Box>
 
-              <Box  sx={{display: 'flex', mx: 10}}>
-                <Box sx={{mt: 8, my: 5, display: 'flex', justifyContent: 'space-around', width: '100%'}}>
+              <Box sx={{height: '50vh', display: 'flex', alignItems: 'center'}}>
+                <Box sx={{display: 'flex', justifyContent: 'space-around', width: '100%'}}>
                   <Box className={styles.texts} sx={{height: '300', diplay: 'flex', flexDirection:'column', justifyContent: 'center', margin: 'auto 0'}}>
                     Keep your favorite papers
                   </Box>
-                  <img src='../images/storage.png' width="600px" className={styles.images}/>
+                  <img src='../images/storage.png' width="40%" className={styles.images}/>
                 </Box>
               </Box>
             </Box>
@@ -117,7 +115,7 @@ export const Landing = () => {
           <Box sx={{height: '100vh', bgcolor: color.appbarGreen}}>
             <Box sx={{display: 'flex', mx: 10, alignItems: 'center', height: '100vh'}}>
               <Box sx={{mt: 8, my: 5, display: 'flex', justifyContent: 'space-around', width: '100%'}}>
-                <img src='../images/chat.png' width="700px" className={styles.images} />
+                <img src='../images/chat.png' width="50%" className={styles.images} />
                 <Box className={styles.texts} sx={{height: '300', diplay: 'flex', flexDirection:'column', justifyContent: 'center', margin: 'auto 0'}}>
                   Ask any questions <br/>you have <br/>about the paper
                 </Box>
