@@ -45,7 +45,7 @@ export const Login = () => {
                 //sessionStorage.setItem('username', data.jwt)
                 setCookie('username', data.username)
                 setCookie('jwt', data.gauth)
-                //window.location.href = "/home"
+                window.location.href = "/home"
             })
             .catch(error => {
                 console.log(error)
@@ -82,7 +82,7 @@ export const Login = () => {
                 <Box sx={{ width: '100%', display: 'flex', alignItems: 'center'}}>
                     <Paper variant='outlined' sx={{width: '100%', p:1, display: 'flex', alignItems: 'center', "&:hover": {bgcolor: color.secondaryGrey}}} onClick={()=>login()}>
                         <img src='https://static-00.iconduck.com/assets.00/google-icon-2048x2048-czn3g8x8.png' width="20px" height="20px"></img>
-                        <Typography sx={{ml: 1}}>구글로 로그인하기</Typography>
+                        <Typography sx={{textAlign: 'center', width: '100%', fontWeight: '400'}}>Google Login</Typography>
                     </Paper>
                 </Box>
                 {/* <Button variant='contained' onClick={() => login()} >
