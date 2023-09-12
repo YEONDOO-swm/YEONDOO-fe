@@ -94,7 +94,7 @@ export const Landing = () => {
               <Box sx={{display: 'flex', mx: 10}}>
                 <Box sx={{mt: 8, my: 5, display: 'flex', justifyContent: 'space-around', width: '100%'}}>
                   <Box>
-                    <img src='../public/images/home.png' width="600px" className={styles.images}/>
+                    <img src='../images/home.png' width="600px" className={styles.images}/>
                   </Box>
 
                   <Box className={styles.texts} sx={{height: '300', diplay: 'flex', flexDirection:'column', justifyContent: 'center', margin: 'auto 0'}}>
@@ -108,7 +108,7 @@ export const Landing = () => {
                   <Box className={styles.texts} sx={{height: '300', diplay: 'flex', flexDirection:'column', justifyContent: 'center', margin: 'auto 0'}}>
                     Keep your favorite papers
                   </Box>
-                  <img src='../public/images/storage.png' width="600px" className={styles.images}/>
+                  <img src='../images/storage.png' width="600px" className={styles.images}/>
                 </Box>
               </Box>
             </Box>
@@ -117,7 +117,7 @@ export const Landing = () => {
           <Box sx={{height: '100vh', bgcolor: color.appbarGreen}}>
             <Box sx={{display: 'flex', mx: 10, alignItems: 'center', height: '100vh'}}>
               <Box sx={{mt: 8, my: 5, display: 'flex', justifyContent: 'space-around', width: '100%'}}>
-                <img src='../public/images/chat.png' width="700px" className={styles.images} />
+                <img src='../images/chat.png' width="700px" className={styles.images} />
                 <Box className={styles.texts} sx={{height: '300', diplay: 'flex', flexDirection:'column', justifyContent: 'center', margin: 'auto 0'}}>
                   Ask any questions <br/>you have <br/>about the paper
                 </Box>
