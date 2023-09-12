@@ -29,7 +29,7 @@ export const History = () => {
       api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
     }
 
-    const username = sessionStorage.getItem('username');
+    const workspaceId = sessionStorage.getItem('workspaceId');
     const [papersInNav, setPapersInNav] = useState<any>([])
     const [results, setResults] = useState<any>([])
     const [urlParam, setUrlParam] = useState('')
@@ -44,7 +44,7 @@ export const History = () => {
             amplitude.track("전체 검색 히스토리 Page Viewed");
         }
         setLoading(true)
-        fetch(`${api}/api/history/search?username=${username}`, {
+        fetch(`${api}/api/history/search?workspaceId=${workspaceId}`, {
             headers: {
                 "X_AUTH_TOKEN": getCookie('jwt')
             }
@@ -68,7 +68,7 @@ export const History = () => {
 
         if (resultid !== ''){
             setUrlParam(resultid)
-            fetch(`${api}/api/history/search/result/${resultid}?username=${username}`,{
+            fetch(`${api}/api/history/search/result/${resultid}?workspaceId=${workspaceId}`,{
                 headers: {
                     "X_AUTH_TOKEN": getCookie('jwt')
                 }

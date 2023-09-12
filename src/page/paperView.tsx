@@ -32,7 +32,7 @@ export const PaperView = () => {
 
     const [searchTerm, setSearchTerm] = useState("");
     const [enteredSearchTermInPaper, setEnteredSearchTermInPaper] = useState<any>([]);
-    const username = sessionStorage.getItem("username");
+    const workspaceId = sessionStorage.getItem("workspaceId");
     
     const [paperInfo, setPaperInfo] = useState<any>('');
     const [isExpanded, setIsExpanded] = useState(false);
@@ -66,7 +66,7 @@ export const PaperView = () => {
 
         setLoading(true)
         
-        fetch(`${api}/api/paper/${paperId}?username=${username}`,{
+        fetch(`${api}/api/paper/${paperId}?workspaceId=${workspaceId}`,{
             headers: {
                 "X_AUTH_TOKEN": getCookie('jwt')
             }
@@ -130,7 +130,7 @@ export const PaperView = () => {
         setSearchTermInPaper("")
         const query = new URLSearchParams(window.location.search);
         const paperId = query.get('paperid') || '';
-        await fetch(`${api}/api/paper/${paperId}?username=${username}`,{
+        await fetch(`${api}/api/paper/${paperId}?workspaceId=${workspaceId}`,{
             method: 'POST',
             headers : { 'Content-Type' : 'application/json',
         'X_AUTH_TOKEN': getCookie('jwt') },
