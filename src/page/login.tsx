@@ -76,13 +76,13 @@ export const Login = () => {
         </GoogleOAuthProvider> */}
         <Box sx={{height: '100vh', display:'flex', justifyContent: 'center', alignItems:"center", backgroundColor: color.mainGreen}}>
             <Card sx={{height: '18vh', width: '40vh', backgroundColor: 'white', borderRadius: '13px', p:3}}>
-                <Typography variant="h4" sx={{fontWeight: 'bold', textAlign: 'center', mb: 2}}>
+                <Box sx={{fontWeight: 'bold', textAlign: 'center', mb: 2, fontSize: '3.5vh'}}>
                     Login
-                </Typography>
+                </Box>
                 <Box sx={{ width: '100%', display: 'flex', alignItems: 'center'}}>
                     <Paper variant='outlined' sx={{width: '100%', p:1, display: 'flex', alignItems: 'center', "&:hover": {bgcolor: color.secondaryGrey}}} onClick={()=>login()}>
                         <img src='https://static-00.iconduck.com/assets.00/google-icon-2048x2048-czn3g8x8.png' width="20px" height="20px"></img>
-                        <Typography sx={{textAlign: 'center', width: '100%', fontWeight: '400'}}>Google Login</Typography>
+                        <Typography sx={{textAlign: 'center', width: '100%', fontWeight: '400', fontSize: '2vh'}}>Google Login</Typography>
                     </Paper>
                 </Box>
                 {/* <Button variant='contained' onClick={() => login()} >
