@@ -108,7 +108,7 @@ export const Home = () => {
       //window.location.href = `/home?query=${searchTerm}&type=${searchType}`
   }
 
-  const username = sessionStorage.getItem("username");
+  const workspaceId = sessionStorage.getItem("workspaceId");
 
   const performSearch = async () => {
       try {
@@ -120,7 +120,7 @@ export const Home = () => {
             setSearchResults('type2')
             return
           }
-          const response = await fetch(`${api}/api/homesearch?query=${performSearchTerm}&username=${username}&searchType=${performSearchType}`, {
+          const response = await fetch(`${api}/api/homesearch?query=${performSearchTerm}&workspaceId=${workspaceId}&searchType=${performSearchType}`, {
             headers: {
               "X_AUTH_TOKEN": getCookie('jwt')
           }

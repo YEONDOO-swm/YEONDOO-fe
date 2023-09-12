@@ -24,7 +24,7 @@ export const HistoryPaper = () => {
       api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
     }
 
-    const username = sessionStorage.getItem('username');
+    const workspaceId = sessionStorage.getItem('workspaceId');
     const [loading, setLoading] = useState<boolean>(false)
     const [searchHistory, setSearchHistory] = useState<any>("")
 
@@ -34,7 +34,7 @@ export const HistoryPaper = () => {
             amplitude.track("논문 내 질의 히스토리 Page Viewed")
         }
         setLoading(true)
-        fetch(`${api}/api/history/search/paper?username=${username}`,{
+        fetch(`${api}/api/history/search/paper?workspaceId=${workspaceId}`,{
           headers: {
             "X_AUTH_TOKEN": getCookie('jwt')
         }

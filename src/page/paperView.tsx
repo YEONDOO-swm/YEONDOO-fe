@@ -32,7 +32,7 @@ export const PaperView = () => {
 
     const [searchTerm, setSearchTerm] = useState("");
     const [enteredSearchTermInPaper, setEnteredSearchTermInPaper] = useState<any>([]);
-    const username = sessionStorage.getItem("username");
+    const workspaceId = sessionStorage.getItem("workspaceId");
     
     const [paperInfo, setPaperInfo] = useState<any>('');
     const [isExpanded, setIsExpanded] = useState(false);
@@ -41,6 +41,7 @@ export const PaperView = () => {
     const [searchResultsInPaper, setSearchResultsInPaper] = useState<any>([])
     const [searchResultsId, setSearchResultsId] = useState<any>([])
     const [loading, setLoading] = useState<boolean>(false)
+    const [isFirstWord, setIsFirstWord] = useState<boolean>(true)
 
     const scrollContainerRef = useRef<HTMLDivElement | null>(null);
     
@@ -66,7 +67,7 @@ export const PaperView = () => {
 
         setLoading(true)
         
-        fetch(`${api}/api/paper/${paperId}?username=${username}`,{
+        fetch(`${api}/api/paper/${paperId}?workspaceId=${workspaceId}`,{
             headers: {
                 "X_AUTH_TOKEN": getCookie('jwt')
             }
@@ -130,22 +131,55 @@ export const PaperView = () => {
         setSearchTermInPaper("")
         const query = new URLSearchParams(window.location.search);
         const paperId = query.get('paperid') || '';
-        await fetch(`${api}/api/paper/${paperId}?username=${username}`,{
-            method: 'POST',
-            headers : { 'Content-Type' : 'application/json',
-        'X_AUTH_TOKEN': getCookie('jwt') },
-            body: JSON.stringify({question: searchTermInPaper})
-        })
-        .then(response => response.json())
-        .then(data => {
-            setSearchResultsInPaper((prevSearchResults: any) => [...prevSearchResults, data])
-            
-            //setSearchTermInPaper("")
-        })
-        .catch(error => {
+        try {
+
+            const response = await fetch(`${api}/api/paper/${paperId}?workspaceId=${workspaceId}`,{
+                method: 'POST',
+                headers : { 'Content-Type' : 'application/json',
+            'X_AUTH_TOKEN': getCookie('jwt') },
+                body: JSON.stringify({question: searchTermInPaper})
+            })
+            //console.log(response.json())
+            const reader = response.body!.getReader()
+            const decoder = new TextDecoder()
+
+            while (true) {
+                const { value, done } = await reader.read()
+                if (done) {
+                    setIsFirstWord(true)
+                    break
+                }
+
+                const decodedChunk = decoder.decode(value, { stream: true });
+
+                setSearchResultsInPaper((prevSearchResults: any) => {
+                    if (isFirstWord) {
+                        setIsFirstWord(false)
+                        return [...prevSearchResults, decodedChunk]
+                    } else {
+                        const lastItem = prevSearchResults[prevSearchResults.length -1]
+                        const updatedResults = prevSearchResults.slice(0, -1)
+                        return [...updatedResults, lastItem + decodedChunk]
+                    }
+
+                })
+
+                
+            }
+        } catch(error) {
             console.error("논문 내 질문 오류")
             Sentry.captureException(error)
-        })
+        }
+        // .then(response => response.json())
+        // .then(data => {
+        //     setSearchResultsInPaper((prevSearchResults: any) => [...prevSearchResults, data])
+            
+        //     //setSearchTermInPaper("")
+        // })
+        // .catch(error => {
+        //     console.error("논문 내 질문 오류")
+        //     Sentry.captureException(error)
+        // })
     }
 
     const handleViewLessAuthors = () => {
@@ -309,13 +343,13 @@ export const PaperView = () => {
                                                                 {index>=searchResultsInPaper.length?(
                                                                     <Typography variant="body1" className={loadingStyle.loading}> <MoreHorizIcon /> </Typography>
                                                                 ):(
-                                                                    <Typography variant="body1">{searchResultsInPaper[index].answer}</Typography>                 
+                                                                    <Typography variant="body1">{searchResultsInPaper[index]}</Typography>                 
                                                                 )}
                                                                 
                                                                 {index>= searchResultsInPaper.length?null:
                                                                 <Box sx={{display: 'flex', flexDirection: 'row-reverse', mt: 1}}>
                                                                     <Box sx={{ml: 1}}>
-                                                                        <CopyClick contents={searchResultsInPaper[index].answer}/>
+                                                                        <CopyClick contents={searchResultsInPaper[index]}/>
                                                                     </Box>
                                                                     <ScoreSlider id={searchResultsInPaper[index].id} paper={true}/>
                                                                 </Box>}

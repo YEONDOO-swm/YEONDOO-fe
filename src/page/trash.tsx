@@ -29,7 +29,7 @@ export const Trash = () => {
 
     const [searchTerm, setSearchTerm] = useState("");
     const [papersInNav, setPapersInNav] = useState<any>([])
-    const username = sessionStorage.getItem('username')
+    const workspaceId = sessionStorage.getItem('workspaceId')
     const navigate = useNavigate()
     const [papersInTrash, setPapersInTrash] = useState<any>([])
     const [checkedItems, setCheckedItems] = useState<any>([])
@@ -43,7 +43,7 @@ export const Trash = () => {
             amplitude.track('관심 해제된 논문 Page Viewed')
         }
         setLoading(true)
-        fetch(`${api}/api/history/trash?username=${username}`, {
+        fetch(`${api}/api/history/trash?workspaceId=${workspaceId}`, {
             headers: {
                 "X_AUTH_TOKEN": getCookie('jwt')
             }
@@ -70,7 +70,7 @@ export const Trash = () => {
             notify("복구할 논문을 선택해주세요", {type: 'error'})
         }
         else {
-            fetch(`${api}/api/history/trash?username=${username}`, {
+            fetch(`${api}/api/history/trash?workspaceId=${workspaceId}`, {
                 method: 'POST',
                 headers: { 'Content-Type' : 'application/json' ,
             'X_AUTH_TOKEN' : getCookie('jwt')},

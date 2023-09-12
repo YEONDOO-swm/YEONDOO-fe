@@ -69,7 +69,7 @@ function ScoreSlider({id, score, paper}: {id: any, score?:any, paper?:boolean}) 
       api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
     }
 
-    const username = sessionStorage.getItem('username')
+    const workspaceId = sessionStorage.getItem('workspaceId')
 
     const handleSlider = (event: any, newValue:any) => {
         const payload = {
@@ -78,7 +78,7 @@ function ScoreSlider({id, score, paper}: {id: any, score?:any, paper?:boolean}) 
         }
         //console.log(payload)
         if (paper){
-          fetch(`${api}/api/paper/result/score?username=${username}`, {
+          fetch(`${api}/api/paper/result/score?workspaceId=${workspaceId}`, {
               method: 'POST',
               headers : { 'Content-Type' : 'application/json',
             'X_AUTH_TOKEN': getCookie('jwt') },
@@ -88,7 +88,7 @@ function ScoreSlider({id, score, paper}: {id: any, score?:any, paper?:boolean}) 
             Sentry.captureException(error)
           })
         } else {
-          fetch(`${api}/api/home/result/score?username=${username}`, {
+          fetch(`${api}/api/home/result/score?workspaceId=${workspaceId}`, {
             method: 'POST',
             headers : { 'Content-Type' : 'application/json',
                         'X_AUTH_TOKEN': getCookie('jwt')},

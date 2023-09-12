@@ -33,7 +33,7 @@ export const PaperStorage = () => {
     const [open, setOpen] = useState<boolean>(false)
     const [papersInStorage, setPapersInStorage] = useState<any>("");
     const [loading, setLoading] = useState<boolean>(false)
-    const username = sessionStorage.getItem("username");
+    const workspaceId = sessionStorage.getItem("workspaceId");
     const [paperIdArray, setPaperIdArray] = useState<string[]>([])
 
     const [curPaperId, setCurPaperId] = useState<any>('')
@@ -82,7 +82,7 @@ export const PaperStorage = () => {
         setPaperIdArray(prevArray => [...prevArray, paperId])
 
         var payload = {
-            username: sessionStorage.getItem('username'),
+            workspaceId: sessionStorage.getItem('workspaceId'),
             paperId: paperId,
             on: false
         }
@@ -106,7 +106,7 @@ export const PaperStorage = () => {
     const callGetApi = async () => {
         setLoading(true)
         try {
-            const response = await fetch(`${api}/api/container?username=${username}`, {
+            const response = await fetch(`${api}/api/container?workspaceId=${workspaceId}`, {
                 headers: {
                     "X_AUTH_TOKEN": getCookie('jwt')
                 }
