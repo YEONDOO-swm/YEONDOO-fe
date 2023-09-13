@@ -12,6 +12,11 @@ import { HelmetProvider } from 'react-helmet-async';
 import { hydrateRoot } from 'react-dom/client';
 import { render } from 'react-dom';
 
+import { createStore } from "redux";
+import { reducer } from './reducer';
+import { composeWithDevTools } from '@redux-devtools/extension';
+import { Provider } from "react-redux";
+
 // if (process.env.NODE_ENV === 'development') {
 //     worker.start();
 //   }
@@ -42,15 +47,25 @@ Sentry.init({
 //         "pluginKey": "3ba503c9-c95d-4119-b1a6-fa80b408507f", // fill your plugin key
 //       });
 
+const store = createStore(
+    reducer,
+    composeWithDevTools(
+      
+      // other store enhancers if any
+    ),
+  );
+
 const rootElement = document.getElementById('root');
 const app = (
-    <React.StrictMode>
-        <BrowserRouter>
-            <HelmetProvider>
-                <App />
-            </HelmetProvider>
-        </BrowserRouter>
-    </React.StrictMode>
+    <Provider store={store}>
+        <React.StrictMode>
+            <BrowserRouter>
+                <HelmetProvider>
+                    <App />
+                </HelmetProvider>
+            </BrowserRouter>
+        </React.StrictMode>
+    </Provider>
 )
 let root = ReactDOM.createRoot(rootElement as HTMLElement);
 

@@ -7,6 +7,8 @@ import { color } from '../layout/color'
 import { setCookie, getCookie, removeCookie } from '../cookie';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { LoginApi } from './loginApi';
+import { useSelector } from 'react-redux';
+import { CounterState } from '../reducer';
 
 var api: string = '';
 
@@ -21,53 +23,16 @@ interface loginResponse {
 
 export const Login = () => {
     const queryClient = useQueryClient()
-
     
-    if (process.env.NODE_ENV === 'development'){
-      api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
-    }
-    else if (process.env.NODE_ENV === 'production'){
-      api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
-    }
-
-    // const loginApiCall = async (value: loginPayload) => {
-
-        
-        
-        // try {
-        //     const response = await fetch(`${api}/api/login/google`, {
-        //         method: 'POST',
-        //         headers: { 'Content-Type' : 'application/json' },
-        //         body: JSON.stringify(value)
-        //     })
-
-        //     let jwtToken: string | null = response.headers.get('Gauth')
-        //     console.log(jwtToken)
-
-        //     if (jwtToken) {
-        //         console.log("안에 들어있는지 확인", jwtToken)
-        //         setCookie('jwt', jwtToken)
-        //     }
-
-        //     const data: loginResponse =  await response.json()
-
-        //     setCookie('username', data.username)
-        //     window.location.href = "/home"
-        // } catch (error: unknown) {
-        //     console.log(error)
-        // }
+    // if (process.env.NODE_ENV === 'development'){
+    //   api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
     // }
-    //var queryResponse;
-    // const fetchapi = (value: loginPayload) => {
-    //     return fetch(`${api}/api/login/google`, {
-    //         method: 'POST',
-    //         headers: { 'Content-Type' : 'application/json' },
-    //         body: JSON.stringify(value)
-    //     })
+    // else if (process.env.NODE_ENV === 'production'){
+    //   api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
     // }
-    // const mutations = ()=> {
-    //     return useMutation()
-    // }
+
+    const api = useSelector((state: CounterState) => state.api)
+
     const { mutate } = useMutation(
         (value: loginPayload) => fetch(`${api}/api/login/google`, {
             method: 'POST',
@@ -97,18 +62,6 @@ export const Login = () => {
                 authCode: tokenResponse.code
             }
             mutate(payload)
-            // try {
-            //     mutate(payload)
-            //     if (status === 'error') {
-            //         console.log(error)
-            //     } else if (status === 'success'){
-            //         console.log(data)
-            //         //setCookie('username', data.username)
-            //         window.location.href = "/home"
-            //     }
-            // } catch(error) {
-            //     console.log(error)
-            // }
         },
         onError: (errorResponse: unknown) => {
             console.error(errorResponse);

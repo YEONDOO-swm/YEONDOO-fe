@@ -1,7 +1,7 @@
 import { Admin, Resource, ListGuesser, EditGuesser, ShowGuesser, CustomRoutes, useAuthenticated, useAuthState } from 'react-admin';
 import { dataProvider } from './dataProvider';
 import { authProvider } from './authProvider';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { Home } from './page/home';
 import { PaperStorage } from './page/paperStorage';
@@ -31,6 +31,8 @@ import {
     QueryClient,
     QueryClientProvider,
   } from 'react-query'
+import { useDispatch } from "react-redux";
+import { SET_API } from './reducer';
 
 amplitude.init('fa2f5340585a6728ae2103fb05e56bec', {
     defaultTracking: {
@@ -48,6 +50,23 @@ export const App = () => {
     if (process.env.NODE_ENV === 'production'){
         RouteChangeTracker()
     }
+
+    var api = '';
+    if (process.env.NODE_ENV === 'development'){
+      api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
+    }
+    else if (process.env.NODE_ENV === 'production'){
+      api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
+    }
+
+    const dispatch = useDispatch()
+
+    useEffect(()=>{
+        dispatch({
+            type: SET_API,
+            data: api
+        })
+    }, [])
     
     return (
         <QueryClientProvider client={queryClient}>
