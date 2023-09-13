@@ -27,7 +27,7 @@ export const Trash = () => {
       api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
     }
 
-    const [searchTerm, setSearchTerm] = useState("");
+    const [searchTerm, setSearchTerm] = useState<string>("");
     const [papersInNav, setPapersInNav] = useState<any>([])
     const workspaceId = sessionStorage.getItem('workspaceId')
     const navigate = useNavigate()

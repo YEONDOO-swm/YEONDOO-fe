@@ -5,6 +5,8 @@ import { useGoogleLogin } from '@react-oauth/google';
 import { Box, Button, Card, Paper, Typography } from '@mui/material';
 import { color } from '../layout/color'
 import { setCookie, getCookie, removeCookie } from '../cookie';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { LoginApi } from './loginApi';
 
 var api: string = '';
 
@@ -18,6 +20,9 @@ interface loginResponse {
 }
 
 export const Login = () => {
+    const queryClient = useQueryClient()
+
+    
     if (process.env.NODE_ENV === 'development'){
       api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
     }
@@ -25,66 +30,88 @@ export const Login = () => {
       api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
     }
 
-    const loginApiCall = async (value: loginPayload) => {
-        try {
-            const response = await fetch(`${api}/api/login/google`, {
-                method: 'POST',
-                headers: { 'Content-Type' : 'application/json' },
-                body: JSON.stringify(value)
-            })
+    // const loginApiCall = async (value: loginPayload) => {
 
-            let jwtToken: string | null = response.headers.get('Gauth')
-            console.log(jwtToken)
+        
+        
+        // try {
+        //     const response = await fetch(`${api}/api/login/google`, {
+        //         method: 'POST',
+        //         headers: { 'Content-Type' : 'application/json' },
+        //         body: JSON.stringify(value)
+        //     })
 
-            if (jwtToken) {
-                console.log("안에 들어있는지 확인", jwtToken)
-                setCookie('jwt', jwtToken)
+        //     let jwtToken: string | null = response.headers.get('Gauth')
+        //     console.log(jwtToken)
+
+        //     if (jwtToken) {
+        //         console.log("안에 들어있는지 확인", jwtToken)
+        //         setCookie('jwt', jwtToken)
+        //     }
+
+        //     const data: loginResponse =  await response.json()
+
+        //     setCookie('username', data.username)
+        //     window.location.href = "/home"
+        // } catch (error: unknown) {
+        //     console.log(error)
+        // }
+    // }
+    //var queryResponse;
+    // const fetchapi = (value: loginPayload) => {
+    //     return fetch(`${api}/api/login/google`, {
+    //         method: 'POST',
+    //         headers: { 'Content-Type' : 'application/json' },
+    //         body: JSON.stringify(value)
+    //     })
+    // }
+    // const mutations = ()=> {
+    //     return useMutation()
+    // }
+    const { mutate } = useMutation(
+        (value: loginPayload) => fetch(`${api}/api/login/google`, {
+            method: 'POST',
+            headers: { 'Content-Type' : 'application/json' },
+            body: JSON.stringify(value)
+        }),
+        {
+            onSuccess: (data) => {
+                const response = data
+                let jwtToken: string | null = response.headers.get('Gauth')
+
+                if (jwtToken) {
+                    setCookie('jwt', jwtToken)
+                }
+
+                response.json().then((data)=> {
+                    console.log(data)
+                    setCookie('username', data.username)
+                    window.location.href = "/home"
+                }) 
             }
-
-            const data: loginResponse =  await response.json()
-
-            setCookie('username', data.username)
-            //setCookie('jwt', data.gauth)
-            window.location.href = "/home"
-        } catch (error: unknown) {
-            console.log(error)
         }
-    }
-
+    )
     const login = useGoogleLogin({
-        onSuccess: tokenResponse => {
-
+        onSuccess: async tokenResponse => {
             const payload: loginPayload = {
                 authCode: tokenResponse.code
             }
-
-            loginApiCall(payload)
-            
-            // fetch(`${api}/api/login/google`, {
-            //     method: 'POST',
-            //     headers: { 'Content-Type' : 'application/json' },
-            //     body: JSON.stringify(payload)
-            // })
-            // .then((response) => {
-            //     let jwtToken = response.headers.get('Gauth')
-            //     console.log(jwtToken)
-            //     if (jwtToken) {
-            //         console.log("안에 들어있는지 확인", jwtToken)
-            //         setCookie('jwt', jwtToken)
+            mutate(payload)
+            // try {
+            //     mutate(payload)
+            //     if (status === 'error') {
+            //         console.log(error)
+            //     } else if (status === 'success'){
+            //         console.log(data)
+            //         //setCookie('username', data.username)
+            //         window.location.href = "/home"
             //     }
-            //     return response.json()
-            // })
-            // .then((data: loginResponse) => {
-            //     setCookie('username', data.username)
-            //     //setCookie('jwt', data.gauth)
-            //     window.location.href = "/home"
-            // })
-            // .catch((error:unknown) => {
+            // } catch(error) {
             //     console.log(error)
-            // })
+            // }
         },
         onError: (errorResponse: unknown) => {
-        console.error(errorResponse);
+            console.error(errorResponse);
         },
         flow: "auth-code",
         redirect_uri: 'postmessage'
@@ -92,20 +119,6 @@ export const Login = () => {
       });
   return (
     <React.Fragment>
-
-        {/* <GoogleOAuthProvider clientId="499303710660-ps4rmdcpmci178dbaqro07ial11bevlj.apps.googleusercontent.com">
-            <GoogleLogin
-                buttonText="google"
-                onSuccess={credentialResponse => {
-                    console.log(credentialResponse);
-                }}
-                onError={() => {
-                    console.log('Login Failed');
-                }}
-                cookiePolicy={'single_host_origin'}
-                redirect_uri='postmessage'
-                />
-        </GoogleOAuthProvider> */}
         <Box sx={{height: '100vh', display:'flex', justifyContent: 'center', alignItems:"center", backgroundColor: color.mainGreen}}>
             <Box sx={{height: '18vh', width: '50vh', borderRadius: '13px', p:3}}>
                 <Box sx={{fontWeight: '500', textAlign: 'center', fontSize: '3.5vh', color: color.appbarGreen}}>
@@ -120,9 +133,6 @@ export const Login = () => {
                         <Typography sx={{textAlign: 'center', width: '100%', fontWeight: '400', fontSize: '2vh'}}>Google Login</Typography>
                     </Paper>
                 </Box>
-                {/* <Button variant='contained' onClick={() => login()} >
-                    구글로 로그인하기
-                </Button> */}
             </Box>
         </Box>
 

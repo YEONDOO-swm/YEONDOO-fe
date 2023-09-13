@@ -24,6 +24,13 @@ import { Login } from './page/login';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { CookiesProvider } from 'react-cookie'
 import { PersonalInfo } from './page/personalInfo';
+import {
+    useQuery,
+    useMutation,
+    useQueryClient,
+    QueryClient,
+    QueryClientProvider,
+  } from 'react-query'
 
 amplitude.init('fa2f5340585a6728ae2103fb05e56bec', {
     defaultTracking: {
@@ -32,45 +39,51 @@ amplitude.init('fa2f5340585a6728ae2103fb05e56bec', {
     }
 });
 
+// react-query client 설정
+const queryClient = new QueryClient()
+
 // import 시 파일 대소문자확인
 // 파일 이름 컨벤션 정의
 export const App = () => {
     if (process.env.NODE_ENV === 'production'){
         RouteChangeTracker()
     }
+    
     return (
-        <GoogleOAuthProvider clientId="499303710660-ps4rmdcpmci178dbaqro07ial11bevlj.apps.googleusercontent.com">
-            {/* <Helmet>
-                <title>연두</title>
-            </Helmet> */}
-            <CookiesProvider>
-                <MetaTag title="연두" description="연두는 논문을 작성하는 데 어려움을 느끼는 사람들을 위해 대화형 검색, 질의 서비스를 제공합니다." keywords="논문, AI, 인공지능, 머신러닝, 검색, 질의, gpt, 논문 내 질의"/>
-                
-                <Admin
-                    authProvider={authProvider} layout={MyLayout} theme={MyTheme} loginPage={Login}
-                >
+        <QueryClientProvider client={queryClient}>
+            <GoogleOAuthProvider clientId="499303710660-ps4rmdcpmci178dbaqro07ial11bevlj.apps.googleusercontent.com">
+                {/* <Helmet>
+                    <title>연두</title>
+                </Helmet> */}
+                <CookiesProvider>
+                    <MetaTag title="연두" description="연두는 논문을 작성하는 데 어려움을 느끼는 사람들을 위해 대화형 검색, 질의 서비스를 제공합니다." keywords="논문, AI, 인공지능, 머신러닝, 검색, 질의, gpt, 논문 내 질의"/>
                     
-                    {/* <Resource name="users" list={ListGuesser}></Resource> */}
-                    {/* <Route path="/home" element={< Home />}/> */}
-                    <CustomRoutes noLayout>
-                        <Route path="/" element={< Landing />} />
-                        <Route path='/personalinfo' element={< PersonalInfo />} />
-                    </CustomRoutes>
-                    <CustomRoutes>
-                        {/* <Route path="/" element={<Navigate to="/home" replace />} /> */}
+                    <Admin
+                        authProvider={authProvider} layout={MyLayout} theme={MyTheme} loginPage={Login}
+                    >
                         
-                        <Route path="/home" element={< Home />}/>
-                        <Route path="/paperstorage" element={< PaperStorage/>}/>
-                        <Route path="/history" element={< History />}/>
-                        <Route path="/userprofile" element={< UserProfile />}/>
-                        <Route path="/paper" element={< PaperView />}/>
-                        <Route path="/historypaper" element={< HistoryPaper />} />
-                        <Route path="/historytrash" element={< Trash />} />
-                        
-                    </CustomRoutes>
-                </Admin>
-            </CookiesProvider>
-        </GoogleOAuthProvider>
+                        {/* <Resource name="users" list={ListGuesser}></Resource> */}
+                        {/* <Route path="/home" element={< Home />}/> */}
+                        <CustomRoutes noLayout>
+                            <Route path="/" element={< Landing />} />
+                            <Route path='/personalinfo' element={< PersonalInfo />} />
+                        </CustomRoutes>
+                        <CustomRoutes>
+                            {/* <Route path="/" element={<Navigate to="/home" replace />} /> */}
+                            
+                            <Route path="/home" element={< Home />}/>
+                            <Route path="/paperstorage" element={< PaperStorage/>}/>
+                            <Route path="/history" element={< History />}/>
+                            <Route path="/userprofile" element={< UserProfile />}/>
+                            <Route path="/paper" element={< PaperView />}/>
+                            <Route path="/historypaper" element={< HistoryPaper />} />
+                            <Route path="/historytrash" element={< Trash />} />
+                            
+                        </CustomRoutes>
+                    </Admin>
+                </CookiesProvider>
+            </GoogleOAuthProvider>
+        </QueryClientProvider>
         
 )};
     
