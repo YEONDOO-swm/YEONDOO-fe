@@ -34,14 +34,17 @@ export const Login = () => {
             })
 
             let jwtToken: string | null = response.headers.get('Gauth')
+            console.log(jwtToken)
+
             if (jwtToken) {
+                console.log("안에 들어있는지 확인", jwtToken)
                 setCookie('jwt', jwtToken)
             }
 
             const data: loginResponse =  await response.json()
 
             setCookie('username', data.username)
-            setCookie('jwt', data.gauth)
+            //setCookie('jwt', data.gauth)
             window.location.href = "/home"
         } catch (error: unknown) {
             console.log(error)
@@ -55,29 +58,30 @@ export const Login = () => {
                 authCode: tokenResponse.code
             }
 
-            //loginApiCall(payload)
+            loginApiCall(payload)
             
-            fetch(`${api}/api/login/google`, {
-                method: 'POST',
-                headers: { 'Content-Type' : 'application/json' },
-                body: JSON.stringify(payload)
-            })
-            .then((response) => {
-                let jwtToken = response.headers.get('Gauth')
-                console.log(jwtToken)
-                if (jwtToken) {
-                    setCookie('jwt', jwtToken)
-                }
-                return response.json()
-            })
-            .then((data: loginResponse) => {
-                setCookie('username', data.username)
-                setCookie('jwt', data.gauth)
-                window.location.href = "/home"
-            })
-            .catch((error:unknown) => {
-                console.log(error)
-            })
+            // fetch(`${api}/api/login/google`, {
+            //     method: 'POST',
+            //     headers: { 'Content-Type' : 'application/json' },
+            //     body: JSON.stringify(payload)
+            // })
+            // .then((response) => {
+            //     let jwtToken = response.headers.get('Gauth')
+            //     console.log(jwtToken)
+            //     if (jwtToken) {
+            //         console.log("안에 들어있는지 확인", jwtToken)
+            //         setCookie('jwt', jwtToken)
+            //     }
+            //     return response.json()
+            // })
+            // .then((data: loginResponse) => {
+            //     setCookie('username', data.username)
+            //     //setCookie('jwt', data.gauth)
+            //     window.location.href = "/home"
+            // })
+            // .catch((error:unknown) => {
+            //     console.log(error)
+            // })
         },
         onError: (errorResponse: unknown) => {
         console.error(errorResponse);
