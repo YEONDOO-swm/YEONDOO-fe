@@ -54,29 +54,29 @@ export const Login = () => {
             const payload: loginPayload = {
                 authCode: tokenResponse.code
             }
+
+            //loginApiCall(payload)
             
-            loginApiCall(payload)
-            
-            // fetch(`${api}/api/login/google`, {
-            //     method: 'POST',
-            //     headers: { 'Content-Type' : 'application/json' },
-            //     body: JSON.stringify(payload)
-            // })
-            // .then((response) => {
-            //     let jwtToken = response.headers.get('Gauth')
-            //     if (jwtToken) {
-            //         setCookie('jwt', jwtToken)
-            //     }
-            //     return response.json()
-            // })
-            // .then((data: loginResponse) => {
-            //     setCookie('username', data.username)
-            //     setCookie('jwt', data.gauth)
-            //     window.location.href = "/home"
-            // })
-            // .catch((error:unknown) => {
-            //     console.log(error)
-            // })
+            fetch(`${api}/api/login/google`, {
+                method: 'POST',
+                headers: { 'Content-Type' : 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then((response) => {
+                let jwtToken = response.headers.get('Gauth')
+                if (jwtToken) {
+                    setCookie('jwt', jwtToken)
+                }
+                return response.json()
+            })
+            .then((data: loginResponse) => {
+                setCookie('username', data.username)
+                setCookie('jwt', data.gauth)
+                window.location.href = "/home"
+            })
+            .catch((error:unknown) => {
+                console.log(error)
+            })
         },
         onError: (errorResponse: unknown) => {
         console.error(errorResponse);
