@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { FC, useEffect } from 'react'
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google'
 //import { jwt_decode } from 'jwt-decode'
 import { useGoogleLogin } from '@react-oauth/google';
@@ -6,8 +6,18 @@ import { Box, Button, Card, Paper, Typography } from '@mui/material';
 import { color } from '../layout/color'
 import { setCookie, getCookie, removeCookie } from '../cookie';
 
+var api: string = '';
+
+interface loginPayload {
+    authCode: string;
+}
+
+interface loginResponse {
+    username: string;
+    gauth: string;
+}
+
 export const Login = () => {
-    var api = '';
     if (process.env.NODE_ENV === 'development'){
       api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
     }
@@ -15,43 +25,60 @@ export const Login = () => {
       api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
     }
 
-    const login = useGoogleLogin({
-        onSuccess: tokenResponse => {
-            
-            console.log(tokenResponse)
-
-            const payload = {
-                authCode: tokenResponse.code
-            }
-            fetch(`${api}/api/login/google`, {
+    const loginApiCall = async (value: loginPayload) => {
+        try {
+            const response = await fetch(`${api}/api/login/google`, {
                 method: 'POST',
                 headers: { 'Content-Type' : 'application/json' },
-                body: JSON.stringify(payload)
+                body: JSON.stringify(value)
             })
-            .then((response) => {
-                let jwtToken = response.headers.get('Gauth')
-                console.log(response.headers)
-                let a = response.headers.get('Content-Type')
-                console.log('Content-Type', a)
-                console.log('Date', response.headers.get('Date'))
-                console.log("Gauth", jwtToken)
-                if (jwtToken) {
-                    setCookie('jwt', jwtToken)
-                }
-                return response.json()
-            })
-            .then(data => {
-                console.log(data)
-                //sessionStorage.setItem('username', data.jwt)
-                setCookie('username', data.username)
-                setCookie('jwt', data.gauth)
-                window.location.href = "/home"
-            })
-            .catch(error => {
-                console.log(error)
-            })
+
+            let jwtToken: string | null = response.headers.get('Gauth')
+            if (jwtToken) {
+                setCookie('jwt', jwtToken)
+            }
+
+            const data: loginResponse =  await response.json()
+
+            setCookie('username', data.username)
+            setCookie('jwt', data.gauth)
+            window.location.href = "/home"
+        } catch (error: unknown) {
+            console.log(error)
+        }
+    }
+
+    const login = useGoogleLogin({
+        onSuccess: tokenResponse => {
+
+            const payload: loginPayload = {
+                authCode: tokenResponse.code
+            }
+            
+            loginApiCall(payload)
+            
+            // fetch(`${api}/api/login/google`, {
+            //     method: 'POST',
+            //     headers: { 'Content-Type' : 'application/json' },
+            //     body: JSON.stringify(payload)
+            // })
+            // .then((response) => {
+            //     let jwtToken = response.headers.get('Gauth')
+            //     if (jwtToken) {
+            //         setCookie('jwt', jwtToken)
+            //     }
+            //     return response.json()
+            // })
+            // .then((data: loginResponse) => {
+            //     setCookie('username', data.username)
+            //     setCookie('jwt', data.gauth)
+            //     window.location.href = "/home"
+            // })
+            // .catch((error:unknown) => {
+            //     console.log(error)
+            // })
         },
-        onError: (errorResponse) => {
+        onError: (errorResponse: unknown) => {
         console.error(errorResponse);
         },
         flow: "auth-code",
