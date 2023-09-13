@@ -26,20 +26,23 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import * as Sentry from '@sentry/react';
 import { getCookie } from "../cookie";
+import { useSelector } from "react-redux";
+import { CounterState } from "../reducer";
 
 export const Home = () => {
     useAuthenticated();
     const navigate = useNavigate();
     const notify = useNotify();
     //UserProfileCheck();
-
-    var api = '';
-    if (process.env.NODE_ENV === 'development'){
-      api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
-    }
-    else if (process.env.NODE_ENV === 'production'){
-      api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
-    }
+    const api = useSelector((state: CounterState) => state.api)
+    console.log(api)
+    // var api = '';
+    // if (process.env.NODE_ENV === 'development'){
+    //   api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
+    // }
+    // else if (process.env.NODE_ENV === 'production'){
+    //   api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
+    // }
     
     const [searchTerm, setSearchTerm] = useState("");
     const [searchType, setSearchType] = useState("1");
