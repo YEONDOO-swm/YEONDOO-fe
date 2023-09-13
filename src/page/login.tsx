@@ -64,6 +64,7 @@ export const Login = () => {
             })
             .then((response) => {
                 let jwtToken = response.headers.get('Gauth')
+                console.log(jwtToken)
                 if (jwtToken) {
                     setCookie('jwt', jwtToken)
                 }
