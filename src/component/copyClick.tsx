@@ -4,9 +4,9 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { useNotify } from 'react-admin';
 import { color } from "../layout/color";
 
-const CopyClick = ({contents}:{contents: any}) => {
+const CopyClick = ({contents}:{contents: string}) => {
     const notify = useNotify();
-    const handleCopy = (copyContents:any) => {
+    const handleCopy = (copyContents: string) => {
         navigator.clipboard.writeText(copyContents)
         notify('내용이 복사되었습니다.', {type:'success'})
     };

@@ -5,11 +5,11 @@ import { useState } from 'react';
 import scroll from '../layout/scroll.module.css'
 import { color } from '../layout/color';
 
-export const HistoryNav = ({page} : {page: any}) => {
+export const HistoryNav = ({page} : {page: string}) => {
     const navigate = useNavigate()
 
     const handleNavigateToHistory = () => {
-        const path = location.pathname
+        const path: string = location.pathname
         navigate('/history')
         if (path === '/history'){
             window.location.reload()
@@ -17,7 +17,7 @@ export const HistoryNav = ({page} : {page: any}) => {
     }
 
     const handleNavigateToSearchInPaper = () => {
-        const path = location.pathname
+        const path: string = location.pathname
         navigate('/historypaper')
         if (path === '/historypaper'){
             window.location.reload()
@@ -25,7 +25,7 @@ export const HistoryNav = ({page} : {page: any}) => {
     }
 
     const handleNavigateToTrash = () => {
-        const path = location.pathname
+        const path: string = location.pathname
         navigate('/historytrash')
         if (path === '/historytrash'){
             window.location.reload()

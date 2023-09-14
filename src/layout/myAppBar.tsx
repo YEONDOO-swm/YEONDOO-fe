@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import { Typography, styled, alpha,  ToggleButtonGroup } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { SearchTap } from '../component/searchTap';
-import { useState } from 'react';
+import { useState, KeyboardEvent, ChangeEvent } from 'react';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import * as amplitude from '@amplitude/analytics-browser';
@@ -64,13 +64,13 @@ const ToggleButton = styled(MuiToggleButton)({
 
 export const MyAppBar = () => {
 
-    const [searchTerm, setSearchTerm] = useState("");
-    const [searchType, setSearchType] = useState("1");
+    const [searchTerm, setSearchTerm] = useState<string>("");
+    const [searchType, setSearchType] = useState<string>("1");
     const notify = useNotify()
     const navigate = useNavigate()
     const maxLengthLimit = 300
 
-    const handleSearchKeyDown = (event: any) => {
+    const handleSearchKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Enter' && event.nativeEvent.isComposing === false){
           event.preventDefault();
           if (!searchTerm) {
@@ -90,7 +90,7 @@ export const MyAppBar = () => {
         }
     }
 
-    const handleChange = (event: any) => {
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
       const inputText = event.target.value;
   
       if (inputText.length > maxLengthLimit) {

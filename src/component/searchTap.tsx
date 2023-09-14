@@ -2,11 +2,12 @@ import * as React from "react";
 import { Box, SxProps, TextField, IconButton, InputAdornment, CardContent, Container } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNotify } from "react-admin";
+import { MouseEvent } from "react";
 
 type SearchTapProps = {
   searchTerm: string;
   onChange: (value: string) => void;
-  onSearch: (value: any) => void;
+  onSearch: (value: MouseEvent<HTMLButtonElement>) => void;
   onSearchKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   placeholder?: string;
   firstBoxSx?: SxProps;
@@ -26,11 +27,11 @@ export const SearchTap: React.FC<SearchTapProps> = ({
   sx,
   heightSx
 }) => {
-  const maxLengthLimit = 300
+  const maxLengthLimit: number = 300
   const searchInputRef = React.useRef<HTMLInputElement | null>(null);
   const notify = useNotify()
 
-  const handleChange = (event: any) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputText = event.target.value;
 
     if (inputText.length > maxLengthLimit) {

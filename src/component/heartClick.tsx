@@ -7,20 +7,22 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { useState } from "react";
 import * as Sentry from '@sentry/react';
 import { getCookie } from "../cookie";
+import { useSelector } from "react-redux";
+import { CounterState } from "../reducer";
+import { paperType } from "../page/home";
 
-export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentItem: any, onUpdateLikes?:any, paperlike?: any }) => {
+type onUpdateLikesType = (
+  paperId: string,
+  newLikes: number
+ ) => void
+
+export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentItem: paperType, onUpdateLikes?:onUpdateLikesType, paperlike?: boolean }) => {
     const [paperIdArray, setPaperIdArray] = useState<string[]>([]);
-    const [isPaperLike, setIsPaperLike] = useState(paperlike)
+    const [isPaperLike, setIsPaperLike] = useState<boolean|undefined>(paperlike)
 
-    var api = '';
-    if (process.env.NODE_ENV === 'development'){
-      api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
-    }
-    else if (process.env.NODE_ENV === 'production'){
-      api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
-    }
+    const api: string = useSelector((state: CounterState) => state.api)
     
-    const handleHeartClick = (paperId:any) => {
+    const handleHeartClick = (paperId:string) => {
         var payload
         if (paperIdArray.includes(paperId) || isPaperLike) {
           if (process.env.NODE_ENV === 'production') {
@@ -35,7 +37,7 @@ export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentIt
           }
           setPaperIdArray(paperIdArray)
           payload = {
-            workspaceId: sessionStorage.getItem('workspaceId'),
+            workspaceId: Number(sessionStorage.getItem('workspaceId')),
             paperId: paperId,
             on: false
           }
@@ -50,7 +52,7 @@ export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentIt
           }
           setPaperIdArray(prevArray => [...prevArray, paperId]);
           payload = {
-            workspaceId: sessionStorage.getItem('workspaceId'),
+            workspaceId: Number(sessionStorage.getItem('workspaceId')),
             paperId: paperId,
             on: true
           }
