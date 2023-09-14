@@ -114,7 +114,7 @@ export const Home = () => {
       //window.location.href = `/home?query=${searchTerm}&type=${searchType}`
   }
 
-  const workspaceId = sessionStorage.getItem("workspaceId");
+  const workspaceId = Number(sessionStorage.getItem("workspaceId"));
 
   
 

@@ -37,7 +37,7 @@ export const PaperStorage = () => {
     // const [papersInStorage, setPapersInStorage] = useState<any>("");
     // const [loading, setLoading] = useState<boolean>(false)
 
-    const workspaceId: string | null = sessionStorage.getItem("workspaceId");
+    const workspaceId: number | null = Number(sessionStorage.getItem("workspaceId"));
 
     const [paperIdArray, setPaperIdArray] = useState<string[]>([])
 

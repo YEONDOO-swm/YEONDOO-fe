@@ -41,7 +41,7 @@ export const PaperView = () => {
 
     const [searchTermInPaper, setSearchTermInPaper] = useState<string>(""); // 변화하는 입력값
     const [enteredSearchTermInPaper, setEnteredSearchTermInPaper] = useState<string[]>([]); // 전체 입력값
-    const workspaceId = sessionStorage.getItem("workspaceId");
+    const workspaceId = Number(sessionStorage.getItem("workspaceId"));
     
     const [isExpanded, setIsExpanded] = useState<boolean>(false); // author
     

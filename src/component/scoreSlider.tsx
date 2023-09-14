@@ -65,7 +65,7 @@ function ScoreSlider({id, score, paper}: {id: number, score?:number | null, pape
 
     const api = useSelector((state: CounterState) => state.api)
 
-    const workspaceId = sessionStorage.getItem('workspaceId')
+    const workspaceId = Number(sessionStorage.getItem('workspaceId'))
 
     const handleSlider = (event: Event | SyntheticEvent<Element, Event>, newValue: number | number[]) => {
         const payload = {

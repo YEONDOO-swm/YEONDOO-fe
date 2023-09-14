@@ -37,7 +37,7 @@ export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentIt
           }
           setPaperIdArray(paperIdArray)
           payload = {
-            workspaceId: sessionStorage.getItem('workspaceId'),
+            workspaceId: Number(sessionStorage.getItem('workspaceId')),
             paperId: paperId,
             on: false
           }
@@ -52,7 +52,7 @@ export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentIt
           }
           setPaperIdArray(prevArray => [...prevArray, paperId]);
           payload = {
-            workspaceId: sessionStorage.getItem('workspaceId'),
+            workspaceId: Number(sessionStorage.getItem('workspaceId')),
             paperId: paperId,
             on: true
           }
