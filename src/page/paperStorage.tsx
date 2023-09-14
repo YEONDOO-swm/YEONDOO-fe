@@ -54,7 +54,7 @@ export const PaperStorage = () => {
         (value: paperLikePayload)=> fetch(`${api}/api/paperlikeonoff`, {
             method:'POST',
             headers: { 'Content-Type' : 'application/json',
-        'X_AUTH_TOKEN': getCookie('jwt') },
+        'Gauth': getCookie('jwt') },
             body: JSON.stringify(value)
         }), {
             onError: (error) => {
@@ -80,7 +80,7 @@ export const PaperStorage = () => {
         // fetch(`${api}/api/paperlikeonoff`, {
         //     method:'POST',
         //     headers: { 'Content-Type' : 'application/json',
-        // 'X_AUTH_TOKEN': getCookie('jwt') },
+        // 'Gauth': getCookie('jwt') },
         //     body: JSON.stringify(payload)
         // })
         // .then(response => {
@@ -96,7 +96,7 @@ export const PaperStorage = () => {
     const {data: papersInStorage, isLoading} = useQuery(['homesearch', api, workspaceId],()=> fetch(`${api}/api/container?workspaceId=${workspaceId}`
     , {
         headers: {
-            "X_AUTH_TOKEN": getCookie('jwt')
+            "Gauth": getCookie('jwt')
         }
     }).then(response => response.json()),
     {
@@ -113,7 +113,7 @@ export const PaperStorage = () => {
     //     try {
     //         const response = await fetch(`${api}/api/container?workspaceId=${workspaceId}`, {
     //             headers: {
-    //                 "X_AUTH_TOKEN": getCookie('jwt')
+    //                 "Gauth": getCookie('jwt')
     //             }
     //         })
     //         const data = await response.json()

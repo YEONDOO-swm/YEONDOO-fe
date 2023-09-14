@@ -76,7 +76,7 @@ function ScoreSlider({id, score, paper}: {id: number, score?:number | null, pape
           fetch(`${api}/api/paper/result/score?workspaceId=${workspaceId}`, {
               method: 'POST',
               headers : { 'Content-Type' : 'application/json',
-            'X_AUTH_TOKEN': getCookie('jwt') },
+            'Gauth': getCookie('jwt') },
               body: JSON.stringify(payload)
           })
           .catch(error => {
@@ -86,7 +86,7 @@ function ScoreSlider({id, score, paper}: {id: number, score?:number | null, pape
           fetch(`${api}/api/home/result/score?workspaceId=${workspaceId}`, {
             method: 'POST',
             headers : { 'Content-Type' : 'application/json',
-                        'X_AUTH_TOKEN': getCookie('jwt')},
+                        'Gauth': getCookie('jwt')},
             body: JSON.stringify(payload)
         })
         .catch(error => {

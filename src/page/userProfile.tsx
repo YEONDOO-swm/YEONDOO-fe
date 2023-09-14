@@ -46,7 +46,7 @@ export const UserProfile = () => {
         // fetch fields from API
         fetch(`${api}/api/userprofile/${username}`, {
             headers: {
-                "X_AUTH_TOKEN": getCookie('jwt')
+                "Gauth": getCookie('jwt')
             }
         })
             .then(response => response.json())
@@ -134,7 +134,7 @@ export const UserProfile = () => {
         fetch(`${api}/api/userprofile`, {
             method: 'POST',
             headers: { 'Content-Type' : 'application/json' ,
-        'X_AUTH_TOKEN': getCookie('jwt')},
+        'Gauth': getCookie('jwt')},
             body: JSON.stringify(payload)
         })
         .then(response => {

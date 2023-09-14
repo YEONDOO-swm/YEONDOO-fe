@@ -65,7 +65,7 @@ export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentIt
         fetch(`${api}/api/paperlikeonoff`, {
           method: 'POST',
           headers: { 'Content-Type' : 'application/json',
-                      'X_AUTH_TOKEN' : getCookie('jwt') },
+                      'Gauth' : getCookie('jwt') },
           body: JSON.stringify(payload)
         })
         .then(response => {

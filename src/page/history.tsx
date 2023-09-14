@@ -40,7 +40,7 @@ export const History = () => {
     const {data: results, isLoading} = useQuery(["historySearch", workspaceId], ()=>
         fetch(`${api}/api/history/search?workspaceId=${workspaceId}`, {
         headers: {
-            "X_AUTH_TOKEN": getCookie('jwt')
+            "Gauth": getCookie('jwt')
         }
         }).then(response => response.json())
         .then(data => data.results),

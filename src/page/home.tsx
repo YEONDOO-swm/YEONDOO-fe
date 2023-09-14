@@ -135,7 +135,7 @@ export const Home = () => {
           // const { isLoading, error } = useQuery(['homesearch', performSearchTerm, workspaceId], () => 
           //   fetch(`${api}/api/homesearch?query=${performSearchTerm}&workspaceId=${workspaceId}&searchType=${performSearchType}`, {
           //     headers: {
-          //       "X_AUTH_TOKEN": getCookie('jwt')
+          //       "Gauth": getCookie('jwt')
           //   }}
           //   )
           // ,{
@@ -158,7 +158,7 @@ export const Home = () => {
           
           const response: Response = await fetch(`${api}/api/homesearch?query=${performSearchTerm}&workspaceId=${workspaceId}&searchType=${performSearchType}`, {
             headers: {
-              "X_AUTH_TOKEN": getCookie('jwt')
+              "Gauth": getCookie('jwt')
           }
           });
           const data = await response.json();
@@ -329,7 +329,6 @@ export const Home = () => {
                 <GoToArxiv url={paper.url} paperId={paper.paperId}/>
 
                 <Box sx={{width: '15px'}}></Box>
-                {/* <Button variant ="contained" onClick={() => handleViewMore(paper.paperId)}>자세히 보기</Button> */}
                 <GoToViewMore paperid={paper.paperId} />
               </Box>
               {/* Add other details for the paper */}
