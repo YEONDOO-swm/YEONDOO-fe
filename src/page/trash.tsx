@@ -38,7 +38,7 @@ export const Trash = () => {
     const { data: papersInTrash, isLoading } = useQuery(["trash", workspaceId], 
         ()=>fetch(`${api}/api/history/trash?workspaceId=${workspaceId}`, {
             headers: {
-                "X_AUTH_TOKEN": getCookie('jwt')
+                "Gauth": getCookie('jwt')
             }
         }).then(response => response.json()).then(data => data.trashContainers),
         {
@@ -59,7 +59,7 @@ export const Trash = () => {
         (value: string[]) => fetch(`${api}/api/history/trash?workspaceId=${workspaceId}`, {
             method: 'POST',
             headers: { 'Content-Type' : 'application/json' ,
-        'X_AUTH_TOKEN' : getCookie('jwt')},
+        'Gauth' : getCookie('jwt')},
             body: JSON.stringify(value)
         }),
         {

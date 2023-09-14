@@ -41,7 +41,7 @@ export const HistoryPaper = () => {
     const { data: searchHistory, isLoading } = useQuery(["historyPaper", workspaceId]
     , ()=>fetch(`${api}/api/history/search/paper?workspaceId=${workspaceId}`,{
       headers: {
-        "X_AUTH_TOKEN": getCookie('jwt')
+        "Gauth": getCookie('jwt')
     }
     }).then(response => response.json()), {
       onError: (error) => {

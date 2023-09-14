@@ -60,7 +60,7 @@ export const PaperView = () => {
     const { data, isLoading } = useQuery(["paperView", api, paperId, workspaceId], 
         ()=> fetch(`${api}/api/paper/${paperId}?workspaceId=${workspaceId}`,{
             headers: {
-                "X_AUTH_TOKEN": getCookie('jwt')
+                "Gauth": getCookie('jwt')
             }
         }).then(response => response.json()),
         {
@@ -127,7 +127,7 @@ export const PaperView = () => {
             const response = await fetch(`${api}/api/paper/${paperId}?workspaceId=${workspaceId}&key=${key}`,{
                 method: 'POST',
                 headers : { 'Content-Type' : 'application/json',
-            'X_AUTH_TOKEN': getCookie('jwt') },
+            'Gauth': getCookie('jwt') },
                 body: JSON.stringify({question: searchTermInPaper})
             })
             const reader = response.body!.getReader()
