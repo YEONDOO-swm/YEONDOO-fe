@@ -14,20 +14,14 @@ export const Landing = () => {
         navigate(`/login`)
     }
 
-    const completedWord = "Yeondoo is your research assistant!"
-    const [firstTitle, setFirstTitle] = useState('')
-    const [count, setCount] = useState(0)
-    const [isTypingCompleted, setIsTypingCompleted] = useState(false)
-    const [rerendering, setRerendering] = useState(false)
-
-    // useEffect(()=> {
-    //   window.location.href = '/'
-    // }, [rerendering])
+    const completedWord: string = "Yeondoo is your research assistant!"
+    const [firstTitle, setFirstTitle] = useState<string>('')
+    const [count, setCount] = useState<number>(0)
+    const [isTypingCompleted, setIsTypingCompleted] = useState<boolean>(false)
 
     useEffect(()=> {
       window.scrollTo(0,0)
       if (window.location.pathname !== '#first') {
-        console.log("hereeee")
         window.location.href = '#first'
       }
       
@@ -45,18 +39,12 @@ export const Landing = () => {
           })
   
           
-        }, 100)
+        }, 70)
       }
       return () => {
         clearInterval(typingInterval)
       }
     }, [count])
-
-    const blinkEffect = keyframes `
-      50%{
-        opacity: 0;
-      }
-    `
 
     let options = {
       anchors: ['first', 'second', 'third']

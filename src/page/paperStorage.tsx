@@ -16,65 +16,54 @@ import { Helmet } from "react-helmet-async";
 import MetaTag from "../SEOMetaTag";
 import * as Sentry from '@sentry/react';
 import { getCookie } from "../cookie";
+import { useSelector } from "react-redux";
+import { CounterState } from "../reducer";
+import { useMutation, useQuery } from "react-query";
+import { paperType } from "./home";
+
+type paperLikePayload = {
+    workspaceId: number | null;
+    paperId: string;
+    on: boolean;
+}
 
 
 export const PaperStorage = () => {
     useAuthenticated();
-    //UserProfileCheck();
 
-    var api = '';
-    if (process.env.NODE_ENV === 'development'){
-      api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
-    }
-    else if (process.env.NODE_ENV === 'production'){
-      api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
-    }
+    const api: string = useSelector((state: CounterState) => state.api)
 
     const [open, setOpen] = useState<boolean>(false)
-    const [papersInStorage, setPapersInStorage] = useState<any>("");
-    const [loading, setLoading] = useState<boolean>(false)
-    const workspaceId = sessionStorage.getItem("workspaceId");
+    // const [papersInStorage, setPapersInStorage] = useState<any>("");
+    // const [loading, setLoading] = useState<boolean>(false)
+
+    const workspaceId: string | null = sessionStorage.getItem("workspaceId");
+
     const [paperIdArray, setPaperIdArray] = useState<string[]>([])
 
-    const [curPaperId, setCurPaperId] = useState<any>('')
-    const [curPaperTitle, setCurPaperTitle] = useState<any>('')
+    const [curPaperId, setCurPaperId] = useState<string | null>(null)
+    const [curPaperTitle, setCurPaperTitle] = useState<string>('')
 
-    const handleHeartClick = (paperId: any, paperTitle:any) => {
+    const handleCancelClick = (paperId: string, paperTitle: string) => { // x버튼 클릭시
         setOpen(true)
         setCurPaperId(paperId)
         setCurPaperTitle(paperTitle)
-        // const isConfirmed = window.confirm(`정말 "${paperTitle}"을 관심 논문에서 삭제하시겠습니까?`)
-        // if (!isConfirmed){
-        //     return
-        // }
-        // else {
-        //     if (process.env.NODE_ENV === 'production') {
-            
-        //         amplitude.track("관심 논문 페이지에서 삭제",{paperId: paperId})
-        //     }
-        //     setPaperIdArray(prevArray => [...prevArray, paperId])
-        // }
-        
-        // var payload = {
-        //     username: sessionStorage.getItem('username'),
-        //     paperId: paperId,
-        //     on: false
-        // }
-
-        // fetch(`${api}/api/paperlikeonoff`, {
-        //     method:'POST',
-        //     headers: { 'Content-Type' : 'application/json' },
-        //     body: JSON.stringify(payload)
-        // })
-        // .then(response => {
-        //     return response;
-        // })
-        // .catch(error => {
-        //     console.log("관심 논문 삭제에 실패하였습니다", error)
-        // })
-        
     }
-    const handleCancel = (paperId: any) => {
+
+    const { mutate } = useMutation(
+        (value: paperLikePayload)=> fetch(`${api}/api/paperlikeonoff`, {
+            method:'POST',
+            headers: { 'Content-Type' : 'application/json',
+        'X_AUTH_TOKEN': getCookie('jwt') },
+            body: JSON.stringify(value)
+        }), {
+            onError: (error) => {
+                console.log("관심 논문 삭제에 실패하였습니다", error)
+                Sentry.captureException(error)
+            }
+        }
+    )
+    const handleCancel = (paperId: string) => { // 예를 누르면 실제 삭제
         if (process.env.NODE_ENV === 'production') {
             
             amplitude.track("관심 논문 페이지에서 삭제",{paperId: paperId})
@@ -82,51 +71,65 @@ export const PaperStorage = () => {
         setPaperIdArray(prevArray => [...prevArray, paperId])
 
         var payload = {
-            workspaceId: sessionStorage.getItem('workspaceId'),
+            workspaceId: Number(sessionStorage.getItem('workspaceId')),
             paperId: paperId,
             on: false
         }
+        mutate(payload)
 
-        fetch(`${api}/api/paperlikeonoff`, {
-            method:'POST',
-            headers: { 'Content-Type' : 'application/json',
-        'X_AUTH_TOKEN': getCookie('jwt') },
-            body: JSON.stringify(payload)
-        })
-        .then(response => {
-            return response;
-        })
-        .catch(error => {
-            console.log("관심 논문 삭제에 실패하였습니다", error)
-            Sentry.captureException(error)
-        })
+        // fetch(`${api}/api/paperlikeonoff`, {
+        //     method:'POST',
+        //     headers: { 'Content-Type' : 'application/json',
+        // 'X_AUTH_TOKEN': getCookie('jwt') },
+        //     body: JSON.stringify(payload)
+        // })
+        // .then(response => {
+        //     return response;
+        // })
+        // .catch(error => {
+        //     console.log("관심 논문 삭제에 실패하였습니다", error)
+        //     Sentry.captureException(error)
+        // })
         setOpen(false)
     }
 
-    const callGetApi = async () => {
-        setLoading(true)
-        try {
-            const response = await fetch(`${api}/api/container?workspaceId=${workspaceId}`, {
-                headers: {
-                    "X_AUTH_TOKEN": getCookie('jwt')
-                }
-            })
-            const data = await response.json()
-            setPapersInStorage(data)
-            setLoading(false)
-        } catch (error) {
+    const {data: papersInStorage, isLoading} = useQuery(['homesearch', api, workspaceId],()=> fetch(`${api}/api/container?workspaceId=${workspaceId}`
+    , {
+        headers: {
+            "X_AUTH_TOKEN": getCookie('jwt')
+        }
+    }).then(response => response.json()),
+    {
+        onError: (error) => {
             console.error('관심 논문 정보를 불러오는데 실패하였습니다: ', error)
             Sentry.captureException(error)
-            setLoading(false)
         }
-    }
+    })
+
+    // console.log(papersInStorage)
+
+    // const callGetApi = async () => {
+    //     setLoading(true)
+    //     try {
+    //         const response = await fetch(`${api}/api/container?workspaceId=${workspaceId}`, {
+    //             headers: {
+    //                 "X_AUTH_TOKEN": getCookie('jwt')
+    //             }
+    //         })
+    //         const data = await response.json()
+    //         setPapersInStorage(data)
+    //         setLoading(false)
+    //     } catch (error) {
+    //         console.error('관심 논문 정보를 불러오는데 실패하였습니다: ', error)
+    //         Sentry.captureException(error)
+    //         setLoading(false)
+    //     }
+    // }
 
     useEffect(() => {
         if (process.env.NODE_ENV === 'production') {
-            
             amplitude.track("관심 논문 Page Viewed");
         }
-        callGetApi()
     }, []);
     
     return (
@@ -134,7 +137,7 @@ export const PaperStorage = () => {
         <MetaTag title="관심 논문" description="사용자가 선택한 관심 논문 리스트를 볼 수 있습니다." keywords="히스토리, 논문, AI, 관심 논문, 찜"/>
         <Title title="관심 논문" />
         <Box sx={{height: 50}}></Box>
-          {loading?(
+          {isLoading?(
             <Box sx={{height: '75vh', margin: '0 30px 0 10px', padding: '10px'}} className={loadingStyle.loading}>
                 <Card sx={{height: '15vh', padding: '15px', borderRadius: '15px', margin: '15px', display: 'flex', justifyContent:'space-between', backgroundColor: color.loadingColor, opacity: '0.2'}}>
                 </Card>
@@ -159,12 +162,12 @@ export const PaperStorage = () => {
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={()=>setOpen(false)}>아니오</Button>
-                            <Button onClick={()=>handleCancel(curPaperId)} autoFocus>
+                            <Button onClick={()=>curPaperId!==null && handleCancel(curPaperId)} autoFocus>
                             예
                             </Button>
                         </DialogActions>
                     </Dialog> 
-                {(papersInStorage && papersInStorage.length>0) ? papersInStorage.map((paper:any) => (
+                {(papersInStorage && papersInStorage.length>0) ? papersInStorage.map((paper: paperType) => (
                     !paperIdArray.includes(paper.paperId) && (
                             <Card key={paper.paperId} sx={{padding: '15px 10px 18px 25px', borderRadius: '15px', margin: '15px'}}>
                                 <Box sx={{display: 'flex', justifyContent:'space-between'}}>
@@ -181,7 +184,7 @@ export const PaperStorage = () => {
                                     </Box>
                                     <Box sx={{ margin:'0px 10px', display: 'flex', flexDirection:'column', justifyContent: 'space-between', alignItems: 'flex-end'}}> 
                                         {/* <HeartClick currentItem={paper} home={false} callGetApi={callGetApi}/> */}
-                                        <IconButton onClick={()=> handleHeartClick(paper.paperId, paper.title)} >
+                                        <IconButton onClick={()=> handleCancelClick(paper.paperId, paper.title)} >
                                             <ClearIcon />
                                         </IconButton>
                                     </Box> 

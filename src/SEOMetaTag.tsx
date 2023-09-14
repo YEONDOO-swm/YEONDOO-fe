@@ -1,7 +1,15 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
-const MetaTag = (props: any) => {
+type tagProps = {
+  title: string;
+  description: string;
+  keywords: string;
+  imgsrc: string;
+  url: string;
+}
+
+const MetaTag = (props: tagProps) => {
   // props로 content 내용을 불러올 예정임
     return (
       <Helmet>

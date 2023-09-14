@@ -6,32 +6,19 @@ import { Box, Button, Card, Paper, Typography } from '@mui/material';
 import { color } from '../layout/color'
 import { setCookie, getCookie, removeCookie } from '../cookie';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { LoginApi } from './loginApi';
 import { useSelector } from 'react-redux';
 import { CounterState } from '../reducer';
 
 var api: string = '';
 
-interface loginPayload {
+type loginPayload = {
     authCode: string;
-}
-
-interface loginResponse {
-    username: string;
-    gauth: string;
 }
 
 export const Login = () => {
     const queryClient = useQueryClient()
-    
-    // if (process.env.NODE_ENV === 'development'){
-    //   api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
-    // }
-    // else if (process.env.NODE_ENV === 'production'){
-    //   api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
-    // }
 
-    const api = useSelector((state: CounterState) => state.api)
+    const api: string = useSelector((state: CounterState) => state.api)
 
     const { mutate } = useMutation(
         (value: loginPayload) => fetch(`${api}/api/login/google`, {

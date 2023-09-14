@@ -1,6 +1,6 @@
 import * as React from "react"
 import { SearchTap } from "../component/searchTap";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, KeyboardEvent, MouseEvent } from "react";
 import { Typography, Grid, Box, IconButton, TextField, InputAdornment, Icon, Card, CardContent } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -20,81 +20,73 @@ import MetaTag from "../SEOMetaTag";
 import ScoreSlider from "../component/scoreSlider";
 import * as Sentry from '@sentry/react';
 import { getCookie } from "../cookie";
+import { useSelector } from "react-redux";
+import { CounterState } from "../reducer";
+import { useQuery } from "react-query";
 
 // TODO1: list 제한 걸기
 // TODO2: 스크롤
 
+type history = {
+    who: boolean;
+    content: string;
+    id: number;
+    score: number | null;
+}
+
 export const PaperView = () => {
     useAuthenticated();
-    //UserProfileCheck();
 
     const notify = useNotify()
 
-    const [searchTerm, setSearchTerm] = useState("");
-    const [enteredSearchTermInPaper, setEnteredSearchTermInPaper] = useState<any>([]);
+    const [searchTermInPaper, setSearchTermInPaper] = useState<string>(""); // 변화하는 입력값
+    const [enteredSearchTermInPaper, setEnteredSearchTermInPaper] = useState<string[]>([]); // 전체 입력값
     const workspaceId = sessionStorage.getItem("workspaceId");
     
-    const [paperInfo, setPaperInfo] = useState<any>('');
-    const [isExpanded, setIsExpanded] = useState(false);
-    const [paperHistory, setPaperHistory] = useState<any>('');
-    const [searchTermInPaper, setSearchTermInPaper] = useState("");
-    const [searchResultsInPaper, setSearchResultsInPaper] = useState<any>([])
-    const [searchResultsId, setSearchResultsId] = useState<any>([])
-    const [loading, setLoading] = useState<boolean>(false)
-    const [isFirstWord, setIsFirstWord] = useState<boolean>(true)
+    const [isExpanded, setIsExpanded] = useState<boolean>(false); // author
+    
+    const [searchResultsInPaper, setSearchResultsInPaper] = useState<string[]>([])
+
+    const [isFirstWord, setIsFirstWord] = useState<boolean>(true) // 스트리밍 응답 저장시 필요
+    const [key, setKey] = useState<number>(); // 스트리밍 데이터 + 기본 데이터 받기 위해
+    const [resultId, setResultId] = useState<number>()
 
     const scrollContainerRef = useRef<HTMLDivElement | null>(null);
     
-    var api = '';
-    if (process.env.NODE_ENV === 'development'){
-      api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
-    }
-    else if (process.env.NODE_ENV === 'production'){
-      api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
-    }
+    const api: string = useSelector((state: CounterState) => state.api)
 
-    const handleChange = (event: any) => {
-        setSearchTerm(event.target.value)
-    };
-
-    useEffect(() => {
-        const query = new URLSearchParams(window.location.search);
-        const paperId = query.get('paperid') || '';
-        if (process.env.NODE_ENV === 'production') {
-            
-            amplitude.track('AI와 논문 읽기 Page Viewed', {paperId: paperId})
-        }
-
-        setLoading(true)
-        
-        fetch(`${api}/api/paper/${paperId}?workspaceId=${workspaceId}`,{
+    const query = new URLSearchParams(window.location.search);
+    const paperId: string = query.get('paperid') || '';
+    const { data, isLoading } = useQuery(["paperView", api, paperId, workspaceId], 
+        ()=> fetch(`${api}/api/paper/${paperId}?workspaceId=${workspaceId}`,{
             headers: {
                 "X_AUTH_TOKEN": getCookie('jwt')
             }
-        })
-            .then(response => response.json())
-            .then(data => {
-                setPaperInfo(data.paperInfo)
-                setPaperHistory(data.paperHistory)
-                setLoading(false)
-            })
-            .catch(error => {
+        }).then(response => response.json()),
+        {
+            onError: (error) => {
                 console.error('논문 정보를 불러오는 데 실패하였습니다:', error)
                 Sentry.captureException(error)
-                setLoading(false)
-            })
+            }
+        })
+
+
+    useEffect(() => {
+        if (process.env.NODE_ENV === 'production') {
+            amplitude.track('AI와 논문 읽기 Page Viewed', {paperId: paperId})
+        }
     }, [])
 
     useEffect(() => {
         scrollContainerRef.current?.scrollTo(0, scrollContainerRef.current.scrollHeight);
-      }, [paperHistory, enteredSearchTermInPaper, searchResultsInPaper]);
+      }, [data, enteredSearchTermInPaper, searchResultsInPaper]);
     
 
-    const handleSearchKeyDownInPaper = (event: any) => {
+    const handleSearchKeyDownInPaper = (event: KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter' && event.nativeEvent.isComposing === false){
             event.preventDefault();
             const query = new URLSearchParams(window.location.search);
-            const paperId = query.get('paperid') || '';
+            const paperId: string = query.get('paperid') || '';
             amplitude.track('논문 내 질의', {paperId: paperId})
             if (searchTermInPaper === '') {
                 notify('질문을 입력해 주세요.', {type: 'error'})
@@ -104,10 +96,10 @@ export const PaperView = () => {
         }
     }
 
-    const handleButtonClickInPaper = (event: any) => {
+    const handleButtonClickInPaper = (event: MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         const query = new URLSearchParams(window.location.search);
-        const paperId = query.get('paperid') || '';
+        const paperId: string = query.get('paperid') || '';
         amplitude.track('논문 내 질의', {paperId: paperId})
         if (searchTermInPaper === '') {
             notify('질문을 입력해 주세요.', {type: 'error'})
@@ -118,28 +110,26 @@ export const PaperView = () => {
 
     const handleViewMoreAuthors = () => {
         const query = new URLSearchParams(window.location.search);
-        const paperId = query.get('paperid') || '';
+        const paperId: string = query.get('paperid') || '';
         amplitude.track('저자 더보기 Button Clicked', {paperId: paperId})
         setIsExpanded(true)
-        //console.log()
     }
 
     const performSearchInPaper = async () => {
         if (searchTermInPaper != ''){
-            setEnteredSearchTermInPaper((prevEnteredSearchTerm: any)=>[...prevEnteredSearchTerm, searchTermInPaper])      
+            setEnteredSearchTermInPaper((prevEnteredSearchTerm: string[])=>[...prevEnteredSearchTerm, searchTermInPaper])      
         }
         setSearchTermInPaper("")
         const query = new URLSearchParams(window.location.search);
-        const paperId = query.get('paperid') || '';
+        const paperId: string = query.get('paperid') || '';
         try {
-
-            const response = await fetch(`${api}/api/paper/${paperId}?workspaceId=${workspaceId}`,{
+            setKey(Math.random()*10000000)
+            const response = await fetch(`${api}/api/paper/${paperId}?workspaceId=${workspaceId}&key=${key}`,{
                 method: 'POST',
                 headers : { 'Content-Type' : 'application/json',
             'X_AUTH_TOKEN': getCookie('jwt') },
                 body: JSON.stringify({question: searchTermInPaper})
             })
-            //console.log(response.json())
             const reader = response.body!.getReader()
             const decoder = new TextDecoder()
 
@@ -152,7 +142,7 @@ export const PaperView = () => {
 
                 const decodedChunk = decoder.decode(value, { stream: true });
 
-                setSearchResultsInPaper((prevSearchResults: any) => {
+                setSearchResultsInPaper((prevSearchResults: string[]) => {
                     if (isFirstWord) {
                         setIsFirstWord(false)
                         return [...prevSearchResults, decodedChunk]
@@ -166,20 +156,15 @@ export const PaperView = () => {
 
                 
             }
-        } catch(error) {
+        } 
+        catch(error) {
             console.error("논문 내 질문 오류")
             Sentry.captureException(error)
+        } finally {
+            const response = await fetch(`${api}/api/paper/${paperId}?workspaceId=${workspaceId}&key=${key}`)
+            const data = await response.json()
+            setResultId(data)
         }
-        // .then(response => response.json())
-        // .then(data => {
-        //     setSearchResultsInPaper((prevSearchResults: any) => [...prevSearchResults, data])
-            
-        //     //setSearchTermInPaper("")
-        // })
-        // .catch(error => {
-        //     console.error("논문 내 질문 오류")
-        //     Sentry.captureException(error)
-        // })
     }
 
     const handleViewLessAuthors = () => {
@@ -189,12 +174,11 @@ export const PaperView = () => {
     const sizeTitleInInfo = "body1"
     const sizeContentInInfo = "body1"
 
-
     return (
         <div>
             <MetaTag title="AI와 논문읽기" description="AI가 제공한 논문의 핵심 인사이트, 질문, 향후 연구주제 추천을 볼 수 있고, 직접 AI에게 논문에 대해서 궁금한 내용을 질문할 수 있습니다." keywords="논문, AI, 질문, 핵심 인사이트, 질문, 향후 연구주제 추천, 현 논문 내 질의, gpt"/>
             <Title title="AI와 논문읽기" />
-            {loading ? (<div className={loadingStyle.loading}>
+            {isLoading ? (<div className={loadingStyle.loading}>
             <Box sx={{m:2, p:3, color: color.loadingColor, opacity: '0.8'}}>
                 <Typography>1분 정도 소요될 수 있습니다.</Typography>
             </Box>
@@ -211,14 +195,14 @@ export const PaperView = () => {
                     <Box sx={{display: 'flex', justifyContent: 'space-between',margin: '20px 12px'}}>
                     <Box sx={{}}>
                         <Box sx={{display: 'flex', alignItems: 'flex-start'}}>
-                            <Typography variant="h5" sx={{mr: 2}}>{paperInfo.title}</Typography>
-                            <GoToArxiv url={paperInfo.url} paperId={paperInfo.paperId}/>
+                            <Typography variant="h5" sx={{mr: 2}}>{data.paperInfo.title}</Typography>
+                            <GoToArxiv url={data.paperInfo.url} paperId={data.paperInfo.paperId}/>
                         </Box>
-                        { paperInfo.authors && (paperInfo.authors.length > 3 
+                        { data.paperInfo.authors && (data.paperInfo.authors.length > 3 
                         ? (
                             !isExpanded ? (
                             <Box sx={{display: 'flex', alignItems: 'center'}}> 
-                                <Typography variant="body1"> {paperInfo.authors.slice(0, 3).join(", ")} </Typography>
+                                <Typography variant="body1"> {data.paperInfo.authors.slice(0, 3).join(", ")} </Typography>
                                 <IconButton onClick={handleViewMoreAuthors}>
                                     <ExpandMoreIcon />
                                 </IconButton>
@@ -226,7 +210,7 @@ export const PaperView = () => {
                             ) : (
                                 <Box sx={{display: 'flex',alignItems: 'flex-end', marginTop: '10px'}}>
                                     <Box> 
-                                        {paperInfo.authors.map((author: any, index: number) => (
+                                        {data.paperInfo.authors.map((author: string, index: number) => (
                                             <Typography
                                             key={index}
                                             variant="body1"
@@ -242,12 +226,12 @@ export const PaperView = () => {
                                 </Box>
                             )
                         )           
-                        : <Typography variant="body1"> {paperInfo.authors.join(", ")} </Typography>) }
-                        {/* <Typography variant="h6">{paperInfo.authors && (paperInfo.authors.length > 3 ? paperInfo.authors.slice(0, 3).join(", ") : paperInfo.authors.join(", "))}</Typography> */}
-                        <Typography variant="body1"> {paperInfo.year} </Typography>
+                        : <Typography variant="body1"> {data.paperInfo.authors.join(", ")} </Typography>) }
+                        {/* <Typography variant="h6">{data.paperInfo.authors && (data.paperInfo.authors.length > 3 ? data.paperInfo.authors.slice(0, 3).join(", ") : data.paperInfo.authors.join(", "))}</Typography> */}
+                        <Typography variant="body1"> {data.paperInfo.year} </Typography>
                     </Box>
                     <Box sx={{}}>
-                        <HeartClick currentItem={paperInfo} paperlike={paperInfo.isLike} />
+                        <HeartClick currentItem={data.paperInfo} paperlike={data.paperInfo.isLike} />
                     </Box>
                     </Box>
                     <div>
@@ -260,20 +244,20 @@ export const PaperView = () => {
                                     <Box>   
                                         <Typography variant={sizeTitleInInfo} sx={{fontWeight: 'bold'}}>핵심 인사이트</Typography>
                                         <Box sx={{mb: 2, marginLeft: '5px'}}>
-                                        {paperInfo.insights && paperInfo.insights.map((insight: string, index: number) => (
+                                        {data.paperInfo.insights && data.paperInfo.insights.map((insight: string, index: number) => (
                                             <Typography key={index} variant={sizeContentInInfo}>{insight}</Typography>
                                         ))}
                                         </Box>
                                         
                                         <Typography variant={sizeTitleInInfo} sx={{fontWeight: 'bold'}}>질문</Typography>
                                         <Box sx={{mb: 2, marginLeft: '5px'}}>
-                                        {paperInfo.questions && paperInfo.questions.map((question: any, index: number) => (
+                                        {data.paperInfo.questions && data.paperInfo.questions.map((question: string, index: number) => (
                                             <Typography key={index} variant={sizeContentInInfo}>{question}</Typography>
                                         ))}
                                         </Box>
                                         <Typography variant={sizeTitleInInfo} sx={{fontWeight: 'bold'}}>향후 연구주제 추천</Typography>
                                         <Box sx={{mb: 2, marginLeft: '5px'}}>
-                                        {paperInfo.subjectRecommends && paperInfo.subjectRecommends.map((subjectRecommend: any, index: number) => (
+                                        {data.paperInfo.subjectRecommends && data.paperInfo.subjectRecommends.map((subjectRecommend: string, index: number) => (
                                             <Typography key={index} variant={sizeContentInInfo}>{subjectRecommend}</Typography>
                                         ))}
                                         </Box>
@@ -288,8 +272,8 @@ export const PaperView = () => {
                                     display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
                                     }}>
                                         <Box sx={{ overflowY: 'scroll' }} ref={scrollContainerRef} className={scrollStyle.scrollBar}>
-                                            {paperHistory &&
-                                            paperHistory.map((history: any, index: number) => (
+                                            {data.paperHistory &&
+                                            data.paperHistory.map((history: history, index: number) => (
                                             <Box
                                                 key={`history-${index}`}
                                                 sx={{
@@ -324,7 +308,7 @@ export const PaperView = () => {
                                             ))}
                                             {enteredSearchTermInPaper && searchResultsInPaper && (
                                             <>
-                                                {enteredSearchTermInPaper.map((term:any, index:number) => (
+                                                {enteredSearchTermInPaper.map((term: string, index:number) => (
                                                 <div key={index}>
                                                     
                                                     <Box sx={{ display: 'flex', backgroundColor: "white", padding: '10px', marginBottom: '10px', borderRadius: '10px'}}>
@@ -351,7 +335,7 @@ export const PaperView = () => {
                                                                     <Box sx={{ml: 1}}>
                                                                         <CopyClick contents={searchResultsInPaper[index]}/>
                                                                     </Box>
-                                                                    <ScoreSlider id={searchResultsInPaper[index].id} paper={true}/>
+                                                                    <ScoreSlider id={resultId} paper={true}/>
                                                                 </Box>}
                                                             
                                                             </Box>

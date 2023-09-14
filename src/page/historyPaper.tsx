@@ -11,44 +11,49 @@ import MetaTag from '../SEOMetaTag';
 import { Link } from 'react-router-dom';
 import * as Sentry from '@sentry/react';
 import { getCookie } from '../cookie';
+import { useSelector } from 'react-redux';
+import { CounterState } from '../reducer';
+import { useQuery } from 'react-query';
+
+type paperHistory = {
+  paperId: string;
+  who: boolean;
+  content: string;
+  title: string;
+  url: string;
+}
+
+type paperHistoryPair = {
+  id: number;
+  content: string;
+  title: string;
+  who: boolean;
+  paperId: string;
+}
 
 export const HistoryPaper = () => {
     useAuthenticated();
-    //UserProfileCheck();
 
-    var api = '';
-    if (process.env.NODE_ENV === 'development'){
-      api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
-    }
-    else if (process.env.NODE_ENV === 'production'){
-      api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
-    }
+    const api: string = useSelector((state: CounterState) => state.api)
 
-    const workspaceId = sessionStorage.getItem('workspaceId');
-    const [loading, setLoading] = useState<boolean>(false)
-    const [searchHistory, setSearchHistory] = useState<any>("")
+    const workspaceId: number = Number(sessionStorage.getItem('workspaceId'));
+
+    const { data: searchHistory, isLoading } = useQuery(["historyPaper", workspaceId]
+    , ()=>fetch(`${api}/api/history/search/paper?workspaceId=${workspaceId}`,{
+      headers: {
+        "X_AUTH_TOKEN": getCookie('jwt')
+    }
+    }).then(response => response.json()), {
+      onError: (error) => {
+        console.error('논문 내 질의 히스토리 정보를 가져오는데 실패하였습니다: ', error)
+        Sentry.captureException(error)
+      }
+    })
 
     useEffect(() => {
         if (process.env.NODE_ENV === 'production') {
-            
             amplitude.track("논문 내 질의 히스토리 Page Viewed")
         }
-        setLoading(true)
-        fetch(`${api}/api/history/search/paper?workspaceId=${workspaceId}`,{
-          headers: {
-            "X_AUTH_TOKEN": getCookie('jwt')
-        }
-        })
-        .then(response => response.json())
-        .then(data => {
-            setSearchHistory(data)
-            setLoading(false)
-        })
-        .catch(error => {
-            console.error('논문 내 질의 히스토리 정보를 가져오는데 실패하였습니다: ', error)
-            Sentry.captureException(error)
-            setLoading(false)
-        })
 
     }, [])
     return (
@@ -56,7 +61,7 @@ export const HistoryPaper = () => {
             <MetaTag title="논문 내 질의 히스토리" description="사용자가 했던 모든 논문 내 질의를 보고, 찾을 수 있습니다." keywords="히스토리, 논문, 논문 내 질의, AI, AI와 함께 논문읽기"/>
             <Title title="히스토리" />
             <Box sx={{height: 50}}></Box>
-            {loading?(
+            {isLoading?(
                 <Box sx={{ height: '80vh'}} className={loadingStyle.loading}>
                 <HistoryNav page="historyInPaper" />
                 <Box sx={{ m: 2, p:1, height: '75vh'}}>
@@ -70,7 +75,7 @@ export const HistoryPaper = () => {
   <HistoryNav page="historyInPaper" />
   <Box sx={{ m: 2, p:1, height: '75vh', overflowY: 'scroll' }} className={scrollStyle.scrollBar}>
     {searchHistory &&
-      searchHistory.reduce((acc: any[], item: any, index: number) => {
+      searchHistory.reduce((acc: paperHistoryPair[][], item: paperHistory, index: number) => {
         if (index % 2 === 0) {
           const nextItem = searchHistory[index + 1];
           if (nextItem) {
@@ -103,7 +108,7 @@ export const HistoryPaper = () => {
           }
         }
         return acc;
-      }, []).map((mergedItems: any[], mergedIndex: number) => (
+      }, []).map((mergedItems: paperHistoryPair[], mergedIndex: number) => (
         <Link to={`/paper?paperid=${mergedItems[0].paperId}`} key={mergedIndex} style={{ textDecoration: 'none', color: 'black' }}>
             <Card  sx={{ p: 2, mb: 1, pt:1 }}>
             
@@ -111,7 +116,7 @@ export const HistoryPaper = () => {
                     {mergedItems[0].title}
                 </Typography>
                 
-                {mergedItems.map((item: any) => (
+                {mergedItems.map((item: paperHistoryPair) => (
                     
                     
                         <Box key={item.id} sx={{ display: 'flex', alignItems: 'flex-start' }}>

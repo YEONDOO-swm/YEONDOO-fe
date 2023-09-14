@@ -4,7 +4,7 @@ import { Grid, Box, Container, InputAdornment, TextField, IconButton, Typography
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useState, useEffect, useRef, KeyboardEvent, MouseEvent } from "react";
 import SearchIcon from "@mui/icons-material/Search";
-import { Title, useAuthenticated, useNotify } from 'react-admin';
+import { NumberFieldProps, Title, useAuthenticated, useNotify } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
 import * as amplitude from '@amplitude/analytics-browser';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
@@ -28,38 +28,50 @@ import * as Sentry from '@sentry/react';
 import { getCookie } from "../cookie";
 import { useSelector } from "react-redux";
 import { CounterState } from "../reducer";
+import { useQuery } from "react-query";
+
+type searchResultType = {
+  query?: string;
+  papers: paperType[];
+  id?: string;
+  answer?: string;
+}
+
+export type paperType = {
+  paperId: string;
+  title: string;
+  summary: string;
+  likes: number;
+  isLike: boolean;
+  authors: string[];
+  year: number;
+  conference: string;
+  cites: number;
+  url: string;
+}
 
 export const Home = () => {
+    // 유효성 검사
     useAuthenticated();
+
+    // hook 설정
     const navigate = useNavigate();
     const notify = useNotify();
-    //UserProfileCheck();
+
+    // api 설정
     const api = useSelector((state: CounterState) => state.api)
-    console.log(api)
-    // var api = '';
-    // if (process.env.NODE_ENV === 'development'){
-    //   api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
-    // }
-    // else if (process.env.NODE_ENV === 'production'){
-    //   api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
-    // }
     
-    const [searchTerm, setSearchTerm] = useState("");
-    const [searchType, setSearchType] = useState("1");
-    const [searchResults, setSearchResults] = useState<any>("");
-    //const [enteredSearch, setEnteredSearch] = useState(""); 
-    //const [isFavorite, setIsFavorite] = useState(false);
-    //const [paperIdArray, setPaperIdArray] = useState<string[]>([]); 
+    const [searchTerm, setSearchTerm] = useState<string>(""); // 사용자가 치고있는 질문
+    const [searchType, setSearchType] = useState<string>("1"); // 논문 검색인지 or 개념 질문인지
+    const [searchResults, setSearchResults] = useState<searchResultType | null>(null); // 챗봇 답변
+
     const [loading, setLoading] = useState<boolean>(false);
-    const [expandedPaperArray, setExpandedPaperArray] = useState<any>([])
-    const [isSearched, setIsSearched] = useState<boolean>(false)
-    //const [sliderText, setSliderText] = useState<any>();
+    const [expandedPaperArray, setExpandedPaperArray] = useState<string[]>([]) // abstract 열려있는 논문 모음
 
-    const searchInputRef = useRef<HTMLInputElement | null>(null);
+    const searchInputRef: React.MutableRefObject<HTMLInputElement | null> = useRef<HTMLInputElement | null>(null); // 채팅 입력창에 포거스 주기 위해
 
-    const handleSearchKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-      if (!loading && event.key === 'Enter' && event.nativeEvent.isComposing === false){
-        //console.log("in!") 
+    const handleSearchKeyDown = (event: KeyboardEvent<HTMLInputElement>) => { // 검색어 입력 후 엔터
+      if (!loading && event.key === 'Enter' && event.nativeEvent.isComposing === false){ 
         event.preventDefault();
           if (!searchTerm) {
             notify("검색어를 입력해주세요", {type: 'error'})
@@ -69,12 +81,9 @@ export const Home = () => {
             notify("검색 유형을 선택해주세요", {type: 'error'})
             return
           }
-          //setEnteredSearch(searchResults);
-          if (process.env.NODE_ENV === 'production') {
-            
+          if (process.env.NODE_ENV === 'production') { 
             amplitude.track("Home에서 검색")
           }
-          //console.log(searchType)
           
           navigate(`/home?query=${searchTerm}&type=${searchType}`)
           performSearch()
@@ -82,7 +91,7 @@ export const Home = () => {
       }
   }
   
-  const handleButtonClick = (event: any) => {
+  const handleButtonClick = (event: MouseEvent<HTMLButtonElement>) => { // 검색어 입력 후 버튼 클릭
       if (loading) {
         return
       }
@@ -95,17 +104,11 @@ export const Home = () => {
         notify("검색 유형을 선택해주세요", {type: 'error'})
         return
       }
-      //setEnteredSearch(searchResults);
       if (process.env.NODE_ENV === 'production') {
             
         amplitude.track("Home에서 검색")
       }
-      // if (process.env.NODE_ENV === 'development'){
-      //   window.location.href = `http://localhost:5173/home?query=${searchTerm}&type=${searchType}`
-      // }
-      // else if (process.env.NODE_ENV === 'production'){
-      //   window.location.href = `https://yeondoo.net/home?query=${searchTerm}&type=${searchType}`
-      // }
+      
       navigate(`/home?query=${searchTerm}&type=${searchType}`)
       performSearch()
       //window.location.href = `/home?query=${searchTerm}&type=${searchType}`
@@ -113,17 +116,47 @@ export const Home = () => {
 
   const workspaceId = sessionStorage.getItem("workspaceId");
 
-  const performSearch = async () => {
+  
+
+  const performSearch = async () => { // 검색 과정
       try {
           setLoading(true)
-          const query= new URLSearchParams(window.location.search); 
-          const performSearchTerm = query.get('query') || '';
-          const performSearchType = query.get('type') || '';
-          if (performSearchType === '2') {
-            setSearchResults('type2')
-            return
-          }
-          const response = await fetch(`${api}/api/homesearch?query=${performSearchTerm}&workspaceId=${workspaceId}&searchType=${performSearchType}`, {
+          const query: URLSearchParams = new URLSearchParams(window.location.search); 
+          const performSearchTerm: string = query.get('query') || '';
+          const performSearchType: string = query.get('type') || '';
+          // if (performSearchType === '2') {
+          //   setSearchResults('type2')
+          //   return
+          // }
+
+          /*useQuery는 get일 때 쓸 수 있다. 하지만 최상단에 훅이 위치해 있어야 한다. 이경우 performSearchTerm이 이 함수안에서만
+          접근할 수 있다. 그리고 어차피 searchResults가 다른 곳에서도 업데이트가 되어야 해서 react query를 쓰는 이유가 없다.
+          더하여 다른 컴포넌트에서 사용되는 값도 아니다. (다른 컴포넌트에서 사용하려면 staleTime 사용)*/
+          // const { isLoading, error } = useQuery(['homesearch', performSearchTerm, workspaceId], () => 
+          //   fetch(`${api}/api/homesearch?query=${performSearchTerm}&workspaceId=${workspaceId}&searchType=${performSearchType}`, {
+          //     headers: {
+          //       "X_AUTH_TOKEN": getCookie('jwt')
+          //   }}
+          //   )
+          // ,{
+          //   onSuccess: (data) => {
+          //     const response = data
+          //     response.json().then((data)=> {
+          //       setSearchResults(data)
+          //     })
+          //   },
+          //   onError: (error) => {
+          //     console.log(error)
+          //   }
+          // })
+          // if (status === 'success') {
+          //   const response = data
+          //   response.json().then((data)=> {
+          //     setSearchResults(data)
+          //   })
+          // }
+          
+          const response: Response = await fetch(`${api}/api/homesearch?query=${performSearchTerm}&workspaceId=${workspaceId}&searchType=${performSearchType}`, {
             headers: {
               "X_AUTH_TOKEN": getCookie('jwt')
           }
@@ -133,6 +166,7 @@ export const Home = () => {
           setSearchResults(data);
       } catch (error) {
           console.error('검색 결과에서 오류가 발생했습니다.')
+          console.error(error)
           Sentry.captureException(error)
       } finally {
         setLoading(false)
@@ -140,14 +174,14 @@ export const Home = () => {
   };
 
 
-  const handleUpdateLikes = (paperId:any, newLikes:any) => {
+  const handleUpdateLikes = (paperId: string, newLikes: number) => { // 하트 클릭시
     // Create a new array of papers with updated likes count
-    const updatedPapers = searchResults.papers.map((paper:any) =>
+    const updatedPapers: paperType[] = searchResults!.papers.map((paper: paperType) =>
       paper.paperId === paperId ? { ...paper, likes: newLikes } : paper
     );
 
     // Update the searchResults state with the new array of papers
-    setSearchResults((prevSearchResults: any) => ({
+    setSearchResults((prevSearchResults: searchResultType | null) => ({
       ...prevSearchResults,
       papers: updatedPapers,
     }));
@@ -155,33 +189,32 @@ export const Home = () => {
 
 
   const handleChangeSearchType = (event: React.MouseEvent<HTMLElement>,
-    newType: string) => {
+    newType: string) => { // 검색 타입 버튼 클릭시
     //setSearchType(event.target.value)
     setSearchType(newType)
     setSearchTerm('')
-    setSearchResults('')
+    setSearchResults(null)
   }
 
-  const handleViewMoreAbstract = (paperId: any) => {
-    setExpandedPaperArray((prevPaper: any)=> [...prevPaper, paperId])
+  const handleViewMoreAbstract = (paperId: string) => {
+    setExpandedPaperArray((prevPaper: string[])=> [...prevPaper, paperId])
   }
 
-  const handleViewLessAbstract = (paperId: any) => {
-    setExpandedPaperArray(expandedPaperArray.filter((paper: any) => paper !== paperId))
+  const handleViewLessAbstract = (paperId: string) => {
+    setExpandedPaperArray(expandedPaperArray.filter((paper: string) => paper !== paperId))
   }
 
   useEffect(() => {
-    //console.log(location)
     if (process.env.NODE_ENV === 'production') {
             
       amplitude.track("Home Page Viewed");
     }
     searchInputRef.current?.focus();
-    // console.log(window.location.search)
-    const query = new URLSearchParams(window.location.search);
-    const searchTermParam = query.get('query') || '';
-    const searchTypeParam = query.get('type') || '';
-    //const appBarParam = query.get('appbar') || '';
+
+    const query: URLSearchParams = new URLSearchParams(window.location.search);
+    const searchTermParam: string = query.get('query') || '';
+    const searchTypeParam: string = query.get('type') || '';
+
     if (searchTermParam && searchTypeParam) {
       setSearchTerm(searchTermParam);
       setSearchType(searchTypeParam);
@@ -281,15 +314,9 @@ export const Home = () => {
                 !expandedPaperArray.includes(paper.paperId) ? (
                   <Typography variant="body2" sx={{ display: 'inline' }}>
                     {paper.summary.slice(0, 400)}... <span onClick={() => handleViewMoreAbstract(paper.paperId)} style={{color: color.appbarGreen, borderBottom: `1px solid ${color.appbarGreen}`, cursor: 'pointer'}}>▼ More</span>
-                    {/* <IconButton onClick={()=>handleViewMoreAbstract(paper.paperId)} sx={{  }}>
-                      <ExpandMoreIcon />
-                    </IconButton> */}
                   </Typography>
                 ) : (
                       <Typography variant="body2" sx={{display: 'inline'}}>{paper.summary}<span onClick={() => handleViewLessAbstract(paper.paperId)} style={{color: color.appbarGreen, borderBottom: `1px solid ${color.appbarGreen}`, cursor: 'pointer' }}>▲ Less</span>
-                      {/* <IconButton onClick={() => handleViewLessAbstract(paper.paperId)}>
-                        <ExpandLessIcon />
-                    </IconButton> */}
                     </Typography>
                 )
               ): (
