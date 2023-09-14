@@ -66,6 +66,7 @@ export const App = () => {
             type: SET_API,
             data: api
         })
+        sessionStorage.setItem('workspaceId', "1")
     }, [])
     
     return (

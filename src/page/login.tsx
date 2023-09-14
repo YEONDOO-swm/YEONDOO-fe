@@ -36,7 +36,6 @@ export const Login = () => {
                 }
 
                 response.json().then((data)=> {
-                    console.log(data)
                     setCookie('username', data.username)
                     window.location.href = "/home"
                 }) 
