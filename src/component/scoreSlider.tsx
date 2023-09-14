@@ -1,9 +1,11 @@
 import { Box, Slider, Typography } from '@mui/material'
-import React from 'react'
+import React, { ChangeEvent, SyntheticEvent } from 'react'
 import { color } from "../layout/color";
 import CampaignIcon from '@mui/icons-material/Campaign';
 import * as Sentry from '@sentry/react';
 import { getCookie } from '../cookie';
+import { useSelector } from 'react-redux';
+import { CounterState } from '../reducer';
 
 
 function valuetext(value: number) {
@@ -59,24 +61,17 @@ function valuetext(value: number) {
   ];
 
 
-function ScoreSlider({id, score, paper}: {id: any, score?:any, paper?:boolean}) {
+function ScoreSlider({id, score, paper}: {id: number, score?:number | null, paper?:boolean}) {
 
-    var api = '';
-    if (process.env.NODE_ENV === 'development'){
-      api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
-    }
-    else if (process.env.NODE_ENV === 'production'){
-      api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
-    }
+    const api = useSelector((state: CounterState) => state.api)
 
     const workspaceId = sessionStorage.getItem('workspaceId')
 
-    const handleSlider = (event: any, newValue:any) => {
+    const handleSlider = (event: Event | SyntheticEvent<Element, Event>, newValue: number | number[]) => {
         const payload = {
             id: id,
             score: newValue
         }
-        //console.log(payload)
         if (paper){
           fetch(`${api}/api/paper/result/score?workspaceId=${workspaceId}`, {
               method: 'POST',

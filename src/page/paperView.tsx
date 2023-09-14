@@ -49,7 +49,7 @@ export const PaperView = () => {
 
     const [isFirstWord, setIsFirstWord] = useState<boolean>(true) // 스트리밍 응답 저장시 필요
     const [key, setKey] = useState<number>(); // 스트리밍 데이터 + 기본 데이터 받기 위해
-    const [resultId, setResultId] = useState<number>()
+    const [resultId, setResultId] = useState<number>(1)
 
     const scrollContainerRef = useRef<HTMLDivElement | null>(null);
     

@@ -5,8 +5,8 @@ type tagProps = {
   title: string;
   description: string;
   keywords: string;
-  imgsrc: string;
-  url: string;
+  imgsrc?: string;
+  url?: string;
 }
 
 const MetaTag = (props: tagProps) => {
