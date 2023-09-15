@@ -2,10 +2,6 @@ export type CounterState = {
     api: string;
 };
 
-type CounterAction = {
-
-}
-
 export const SET_API = "SET_API"
 
 const initState = {

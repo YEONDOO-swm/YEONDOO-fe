@@ -89,7 +89,7 @@ export const PaperView = () => {
             const paperId: string = query.get('paperid') || '';
             amplitude.track('논문 내 질의', {paperId: paperId})
             if (searchTermInPaper === '') {
-                notify('질문을 입력해 주세요.', {type: 'error'})
+                notify('Please enter your question', {type: 'error'})
                 return ;
             }
             performSearchInPaper()
@@ -102,7 +102,7 @@ export const PaperView = () => {
         const paperId: string = query.get('paperid') || '';
         amplitude.track('논문 내 질의', {paperId: paperId})
         if (searchTermInPaper === '') {
-            notify('질문을 입력해 주세요.', {type: 'error'})
+            notify('Please enter your question', {type: 'error'})
             return ;
         }
         performSearchInPaper();
@@ -176,11 +176,11 @@ export const PaperView = () => {
 
     return (
         <div>
-            <MetaTag title="AI와 논문읽기" description="AI가 제공한 논문의 핵심 인사이트, 질문, 향후 연구주제 추천을 볼 수 있고, 직접 AI에게 논문에 대해서 궁금한 내용을 질문할 수 있습니다." keywords="논문, AI, 질문, 핵심 인사이트, 질문, 향후 연구주제 추천, 현 논문 내 질의, gpt"/>
-            <Title title="AI와 논문읽기" />
+            <MetaTag title="Chat with AI - Yeondoo" description="AI가 제공한 논문의 핵심 인사이트, 질문, 향후 연구주제 추천을 볼 수 있고, 직접 AI에게 논문에 대해서 궁금한 내용을 질문할 수 있습니다." keywords="논문, AI, 질문, 핵심 인사이트, 질문, 향후 연구주제 추천, 현 논문 내 질의, gpt"/>
+            <Title title="Chat with AI" />
             {isLoading ? (<div className={loadingStyle.loading}>
             <Box sx={{m:2, p:3, color: color.loadingColor, opacity: '0.8'}}>
-                <Typography>1분 정도 소요될 수 있습니다.</Typography>
+                <Typography>This may take about 1 minute</Typography>
             </Box>
               <Grid container spacing={2}>
                 <Grid item xs={6}>
@@ -237,7 +237,7 @@ export const PaperView = () => {
                     <div>
                         <Box display="flex" justifyContent="space-between">
                             <Box width="50%" sx={{margin: '0 10px 10px 10px'}}>
-                                <Typography variant="h6">정보</Typography>
+                                <Typography variant="h6">Information</Typography>
                                 <Card sx={{ border: `1px solid ${color.mainGreen}`, padding: '20px', height: '75vh', borderRadius: '15px', backgroundColor: color.mainGreen, 
                                     overflowY: 'scroll'
                                 }} className={scrollStyle.scrollBar}>
@@ -267,7 +267,7 @@ export const PaperView = () => {
                             <Box width="50%" sx={{margin: '0 10px 10px 10px'}}>
                             {/* true: user(question) false: gpt (answer) */}
                                 <Box>
-                                    <Typography variant="h6">현 논문 내 질의</Typography>
+                                    <Typography variant="h6">Chat</Typography>
                                     <Box sx={{ border: `1px solid ${color.mainGrey}`,  padding: '20px', height: '75vh', borderRadius: '15px', backgroundColor: color.mainGrey, 
                                     display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
                                     }}>

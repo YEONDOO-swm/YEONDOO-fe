@@ -51,7 +51,7 @@ export const Landing = () => {
     }
   return (
     <Box>
-        <MetaTag title="연두" description="연두를 통해 특별한 연구 경험을 느껴보세요." keywords="연두, yeondoo, 논문, 논문 내 질의, 질의, gpt, 논문 gpt" />
+        <MetaTag title="Yeondoo" description="연두를 통해 특별한 연구 경험을 느껴보세요." keywords="연두, yeondoo, 논문, 논문 내 질의, 질의, gpt, 논문 gpt" />
         
         <SectionsContainer {...options}>
           <Section>

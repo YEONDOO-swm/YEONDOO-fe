@@ -13,6 +13,6 @@ export const GoToViewMore = ({paperid}: {paperid:string}) => {
       }
 
     return (<Button variant ="contained" onClick={() => handleViewMore(paperid)}>
-      AI와 논문읽기
+      Chat with AI
     </Button>)
 }

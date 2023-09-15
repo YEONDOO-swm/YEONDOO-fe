@@ -134,8 +134,8 @@ export const PaperStorage = () => {
     
     return (
     <div>
-        <MetaTag title="관심 논문" description="사용자가 선택한 관심 논문 리스트를 볼 수 있습니다." keywords="히스토리, 논문, AI, 관심 논문, 찜"/>
-        <Title title="관심 논문" />
+        <MetaTag title="Working Papers - Yeondoo" description="사용자가 선택한 관심 논문 리스트를 볼 수 있습니다." keywords="히스토리, 논문, AI, 관심 논문, 찜"/>
+        <Title title="Working Papers" />
         <Box sx={{height: 50}}></Box>
           {isLoading?(
             <Box sx={{height: '75vh', margin: '0 30px 0 10px', padding: '10px'}} className={loadingStyle.loading}>
@@ -153,17 +153,17 @@ export const PaperStorage = () => {
                     aria-describedby="alert-dialog-description"
                     >
                         <DialogTitle id="alert-dialog-title">
-                            {"연두"}
+                            {"Yeondoo"}
                         </DialogTitle>
                         <DialogContent>
                             <DialogContentText id="alert-dialog-description">
-                            정말 "{curPaperTitle}"을 관심 논문에서 삭제하시겠습니까?
+                            Are you sure you want to delete "{curPaperTitle}" from Working Papers?
                             </DialogContentText>
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={()=>setOpen(false)}>아니오</Button>
+                            <Button onClick={()=>setOpen(false)}>No</Button>
                             <Button onClick={()=>curPaperId!==null && handleCancel(curPaperId)} autoFocus>
-                            예
+                            Yes
                             </Button>
                         </DialogActions>
                     </Dialog> 
@@ -197,7 +197,7 @@ export const PaperStorage = () => {
                             </Card>
                         
                     )
-                )):<Typography sx={{m:3}}>관심 논문이 없습니다.</Typography>}
+                )):<Typography sx={{m:3}}>No Working Papers</Typography>}
             </Box>
           )}
 

@@ -74,7 +74,7 @@ export const Trash = () => {
         event.preventDefault();
         // console.log(checkedItems)
         if (checkedItems.length === 0){
-            notify("복구할 논문을 선택해주세요", {type: 'error'})
+            notify("Please select the paper you want to restore", {type: 'error'})
         }
         else {
             mutate(checkedItems)
@@ -115,8 +115,8 @@ export const Trash = () => {
 
     return (
         <div>
-            <MetaTag title="관심 해제된 논문" description="사용자가 관심 해제한 논문의 리스트를 볼 수 있고, 복구할 수 있습니다." keywords="히스토리, 관심 해제, 복구, 논문"/>
-            <Title title="히스토리"/>
+            <MetaTag title="Papers in Trash - Yeondoo" description="사용자가 관심 해제한 논문의 리스트를 볼 수 있고, 복구할 수 있습니다." keywords="히스토리, 관심 해제, 복구, 논문"/>
+            <Title title="History"/>
             <Box sx={{height: 50}}></Box>
             {isLoading ? (
                 <Box sx={{ height: '80vh'}} className={loadingStyle.loading}>
@@ -125,8 +125,8 @@ export const Trash = () => {
                     </Box>
                     <Box sx={{ m: 2}}>
                         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1}}>
-                            <Button variant="outlined" sx={{mr: 1}} onClick={handleCheckAllItems} disabled> 전체선택 </Button>
-                            <Button type="submit" variant="contained" disabled> 복구 </Button>
+                            <Button variant="outlined" sx={{mr: 1}} onClick={handleCheckAllItems} disabled> Select All </Button>
+                            <Button type="submit" variant="contained" disabled> Restore </Button>
                         </Box>
                     
                         <Card sx={{ mb: '10px', height: '5vh', backgroundColor: color.loadingColor, opacity: '0.2', marginBottom: '10px'}}>
@@ -147,8 +147,8 @@ export const Trash = () => {
                     <Box sx={{ m: 2}}>
                         <form onSubmit={handleSubmit} >
                             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1}}>
-                                <Button variant="outlined" sx={{mr: 1}} onClick={handleCheckAllItems}> 전체선택 </Button>
-                                <Button type="submit" variant="contained"> 복구 </Button>
+                                <Button variant="outlined" sx={{mr: 1}} onClick={handleCheckAllItems}> Select All </Button>
+                                <Button type="submit" variant="contained"> Recover </Button>
                             </Box>
                             <Box sx={{height: '70vh', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
                                 {papersInTrash && ( papersInTrash.map((paper: papersInTrashType)=>(
@@ -176,7 +176,7 @@ export const Trash = () => {
                         <HistoryNav page="trash" />
                     </Box>
                     <Typography sx={{m:3}}>
-                    관심 해제한 논문이 없습니다.
+                    No papers in trash
                     </Typography>
                 </Box>
                 )

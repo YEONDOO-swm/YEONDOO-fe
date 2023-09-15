@@ -98,8 +98,8 @@ function ScoreSlider({id, score, paper}: {id: number, score?:number | null, pape
     return (
         <Box sx={{display:'flex', flexDirection: 'column', justifyContent:'center', backgroundColor: paper?color.mainGreen:color.white, pt:1, px:3, borderRadius: 2, width: '100%'}}>
             <Typography variant='body2' sx={{display: 'flex',justifyContent: 'center', alignItems:'center'}}>
-                <CampaignIcon sx={{marginRight: '3px'}}/>
-                답변의 퀄리티를 평가해주세요!
+                <CampaignIcon sx={{marginRight: '3px'}}/>  
+                  Please rate the quality of the answer!
             </Typography>
             <Box>
             <Slider

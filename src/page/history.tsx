@@ -66,8 +66,8 @@ export const History = () => {
     return (
 
     <div>
-        <MetaTag title="전체 검색 히스토리" description="사용자가 전체 검색했던 내용을 보고, 찾을 수 있습니다." keywords="히스토리, 검색결과, 검색, 전체검색"/>
-        <Title title="히스토리"/>
+        <MetaTag title="History - Yeondoo" description="사용자가 전체 검색했던 내용을 보고, 찾을 수 있습니다." keywords="히스토리, 검색결과, 검색, 전체검색, history, yeondoo, 연두"/>
+        <Title title="History"/>
         <Box sx={{height: 50}}></Box>
         {isLoading?(
             <Box sx={{ height: '80vh'}} className={loadingStyle.loading}>

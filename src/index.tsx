@@ -48,11 +48,7 @@ Sentry.init({
 //       });
 
 const store = createStore(
-    reducer,
-    composeWithDevTools(
-      
-      // other store enhancers if any
-    ),
+    reducer
   );
 
 const rootElement = document.getElementById('root');
