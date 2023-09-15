@@ -35,12 +35,23 @@ export const Trash = () => {
     const [checkedItems, setCheckedItems] = useState<string[]>([])
     const [submittedItems, setSubmittedItems] = useState<string[]>([])
 
+    const navigate = useNavigate()
+
     const { data: papersInTrash, isLoading } = useQuery(["trash", workspaceId], 
         ()=>fetch(`${api}/api/history/trash?workspaceId=${workspaceId}`, {
             headers: {
                 "Gauth": getCookie('jwt')
             }
-        }).then(response => response.json()).then(data => data.trashContainers),
+        }).then(response => {
+            if (response.status === 200) {
+                return response.json()
+            } else if (response.status === 401) {
+                navigate('/login')
+                notify('Login time has expired')
+                throw new Error('로그아웃')
+            }
+            throw new Error("관심 해제된 논문 정보를 가져오는데 실패하였습니다")
+        }).then(data => data.trashContainers),
         {
             onError: (error) => {
                 console.log("관심 해제된 논문 정보를 가져오는데 실패하였습니다: ", error)
@@ -61,6 +72,12 @@ export const Trash = () => {
             headers: { 'Content-Type' : 'application/json' ,
         'Gauth' : getCookie('jwt')},
             body: JSON.stringify(value)
+        }).then(response => {
+            if (response.status === 401){
+                navigate('/login')
+                notify('Login time has expired')
+                throw new Error('로그아웃')
+            }
         }),
         {
             onError: (error) => {

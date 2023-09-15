@@ -23,6 +23,7 @@ import { getCookie } from "../cookie";
 import { useSelector } from "react-redux";
 import { CounterState } from "../reducer";
 import { useQuery } from "react-query";
+import { useNavigate } from "react-router-dom";
 
 // TODO1: list 제한 걸기
 // TODO2: 스크롤
@@ -55,6 +56,8 @@ export const PaperView = () => {
     
     const api: string = useSelector((state: CounterState) => state.api)
 
+    const navigate = useNavigate()
+
     const query = new URLSearchParams(window.location.search);
     const paperId: string = query.get('paperid') || '';
     const { data, isLoading } = useQuery(["paperView", api, paperId, workspaceId], 
@@ -62,7 +65,16 @@ export const PaperView = () => {
             headers: {
                 "Gauth": getCookie('jwt')
             }
-        }).then(response => response.json()),
+        }).then(response => {
+            if (response.status === 200) {
+                return response.json()
+            } else if (response.status === 401) {
+                navigate('/login')
+                notify('Login time has expired')
+                throw new Error('로그아웃')
+            }
+            throw new Error("논문 내 질의 히스토리 정보를 가져오는데 실패하였습니다")
+        }),
         {
             onError: (error) => {
                 console.error('논문 정보를 불러오는 데 실패하였습니다:', error)
@@ -123,13 +135,19 @@ export const PaperView = () => {
         const query = new URLSearchParams(window.location.search);
         const paperId: string = query.get('paperid') || '';
         try {
-            setKey(Math.random()*10000000)
+            setKey(Math.floor(Math.random()*1000000000))
             const response = await fetch(`${api}/api/paper/${paperId}?workspaceId=${workspaceId}&key=${key}`,{
                 method: 'POST',
                 headers : { 'Content-Type' : 'application/json',
             'Gauth': getCookie('jwt') },
                 body: JSON.stringify({question: searchTermInPaper})
             })
+
+            if (response.status === 401) {
+                navigate('/login')
+                notify('Login time has expired')
+                throw new Error('로그아웃')
+            }
             const reader = response.body!.getReader()
             const decoder = new TextDecoder()
 

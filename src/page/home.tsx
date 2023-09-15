@@ -161,6 +161,11 @@ export const Home = () => {
               "Gauth": getCookie('jwt')
           }
           });
+          if (response.status === 401){
+            navigate('/login')
+            notify('Login time has expired')
+            throw new Error('로그아웃')
+          }
           const data = await response.json();
 
           setSearchResults(data);

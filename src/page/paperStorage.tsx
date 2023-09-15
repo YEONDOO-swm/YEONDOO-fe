@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Card, CardContent, Box, Typography, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
-import { Title, useAuthenticated } from 'react-admin';
+import { Title, useAuthenticated, useNotify } from 'react-admin';
 import * as amplitude from '@amplitude/analytics-browser';
 import { useEffect, useState } from "react";
 import { SearchTap } from "../component/searchTap";
@@ -20,6 +20,7 @@ import { useSelector } from "react-redux";
 import { CounterState } from "../reducer";
 import { useMutation, useQuery } from "react-query";
 import { paperType } from "./home";
+import { useNavigate } from "react-router-dom";
 
 type paperLikePayload = {
     workspaceId: number | null;
@@ -44,6 +45,9 @@ export const PaperStorage = () => {
     const [curPaperId, setCurPaperId] = useState<string | null>(null)
     const [curPaperTitle, setCurPaperTitle] = useState<string>('')
 
+    const navigate = useNavigate()
+    const notify = useNotify()
+
     const handleCancelClick = (paperId: string, paperTitle: string) => { // x버튼 클릭시
         setOpen(true)
         setCurPaperId(paperId)
@@ -56,6 +60,12 @@ export const PaperStorage = () => {
             headers: { 'Content-Type' : 'application/json',
         'Gauth': getCookie('jwt') },
             body: JSON.stringify(value)
+        }).then(response => {
+            if (response.status === 401) {
+                navigate('/login')
+                notify('Login time has expired')
+                throw new Error('로그아웃')
+            }
         }), {
             onError: (error) => {
                 console.log("관심 논문 삭제에 실패하였습니다", error)
@@ -98,7 +108,16 @@ export const PaperStorage = () => {
         headers: {
             "Gauth": getCookie('jwt')
         }
-    }).then(response => response.json()),
+    }).then(response => {
+        if (response.status === 200) {
+            return response.json()
+        } else if (response.status === 401) {
+            navigate('/login')
+            notify('Login time has expired')
+            throw new Error('로그아웃')
+        }
+        throw new Error("논문 내 질의 히스토리 정보를 가져오는데 실패하였습니다")
+    }),
     {
         onError: (error) => {
             console.error('관심 논문 정보를 불러오는데 실패하였습니다: ', error)

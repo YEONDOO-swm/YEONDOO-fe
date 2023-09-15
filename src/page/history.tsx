@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Card, CardContent, Typography, Box } from '@mui/material';
-import { Title, useAuthenticated } from 'react-admin';
+import { Title, useAuthenticated, useNotify } from 'react-admin';
 import { useEffect, useState } from "react";
 import * as amplitude from '@amplitude/analytics-browser';
 import { UserProfileCheck } from "../component/userProfileCheck";
@@ -36,13 +36,23 @@ export const History = () => {
 
     const workspaceId = Number(sessionStorage.getItem('workspaceId'));
     const navigate = useNavigate()
+    const notify = useNotify()
 
     const {data: results, isLoading} = useQuery(["historySearch", workspaceId], ()=>
         fetch(`${api}/api/history/search?workspaceId=${workspaceId}`, {
         headers: {
             "Gauth": getCookie('jwt')
         }
-        }).then(response => response.json())
+        }).then(response => {
+            if (response.status === 200) {
+                return response.json()
+            } else if (response.status === 401) {
+                navigate('/login')
+                notify('Login time has expired')
+                throw new Error('로그아웃')
+            }
+            throw new Error("히스토리 정보를 가져오는데 실패하였습니다")
+        })
         .then(data => data.results),
         {   
             onError: (error) => {
