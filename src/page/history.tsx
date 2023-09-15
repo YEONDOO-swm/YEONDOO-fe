@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Card, CardContent, Typography, Box } from '@mui/material';
-import { Title, useAuthenticated } from 'react-admin';
+import { Title, useAuthenticated, useNotify } from 'react-admin';
 import { useEffect, useState } from "react";
 import * as amplitude from '@amplitude/analytics-browser';
 import { UserProfileCheck } from "../component/userProfileCheck";
@@ -36,13 +36,23 @@ export const History = () => {
 
     const workspaceId = Number(sessionStorage.getItem('workspaceId'));
     const navigate = useNavigate()
+    const notify = useNotify()
 
     const {data: results, isLoading} = useQuery(["historySearch", workspaceId], ()=>
         fetch(`${api}/api/history/search?workspaceId=${workspaceId}`, {
         headers: {
             "Gauth": getCookie('jwt')
         }
-        }).then(response => response.json())
+        }).then(response => {
+            if (response.status === 200) {
+                return response.json()
+            } else if (response.status === 401) {
+                navigate('/login')
+                notify('Login time has expired')
+                throw new Error('로그아웃')
+            }
+            throw new Error("히스토리 정보를 가져오는데 실패하였습니다")
+        })
         .then(data => data.results),
         {   
             onError: (error) => {
@@ -66,8 +76,8 @@ export const History = () => {
     return (
 
     <div>
-        <MetaTag title="전체 검색 히스토리" description="사용자가 전체 검색했던 내용을 보고, 찾을 수 있습니다." keywords="히스토리, 검색결과, 검색, 전체검색"/>
-        <Title title="히스토리"/>
+        <MetaTag title="History - Yeondoo" description="사용자가 전체 검색했던 내용을 보고, 찾을 수 있습니다." keywords="히스토리, 검색결과, 검색, 전체검색, history, yeondoo, 연두"/>
+        <Title title="History"/>
         <Box sx={{height: 50}}></Box>
         {isLoading?(
             <Box sx={{ height: '80vh'}} className={loadingStyle.loading}>

@@ -38,14 +38,14 @@ export const HistoryNav = ({page} : {page: string}) => {
             <Typography variant="h6" 
             sx={{mr: 2}} 
             onClick={handleNavigateToHistory} 
-            className={`${styles.customTypography} ${page==="totalSearch"&& styles.currentPage}`}> 전체 검색 </Typography>
+            className={`${styles.customTypography} ${page==="totalSearch"&& styles.currentPage}`}> Paper Search </Typography>
             <Typography variant="h6" 
             sx={{mr: 2}} 
             onClick={handleNavigateToSearchInPaper}
-            className={`${styles.customTypography} ${page==="historyInPaper"&& styles.currentPage}`}> 논문 내 질의 </Typography>
+            className={`${styles.customTypography} ${page==="historyInPaper"&& styles.currentPage}`}> Queries </Typography>
             <Typography variant="h6" 
             onClick={handleNavigateToTrash}
-            className={`${styles.customTypography} ${page==="trash" && styles.currentPage}`}> 관심 해제된 논문 </Typography>
+            className={`${styles.customTypography} ${page==="trash" && styles.currentPage}`}> Papers in Trash </Typography>
             
         </Box>
     )

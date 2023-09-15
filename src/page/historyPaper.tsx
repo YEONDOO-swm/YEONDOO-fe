@@ -1,5 +1,5 @@
 import { Typography, Box, Card } from '@mui/material';
-import { Title, useAuthenticated } from 'react-admin';
+import { Title, useAuthenticated, useNotify } from 'react-admin';
 import { useEffect, useState } from 'react';
 import { UserProfileCheck } from "../component/userProfileCheck";
 import { HistoryNav } from '../component/historyNav';
@@ -8,7 +8,7 @@ import scrollStyle from "../layout/scroll.module.css"
 import { color } from "../layout/color";
 import * as amplitude from '@amplitude/analytics-browser';
 import MetaTag from '../SEOMetaTag';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import * as Sentry from '@sentry/react';
 import { getCookie } from '../cookie';
 import { useSelector } from 'react-redux';
@@ -38,12 +38,24 @@ export const HistoryPaper = () => {
 
     const workspaceId: number = Number(sessionStorage.getItem('workspaceId'));
 
+    const navigate = useNavigate()
+    const notify = useNotify()
+
     const { data: searchHistory, isLoading } = useQuery(["historyPaper", workspaceId]
     , ()=>fetch(`${api}/api/history/search/paper?workspaceId=${workspaceId}`,{
       headers: {
         "Gauth": getCookie('jwt')
     }
-    }).then(response => response.json()), {
+    }).then(response => {
+      if (response.status === 200) {
+          return response.json()
+      } else if (response.status === 401) {
+          navigate('/login')
+          notify('Login time has expired')
+          throw new Error('로그아웃')
+      }
+      throw new Error("논문 내 질의 히스토리 정보를 가져오는데 실패하였습니다")
+  }), {
       onError: (error) => {
         console.error('논문 내 질의 히스토리 정보를 가져오는데 실패하였습니다: ', error)
         Sentry.captureException(error)
@@ -58,8 +70,8 @@ export const HistoryPaper = () => {
     }, [])
     return (
         <Box>
-            <MetaTag title="논문 내 질의 히스토리" description="사용자가 했던 모든 논문 내 질의를 보고, 찾을 수 있습니다." keywords="히스토리, 논문, 논문 내 질의, AI, AI와 함께 논문읽기"/>
-            <Title title="히스토리" />
+            <MetaTag title="History - Yeondoo" description="사용자가 했던 모든 논문 내 질의를 보고, 찾을 수 있습니다." keywords="히스토리, 논문, 논문 내 질의, AI, AI와 함께 논문읽기, history"/>
+            <Title title="History" />
             <Box sx={{height: 50}}></Box>
             {isLoading?(
                 <Box sx={{ height: '80vh'}} className={loadingStyle.loading}>

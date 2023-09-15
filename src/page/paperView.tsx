@@ -23,6 +23,7 @@ import { getCookie } from "../cookie";
 import { useSelector } from "react-redux";
 import { CounterState } from "../reducer";
 import { useQuery } from "react-query";
+import { useNavigate } from "react-router-dom";
 
 // TODO1: list 제한 걸기
 // TODO2: 스크롤
@@ -55,6 +56,8 @@ export const PaperView = () => {
     
     const api: string = useSelector((state: CounterState) => state.api)
 
+    const navigate = useNavigate()
+
     const query = new URLSearchParams(window.location.search);
     const paperId: string = query.get('paperid') || '';
     const { data, isLoading } = useQuery(["paperView", api, paperId, workspaceId], 
@@ -62,7 +65,16 @@ export const PaperView = () => {
             headers: {
                 "Gauth": getCookie('jwt')
             }
-        }).then(response => response.json()),
+        }).then(response => {
+            if (response.status === 200) {
+                return response.json()
+            } else if (response.status === 401) {
+                navigate('/login')
+                notify('Login time has expired')
+                throw new Error('로그아웃')
+            }
+            throw new Error("논문 내 질의 히스토리 정보를 가져오는데 실패하였습니다")
+        }),
         {
             onError: (error) => {
                 console.error('논문 정보를 불러오는 데 실패하였습니다:', error)
@@ -89,7 +101,7 @@ export const PaperView = () => {
             const paperId: string = query.get('paperid') || '';
             amplitude.track('논문 내 질의', {paperId: paperId})
             if (searchTermInPaper === '') {
-                notify('질문을 입력해 주세요.', {type: 'error'})
+                notify('Please enter your question', {type: 'error'})
                 return ;
             }
             performSearchInPaper()
@@ -102,7 +114,7 @@ export const PaperView = () => {
         const paperId: string = query.get('paperid') || '';
         amplitude.track('논문 내 질의', {paperId: paperId})
         if (searchTermInPaper === '') {
-            notify('질문을 입력해 주세요.', {type: 'error'})
+            notify('Please enter your question', {type: 'error'})
             return ;
         }
         performSearchInPaper();
@@ -123,13 +135,19 @@ export const PaperView = () => {
         const query = new URLSearchParams(window.location.search);
         const paperId: string = query.get('paperid') || '';
         try {
-            setKey(Math.random()*10000000)
+            setKey(Math.floor(Math.random()*1000000000))
             const response = await fetch(`${api}/api/paper/${paperId}?workspaceId=${workspaceId}&key=${key}`,{
                 method: 'POST',
                 headers : { 'Content-Type' : 'application/json',
             'Gauth': getCookie('jwt') },
                 body: JSON.stringify({question: searchTermInPaper})
             })
+
+            if (response.status === 401) {
+                navigate('/login')
+                notify('Login time has expired')
+                throw new Error('로그아웃')
+            }
             const reader = response.body!.getReader()
             const decoder = new TextDecoder()
 
@@ -176,11 +194,11 @@ export const PaperView = () => {
 
     return (
         <div>
-            <MetaTag title="AI와 논문읽기" description="AI가 제공한 논문의 핵심 인사이트, 질문, 향후 연구주제 추천을 볼 수 있고, 직접 AI에게 논문에 대해서 궁금한 내용을 질문할 수 있습니다." keywords="논문, AI, 질문, 핵심 인사이트, 질문, 향후 연구주제 추천, 현 논문 내 질의, gpt"/>
-            <Title title="AI와 논문읽기" />
+            <MetaTag title="Chat with AI - Yeondoo" description="AI가 제공한 논문의 핵심 인사이트, 질문, 향후 연구주제 추천을 볼 수 있고, 직접 AI에게 논문에 대해서 궁금한 내용을 질문할 수 있습니다." keywords="논문, AI, 질문, 핵심 인사이트, 질문, 향후 연구주제 추천, 현 논문 내 질의, gpt"/>
+            <Title title="Chat with AI" />
             {isLoading ? (<div className={loadingStyle.loading}>
             <Box sx={{m:2, p:3, color: color.loadingColor, opacity: '0.8'}}>
-                <Typography>1분 정도 소요될 수 있습니다.</Typography>
+                <Typography>This may take about 1 minute</Typography>
             </Box>
               <Grid container spacing={2}>
                 <Grid item xs={6}>
@@ -237,7 +255,7 @@ export const PaperView = () => {
                     <div>
                         <Box display="flex" justifyContent="space-between">
                             <Box width="50%" sx={{margin: '0 10px 10px 10px'}}>
-                                <Typography variant="h6">정보</Typography>
+                                <Typography variant="h6">Information</Typography>
                                 <Card sx={{ border: `1px solid ${color.mainGreen}`, padding: '20px', height: '75vh', borderRadius: '15px', backgroundColor: color.mainGreen, 
                                     overflowY: 'scroll'
                                 }} className={scrollStyle.scrollBar}>
@@ -267,7 +285,7 @@ export const PaperView = () => {
                             <Box width="50%" sx={{margin: '0 10px 10px 10px'}}>
                             {/* true: user(question) false: gpt (answer) */}
                                 <Box>
-                                    <Typography variant="h6">현 논문 내 질의</Typography>
+                                    <Typography variant="h6">Chat</Typography>
                                     <Box sx={{ border: `1px solid ${color.mainGrey}`,  padding: '20px', height: '75vh', borderRadius: '15px', backgroundColor: color.mainGrey, 
                                     display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
                                     }}>

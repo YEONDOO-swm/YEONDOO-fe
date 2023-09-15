@@ -62,7 +62,7 @@ export const Home = () => {
     const api = useSelector((state: CounterState) => state.api)
     
     const [searchTerm, setSearchTerm] = useState<string>(""); // 사용자가 치고있는 질문
-    const [searchType, setSearchType] = useState<string>("1"); // 논문 검색인지 or 개념 질문인지
+    //const [searchType, setSearchType] = useState<string>("1"); // 논문 검색인지 or 개념 질문인지
     const [searchResults, setSearchResults] = useState<searchResultType | null>(null); // 챗봇 답변
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -74,18 +74,18 @@ export const Home = () => {
       if (!loading && event.key === 'Enter' && event.nativeEvent.isComposing === false){ 
         event.preventDefault();
           if (!searchTerm) {
-            notify("검색어를 입력해주세요", {type: 'error'})
+            notify("Please enter your search term", {type: 'error'})
             return
           }
-          if (!searchType) {
-            notify("검색 유형을 선택해주세요", {type: 'error'})
-            return
-          }
+          // if (!searchType) {
+          //   notify("Please select a search type", {type: 'error'})
+          //   return
+          // }
           if (process.env.NODE_ENV === 'production') { 
             amplitude.track("Home에서 검색")
           }
           
-          navigate(`/home?query=${searchTerm}&type=${searchType}`)
+          navigate(`/home?query=${searchTerm}`)
           performSearch()
           //window.location.href = `/home?query=${searchTerm}&type=${searchType}`
       }
@@ -97,19 +97,19 @@ export const Home = () => {
       }
       event.preventDefault();
       if (!searchTerm) {
-        notify("검색어를 입력해주세요", {type: 'error'})
+        notify("Please enter your search term", {type: 'error'})
         return
       }
-      if (!searchType) {
-        notify("검색 유형을 선택해주세요", {type: 'error'})
-        return
-      }
+      // if (!searchType) {
+      //   notify("Please select a search type", {type: 'error'})
+      //   return
+      // }
       if (process.env.NODE_ENV === 'production') {
             
         amplitude.track("Home에서 검색")
       }
       
-      navigate(`/home?query=${searchTerm}&type=${searchType}`)
+      navigate(`/home?query=${searchTerm}`)
       performSearch()
       //window.location.href = `/home?query=${searchTerm}&type=${searchType}`
   }
@@ -123,7 +123,7 @@ export const Home = () => {
           setLoading(true)
           const query: URLSearchParams = new URLSearchParams(window.location.search); 
           const performSearchTerm: string = query.get('query') || '';
-          const performSearchType: string = query.get('type') || '';
+          // const performSearchType: string = query.get('type') || '';
           // if (performSearchType === '2') {
           //   setSearchResults('type2')
           //   return
@@ -156,11 +156,16 @@ export const Home = () => {
           //   })
           // }
           
-          const response: Response = await fetch(`${api}/api/homesearch?query=${performSearchTerm}&workspaceId=${workspaceId}&searchType=${performSearchType}`, {
+          const response: Response = await fetch(`${api}/api/homesearch?query=${performSearchTerm}&workspaceId=${workspaceId}`, {
             headers: {
               "Gauth": getCookie('jwt')
           }
           });
+          if (response.status === 401){
+            navigate('/login')
+            notify('Login time has expired')
+            throw new Error('로그아웃')
+          }
           const data = await response.json();
 
           setSearchResults(data);
@@ -188,13 +193,6 @@ export const Home = () => {
   };
 
 
-  const handleChangeSearchType = (event: React.MouseEvent<HTMLElement>,
-    newType: string) => { // 검색 타입 버튼 클릭시
-    //setSearchType(event.target.value)
-    setSearchType(newType)
-    setSearchTerm('')
-    setSearchResults(null)
-  }
 
   const handleViewMoreAbstract = (paperId: string) => {
     setExpandedPaperArray((prevPaper: string[])=> [...prevPaper, paperId])
@@ -217,7 +215,7 @@ export const Home = () => {
 
     if (searchTermParam && searchTypeParam) {
       setSearchTerm(searchTermParam);
-      setSearchType(searchTypeParam);
+      // setSearchType(searchTypeParam);
       performSearch();
     }
   }, [location]);
@@ -227,72 +225,28 @@ export const Home = () => {
         <MetaTag title="연두 홈" description="궁금한 개념 질문 또는 논문 제목 검색을 하면 답변과 관련 논문을 제공합니다." keywords="논문, 검색, 질문, 개념, gpt"/>
         <Title title="Home" />
         <Box sx={{display: 'flex', margin: '30px auto', justifyContent: 'center', alignItems: 'center'}}>
-          {/* <FormControl sx={{mr: 2, width: '150px'}}>
-            <InputLabel>검색 유형</InputLabel>
-            <Select
-              value={searchType}
-              label="검색 유형"
-              onChange={handleChangeSearchType}
-            >
-
-              <MenuItem value={1}>논문 제목 검색</MenuItem>
-              <MenuItem value={2}>개념 설명</MenuItem>
-
-            </Select>
-          </FormControl> */}
-          <ToggleButtonGroup
-            color="primary"
-            value={searchType}
-            exclusive
-            onChange={handleChangeSearchType}
-            aria-label="Platform"
-            sx={{mr: 2}}>
-              <ToggleButton value="1">논문 제목 검색</ToggleButton>
-              <ToggleButton value="2">개념 질문</ToggleButton>
-            </ToggleButtonGroup>
             <SearchTap
               searchTerm={searchTerm}
               onChange={setSearchTerm}
               onSearch={handleButtonClick}
               onSearchKeyDown={handleSearchKeyDown}
-              placeholder={searchType=='1'?"Attention is all you need":"Transformer가 뭐야?"}
+              placeholder="Attention is all you need"
               firstBoxSx={{ width: '70%'  }}
               middleBoxSx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
               sx={{width: "100%"}} />
         </Box>
           
           {loading ? (
-            (searchType ==='1'?(
+            
               <Box className={loadingStyle.loading} sx={{margin: '0 30px 0 10px'}}>
               <Card sx={{ display: 'flex', justifyContent: 'center', marginBottom: '15px', border: `1px solid ${color.loadingColor}`, height: '20vh', borderRadius: '15px', backgroundColor: color.loadingColor, opacity: '0.2'}} >
               </Card>
               <Card sx={{ display: 'flex', justifyContent: 'center', marginBottom: '15px', border: `1px solid ${color.mainGrey}`, height: '20vh', borderRadius: '15px', backgroundColor: color.loadingColor, opacity: '0.2'}} >
               </Card>
               </Box>
-            ):(
-              <div >
-                <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                    <Card sx={{ display: 'flex', alignItems: 'flex-start', border: `1px solid ${color.mainGreen}`, margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: color.mainGreen, opacity: '0.7'}}>
-                    <Typography sx={{fontSize: "20px"}}>🍀</Typography>
-                      <MoreHorizIcon className={loadingStyle.loading}/>
-                    </Card>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <CardContent sx={{ height: '75vh', margin: '0 30px 0 10px', padding: '10px'}} className={loadingStyle.loading}>
-                      <Card sx={{ height: '20vh', backgroundColor: color.loadingColor, opacity: '0.2', borderRadius: '15px', marginBottom: '15px'}}>
-
-                      </Card>
-                      <Card sx={{ height: '20vh', backgroundColor: color.loadingColor, opacity: '0.2', borderRadius: '15px',}}>
-
-                      </Card>
-                    </CardContent>
-                  </Grid>
-                </Grid>
-              </div>
-            ))
+            
           ) :
-        (searchResults && ((searchResults.answer !== "아니아니아니") ? (searchType==='1'?(
+        (searchResults && ((searchResults.answer !== "아니아니아니") ? (
           <Box sx={{height: '75vh', margin: '0 30px 0 10px', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
             {searchResults.papers.map((paper: any) => (
           <Card key={paper.paperId} sx={{ marginBottom: '15px', border: `1px solid ${color.mainGrey}`, padding: '15px 25px', pb: '18px', borderRadius: '15px', backgroundColor: color.mainGrey}}>
@@ -335,66 +289,7 @@ export const Home = () => {
             
           </Card>))}
           </Box>
-        ):(<div>
-          <Card sx={{ margin: 20, p:5, textAlign: 'center', backgroundColor: color.mainGreen}}>
-            <Typography variant="h6" sx={{justifyContent: 'center' , mb: 2}}>
-              🚧 기능 개발 중입니다...
-            </Typography>
-            논문 제목 검색을 사용해주세요.
-          </Card>
-  {/* <Grid container spacing={2}>
-    <Grid item xs={6}>
-      <Card sx={{ justifyContent: 'space-between', border: `1px solid ${color.mainGreen}`, margin: '10px', padding: '20px', height: '70vh', borderRadius: '15px', backgroundColor: color.mainGreen, 
-      overflowY: 'scroll'
-      }} className={scrollStyle.scrollBar}>
-        <Box sx={{display: 'flex', alignItems: 'flex-start'}}>
-
-          <Typography sx={{fontSize: "20px", mr: 1}}>🍀</Typography>
-          <Box sx={{display: 'flex', flexDirection:'column'}}>
-            {searchResults.answer} 
-            <Box sx={{display: 'flex', flexDirection: 'row-reverse', mt: 1}}>
-              <Box sx={{ml: 1}}>
-                <CopyClick contents={searchResults.answer}/>
-              </Box>
-              <ScoreSlider id={searchResults.id}/>
-            </Box>
-          </Box>
-        </Box>
-      </Card>
-    </Grid>
-    <Grid item xs={6}>
-      <Box sx={{ height: '75vh', margin: '0 30px 0 10px', padding: '10px', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
-        {searchResults.papers.map((paper: any) => (
-          <Card key={paper.paperId} sx={{ display: 'flex', justifyContent: 'center', marginBottom: '15px', border: `1px solid ${color.mainGrey}`, padding: '15px 0', borderRadius: '15px', backgroundColor: color.mainGrey}}>
-            <Container>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignContent: 'center' }}>
-              <Box sx={{ flexGrow: 1 }}>
-                <Typography variant="h6">{paper.title}</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
-                <HeartClick currentItem={paper} onUpdateLikes={handleUpdateLikes} paperlike={paper.isLike}/>
-                <Typography variant="body2" sx={{ margin: '10px 0' }}>
-                  {paper.likes}
-                </Typography>
-              </Box>
-            </Box>
-              <Typography variant="body2"> {paper.authors.slice(0,3).join(", ")} / {paper.year}  </Typography>
-              <Box sx = {{margin: "15px 0 0 0" , display: 'flex'}}>
-                
-                <GoToArxiv url={paper.url} paperId={paper.paperId}/>
-
-                <Box sx={{width: '15px'}}></Box>
-                
-                <GoToViewMore paperid={paper.paperId} />
-              </Box>
-              
-            </Container>
-          </Card>
-        ))}
-      </Box>
-    </Grid>
-  </Grid> */}
-</div>))
+        )
 : (
   <Box sx={{m:3}}>
     <Typography> 검색 결과가 없습니다.</Typography>

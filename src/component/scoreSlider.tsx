@@ -6,6 +6,8 @@ import * as Sentry from '@sentry/react';
 import { getCookie } from '../cookie';
 import { useSelector } from 'react-redux';
 import { CounterState } from '../reducer';
+import { useNavigate } from 'react-router-dom';
+import { useNotify } from 'react-admin';
 
 
 function valuetext(value: number) {
@@ -67,6 +69,9 @@ function ScoreSlider({id, score, paper}: {id: number, score?:number | null, pape
 
     const workspaceId = Number(sessionStorage.getItem('workspaceId'))
 
+    const navigate = useNavigate()
+    const notify = useNotify()
+
     const handleSlider = (event: Event | SyntheticEvent<Element, Event>, newValue: number | number[]) => {
         const payload = {
             id: id,
@@ -78,6 +83,13 @@ function ScoreSlider({id, score, paper}: {id: number, score?:number | null, pape
               headers : { 'Content-Type' : 'application/json',
             'Gauth': getCookie('jwt') },
               body: JSON.stringify(payload)
+          }).then(response =>{
+            if (response.status === 401) {
+              navigate('/login')
+              notify('Login time has expired')
+              throw new Error('로그아웃')
+            }
+            return response
           })
           .catch(error => {
             Sentry.captureException(error)
@@ -88,6 +100,13 @@ function ScoreSlider({id, score, paper}: {id: number, score?:number | null, pape
             headers : { 'Content-Type' : 'application/json',
                         'Gauth': getCookie('jwt')},
             body: JSON.stringify(payload)
+        }).then(response =>{
+          if (response.status === 401) {
+            navigate('/login')
+            notify('Login time has expired')
+            throw new Error('로그아웃')
+          }
+          return response
         })
         .catch(error => {
           Sentry.captureException(error)
@@ -98,8 +117,8 @@ function ScoreSlider({id, score, paper}: {id: number, score?:number | null, pape
     return (
         <Box sx={{display:'flex', flexDirection: 'column', justifyContent:'center', backgroundColor: paper?color.mainGreen:color.white, pt:1, px:3, borderRadius: 2, width: '100%'}}>
             <Typography variant='body2' sx={{display: 'flex',justifyContent: 'center', alignItems:'center'}}>
-                <CampaignIcon sx={{marginRight: '3px'}}/>
-                답변의 퀄리티를 평가해주세요!
+                <CampaignIcon sx={{marginRight: '3px'}}/>  
+                  Please rate the quality of the answer!
             </Typography>
             <Box>
             <Slider

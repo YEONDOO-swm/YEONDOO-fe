@@ -10,6 +10,8 @@ import { getCookie } from "../cookie";
 import { useSelector } from "react-redux";
 import { CounterState } from "../reducer";
 import { paperType } from "../page/home";
+import { useNavigate } from "react-router-dom";
+import { useNotify } from "react-admin";
 
 type onUpdateLikesType = (
   paperId: string,
@@ -21,6 +23,9 @@ export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentIt
     const [isPaperLike, setIsPaperLike] = useState<boolean|undefined>(paperlike)
 
     const api: string = useSelector((state: CounterState) => state.api)
+
+    const navigate = useNavigate()
+    const notify = useNotify()
     
     const handleHeartClick = (paperId:string) => {
         var payload
@@ -69,6 +74,11 @@ export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentIt
           body: JSON.stringify(payload)
         })
         .then(response => {
+          if (response.status === 401) {
+            navigate('/login')
+            notify('Login time has expired')
+            throw new Error('로그아웃')
+          }
           return response;
           }
         )

@@ -35,7 +35,7 @@ export const SearchTap: React.FC<SearchTapProps> = ({
     const inputText = event.target.value;
 
     if (inputText.length > maxLengthLimit) {
-      notify('최대 300글자까지만 입력할 수 있습니다.')
+      notify('You can only enter up to 300 characters.')
       return;
     }
     onChange(inputText);

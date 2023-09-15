@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Card, CardContent, Box, Typography, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
-import { Title, useAuthenticated } from 'react-admin';
+import { Title, useAuthenticated, useNotify } from 'react-admin';
 import * as amplitude from '@amplitude/analytics-browser';
 import { useEffect, useState } from "react";
 import { SearchTap } from "../component/searchTap";
@@ -20,6 +20,7 @@ import { useSelector } from "react-redux";
 import { CounterState } from "../reducer";
 import { useMutation, useQuery } from "react-query";
 import { paperType } from "./home";
+import { useNavigate } from "react-router-dom";
 
 type paperLikePayload = {
     workspaceId: number | null;
@@ -44,6 +45,9 @@ export const PaperStorage = () => {
     const [curPaperId, setCurPaperId] = useState<string | null>(null)
     const [curPaperTitle, setCurPaperTitle] = useState<string>('')
 
+    const navigate = useNavigate()
+    const notify = useNotify()
+
     const handleCancelClick = (paperId: string, paperTitle: string) => { // x버튼 클릭시
         setOpen(true)
         setCurPaperId(paperId)
@@ -56,6 +60,12 @@ export const PaperStorage = () => {
             headers: { 'Content-Type' : 'application/json',
         'Gauth': getCookie('jwt') },
             body: JSON.stringify(value)
+        }).then(response => {
+            if (response.status === 401) {
+                navigate('/login')
+                notify('Login time has expired')
+                throw new Error('로그아웃')
+            }
         }), {
             onError: (error) => {
                 console.log("관심 논문 삭제에 실패하였습니다", error)
@@ -98,7 +108,16 @@ export const PaperStorage = () => {
         headers: {
             "Gauth": getCookie('jwt')
         }
-    }).then(response => response.json()),
+    }).then(response => {
+        if (response.status === 200) {
+            return response.json()
+        } else if (response.status === 401) {
+            navigate('/login')
+            notify('Login time has expired')
+            throw new Error('로그아웃')
+        }
+        throw new Error("논문 내 질의 히스토리 정보를 가져오는데 실패하였습니다")
+    }),
     {
         onError: (error) => {
             console.error('관심 논문 정보를 불러오는데 실패하였습니다: ', error)
@@ -134,8 +153,8 @@ export const PaperStorage = () => {
     
     return (
     <div>
-        <MetaTag title="관심 논문" description="사용자가 선택한 관심 논문 리스트를 볼 수 있습니다." keywords="히스토리, 논문, AI, 관심 논문, 찜"/>
-        <Title title="관심 논문" />
+        <MetaTag title="Working Papers - Yeondoo" description="사용자가 선택한 관심 논문 리스트를 볼 수 있습니다." keywords="히스토리, 논문, AI, 관심 논문, 찜"/>
+        <Title title="Working Papers" />
         <Box sx={{height: 50}}></Box>
           {isLoading?(
             <Box sx={{height: '75vh', margin: '0 30px 0 10px', padding: '10px'}} className={loadingStyle.loading}>
@@ -153,17 +172,17 @@ export const PaperStorage = () => {
                     aria-describedby="alert-dialog-description"
                     >
                         <DialogTitle id="alert-dialog-title">
-                            {"연두"}
+                            {"Yeondoo"}
                         </DialogTitle>
                         <DialogContent>
                             <DialogContentText id="alert-dialog-description">
-                            정말 "{curPaperTitle}"을 관심 논문에서 삭제하시겠습니까?
+                            Are you sure you want to delete "{curPaperTitle}" from Working Papers?
                             </DialogContentText>
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={()=>setOpen(false)}>아니오</Button>
+                            <Button onClick={()=>setOpen(false)}>No</Button>
                             <Button onClick={()=>curPaperId!==null && handleCancel(curPaperId)} autoFocus>
-                            예
+                            Yes
                             </Button>
                         </DialogActions>
                     </Dialog> 
@@ -197,7 +216,7 @@ export const PaperStorage = () => {
                             </Card>
                         
                     )
-                )):<Typography sx={{m:3}}>관심 논문이 없습니다.</Typography>}
+                )):<Typography sx={{m:3}}>No Working Papers</Typography>}
             </Box>
           )}
 

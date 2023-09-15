@@ -8,7 +8,6 @@ export const GoToArxiv = ({url, paperId}: {url: string, paperId: string}) => {
         if (process.env.NODE_ENV === 'production'){
             amplitude.track("Arxiv Clicked", {paperId: paperId});
         }
-        console.log(url)
         window.open(url, "home")
     }
     return (

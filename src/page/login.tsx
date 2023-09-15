@@ -8,6 +8,7 @@ import { setCookie, getCookie, removeCookie } from '../cookie';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
 import { CounterState } from '../reducer';
+import { useNotify } from 'react-admin';
 
 var api: string = '';
 
@@ -20,6 +21,8 @@ export const Login = () => {
 
     const api: string = useSelector((state: CounterState) => state.api)
 
+    const notify = useNotify()
+
     const { mutate } = useMutation(
         (value: loginPayload) => fetch(`${api}/api/login/google`, {
             method: 'POST',
@@ -29,6 +32,11 @@ export const Login = () => {
         {
             onSuccess: (data) => {
                 const response = data
+
+                if (response.status === 401) {
+                    notify('Invalid user')
+                    throw new Error("유효하지 않음")
+                }
                 let jwtToken: string | null = response.headers.get('Gauth')
 
                 if (jwtToken) {
@@ -38,7 +46,7 @@ export const Login = () => {
                 response.json().then((data)=> {
                     setCookie('username', data.username)
                     window.location.href = "/home"
-                }) 
+                }).catch(error => console.log(error))
             }
         }
     )
