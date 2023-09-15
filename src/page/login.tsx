@@ -36,6 +36,8 @@ export const Login = () => {
                 if (response.status === 401) {
                     notify('Invalid user')
                     throw new Error("유효하지 않음")
+                } else if (response.status === 500) {
+                    throw new Error("서버 에러")
                 }
                 let jwtToken: string | null = response.headers.get('Gauth')
 
