@@ -25,7 +25,7 @@ import ScoreSlider from "../component/scoreSlider";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import * as Sentry from '@sentry/react';
-import { getCookie } from "../cookie";
+import { getCookie, setCookie } from "../cookie";
 import { useSelector } from "react-redux";
 import { CounterState } from "../reducer";
 import { useQuery } from "react-query";
@@ -161,10 +161,32 @@ export const Home = () => {
               "Gauth": getCookie('jwt')
           }
           });
-          if (response.status === 401){
-            navigate('/login')
-            notify('Login time has expired')
-            throw new Error('로그아웃')
+          if (response.status === 401) {
+
+            fetch(`${api}/api/update/token`, {
+              headers: { 
+                'Refresh' : getCookie('refresh') 
+              }
+            }).then(response => {
+              if (response.status === 401) {
+                navigate('/login')
+                notify('Login time has expired')
+                throw new Error('로그아웃')
+              }
+              else if (response.status === 200) {
+                let jwtToken: string | null = response.headers.get('Gauth')
+                let refreshToken: string | null = response.headers.get('RefreshToken')
+
+                if (jwtToken) {
+                    setCookie('access', jwtToken)
+                }
+
+                if (refreshToken) {
+                    setCookie('refresh', refreshToken)
+                }
+              }
+            })
+            
           }
           const data = await response.json();
 
@@ -211,9 +233,9 @@ export const Home = () => {
 
     const query: URLSearchParams = new URLSearchParams(window.location.search);
     const searchTermParam: string = query.get('query') || '';
-    const searchTypeParam: string = query.get('type') || '';
+    // const searchTypeParam: string = query.get('type') || '';
 
-    if (searchTermParam && searchTypeParam) {
+    if (searchTermParam) {
       setSearchTerm(searchTermParam);
       // setSearchType(searchTypeParam);
       performSearch();

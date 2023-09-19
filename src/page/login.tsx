@@ -42,9 +42,14 @@ export const Login = () => {
                     return
                 }
                 let jwtToken: string | null = response.headers.get('Gauth')
+                let refreshToken: string | null = response.headers.get('RefreshToken')
 
                 if (jwtToken) {
-                    setCookie('jwt', jwtToken)
+                    setCookie('access', jwtToken)
+                }
+
+                if (refreshToken) {
+                    setCookie('refresh', refreshToken)
                 }
 
                 response.json().then((data)=> {

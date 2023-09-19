@@ -19,7 +19,7 @@ import { HeartClick } from "../component/heartClick";
 import MetaTag from "../SEOMetaTag";
 import ScoreSlider from "../component/scoreSlider";
 import * as Sentry from '@sentry/react';
-import { getCookie } from "../cookie";
+import { getCookie, setCookie } from "../cookie";
 import { useSelector } from "react-redux";
 import { CounterState } from "../reducer";
 import { useQuery } from "react-query";
@@ -69,10 +69,32 @@ export const PaperView = () => {
             if (response.status === 200) {
                 return response.json()
             } else if (response.status === 401) {
-                navigate('/login')
-                notify('Login time has expired')
-                throw new Error('로그아웃')
-            }
+
+                fetch(`${api}/api/update/token`, {
+                  headers: { 
+                    'Refresh' : getCookie('refresh') 
+                  }
+                }).then(response => {
+                  if (response.status === 401) {
+                    navigate('/login')
+                    notify('Login time has expired')
+                    throw new Error('로그아웃')
+                  }
+                  else if (response.status === 200) {
+                    let jwtToken: string | null = response.headers.get('Gauth')
+                    let refreshToken: string | null = response.headers.get('RefreshToken')
+    
+                    if (jwtToken) {
+                        setCookie('access', jwtToken)
+                    }
+    
+                    if (refreshToken) {
+                        setCookie('refresh', refreshToken)
+                    }
+                  }
+                })
+                
+              }
             throw new Error("논문 내 질의 히스토리 정보를 가져오는데 실패하였습니다")
         }),
         {
@@ -144,10 +166,32 @@ export const PaperView = () => {
             })
 
             if (response.status === 401) {
-                navigate('/login')
-                notify('Login time has expired')
-                throw new Error('로그아웃')
-            }
+
+                fetch(`${api}/api/update/token`, {
+                  headers: { 
+                    'Refresh' : getCookie('refresh') 
+                  }
+                }).then(response => {
+                  if (response.status === 401) {
+                    navigate('/login')
+                    notify('Login time has expired')
+                    throw new Error('로그아웃')
+                  }
+                  else if (response.status === 200) {
+                    let jwtToken: string | null = response.headers.get('Gauth')
+                    let refreshToken: string | null = response.headers.get('RefreshToken')
+    
+                    if (jwtToken) {
+                        setCookie('access', jwtToken)
+                    }
+    
+                    if (refreshToken) {
+                        setCookie('refresh', refreshToken)
+                    }
+                  }
+                })
+                
+              }
             const reader = response.body!.getReader()
             const decoder = new TextDecoder()
 
@@ -260,20 +304,20 @@ export const PaperView = () => {
                                     overflowY: 'scroll'
                                 }} className={scrollStyle.scrollBar}>
                                     <Box>   
-                                        <Typography variant={sizeTitleInInfo} sx={{fontWeight: 'bold'}}>핵심 인사이트</Typography>
+                                        <Typography variant={sizeTitleInInfo} sx={{fontWeight: 'bold'}}>Key Insights</Typography>
                                         <Box sx={{mb: 2, marginLeft: '5px'}}>
                                         {data.paperInfo.insights && data.paperInfo.insights.map((insight: string, index: number) => (
                                             <Typography key={index} variant={sizeContentInInfo}>{insight}</Typography>
                                         ))}
                                         </Box>
                                         
-                                        <Typography variant={sizeTitleInInfo} sx={{fontWeight: 'bold'}}>질문</Typography>
+                                        <Typography variant={sizeTitleInInfo} sx={{fontWeight: 'bold'}}>Questions</Typography>
                                         <Box sx={{mb: 2, marginLeft: '5px'}}>
                                         {data.paperInfo.questions && data.paperInfo.questions.map((question: string, index: number) => (
                                             <Typography key={index} variant={sizeContentInInfo}>{question}</Typography>
                                         ))}
                                         </Box>
-                                        <Typography variant={sizeTitleInInfo} sx={{fontWeight: 'bold'}}>향후 연구주제 추천</Typography>
+                                        <Typography variant={sizeTitleInInfo} sx={{fontWeight: 'bold'}}>Recommended Future Topics</Typography>
                                         <Box sx={{mb: 2, marginLeft: '5px'}}>
                                         {data.paperInfo.subjectRecommends && data.paperInfo.subjectRecommends.map((subjectRecommend: string, index: number) => (
                                             <Typography key={index} variant={sizeContentInInfo}>{subjectRecommend}</Typography>

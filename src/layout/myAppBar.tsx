@@ -65,7 +65,7 @@ const ToggleButton = styled(MuiToggleButton)({
 export const MyAppBar = () => {
 
     const [searchTerm, setSearchTerm] = useState<string>("");
-    const [searchType, setSearchType] = useState<string>("1");
+    // const [searchType, setSearchType] = useState<string>("1");
     const notify = useNotify()
     const navigate = useNavigate()
     const maxLengthLimit = 300
@@ -77,14 +77,14 @@ export const MyAppBar = () => {
             notify("검색어를 입력해주세요", {type: 'error'})
             return
           }
-          if (!searchType) {
-            notify("검색 유형을 선택해주세요", {type: 'error'})
-            return
-          }
+          // if (!searchType) {
+          //   notify("검색 유형을 선택해주세요", {type: 'error'})
+          //   return
+          // }
           if (process.env.NODE_ENV === 'production') {
             amplitude.track("app bar 내 검색 이용")
           }
-          navigate(`/home?query=${searchTerm}&type=${searchType}`)
+          navigate(`/home?query=${searchTerm}`)
           setSearchTerm('')
           //window.location.href = `/home?query=${searchTerm}&type=${searchType}&appbar=${1}`
         }
@@ -100,16 +100,16 @@ export const MyAppBar = () => {
       setSearchTerm(inputText);
     };
 
-    const handleChangeSearchType = (event: React.MouseEvent<HTMLElement>,
-      newType: string) => {
-      setSearchType(newType)
-    }
+    // const handleChangeSearchType = (event: React.MouseEvent<HTMLElement>,
+    //   newType: string) => {
+    //   setSearchType(newType)
+    // }
 
     return (<AppBar >
       <TitlePortal />
       {location.pathname !== '/home' && (
         <>
-          <ToggleButtonGroup
+          {/* <ToggleButtonGroup
           size="small"
           sx={{backgroundColor: alpha('#FFFFFF', 0.25),
           }}
@@ -120,14 +120,14 @@ export const MyAppBar = () => {
           >  
             <ToggleButton value="1" >논문 제목 검색</ToggleButton>
             <ToggleButton value="2" sx={{}}>개념 질문</ToggleButton>
-          </ToggleButtonGroup>
+          </ToggleButtonGroup> */}
           <Typography variant='h6' sx={{mx: 2}}>
             <Search>
                 <SearchIconWrapper>
                   <SearchIcon />
                 </SearchIconWrapper>
                 <StyledInputBase
-                  placeholder="전체 검색"
+                  placeholder="Paper Search"
                   value={searchTerm}
                   onChange={handleChange}
                   onKeyDown={handleSearchKeyDown}
