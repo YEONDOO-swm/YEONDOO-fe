@@ -15,7 +15,7 @@ import { color } from '../layout/color'
 import { Helmet } from "react-helmet-async";
 import MetaTag from "../SEOMetaTag";
 import * as Sentry from '@sentry/react';
-import { getCookie } from "../cookie";
+import { getCookie, setCookie } from "../cookie";
 import { useSelector } from "react-redux";
 import { CounterState } from "../reducer";
 import { useMutation, useQuery } from "react-query";
@@ -62,10 +62,32 @@ export const PaperStorage = () => {
             body: JSON.stringify(value)
         }).then(response => {
             if (response.status === 401) {
-                navigate('/login')
-                notify('Login time has expired')
-                throw new Error('로그아웃')
-            }
+
+                fetch(`${api}/api/update/token`, {
+                  headers: { 
+                    'Refresh' : getCookie('refresh') 
+                  }
+                }).then(response => {
+                  if (response.status === 401) {
+                    navigate('/login')
+                    notify('Login time has expired')
+                    throw new Error('로그아웃')
+                  }
+                  else if (response.status === 200) {
+                    let jwtToken: string | null = response.headers.get('Gauth')
+                    let refreshToken: string | null = response.headers.get('RefreshToken')
+    
+                    if (jwtToken) {
+                        setCookie('access', jwtToken)
+                    }
+    
+                    if (refreshToken) {
+                        setCookie('refresh', refreshToken)
+                    }
+                  }
+                })
+                
+              }
         }), {
             onError: (error) => {
                 console.log("관심 논문 삭제에 실패하였습니다", error)
@@ -112,10 +134,32 @@ export const PaperStorage = () => {
         if (response.status === 200) {
             return response.json()
         } else if (response.status === 401) {
-            navigate('/login')
-            notify('Login time has expired')
-            throw new Error('로그아웃')
-        }
+
+            fetch(`${api}/api/update/token`, {
+              headers: { 
+                'Refresh' : getCookie('refresh') 
+              }
+            }).then(response => {
+              if (response.status === 401) {
+                navigate('/login')
+                notify('Login time has expired')
+                throw new Error('로그아웃')
+              }
+              else if (response.status === 200) {
+                let jwtToken: string | null = response.headers.get('Gauth')
+                let refreshToken: string | null = response.headers.get('RefreshToken')
+
+                if (jwtToken) {
+                    setCookie('access', jwtToken)
+                }
+
+                if (refreshToken) {
+                    setCookie('refresh', refreshToken)
+                }
+              }
+            })
+            
+          }
         throw new Error("논문 내 질의 히스토리 정보를 가져오는데 실패하였습니다")
     }),
     {

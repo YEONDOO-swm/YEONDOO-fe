@@ -6,7 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useState } from "react";
 import * as Sentry from '@sentry/react';
-import { getCookie } from "../cookie";
+import { getCookie, setCookie } from "../cookie";
 import { useSelector } from "react-redux";
 import { CounterState } from "../reducer";
 import { paperType } from "../page/home";
@@ -70,14 +70,36 @@ export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentIt
         fetch(`${api}/api/paperlikeonoff`, {
           method: 'POST',
           headers: { 'Content-Type' : 'application/json',
-                      'Gauth' : getCookie('jwt') },
+                      'Gauth' : getCookie('access') },
           body: JSON.stringify(payload)
         })
         .then(response => {
           if (response.status === 401) {
-            navigate('/login')
-            notify('Login time has expired')
-            throw new Error('로그아웃')
+
+            fetch(`${api}/api/update/token`, {
+              headers: { 
+                'Refresh' : getCookie('refresh') 
+              }
+            }).then(response => {
+              if (response.status === 401) {
+                navigate('/login')
+                notify('Login time has expired')
+                throw new Error('로그아웃')
+              }
+              else if (response.status === 200) {
+                let jwtToken: string | null = response.headers.get('Gauth')
+                let refreshToken: string | null = response.headers.get('RefreshToken')
+
+                if (jwtToken) {
+                    setCookie('access', jwtToken)
+                }
+
+                if (refreshToken) {
+                    setCookie('refresh', refreshToken)
+                }
+              }
+            })
+            
           }
           return response;
           }

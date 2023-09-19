@@ -3,7 +3,7 @@ import React, { ChangeEvent, SyntheticEvent } from 'react'
 import { color } from "../layout/color";
 import CampaignIcon from '@mui/icons-material/Campaign';
 import * as Sentry from '@sentry/react';
-import { getCookie } from '../cookie';
+import { getCookie, setCookie } from '../cookie';
 import { useSelector } from 'react-redux';
 import { CounterState } from '../reducer';
 import { useNavigate } from 'react-router-dom';
@@ -85,9 +85,31 @@ function ScoreSlider({id, score, paper}: {id: number, score?:number | null, pape
               body: JSON.stringify(payload)
           }).then(response =>{
             if (response.status === 401) {
-              navigate('/login')
-              notify('Login time has expired')
-              throw new Error('로그아웃')
+
+              fetch(`${api}/api/update/token`, {
+                headers: { 
+                  'Refresh' : getCookie('refresh') 
+                }
+              }).then(response => {
+                if (response.status === 401) {
+                  navigate('/login')
+                  notify('Login time has expired')
+                  throw new Error('로그아웃')
+                }
+                else if (response.status === 200) {
+                  let jwtToken: string | null = response.headers.get('Gauth')
+                  let refreshToken: string | null = response.headers.get('RefreshToken')
+  
+                  if (jwtToken) {
+                      setCookie('access', jwtToken)
+                  }
+  
+                  if (refreshToken) {
+                      setCookie('refresh', refreshToken)
+                  }
+                }
+              })
+              
             }
             return response
           })
@@ -102,9 +124,31 @@ function ScoreSlider({id, score, paper}: {id: number, score?:number | null, pape
             body: JSON.stringify(payload)
         }).then(response =>{
           if (response.status === 401) {
-            navigate('/login')
-            notify('Login time has expired')
-            throw new Error('로그아웃')
+
+            fetch(`${api}/api/update/token`, {
+              headers: { 
+                'Refresh' : getCookie('refresh') 
+              }
+            }).then(response => {
+              if (response.status === 401) {
+                navigate('/login')
+                notify('Login time has expired')
+                throw new Error('로그아웃')
+              }
+              else if (response.status === 200) {
+                let jwtToken: string | null = response.headers.get('Gauth')
+                let refreshToken: string | null = response.headers.get('RefreshToken')
+
+                if (jwtToken) {
+                    setCookie('access', jwtToken)
+                }
+
+                if (refreshToken) {
+                    setCookie('refresh', refreshToken)
+                }
+              }
+            })
+            
           }
           return response
         })
