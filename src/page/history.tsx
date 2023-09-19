@@ -41,7 +41,7 @@ export const History = () => {
     const {data: results, isLoading} = useQuery(["historySearch", workspaceId], ()=>
         fetch(`${api}/api/history/search?workspaceId=${workspaceId}`, {
         headers: {
-            "Gauth": getCookie('jwt')
+            "Gauth": getCookie('access')
         }
         }).then(response => {
             if (response.status === 200) {

@@ -40,7 +40,7 @@ export const Trash = () => {
     const { data: papersInTrash, isLoading } = useQuery(["trash", workspaceId], 
         ()=>fetch(`${api}/api/history/trash?workspaceId=${workspaceId}`, {
             headers: {
-                "Gauth": getCookie('jwt')
+                "Gauth": getCookie('access')
             }
         }).then(response => {
             if (response.status === 200) {
@@ -92,7 +92,7 @@ export const Trash = () => {
         (value: string[]) => fetch(`${api}/api/history/trash?workspaceId=${workspaceId}`, {
             method: 'POST',
             headers: { 'Content-Type' : 'application/json' ,
-        'Gauth' : getCookie('jwt')},
+        'Gauth' : getCookie('access')},
             body: JSON.stringify(value)
         }).then(response => {
             if (response.status === 401) {
