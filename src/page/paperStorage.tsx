@@ -58,7 +58,7 @@ export const PaperStorage = () => {
         (value: paperLikePayload)=> fetch(`${api}/api/paperlikeonoff`, {
             method:'POST',
             headers: { 'Content-Type' : 'application/json',
-        'Gauth': getCookie('jwt') },
+        'Gauth': getCookie('access') },
             body: JSON.stringify(value)
         }).then(response => {
             if (response.status === 401) {
@@ -112,7 +112,7 @@ export const PaperStorage = () => {
         // fetch(`${api}/api/paperlikeonoff`, {
         //     method:'POST',
         //     headers: { 'Content-Type' : 'application/json',
-        // 'Gauth': getCookie('jwt') },
+        // 'Gauth': getCookie('access') },
         //     body: JSON.stringify(payload)
         // })
         // .then(response => {
@@ -128,7 +128,7 @@ export const PaperStorage = () => {
     const {data: papersInStorage, isLoading} = useQuery(['homesearch', api, workspaceId],()=> fetch(`${api}/api/container?workspaceId=${workspaceId}`
     , {
         headers: {
-            "Gauth": getCookie('jwt')
+            "Gauth": getCookie('access')
         }
     }).then(response => {
         if (response.status === 200) {
@@ -176,7 +176,7 @@ export const PaperStorage = () => {
     //     try {
     //         const response = await fetch(`${api}/api/container?workspaceId=${workspaceId}`, {
     //             headers: {
-    //                 "Gauth": getCookie('jwt')
+    //                 "Gauth": getCookie('access')
     //             }
     //         })
     //         const data = await response.json()

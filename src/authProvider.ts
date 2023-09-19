@@ -75,7 +75,7 @@ export const authProvider = {
       }
       //sessionStorage.removeItem('username');
       removeCookie('username')
-      removeCookie('jwt')
+      removeCookie('access')
       //amplitude.reset()
       return Promise.resolve();
     },

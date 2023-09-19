@@ -135,7 +135,7 @@ export const Home = () => {
           // const { isLoading, error } = useQuery(['homesearch', performSearchTerm, workspaceId], () => 
           //   fetch(`${api}/api/homesearch?query=${performSearchTerm}&workspaceId=${workspaceId}&searchType=${performSearchType}`, {
           //     headers: {
-          //       "Gauth": getCookie('jwt')
+          //       "Gauth": getCookie('access')
           //   }}
           //   )
           // ,{
@@ -158,7 +158,7 @@ export const Home = () => {
           
           const response: Response = await fetch(`${api}/api/homesearch?query=${performSearchTerm}&workspaceId=${workspaceId}`, {
             headers: {
-              "Gauth": getCookie('jwt')
+              "Gauth": getCookie('access')
           }
           });
           if (response.status === 401) {

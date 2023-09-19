@@ -33,6 +33,7 @@ import {
   } from 'react-query'
 import { useDispatch } from "react-redux";
 import { SET_API } from './reducer';
+import PdfViewer from './component/pdfViewer/pdfViewer';
 
 amplitude.init('fa2f5340585a6728ae2103fb05e56bec', {
     defaultTracking: {
@@ -98,7 +99,7 @@ export const App = () => {
                             <Route path="/paper" element={< PaperView />}/>
                             <Route path="/historypaper" element={< HistoryPaper />} />
                             <Route path="/historytrash" element={< Trash />} />
-                            
+                            <Route path="/pdfviewer" element={< PdfViewer />} />
                         </CustomRoutes>
                     </Admin>
                 </CookiesProvider>
