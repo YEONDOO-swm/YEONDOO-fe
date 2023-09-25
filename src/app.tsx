@@ -34,6 +34,7 @@ import {
 import { useDispatch } from "react-redux";
 import { SET_API } from './reducer';
 import PdfViewer from './component/pdfViewer/pdfViewer';
+import Workspaces from './page/workspaces';
 
 amplitude.init('fa2f5340585a6728ae2103fb05e56bec', {
     defaultTracking: {
@@ -100,6 +101,7 @@ export const App = () => {
                             <Route path="/historypaper" element={< HistoryPaper />} />
                             <Route path="/historytrash" element={< Trash />} />
                             <Route path="/pdfviewer" element={< PdfViewer />} />
+                            <Route path="/workspaces" element={<Workspaces/>} />
                         </CustomRoutes>
                     </Admin>
                 </CookiesProvider>
