@@ -52,7 +52,7 @@ export const App = () => {
         RouteChangeTracker()
     }
 
-    var api = '';
+    var api = ''; //var은 웬만해선x
     if (process.env.NODE_ENV === 'development'){
       api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
     }

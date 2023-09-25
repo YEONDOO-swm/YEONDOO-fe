@@ -17,8 +17,6 @@ type loginPayload = {
 }
 
 export const Login = () => {
-    const queryClient = useQueryClient()
-
     const api: string = useSelector((state: CounterState) => state.api)
 
     const notify = useNotify()

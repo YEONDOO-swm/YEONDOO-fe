@@ -24,6 +24,7 @@ import { useSelector } from "react-redux";
 import { CounterState } from "../reducer";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
+import PageLayout from "../layout/pageLayout";
 
 // TODO1: list 제한 걸기
 // TODO2: 스크롤
@@ -237,7 +238,7 @@ export const PaperView = () => {
     const sizeContentInInfo = "body1"
 
     return (
-        <div>
+        <PageLayout workspace={true} number={2}>
             <MetaTag title="Chat with AI - Yeondoo" description="AI가 제공한 논문의 핵심 인사이트, 질문, 향후 연구주제 추천을 볼 수 있고, 직접 AI에게 논문에 대해서 궁금한 내용을 질문할 수 있습니다." keywords="논문, AI, 질문, 핵심 인사이트, 질문, 향후 연구주제 추천, 현 논문 내 질의, gpt"/>
             <Title title="Chat with AI" />
             {isLoading ? (<div className={loadingStyle.loading}>
@@ -427,6 +428,6 @@ export const PaperView = () => {
                     </div>
                     </div>
             )}
-        </div>
+        </PageLayout>
     );
 }

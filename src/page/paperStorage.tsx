@@ -21,6 +21,7 @@ import { CounterState } from "../reducer";
 import { useMutation, useQuery } from "react-query";
 import { paperType } from "./home";
 import { useNavigate } from "react-router-dom";
+import PageLayout from "../layout/pageLayout";
 
 type paperLikePayload = {
     workspaceId: number | null;
@@ -196,7 +197,7 @@ export const PaperStorage = () => {
     }, []);
     
     return (
-    <div>
+    <PageLayout workspace={true} number={1}>
         <MetaTag title="Working Papers - Yeondoo" description="사용자가 선택한 관심 논문 리스트를 볼 수 있습니다." keywords="히스토리, 논문, AI, 관심 논문, 찜"/>
         <Title title="Working Papers" />
         <Box sx={{height: 50}}></Box>
@@ -264,5 +265,5 @@ export const PaperStorage = () => {
             </Box>
           )}
 
-    </div>
+    </PageLayout>
 )};

@@ -113,9 +113,9 @@ export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentIt
     return (
         <IconButton onClick={() => handleHeartClick(currentItem.paperId)}>
             {   paperIdArray.includes(currentItem.paperId) || isPaperLike ? (
-                <FavoriteIcon sx={{margin: '0'}} color="error"/>
+                <FavoriteIcon sx={{margin: '0', color: '#617F5B'}} />
                 ) : (
-                <FavoriteBorderIcon />
+                <FavoriteBorderIcon sx={{color: '#617F5B'}}/>
                 )
             }
         </IconButton>
