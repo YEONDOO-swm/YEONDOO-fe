@@ -39,7 +39,7 @@ export const Trash = () => {
     const navigate = useNavigate()
 
     const { data: papersInTrash, isLoading } = useQuery(["trash", workspaceId], 
-        ()=>fetch(`${api}/api/history/trash?workspaceId=${workspaceId}`, {
+        ()=> fetch(`${api}/api/history/trash?workspaceId=${workspaceId}`, {
             headers: {
                 "Gauth": getCookie('access')
             }

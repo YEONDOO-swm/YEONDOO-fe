@@ -3,7 +3,7 @@ import { Card, CardContent, FormControl, InputLabel, MenuItem, Select, ToggleBut
 import { Grid, Box, Container, InputAdornment, TextField, IconButton, Typography, Button } from "@mui/material";
 import { useState, useEffect, useRef, KeyboardEvent, MouseEvent } from "react";
 import { NumberFieldProps, Title, UserMenu, useAuthenticated, useNotify } from 'react-admin';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import * as amplitude from '@amplitude/analytics-browser';
 import { SearchTap } from "../component/searchTap";
 import { GoToArxiv } from "../component/goToArxiv";
@@ -25,6 +25,7 @@ import { CounterState } from "../reducer";
 import { useQuery } from "react-query";
 import PageLayout from "../layout/pageLayout";
 import arrow from "../asset/rightarrow.svg"
+import CustomButton from "../component/customButton";
 
 type searchResultType = {
   query?: string;
@@ -72,6 +73,9 @@ export const Home = () => {
 
     // api 설정
     const api = useSelector((state: CounterState) => state.api)
+
+    const { workspaceId } = useParams()
+    sessionStorage.setItem('workspaceId', workspaceId!)
     
     const [searchTerm, setSearchTerm] = useState<string>(""); // 사용자가 치고있는 질문
     //const [searchType, setSearchType] = useState<string>("1"); // 논문 검색인지 or 개념 질문인지
@@ -83,6 +87,15 @@ export const Home = () => {
     
     const searchInputRef: React.MutableRefObject<HTMLInputElement | null> = useRef<HTMLInputElement | null>(null); // 채팅 입력창에 포거스 주기 위해
 
+    const {data: recentData, isLoading} = useQuery(["home", workspaceId], ()=> 
+      fetch(`${api}/api/workspaceEnter?workspaceId=${workspaceId}`, {
+        headers: {
+          "Gauth": getCookie('access')
+        }
+      }).then(response => response.json())
+
+    )
+    
     const handleSearchKeyDown = (event: KeyboardEvent<HTMLInputElement>) => { // 검색어 입력 후 엔터
       if (!loading && event.key === 'Enter' && event.nativeEvent.isComposing === false){ 
         event.preventDefault();
@@ -98,7 +111,7 @@ export const Home = () => {
             amplitude.track("Home에서 검색")
           }
           
-          navigate(`/home?query=${searchTerm}`)
+          navigate(`/home/${workspaceId}?query=${searchTerm}`)
           performSearch()
           //window.location.href = `/home?query=${searchTerm}&type=${searchType}`
       }
@@ -118,12 +131,12 @@ export const Home = () => {
         amplitude.track("Home에서 검색")
       }
       
-      navigate(`/home?query=${searchTerm}`)
+      navigate(`/home/${workspaceId}?query=${searchTerm}`)
       performSearch()
 
   }
 
-  const workspaceId = Number(sessionStorage.getItem("workspaceId"));
+  //const workspaceId = Number(sessionStorage.getItem("workspaceId"));
 
   
 
@@ -248,11 +261,11 @@ export const Home = () => {
     )
   }
 
-  const recentPaper = () => (
+  const recentPaper = (recentlyPapers: any) => (
     <Box sx={{height: '55px', width: '82%', borderRadius: '10px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)',
       display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 2, mb: 1}}>
           <Typography sx={{fontWeight: 500}}>
-            Paper Title
+            {recentlyPapers.title}
           </Typography>
           <Box sx={{display: 'flex'}}>
             <Typography sx={{fontWeight: 500, color: '#617F5B'}}>More</Typography>
@@ -273,20 +286,23 @@ export const Home = () => {
   )
 
   const trend = (title: string, year: string) => (
-    <Box sx={{display: 'flex', justifyContent: 'space-between', py: 1}}>
-      <Box>
-        <Typography sx={{mb: 1, color: '#333', fontWeight: '600', fontSize: '18px'}}>
-          {title}
-        </Typography>
-        <Typography sx={{color: '#666', fontSize: '15px'}}>
-          {year}
-        </Typography>
+    <>
+      <Box sx={{display: 'flex', justifyContent: 'space-between', py: 1}}>
+        <Box>
+          <Typography sx={{mb: 1, color: '#333', fontWeight: '600', fontSize: '18px'}}>
+            {title}
+          </Typography>
+          <Typography sx={{color: '#666', fontSize: '15px'}}>
+            {year}
+          </Typography>
+        </Box>
+        <Box sx={{display: 'flex', alignItems: 'center'}}>
+          <Typography sx={{fontWeight: 500, color: '#617F5B'}}>More</Typography>
+          <img src={arrow}/>
+        </Box>
       </Box>
-      <Box sx={{display: 'flex', alignItems: 'center'}}>
-        <Typography sx={{fontWeight: 500, color: '#617F5B'}}>More</Typography>
-        <img src={arrow}/>
-      </Box>
-    </Box>
+      <hr style={{backgroundColor: '#ddd', height: '1px', border: 0}}/>
+    </>
   )
 
   useEffect(() => {
@@ -355,8 +371,8 @@ export const Home = () => {
     )):(
       <Box sx={{ml: '12.5vw', mt: 5}}>
         {subTitle('Recently papers')}
-        {recentPaper()}
-        {recentPaper()}
+        {recentData && recentData.recentlyPapers && recentPaper(recentData.recentlyPapers[0])}
+        {recentData && recentData.recentlyPapers && recentPaper(recentData.recentlyPapers[0])}
         <Box sx={{display: 'flex', mt: 5}}>
           <Box sx={{width: '30.5vw'}}>
             {subTitle('Recommended papers')}
@@ -366,36 +382,40 @@ export const Home = () => {
                 <Box sx={{fontWeight: '600', fontSize: '18px'}}>Paper title</Box>
                 <Box sx={{ marginTop: '-5px', display: 'flex', alignItems: 'center'}}>
                   <HeartClick currentItem={examplePaper} paperlike={false} />
-                  <Typography sx={{color: '#617F5B', fontWeight: '600'}}>3</Typography>
+                  <Typography sx={{color: '#617F5B', fontWeight: '600'}}>{recentData && recentData.recommendedPapers[0].likes}</Typography>
                 </Box>
               </Box>
               <Box sx={{display: 'flex', mb: 1.5}}>
-                {tag('Tag')}
-                {tag('Tag')}
-                {tag('Tag')}
+                {recentData && recentData.recommendedPapers[0].subject.map((sub: string) => (
+                    tag(sub)
+                ))}
+                {/* {tag('Tag')}
+                {tag('Tag')} */}
               </Box>
               <Box sx={{display: 'flex', mb: 1.5}}>
-                <Typography sx={{fontWeight: '500', mr: 1}}> author </Typography>
-                <Typography sx={{color: '#666'}}> 2019.12.3</Typography>
+                <Typography sx={{fontWeight: '500', mr: 1, display: 'flex'}}> {recentData && recentData.recommendedPapers[0].authors.map((author: string) => author)} </Typography>
+                <Typography sx={{color: '#666'}}> 
+                  {recentData && recentData.recommendedPapers[0].year}
+                </Typography>
               </Box>
               <Box sx={{color: '#666', mb: 1.5}}>
-                Abstract Abstract Abstract Abstract Abstract Abstract
+                {recentData && recentData.recommendedPapers[0].summary}
               </Box>
-              <Box sx={{borderRadius: '8px', bgcolor: '#617F5B', display: 'flex', justifyContent: 'center', py: '13px',
-                color: 'white', fontWeight: '700'}}>
-                Chat with AI
-              </Box>
+              <CustomButton title="Chat with AI" width="100%" click={()=>navigate('/paperstorage')}/>
             </Box>
           </Box>
           <Box sx={{width: '30vw'}}>
             {subTitle('Recent trends')}
             <Box sx={{width: '27.5vw', height: '32vh', borderRadius: '20px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)',
             px:3, py: 1}}>
-              {trend('title', '2021.09.12')}
+              {recentData && recentData.recentlyTrends.map((item: any) => (
+                trend(item.title, item.year)
+              ))}
+              {/* {trend('title', '2021.09.12')}
               <hr style={{backgroundColor: '#ddd', height: '1px', border: 0}}/>
-              {trend('title', '2021.09.12')}
-              <hr style={{backgroundColor: '#ddd', height: '1px', border: 0}}/>
-              {trend('title', '2021.09.12')}
+              {trend('title', '2021.09.12')} */}
+              {/* <hr style={{backgroundColor: '#ddd', height: '1px', border: 0}}/>
+              {trend('title', '2021.09.12')} */}
             </Box>
           </Box>
         </Box>
