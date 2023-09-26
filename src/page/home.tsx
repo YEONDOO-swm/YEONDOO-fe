@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Card, CardContent, FormControl, InputLabel, MenuItem, Select, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { Grid, Box, Container, InputAdornment, TextField, IconButton, Typography, Button } from "@mui/material";
+import { Box, Container, InputAdornment, TextField, IconButton, Typography, Button } from "@mui/material";
 import { useState, useEffect, useRef, KeyboardEvent, MouseEvent } from "react";
 import { NumberFieldProps, Title, UserMenu, useAuthenticated, useNotify } from 'react-admin';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -8,16 +8,11 @@ import * as amplitude from '@amplitude/analytics-browser';
 import { SearchTap } from "../component/searchTap";
 import { GoToArxiv } from "../component/goToArxiv";
 import { GoToViewMore } from "../component/goToViewMore";
-import { UserProfileCheck } from "../component/userProfileCheck";
 import { HeartClick } from "../component/heartClick";
 import loadingStyle from "../layout/loading.module.css";
 import scrollStyle from "../layout/scroll.module.css";
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { color } from "../layout/color";
 import MetaTag from "../SEOMetaTag";
-import ScoreSlider from "../component/scoreSlider";
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import * as Sentry from '@sentry/react';
 import { getCookie, setCookie } from "../cookie";
 import { useSelector } from "react-redux";
@@ -74,8 +69,11 @@ export const Home = () => {
     // api 설정
     const api = useSelector((state: CounterState) => state.api)
 
+    const [currentIndex, setCurrentIndex] = useState(0);
+
     const { workspaceId } = useParams()
     sessionStorage.setItem('workspaceId', workspaceId!)
+    const workspaceTitle = sessionStorage.getItem('workspaceTitle')
     
     const [searchTerm, setSearchTerm] = useState<string>(""); // 사용자가 치고있는 질문
     //const [searchType, setSearchType] = useState<string>("1"); // 논문 검색인지 or 개념 질문인지
@@ -93,8 +91,18 @@ export const Home = () => {
           "Gauth": getCookie('access')
         }
       }).then(response => response.json())
-
     )
+
+    useEffect(()=> {
+      if (recentData) {
+        const timer = setInterval(()=> {
+          console.log(recentData)
+          setCurrentIndex((prevIndex) => (prevIndex + 1) % recentData.recommendedPapers.length)
+        }, 5000)
+
+        return () => clearInterval(timer)
+      }
+    }, [recentData])
     
     const handleSearchKeyDown = (event: KeyboardEvent<HTMLInputElement>) => { // 검색어 입력 후 엔터
       if (!loading && event.key === 'Enter' && event.nativeEvent.isComposing === false){ 
@@ -268,7 +276,9 @@ export const Home = () => {
             {recentlyPapers.title}
           </Typography>
           <Box sx={{display: 'flex'}}>
-            <Typography sx={{fontWeight: 500, color: '#617F5B'}}>More</Typography>
+            <Typography sx={{fontWeight: 500, color: '#617F5B', cursor: 'pointer', '&:hover':{
+              color: '#445142'
+            }}}>More</Typography>
             <img src={arrow}/>
           </Box>
         </Box>
@@ -332,7 +342,7 @@ export const Home = () => {
           <UserMenu/>
         </Box>
         <Typography sx={{ml: '12.5vw', fontSize: '25px', fontWeight: '600'}}>
-          Workspace title
+          {workspaceTitle}
         </Typography>
         <Box sx={{display: 'flex', margin: '30px auto', justifyContent: 'center', alignItems: 'center'}}>
             <SearchTap
@@ -372,34 +382,40 @@ export const Home = () => {
       <Box sx={{ml: '12.5vw', mt: 5}}>
         {subTitle('Recently papers')}
         {recentData && recentData.recentlyPapers && recentPaper(recentData.recentlyPapers[0])}
-        {recentData && recentData.recentlyPapers && recentPaper(recentData.recentlyPapers[0])}
+        {recentData && recentData.recentlyPapers && recentPaper(recentData.recentlyPapers[1])}
         <Box sx={{display: 'flex', mt: 5}}>
           <Box sx={{width: '30.5vw'}}>
             {subTitle('Recommended papers')}
             <Box sx={{width: '27.5vw', height: '32vh', borderRadius: '20px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)',
             p:3}}>
               <Box sx={{display: 'flex', justifyContent: 'space-between', mb: 2}}>
-                <Box sx={{fontWeight: '600', fontSize: '18px'}}>Paper title</Box>
+                <Box sx={{fontWeight: '600', fontSize: '18px'}}>
+                  {recentData && recentData.recommendedPapers[currentIndex].title}
+                </Box>
                 <Box sx={{ marginTop: '-5px', display: 'flex', alignItems: 'center'}}>
                   <HeartClick currentItem={examplePaper} paperlike={false} />
-                  <Typography sx={{color: '#617F5B', fontWeight: '600'}}>{recentData && recentData.recommendedPapers[0].likes}</Typography>
+                  <Typography sx={{color: '#617F5B', fontWeight: '600'}}>{recentData && recentData.recommendedPapers[currentIndex].likes}</Typography>
                 </Box>
               </Box>
               <Box sx={{display: 'flex', mb: 1.5}}>
-                {recentData && recentData.recommendedPapers[0].subject.map((sub: string) => (
+                {recentData && recentData.recommendedPapers[currentIndex].subject.map((sub: string) => (
                     tag(sub)
                 ))}
                 {/* {tag('Tag')}
                 {tag('Tag')} */}
               </Box>
               <Box sx={{display: 'flex', mb: 1.5}}>
-                <Typography sx={{fontWeight: '500', mr: 1, display: 'flex'}}> {recentData && recentData.recommendedPapers[0].authors.map((author: string) => author)} </Typography>
+                <Typography sx={{fontWeight: '500', mr: 1, display: 'flex'}}> 
+                  {recentData && (recentData.recommendedPapers[currentIndex].authors.length > 3 
+                  ? recentData.recommendedPapers[currentIndex].authors.slice(3).join(', ')
+                  : recentData.recommendedPapers[currentIndex].authors.join(', '))} 
+                </Typography>
                 <Typography sx={{color: '#666'}}> 
-                  {recentData && recentData.recommendedPapers[0].year}
+                  {recentData && recentData.recommendedPapers[currentIndex].year}
                 </Typography>
               </Box>
               <Box sx={{color: '#666', mb: 1.5}}>
-                {recentData && recentData.recommendedPapers[0].summary}
+                {recentData && recentData.recommendedPapers[currentIndex].summary}
               </Box>
               <CustomButton title="Chat with AI" width="100%" click={()=>navigate('/paperstorage')}/>
             </Box>

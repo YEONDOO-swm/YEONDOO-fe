@@ -183,7 +183,8 @@ const Workspaces = () => {
         }).then((response) => response)
     }
 
-    const goToWorkspace = (workspaceId: number) => {
+    const goToWorkspace = (workspaceId: number, workspaceTitle: string) => {
+        sessionStorage.setItem('workspaceTitle', workspaceTitle)
         navigate(`/home/${workspaceId}`)
     }
 
@@ -202,11 +203,11 @@ const Workspaces = () => {
       };
 
     const card = (title: string, desc: string, date: string, wId: number) => (
-        <Box onClick={()=>goToWorkspace(wId)}>
+        <Box>
             <Box sx={{width: '320px', height: '210px', bgcolor: 'white', borderRadius: '20px', border: '1px solid #ddd',
             boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)'
             ,p: 3, mr: 3, mb: 3, display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
-                <Box>
+                <Box onClick={()=>goToWorkspace(wId, title)}>
                     <Typography sx={{color: '#333', fontSize: '18px', fontWeight: '600', mb: 2}}>{title}</Typography>
                     <Typography sx={{color: '#666', fontSize: '15px', fontWeight: '400', mb: 2}}>{desc}</Typography>
                 </Box>
