@@ -34,6 +34,7 @@ import {
 import { useDispatch } from "react-redux";
 import { SET_API } from './reducer';
 import PdfViewer from './component/pdfViewer/pdfViewer';
+import Workspaces from './page/workspaces';
 
 amplitude.init('fa2f5340585a6728ae2103fb05e56bec', {
     defaultTracking: {
@@ -52,7 +53,7 @@ export const App = () => {
         RouteChangeTracker()
     }
 
-    var api = '';
+    var api = ''; //var은 웬만해선x
     if (process.env.NODE_ENV === 'development'){
       api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
     }
@@ -67,7 +68,6 @@ export const App = () => {
             type: SET_API,
             data: api
         })
-        sessionStorage.setItem('workspaceId', "1")
     }, [])
     
     return (
@@ -92,7 +92,7 @@ export const App = () => {
                         <CustomRoutes>
                             {/* <Route path="/" element={<Navigate to="/home" replace />} /> */}
                             
-                            <Route path="/home" element={< Home />}/>
+                            <Route path="/home/:workspaceId" element={< Home />}/>
                             <Route path="/paperstorage" element={< PaperStorage/>}/>
                             <Route path="/history" element={< History />}/>
                             <Route path="/userprofile" element={< UserProfile />}/>
@@ -100,6 +100,7 @@ export const App = () => {
                             <Route path="/historypaper" element={< HistoryPaper />} />
                             <Route path="/historytrash" element={< Trash />} />
                             <Route path="/pdfviewer" element={< PdfViewer />} />
+                            <Route path="/workspaces" element={<Workspaces/>} />
                         </CustomRoutes>
                     </Admin>
                 </CookiesProvider>

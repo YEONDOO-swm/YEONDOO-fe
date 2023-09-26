@@ -17,6 +17,7 @@ import { getCookie, setCookie } from "../cookie";
 import { useSelector } from "react-redux";
 import { CounterState } from "../reducer";
 import { useMutation, useQuery } from "react-query";
+import PageLayout from "../layout/pageLayout";
 
 type papersInTrashType = {
     paperId: string;
@@ -38,7 +39,7 @@ export const Trash = () => {
     const navigate = useNavigate()
 
     const { data: papersInTrash, isLoading } = useQuery(["trash", workspaceId], 
-        ()=>fetch(`${api}/api/history/trash?workspaceId=${workspaceId}`, {
+        ()=> fetch(`${api}/api/history/trash?workspaceId=${workspaceId}`, {
             headers: {
                 "Gauth": getCookie('access')
             }
@@ -175,7 +176,7 @@ export const Trash = () => {
     }
 
     return (
-        <div>
+        <PageLayout workspace={true} number={3}>
             <MetaTag title="Papers in Trash - Yeondoo" description="사용자가 관심 해제한 논문의 리스트를 볼 수 있고, 복구할 수 있습니다." keywords="히스토리, 관심 해제, 복구, 논문"/>
             <Title title="History"/>
             <Box sx={{height: 50}}></Box>
@@ -243,6 +244,6 @@ export const Trash = () => {
                 )
             )}
         
-        </div>
+        </PageLayout>
     )
 }

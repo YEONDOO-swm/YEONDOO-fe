@@ -14,6 +14,7 @@ import { getCookie, setCookie } from '../cookie';
 import { useSelector } from 'react-redux';
 import { CounterState } from '../reducer';
 import { useQuery } from 'react-query';
+import PageLayout from '../layout/pageLayout';
 
 type paperHistory = {
   paperId: string;
@@ -91,7 +92,7 @@ export const HistoryPaper = () => {
 
     }, [])
     return (
-        <Box>
+        <PageLayout workspace={true} number={3}>
             <MetaTag title="History - Yeondoo" description="사용자가 했던 모든 논문 내 질의를 보고, 찾을 수 있습니다." keywords="히스토리, 논문, 논문 내 질의, AI, AI와 함께 논문읽기, history"/>
             <Title title="History" />
             <Box sx={{height: 50}}></Box>
@@ -169,6 +170,6 @@ export const HistoryPaper = () => {
 </Box>
 
             )}
-        </Box>
+        </PageLayout>
     )
 }

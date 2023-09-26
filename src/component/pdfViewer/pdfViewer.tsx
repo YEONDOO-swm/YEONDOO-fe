@@ -50,6 +50,8 @@ const PdfViewer = () => {
       : [],
   });
 
+  const [scrollViewerTo, setScrollViewerTo] = useState(() => {})
+
   // const resetHighlights = () => {
   //   setState({
   //     url: state.url,
@@ -67,7 +69,7 @@ const PdfViewer = () => {
   //   });
   // };
 
-  const scrollViewerTo = (highlight:any) => {};
+  // const scrollViewerTo = (highlight:any) => {};
 
   // const scrollToHighlightFromHash = () => {
   //   const highlight = getHighlightById(parseIdFromHash());
@@ -151,7 +153,7 @@ const PdfViewer = () => {
                 // onScrollChange={resetHash}
                 // pdfScaleValue="page-width"
                 scrollRef={(scrollTo) => {
-                  // this.scrollViewerTo = scrollTo; // useState 써서 바꾸어야 함
+                  setScrollViewerTo(() => {scrollTo}); // useState 써서 바꾸어야 함
 
                   // scrollToHighlightFromHash();
                 }}

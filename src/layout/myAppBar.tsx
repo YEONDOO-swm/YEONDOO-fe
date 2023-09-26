@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AppBar, TitlePortal, useNotify } from 'react-admin';
+import { TitlePortal, useNotify, AppBar } from 'react-admin';
 import Box from '@mui/material/Box';
 import { Typography, styled, alpha,  ToggleButtonGroup } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
@@ -9,6 +9,8 @@ import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import * as amplitude from '@amplitude/analytics-browser';
 import MuiToggleButton from "@mui/material/ToggleButton";
+// import AppBar from '@material-ui/core/AppBar';
+
 
 
 
@@ -104,39 +106,52 @@ export const MyAppBar = () => {
     //   newType: string) => {
     //   setSearchType(newType)
     // }
+    // return (<Box sx={{width: '0%'}}></Box>)
+    const appBarStyle = {
+      minHeight: 0,
+    visibility: 'hidden',
+    overflow: 'hidden',
+    position: 'fixed',
+    top: '0',
+    left: '0',
+    right: '0',
+    zIndex: '-1',
+    };
+  
+    return <AppBar variant="elevation"  />;
 
-    return (<AppBar >
-      <TitlePortal />
-      {location.pathname !== '/home' && (
-        <>
-          {/* <ToggleButtonGroup
-          size="small"
-          sx={{backgroundColor: alpha('#FFFFFF', 0.25),
-          }}
-          value={searchType}
-          exclusive
-          onChange={handleChangeSearchType}
+    // return (<AppBar >
+    //   <TitlePortal />
+    //   {location.pathname !== '/home' && (
+    //     <>
+    //       {/* <ToggleButtonGroup
+    //       size="small"
+    //       sx={{backgroundColor: alpha('#FFFFFF', 0.25),
+    //       }}
+    //       value={searchType}
+    //       exclusive
+    //       onChange={handleChangeSearchType}
           
-          >  
-            <ToggleButton value="1" >논문 제목 검색</ToggleButton>
-            <ToggleButton value="2" sx={{}}>개념 질문</ToggleButton>
-          </ToggleButtonGroup> */}
-          <Typography variant='h6' sx={{mx: 2}}>
-            <Search>
-                <SearchIconWrapper>
-                  <SearchIcon />
-                </SearchIconWrapper>
-                <StyledInputBase
-                  placeholder="Paper Search"
-                  value={searchTerm}
-                  onChange={handleChange}
-                  onKeyDown={handleSearchKeyDown}
-                  inputProps={{ 'aria-label': 'search' }}
-                />
-              </Search>
-          </Typography>
-        </>
-      )}
-    </AppBar> )
+    //       >  
+    //         <ToggleButton value="1" >논문 제목 검색</ToggleButton>
+    //         <ToggleButton value="2" sx={{}}>개념 질문</ToggleButton>
+    //       </ToggleButtonGroup> */}
+    //       <Typography variant='h6' sx={{mx: 2}}>
+    //         <Search>
+    //             <SearchIconWrapper>
+    //               <SearchIcon />
+    //             </SearchIconWrapper>
+    //             <StyledInputBase
+    //               placeholder="Paper Search"
+    //               value={searchTerm}
+    //               onChange={handleChange}
+    //               onKeyDown={handleSearchKeyDown}
+    //               inputProps={{ 'aria-label': 'search' }}
+    //             />
+    //           </Search>
+    //       </Typography>
+    //     </>
+    //   )}
+    // </AppBar> )
 };
   

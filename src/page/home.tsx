@@ -1,15 +1,10 @@
 import * as React from "react";
 import { Card, CardContent, FormControl, InputLabel, MenuItem, Select, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { Grid, Box, Container, InputAdornment, TextField, IconButton, Typography, Button } from "@mui/material";
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useState, useEffect, useRef, KeyboardEvent, MouseEvent } from "react";
-import SearchIcon from "@mui/icons-material/Search";
-import { NumberFieldProps, Title, useAuthenticated, useNotify } from 'react-admin';
-import { useNavigate } from 'react-router-dom';
+import { NumberFieldProps, Title, UserMenu, useAuthenticated, useNotify } from 'react-admin';
+import { useNavigate, useParams } from 'react-router-dom';
 import * as amplitude from '@amplitude/analytics-browser';
-import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { SearchTap } from "../component/searchTap";
 import { GoToArxiv } from "../component/goToArxiv";
 import { GoToViewMore } from "../component/goToViewMore";
@@ -19,7 +14,6 @@ import loadingStyle from "../layout/loading.module.css";
 import scrollStyle from "../layout/scroll.module.css";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { color } from "../layout/color";
-import CopyClick from "../component/copyClick";
 import MetaTag from "../SEOMetaTag";
 import ScoreSlider from "../component/scoreSlider";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -29,6 +23,9 @@ import { getCookie, setCookie } from "../cookie";
 import { useSelector } from "react-redux";
 import { CounterState } from "../reducer";
 import { useQuery } from "react-query";
+import PageLayout from "../layout/pageLayout";
+import arrow from "../asset/rightarrow.svg"
+import CustomButton from "../component/customButton";
 
 type searchResultType = {
   query?: string;
@@ -50,6 +47,22 @@ export type paperType = {
   url: string;
 }
 
+const examplePaper = {
+  paperId: '123',
+  title: 'attejtion',
+  summary: 'summary12423',
+  likes: 1,
+  isLike: false,
+  authors: [
+    'author1',
+    'author2'
+  ],
+  year: 1902,
+  conference: 'world conf',
+  cites: 123,
+  url: 'https://yeondoo.net',
+}
+
 export const Home = () => {
     // 유효성 검사
     useAuthenticated();
@@ -60,6 +73,9 @@ export const Home = () => {
 
     // api 설정
     const api = useSelector((state: CounterState) => state.api)
+
+    const { workspaceId } = useParams()
+    sessionStorage.setItem('workspaceId', workspaceId!)
     
     const [searchTerm, setSearchTerm] = useState<string>(""); // 사용자가 치고있는 질문
     //const [searchType, setSearchType] = useState<string>("1"); // 논문 검색인지 or 개념 질문인지
@@ -67,9 +83,19 @@ export const Home = () => {
 
     const [loading, setLoading] = useState<boolean>(false);
     const [expandedPaperArray, setExpandedPaperArray] = useState<string[]>([]) // abstract 열려있는 논문 모음
-
+    const [isSearched, setIsSearched] = useState<boolean>(false)
+    
     const searchInputRef: React.MutableRefObject<HTMLInputElement | null> = useRef<HTMLInputElement | null>(null); // 채팅 입력창에 포거스 주기 위해
 
+    const {data: recentData, isLoading} = useQuery(["home", workspaceId], ()=> 
+      fetch(`${api}/api/workspaceEnter?workspaceId=${workspaceId}`, {
+        headers: {
+          "Gauth": getCookie('access')
+        }
+      }).then(response => response.json())
+
+    )
+    
     const handleSearchKeyDown = (event: KeyboardEvent<HTMLInputElement>) => { // 검색어 입력 후 엔터
       if (!loading && event.key === 'Enter' && event.nativeEvent.isComposing === false){ 
         event.preventDefault();
@@ -85,7 +111,7 @@ export const Home = () => {
             amplitude.track("Home에서 검색")
           }
           
-          navigate(`/home?query=${searchTerm}`)
+          navigate(`/home/${workspaceId}?query=${searchTerm}`)
           performSearch()
           //window.location.href = `/home?query=${searchTerm}&type=${searchType}`
       }
@@ -100,62 +126,30 @@ export const Home = () => {
         notify("Please enter your search term", {type: 'error'})
         return
       }
-      // if (!searchType) {
-      //   notify("Please select a search type", {type: 'error'})
-      //   return
-      // }
       if (process.env.NODE_ENV === 'production') {
             
         amplitude.track("Home에서 검색")
       }
       
-      navigate(`/home?query=${searchTerm}`)
+      navigate(`/home/${workspaceId}?query=${searchTerm}`)
       performSearch()
-      //window.location.href = `/home?query=${searchTerm}&type=${searchType}`
+
   }
 
-  const workspaceId = Number(sessionStorage.getItem("workspaceId"));
+  //const workspaceId = Number(sessionStorage.getItem("workspaceId"));
 
   
 
   const performSearch = async () => { // 검색 과정
       try {
           setLoading(true)
+          setIsSearched(true)
           const query: URLSearchParams = new URLSearchParams(window.location.search); 
           const performSearchTerm: string = query.get('query') || '';
-          // const performSearchType: string = query.get('type') || '';
-          // if (performSearchType === '2') {
-          //   setSearchResults('type2')
-          //   return
-          // }
-
           /*useQuery는 get일 때 쓸 수 있다. 하지만 최상단에 훅이 위치해 있어야 한다. 이경우 performSearchTerm이 이 함수안에서만
           접근할 수 있다. 그리고 어차피 searchResults가 다른 곳에서도 업데이트가 되어야 해서 react query를 쓰는 이유가 없다.
           더하여 다른 컴포넌트에서 사용되는 값도 아니다. (다른 컴포넌트에서 사용하려면 staleTime 사용)*/
-          // const { isLoading, error } = useQuery(['homesearch', performSearchTerm, workspaceId], () => 
-          //   fetch(`${api}/api/homesearch?query=${performSearchTerm}&workspaceId=${workspaceId}&searchType=${performSearchType}`, {
-          //     headers: {
-          //       "Gauth": getCookie('access')
-          //   }}
-          //   )
-          // ,{
-          //   onSuccess: (data) => {
-          //     const response = data
-          //     response.json().then((data)=> {
-          //       setSearchResults(data)
-          //     })
-          //   },
-          //   onError: (error) => {
-          //     console.log(error)
-          //   }
-          // })
-          // if (status === 'success') {
-          //   const response = data
-          //   response.json().then((data)=> {
-          //     setSearchResults(data)
-          //   })
-          // }
-          
+
           const response: Response = await fetch(`${api}/api/homesearch?query=${performSearchTerm}&workspaceId=${workspaceId}`, {
             headers: {
               "Gauth": getCookie('access')
@@ -224,6 +218,93 @@ export const Home = () => {
     setExpandedPaperArray(expandedPaperArray.filter((paper: string) => paper !== paperId))
   }
 
+  const makePapersCard = (paper: any) => {
+    return (
+      <Card key={paper.paperId} sx={{ marginBottom: '15px', border: `1px solid ${color.mainGrey}`, padding: '15px 25px', pb: '18px', borderRadius: '15px', backgroundColor: color.mainGrey}}>      
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignContent: 'center' }}>
+          <Box sx={{ flexGrow: 1 }}>
+            <Typography variant="h6">{paper.title}</Typography>
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
+            <HeartClick currentItem={paper} onUpdateLikes={handleUpdateLikes} paperlike={paper.isLike}/>
+            <Typography variant="body2" sx={{ margin: '10px 0' }}>
+              {paper.likes}
+            </Typography>
+          </Box>
+        </Box>
+          <Typography variant="body2"> {paper.authors.slice(0,3).join(", ")} / {paper.year} </Typography>
+          <Typography variant="body2" sx={{fontWeight: 'bold', display: 'inline'}}>Abstract: </Typography>
+          {paper.summary && paper.summary.length > 400 ? (
+            !expandedPaperArray.includes(paper.paperId) ? (
+              <Typography variant="body2" sx={{ display: 'inline' }}>
+                {paper.summary.slice(0, 400)}... <span onClick={() => handleViewMoreAbstract(paper.paperId)} style={{color: color.appbarGreen, borderBottom: `1px solid ${color.appbarGreen}`, cursor: 'pointer'}}>▼ More</span>
+              </Typography>
+            ) : (
+                  <Typography variant="body2" sx={{display: 'inline'}}>{paper.summary}<span onClick={() => handleViewLessAbstract(paper.paperId)} style={{color: color.appbarGreen, borderBottom: `1px solid ${color.appbarGreen}`, cursor: 'pointer' }}>▲ Less</span>
+                </Typography>
+            )
+          ): (
+            <Box>
+              <Typography variant="body2">{paper.summary}</Typography>
+            </Box>  
+          )}
+          <Box sx = {{margin: "15px 0 0 0" , display: 'flex'}}>
+            {/* <Button variant="contained" onClick={() => handleViewPaper(paper.url) }>논문 보기</Button> */}
+            <GoToArxiv url={paper.url} paperId={paper.paperId}/>
+
+            <Box sx={{width: '15px'}}></Box>
+            <GoToViewMore paperid={paper.paperId} />
+          </Box>
+                {/* Add other details for the paper */}
+              
+      </Card>
+    )
+  }
+
+  const recentPaper = (recentlyPapers: any) => (
+    <Box sx={{height: '55px', width: '82%', borderRadius: '10px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)',
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 2, mb: 1}}>
+          <Typography sx={{fontWeight: 500}}>
+            {recentlyPapers.title}
+          </Typography>
+          <Box sx={{display: 'flex'}}>
+            <Typography sx={{fontWeight: 500, color: '#617F5B'}}>More</Typography>
+            <img src={arrow}/>
+          </Box>
+        </Box>
+  )
+
+  const subTitle = (title: string) => (
+    <Typography sx={{fontSize: '18px', fontWeight: '600', mb: 2}}>{title}</Typography>
+  )
+
+  const tag = (tag: string) => (
+    <Box sx={{padding: '2px 10px', borderRadius: '5px', border: '1px solid #ddd', fontSize: '14px',
+    display: 'inline-block', mr: 0.6}}>
+      #{tag}
+    </Box>
+  )
+
+  const trend = (title: string, year: string) => (
+    <>
+      <Box sx={{display: 'flex', justifyContent: 'space-between', py: 1}}>
+        <Box>
+          <Typography sx={{mb: 1, color: '#333', fontWeight: '600', fontSize: '18px'}}>
+            {title}
+          </Typography>
+          <Typography sx={{color: '#666', fontSize: '15px'}}>
+            {year}
+          </Typography>
+        </Box>
+        <Box sx={{display: 'flex', alignItems: 'center'}}>
+          <Typography sx={{fontWeight: 500, color: '#617F5B'}}>More</Typography>
+          <img src={arrow}/>
+        </Box>
+      </Box>
+      <hr style={{backgroundColor: '#ddd', height: '1px', border: 0}}/>
+    </>
+  )
+
   useEffect(() => {
     if (process.env.NODE_ENV === 'production') {
             
@@ -243,9 +324,16 @@ export const Home = () => {
   }, [location]);
 
     return (
-    <div style={{height: '50vh'}}>
+      <PageLayout workspace={true} number={0}>
+    <div>
         <MetaTag title="연두 홈" description="궁금한 개념 질문 또는 논문 제목 검색을 하면 답변과 관련 논문을 제공합니다." keywords="논문, 검색, 질문, 개념, gpt"/>
         <Title title="Home" />
+        <Box sx={{display: 'flex', justifyContent: 'flex-end', p:2, color: 'grey.700'}}>
+          <UserMenu/>
+        </Box>
+        <Typography sx={{ml: '12.5vw', fontSize: '25px', fontWeight: '600'}}>
+          Workspace title
+        </Typography>
         <Box sx={{display: 'flex', margin: '30px auto', justifyContent: 'center', alignItems: 'center'}}>
             <SearchTap
               searchTerm={searchTerm}
@@ -253,9 +341,10 @@ export const Home = () => {
               onSearch={handleButtonClick}
               onSearchKeyDown={handleSearchKeyDown}
               placeholder="Attention is all you need"
-              firstBoxSx={{ width: '70%'  }}
+              firstBoxSx={{ width: '70%' }}
               middleBoxSx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-              sx={{width: "100%"}} />
+              sx={{width: "100%"}}
+              heightSx={{height: '55px'}} />
         </Box>
           
           {loading ? (
@@ -268,56 +357,73 @@ export const Home = () => {
               </Box>
             
           ) :
-        (searchResults && ((searchResults.answer !== "아니아니아니") ? (
+        (searchResults ? ((isSearched) ? (
           <Box sx={{height: '75vh', margin: '0 30px 0 10px', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
             {searchResults.papers.map((paper: any) => (
-          <Card key={paper.paperId} sx={{ marginBottom: '15px', border: `1px solid ${color.mainGrey}`, padding: '15px 25px', pb: '18px', borderRadius: '15px', backgroundColor: color.mainGrey}}>
-            
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignContent: 'center' }}>
-              <Box sx={{ flexGrow: 1 }}>
-                <Typography variant="h6">{paper.title}</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
-                <HeartClick currentItem={paper} onUpdateLikes={handleUpdateLikes} paperlike={paper.isLike}/>
-                <Typography variant="body2" sx={{ margin: '10px 0' }}>
-                  {paper.likes}
-                </Typography>
-              </Box>
-            </Box>
-              <Typography variant="body2"> {paper.authors.slice(0,3).join(", ")} / {paper.year} </Typography>
-              <Typography variant="body2" sx={{fontWeight: 'bold', display: 'inline'}}>Abstract: </Typography>
-              {paper.summary && paper.summary.length > 400 ? (
-                !expandedPaperArray.includes(paper.paperId) ? (
-                  <Typography variant="body2" sx={{ display: 'inline' }}>
-                    {paper.summary.slice(0, 400)}... <span onClick={() => handleViewMoreAbstract(paper.paperId)} style={{color: color.appbarGreen, borderBottom: `1px solid ${color.appbarGreen}`, cursor: 'pointer'}}>▼ More</span>
-                  </Typography>
-                ) : (
-                      <Typography variant="body2" sx={{display: 'inline'}}>{paper.summary}<span onClick={() => handleViewLessAbstract(paper.paperId)} style={{color: color.appbarGreen, borderBottom: `1px solid ${color.appbarGreen}`, cursor: 'pointer' }}>▲ Less</span>
-                    </Typography>
-                )
-              ): (
-                <Box>
-                  <Typography variant="body2">{paper.summary}</Typography>
-                </Box>  
-              )}
-              <Box sx = {{margin: "15px 0 0 0" , display: 'flex'}}>
-                {/* <Button variant="contained" onClick={() => handleViewPaper(paper.url) }>논문 보기</Button> */}
-                <GoToArxiv url={paper.url} paperId={paper.paperId}/>
-
-                <Box sx={{width: '15px'}}></Box>
-                <GoToViewMore paperid={paper.paperId} />
-              </Box>
-              {/* Add other details for the paper */}
-            
-          </Card>))}
+              makePapersCard(paper)
+            ))}
           </Box>
         )
-: (
-  <Box sx={{m:3}}>
-    <Typography> 검색 결과가 없습니다.</Typography>
-  </Box>
-)))}
+      : (
+      <Box sx={{m:3}}>
+        <Typography> 검색 결과가 없습니다.</Typography>
+      </Box>
+    )):(
+      <Box sx={{ml: '12.5vw', mt: 5}}>
+        {subTitle('Recently papers')}
+        {recentData && recentData.recentlyPapers && recentPaper(recentData.recentlyPapers[0])}
+        {recentData && recentData.recentlyPapers && recentPaper(recentData.recentlyPapers[0])}
+        <Box sx={{display: 'flex', mt: 5}}>
+          <Box sx={{width: '30.5vw'}}>
+            {subTitle('Recommended papers')}
+            <Box sx={{width: '27.5vw', height: '32vh', borderRadius: '20px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)',
+            p:3}}>
+              <Box sx={{display: 'flex', justifyContent: 'space-between', mb: 2}}>
+                <Box sx={{fontWeight: '600', fontSize: '18px'}}>Paper title</Box>
+                <Box sx={{ marginTop: '-5px', display: 'flex', alignItems: 'center'}}>
+                  <HeartClick currentItem={examplePaper} paperlike={false} />
+                  <Typography sx={{color: '#617F5B', fontWeight: '600'}}>{recentData && recentData.recommendedPapers[0].likes}</Typography>
+                </Box>
+              </Box>
+              <Box sx={{display: 'flex', mb: 1.5}}>
+                {recentData && recentData.recommendedPapers[0].subject.map((sub: string) => (
+                    tag(sub)
+                ))}
+                {/* {tag('Tag')}
+                {tag('Tag')} */}
+              </Box>
+              <Box sx={{display: 'flex', mb: 1.5}}>
+                <Typography sx={{fontWeight: '500', mr: 1, display: 'flex'}}> {recentData && recentData.recommendedPapers[0].authors.map((author: string) => author)} </Typography>
+                <Typography sx={{color: '#666'}}> 
+                  {recentData && recentData.recommendedPapers[0].year}
+                </Typography>
+              </Box>
+              <Box sx={{color: '#666', mb: 1.5}}>
+                {recentData && recentData.recommendedPapers[0].summary}
+              </Box>
+              <CustomButton title="Chat with AI" width="100%" click={()=>navigate('/paperstorage')}/>
+            </Box>
+          </Box>
+          <Box sx={{width: '30vw'}}>
+            {subTitle('Recent trends')}
+            <Box sx={{width: '27.5vw', height: '32vh', borderRadius: '20px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)',
+            px:3, py: 1}}>
+              {recentData && recentData.recentlyTrends.map((item: any) => (
+                trend(item.title, item.year)
+              ))}
+              {/* {trend('title', '2021.09.12')}
+              <hr style={{backgroundColor: '#ddd', height: '1px', border: 0}}/>
+              {trend('title', '2021.09.12')} */}
+              {/* <hr style={{backgroundColor: '#ddd', height: '1px', border: 0}}/>
+              {trend('title', '2021.09.12')} */}
+            </Box>
+          </Box>
+        </Box>
+
+      </Box>
+    ))}
     </div>
+    </PageLayout>
     )
 };
 

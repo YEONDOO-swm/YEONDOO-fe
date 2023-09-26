@@ -51,26 +51,26 @@ export const SearchTap: React.FC<SearchTapProps> = ({
                 <TextField
                 id="search"
                 type="search"
+                variant="outlined"
                 multiline
                 inputProps={{
                   maxLength: maxLengthLimit,
                 }}
                 inputRef={searchInputRef}
                 placeholder={placeholder}
-                label="Search"
                 value={searchTerm}
                 onChange={handleChange}
                 onKeyDown={onSearchKeyDown}
-                sx={{ ...sx }}
+                sx={{ ...sx, color: '#617F5B'}}
                 InputProps={{
                     endAdornment: (
                     <InputAdornment position="end">
                         <IconButton onClick={onSearch}>
-                        <SearchIcon />
+                        <SearchIcon sx={{color: '#617F5B'}}/>
                         </IconButton>
                     </InputAdornment>
                     ),
-                    sx: {...heightSx}
+                    sx: {...heightSx, border: '1px solid #617F5B', borderRadius: '10px'}
                 }}
                 />
         </Box>

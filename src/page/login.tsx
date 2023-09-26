@@ -17,8 +17,6 @@ type loginPayload = {
 }
 
 export const Login = () => {
-    const queryClient = useQueryClient()
-
     const api: string = useSelector((state: CounterState) => state.api)
 
     const notify = useNotify()
@@ -54,7 +52,7 @@ export const Login = () => {
 
                 response.json().then((data)=> {
                     setCookie('username', data.username)
-                    window.location.href = "/home"
+                    window.location.href = "/workspaces"
                 }).catch(error => console.log(error))
             }
         }

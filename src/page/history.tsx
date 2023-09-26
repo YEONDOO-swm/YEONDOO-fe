@@ -19,6 +19,7 @@ import { getCookie, setCookie } from "../cookie";
 import { useSelector } from "react-redux";
 import { CounterState } from "../reducer";
 import { useQuery } from "react-query";
+import PageLayout from "../layout/pageLayout";
 
 type historySearchType = {
     results: resultType[]
@@ -97,7 +98,7 @@ export const History = () => {
     
     return (
 
-    <div>
+    <PageLayout workspace={true} number={3}>
         <MetaTag title="History - Yeondoo" description="사용자가 전체 검색했던 내용을 보고, 찾을 수 있습니다." keywords="히스토리, 검색결과, 검색, 전체검색, history, yeondoo, 연두"/>
         <Title title="History"/>
         <Box sx={{height: 50}}></Box>
@@ -127,5 +128,5 @@ export const History = () => {
             
         </Box>
         )}
-    </div>
+    </PageLayout>
 )};
