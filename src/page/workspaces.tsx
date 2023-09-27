@@ -115,7 +115,7 @@ const Workspaces = () => {
             title: workspace && workspace.title,
             description: workspace && workspace.description,
             studyField: workspace && workspace.workspaceField,
-            keywords: workspace && workspace.workspaceKeyword
+            keywords: workspace && [workspace.workspaceKeyword]
         }
         fetch(`${api}/api/workspace/workspaceCRUD`, {
             method: 'POST',
