@@ -5,7 +5,9 @@ const CustomButton = ({title, width, click}: {title: string, width: string, clic
   return (
     <Box sx={{ width: width,
       borderRadius: '8px', bgcolor: '#617F5B', display: 'flex', justifyContent: 'center', py: '13px',
-      color: 'white', fontWeight: '700'}}
+      color: 'white', fontWeight: '700', cursor: 'pointer', '&:hover':{
+        bgcolor: '#445142'
+      }}}
       onClick={click}>
       {title}
     </Box>
