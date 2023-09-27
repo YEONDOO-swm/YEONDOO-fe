@@ -18,7 +18,7 @@ type workspaceEdit = {
     title?: string;
     description?: string;
     workspaceField?: string;
-    workspaceKeyword?: string;
+    workspaceKeyword?: string[];
     editDate?: string;
     workspaceId?: number;
 }
@@ -27,7 +27,7 @@ const initWorkspaceEdit = {
     title: '',
     description: '',
     workspaceField: '',
-    workspaceKeyword: '',
+    workspaceKeyword: [],
     editDate: '',
     workspaceId: 0
 }
@@ -115,7 +115,7 @@ const Workspaces = () => {
             title: workspace && workspace.title,
             description: workspace && workspace.description,
             studyField: workspace && workspace.workspaceField,
-            keywords: workspace && [workspace.workspaceKeyword]
+            keywords: workspace && workspace.workspaceKeyword
         }
         fetch(`${api}/api/workspace/workspaceCRUD`, {
             method: 'POST',
@@ -302,8 +302,8 @@ const Workspaces = () => {
                         <MenuItem value="직접 입력">직접 입력</MenuItem>
                     </Select>
                 </Box>
-                {!isEdit && workspaceTextField('Workspace Keywords or Interests', workspace!.workspaceKeyword!, (event: ChangeEvent<HTMLInputElement>)=>{setWorkspace({...workspace, workspaceKeyword: event.target.value})})}
-                {isEdit && workspaceTextField('Workspace Keywords or Interests', curEditItem!.workspaceKeyword!, (event: ChangeEvent<HTMLInputElement>)=>{setCurEditItem({...curEditItem, workspaceKeyword: event.target.value})})}
+                {!isEdit && workspaceTextField('Workspace Keywords or Interests', workspace!.workspaceKeyword![0], (event: ChangeEvent<HTMLInputElement>)=>{setWorkspace({...workspace, workspaceKeyword: [event.target.value]})})}
+                {isEdit && workspaceTextField('Workspace Keywords or Interests', curEditItem!.workspaceKeyword![0], (event: ChangeEvent<HTMLInputElement>)=>{setCurEditItem({...curEditItem, workspaceKeyword: [event.target.value]})})}
                 <Box sx={{display: 'flex', justifyContent: 'flex-end', mt: 5}}>
                     {!isEdit && <CustomButton title="Create new workspace" width= '200px' click={handleSubmitWorkspace} />}
                     {isEdit && <CustomButton title="Edit" width= '100px' click={()=>handleEditWorkspace(curEditItem!.workspaceId!)} />}
