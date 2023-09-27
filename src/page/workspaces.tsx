@@ -13,12 +13,13 @@ import { getCookie, setCookie } from '../cookie'
 import { useNavigate } from 'react-router-dom'
 import * as Sentry from '@sentry/react';
 import CustomButton from '../component/customButton'
+import { studyFieldList } from '../sutdyFieldList'
 
 type workspaceEdit = {
     title?: string;
     description?: string;
-    workspaceField?: string;
-    workspaceKeyword?: string[];
+    studyField?: string;
+    keywords?: string[];
     editDate?: string;
     workspaceId?: number;
 }
@@ -26,8 +27,8 @@ type workspaceEdit = {
 const initWorkspaceEdit = {
     title: '',
     description: '',
-    workspaceField: '',
-    workspaceKeyword: [],
+    studyField: '',
+    keywords: [''],
     editDate: '',
     workspaceId: 0
 }
@@ -46,8 +47,8 @@ const Workspaces = () => {
     const [isEdit, setIsEdit] = useState<boolean>(false)
     // const [title, settitle] = useState<string>('')
     // const [description, setdescription] = useState<string>('')
-    // const [workspaceField, setWorkspaceField] = useState<string>("")
-    // const [workspaceKeyword, setWorkspaceKeyword] = useState<string>("")
+    // const [studyField, setstudyField] = useState<string>("")
+    // const [keywords, setkeywords] = useState<string>("")
     // const [addIds, setAddIds] = useState<number>()
     // const [addDate, setAddDate] = useState<string>('')
     const [workspace, setWorkspace] = useState<workspaceEdit>(initWorkspaceEdit)
@@ -114,8 +115,8 @@ const Workspaces = () => {
         const payload = {
             title: workspace && workspace.title,
             description: workspace && workspace.description,
-            studyField: workspace && workspace.workspaceField,
-            keywords: workspace && workspace.workspaceKeyword
+            studyField: workspace && workspace.studyField,
+            keywords: workspace && workspace.keywords
         }
         fetch(`${api}/api/workspace/workspaceCRUD`, {
             method: 'POST',
@@ -173,14 +174,16 @@ const Workspaces = () => {
 
     const handleEditWorkspace = (workspaceId: number) => {
         setOpen(false)
-        setWorkspacesArr((prevArr) => prevArr.map((workspace) => (workspace.workspaceId === workspaceId ? curEditItem : workspace)));
+        
 
         fetch(`${api}/api/workspace/workspaceCRUD?workspaceId=${workspaceId}`, {
             method: 'PUT',
             headers : { 'Content-Type' : 'application/json',
             'Gauth': getCookie('access') },
             body: JSON.stringify(curEditItem)
-        }).then((response) => response)
+        }).then((response) => {
+            setWorkspacesArr((prevArr) => prevArr.map((workspace) => (workspace.workspaceId === workspaceId ? curEditItem : workspace)));
+        })
     }
 
     const goToWorkspace = (workspaceId: number, workspaceTitle: string) => {
@@ -290,20 +293,24 @@ const Workspaces = () => {
                         Workspace Research Field
                     </Typography>
                     <Select
-                        value={isEdit?curEditItem!.workspaceField :workspace!.workspaceField}
-                        onChange={isEdit?(event: SelectChangeEvent<string>) => {setCurEditItem({...curEditItem, workspaceField: event.target.value})}
-                            :(event: SelectChangeEvent<string>) => {setWorkspace({...workspace, workspaceField: event.target.value})}}
+                        value={isEdit?curEditItem!.studyField :workspace!.studyField}
+                        onChange={isEdit?(event: SelectChangeEvent<string>) => {setCurEditItem({...curEditItem, studyField: event.target.value})}
+                            :(event: SelectChangeEvent<string>) => {setWorkspace({...workspace, studyField: event.target.value})}}
                         size='small'
                         sx={{
                             width: '100%'
                         }}
                     >
                         <MenuItem value="NO">없음</MenuItem>
-                        <MenuItem value="직접 입력">직접 입력</MenuItem>
+                        {studyFieldList.map((studyField) => (
+                            <MenuItem value={studyField}>{studyField}</MenuItem>
+
+                        ))}
+                        {/* <MenuItem value="직접 입력">직접 입력</MenuItem> */}
                     </Select>
                 </Box>
-                {!isEdit && workspaceTextField('Workspace Keywords or Interests', workspace!.workspaceKeyword![0], (event: ChangeEvent<HTMLInputElement>)=>{setWorkspace({...workspace, workspaceKeyword: [event.target.value]})})}
-                {isEdit && workspaceTextField('Workspace Keywords or Interests', curEditItem!.workspaceKeyword![0], (event: ChangeEvent<HTMLInputElement>)=>{setCurEditItem({...curEditItem, workspaceKeyword: [event.target.value]})})}
+                {!isEdit && workspaceTextField('Workspace Keywords or Interests', workspace!.keywords![0], (event: ChangeEvent<HTMLInputElement>)=>{setWorkspace({...workspace, keywords: [event.target.value]})})}
+                {isEdit && curEditItem && workspaceTextField('Workspace Keywords or Interests', curEditItem!.keywords![0], (event: ChangeEvent<HTMLInputElement>)=>{setCurEditItem({...curEditItem, keywords: [event.target.value]})})}
                 <Box sx={{display: 'flex', justifyContent: 'flex-end', mt: 5}}>
                     {!isEdit && <CustomButton title="Create new workspace" width= '200px' click={handleSubmitWorkspace} />}
                     {isEdit && <CustomButton title="Edit" width= '100px' click={()=>handleEditWorkspace(curEditItem!.workspaceId!)} />}
