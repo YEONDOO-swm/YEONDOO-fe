@@ -12,7 +12,7 @@ const SideBarWorkspace = ({number}:{number: number}) => {
     const workspaceId = sessionStorage.getItem('workspaceId')
     const workspaceTitle = sessionStorage.getItem('workspaceTitle')
     return (
-      <Box sx={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+      <Box sx={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', cursor: 'pointer'}}>
           <Typography sx={{
               color: 'white',
               textAlign: 'center',
