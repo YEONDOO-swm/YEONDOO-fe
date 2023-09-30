@@ -22,6 +22,7 @@ import PageLayout from "../layout/pageLayout";
 import arrow from "../asset/rightarrow.svg"
 import CustomButton from "../component/customButton";
 import styles from "../layout/home.module.css"
+import { getApi, refreshApi } from "../utils/apiUtils";
 
 type searchResultType = {
   query?: string;
@@ -88,11 +89,15 @@ export const Home = () => {
     const searchInputRef: React.MutableRefObject<HTMLInputElement | null> = useRef<HTMLInputElement | null>(null); // 채팅 입력창에 포거스 주기 위해
 
     const {data: recentData, isLoading} = useQuery(["home", workspaceId], ()=> 
-      fetch(`${api}/api/workspace/workspaceEnter?workspaceId=${workspaceId}`, {
-        headers: {
-          "Gauth": getCookie('access')
+      getApi(api, `/api/workspace/workspaceEnter?workspaceId=${workspaceId}`)  
+      .then(response => {
+        if (response.status === 200) {
+          return response.json()
+        } else if (response.status === 401) {
+            refreshApi(api, notify, navigate)
         }
-      }).then(response => response.json())
+        throw new Error("워크스페이스 홈 정보를 가져오는데 실패하였습니다")
+      })
       .then(data => {
         setRecommendedPapers(data.recommendedPapers)
         return data
@@ -163,37 +168,9 @@ export const Home = () => {
           접근할 수 있다. 그리고 어차피 searchResults가 다른 곳에서도 업데이트가 되어야 해서 react query를 쓰는 이유가 없다.
           더하여 다른 컴포넌트에서 사용되는 값도 아니다. (다른 컴포넌트에서 사용하려면 staleTime 사용)*/
 
-          const response: Response = await fetch(`${api}/api/homesearch?query=${performSearchTerm}&workspaceId=${workspaceId}`, {
-            headers: {
-              "Gauth": getCookie('access')
-          }
-          });
+          const response: Response = await getApi(api, `/api/homesearch?query=${performSearchTerm}&workspaceId=${workspaceId}`)
           if (response.status === 401) {
-
-            fetch(`${api}/api/update/token`, {
-              headers: { 
-                'Refresh' : getCookie('refresh') 
-              }
-            }).then(response => {
-              if (response.status === 401) {
-                navigate('/login')
-                notify('Login time has expired')
-                throw new Error('로그아웃')
-              }
-              else if (response.status === 200) {
-                let jwtToken: string | null = response.headers.get('Gauth')
-                let refreshToken: string | null = response.headers.get('RefreshToken')
-
-                if (jwtToken) {
-                    setCookie('access', jwtToken)
-                }
-
-                if (refreshToken) {
-                    setCookie('refresh', refreshToken)
-                }
-              }
-            })
-            
+            refreshApi(api, notify, navigate)
           }
           const data = await response.json();
 

@@ -19,6 +19,7 @@ import { type } from 'os'
 import { error } from 'console'
 import styles from '../layout/loading.module.css'
 import pageStyles from '../layout/workspace.module.css'
+import { deleteApi, getApi, postApi, putApi, refreshApi } from '../utils/apiUtils'
 
 type workspaceEdit = {
     title?: string;
@@ -65,50 +66,21 @@ const Workspaces = () => {
         setWorkspace(initWorkspaceEdit)
     };
 
-    const {data: workspaces, isLoading} = useQuery(['workspace'],async ()=> await fetch(`${api}/api/workspace/workspaces`
-    , {
-        headers: {
-            "Gauth": getCookie('access')
-        }
-    }).then(response => {
+    const {data: workspaces, isLoading} = useQuery(['workspace'],async ()=> await getApi(api, '/api/workspace/workspaces').then(response => {
         if (response.status === 200) {
             return response.json()
         } else if (response.status === 401) {
-
-            fetch(`${api}/api/update/token`, {
-              headers: { 
-                'Refresh' : getCookie('refresh') 
-              }
-            }).then(response => {
-              if (response.status === 401) {
-                navigate('/login')
-                notify('Login time has expired')
-                throw new Error('로그아웃')
-              }
-              else if (response.status === 200) {
-                let jwtToken: string | null = response.headers.get('Gauth')
-                let refreshToken: string | null = response.headers.get('RefreshToken')
-
-                if (jwtToken) {
-                    setCookie('access', jwtToken)
-                }
-
-                if (refreshToken) {
-                    setCookie('refresh', refreshToken)
-                }
-              }
-            })
-            
-          }
+            refreshApi(api, notify, navigate)
+        }
         throw new Error("워크스페이스 정보를 가져오는데 실패하였습니다")
     })
     .then(data => {
         const workspacesWithBigIntIds = data.workspaces.map((workspace: any) => ({
-            ...workspace,
-            workspaceId: BigInt(workspace.workspaceId)
-          }));
-        
-          setWorkspacesArr(workspacesWithBigIntIds);
+        ...workspace,
+        workspaceId: workspace.workspaceId //BigInt로 하면 다시 백으로 전송할때 문제가 생김 (Do not know how to serialize a BigInt)
+        }));
+    
+        setWorkspacesArr(workspacesWithBigIntIds);
         console.log(workspacesWithBigIntIds)
         return data.workspaces
     }),
@@ -136,13 +108,15 @@ const Workspaces = () => {
             studyField: workspace && workspace.studyField,
             keywords: workspace && workspace.keywords
         }
-        fetch(`${api}/api/workspace/workspaceCRUD`, {
-            method: 'POST',
-                headers : { 'Content-Type' : 'application/json',
-            'Gauth': getCookie('access') },
-            body: JSON.stringify(payload)
+        postApi(api, '/api/workspace/workspaceCRUD', payload)
+        .then(response => {
+            if (response.status === 200) {
+                return response.json()
+            } else if (response.status === 401) {
+                refreshApi(api, notify, navigate)
+            }
+            throw new Error("워크스페이스를 생성하는 데 실패하였습니다")
         })
-        .then(response => response.json())
         .then(data => {
             setWorkspace({...workspace, workspaceId: data.workspaceId, editDate: data.editDate})  
         }).catch(error => {
@@ -166,12 +140,15 @@ const Workspaces = () => {
     const handleDelete = (workspaceId: number) => {
         setDeleteOpen(false)
         
-        fetch(`${api}/api/workspace/workspaceCRUD?workspaceId=${workspaceId}`, {
-            method: 'DELETE',
-                headers : { 'Content-Type' : 'application/json',
-            'Gauth': getCookie('access') }
-        }).then((response) => {
-            setWorkspacesArr((prevArr) => prevArr.filter((workspace) => workspace.workspaceId !== workspaceId));
+        deleteApi(api, `/api/workspace/workspaceCRUD?workspaceId=${workspaceId}`)
+        .then((response) => {
+            if (response.status === 200) {
+                setWorkspacesArr((prevArr) => prevArr.filter((workspace) => workspace.workspaceId !== workspaceId));
+            } else if (response.status === 401) {
+                refreshApi(api, notify, navigate)
+            } else {
+                throw new Error("워크스페이스 삭제하는 데 실패하였습니다")
+            }
         }).catch(error => {
             notify('Failed to delete a workspace', {type: 'error'})
         })
@@ -196,13 +173,15 @@ const Workspaces = () => {
         }
         setOpen(false)
 
-        fetch(`${api}/api/workspace/workspaceCRUD?workspaceId=${workspaceId}`, {
-            method: 'PUT',
-            headers : { 'Content-Type' : 'application/json',
-            'Gauth': getCookie('access') },
-            body: JSON.stringify(curEditItem)
-        }).then((response) => {
-            setWorkspacesArr((prevArr) => prevArr.map((workspace) => (workspace.workspaceId === workspaceId ? curEditItem : workspace)));
+        putApi(api, `/api/workspace/workspaceCRUD?workspaceId=${workspaceId}`, curEditItem)
+        .then((response) => {
+            if (response.status === 200) {
+                setWorkspacesArr((prevArr) => prevArr.map((workspace) => (workspace.workspaceId === workspaceId ? curEditItem : workspace)));
+            } else if (response.status === 401) {
+                refreshApi(api, notify, navigate)
+            } else {
+                throw new Error("워크스페이스 삭제하는 데 실패하였습니다")
+            }
         }).catch(error => {
             notify('Failed to edit a workspace', {type: 'error'})
         })

@@ -25,6 +25,7 @@ import { CounterState } from "../reducer";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import PageLayout from "../layout/pageLayout";
+import { getApi, postApi, refreshApi } from "../utils/apiUtils";
 
 // TODO1: list 제한 걸기
 // TODO2: 스크롤
@@ -62,39 +63,12 @@ export const PaperView = () => {
     const query = new URLSearchParams(window.location.search);
     const paperId: string = query.get('paperid') || '';
     const { data, isLoading } = useQuery(["paperView", api, paperId, workspaceId], 
-        ()=> fetch(`${api}/api/paper/${paperId}?workspaceId=${workspaceId}`,{
-            headers: {
-                "Gauth": getCookie('access')
-            }
-        }).then(response => {
+        ()=> getApi(api, `/api/paper/${paperId}?workspaceId=${workspaceId}`) 
+        .then(response => {
             if (response.status === 200) {
                 return response.json()
             } else if (response.status === 401) {
-
-                fetch(`${api}/api/update/token`, {
-                  headers: { 
-                    'Refresh' : getCookie('refresh') 
-                  }
-                }).then(response => {
-                  if (response.status === 401) {
-                    navigate('/login')
-                    notify('Login time has expired')
-                    throw new Error('로그아웃')
-                  }
-                  else if (response.status === 200) {
-                    let jwtToken: string | null = response.headers.get('Gauth')
-                    let refreshToken: string | null = response.headers.get('RefreshToken')
-    
-                    if (jwtToken) {
-                        setCookie('access', jwtToken)
-                    }
-    
-                    if (refreshToken) {
-                        setCookie('refresh', refreshToken)
-                    }
-                  }
-                })
-                
+                refreshApi(api, notify, navigate)
               }
             throw new Error("논문 내 질의 히스토리 정보를 가져오는데 실패하였습니다")
         }),
@@ -159,39 +133,10 @@ export const PaperView = () => {
         const paperId: string = query.get('paperid') || '';
         try {
             setKey(Math.floor(Math.random()*1000000000))
-            const response = await fetch(`${api}/api/paper/${paperId}?workspaceId=${workspaceId}&key=${key}`,{
-                method: 'POST',
-                headers : { 'Content-Type' : 'application/json',
-            'Gauth': getCookie('access') },
-                body: JSON.stringify({question: searchTermInPaper})
-            })
+            const response = await postApi(api, `/api/paper/${paperId}?workspaceId=${workspaceId}&key=${key}`, JSON.stringify({question: searchTermInPaper}))
 
             if (response.status === 401) {
-
-                fetch(`${api}/api/update/token`, {
-                  headers: { 
-                    'Refresh' : getCookie('refresh') 
-                  }
-                }).then(response => {
-                  if (response.status === 401) {
-                    navigate('/login')
-                    notify('Login time has expired')
-                    throw new Error('로그아웃')
-                  }
-                  else if (response.status === 200) {
-                    let jwtToken: string | null = response.headers.get('Gauth')
-                    let refreshToken: string | null = response.headers.get('RefreshToken')
-    
-                    if (jwtToken) {
-                        setCookie('access', jwtToken)
-                    }
-    
-                    if (refreshToken) {
-                        setCookie('refresh', refreshToken)
-                    }
-                  }
-                })
-                
+                refreshApi(api, notify, navigate)
               }
             const reader = response.body!.getReader()
             const decoder = new TextDecoder()

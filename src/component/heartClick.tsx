@@ -12,6 +12,7 @@ import { CounterState } from "../reducer";
 import { paperType } from "../page/home";
 import { useNavigate } from "react-router-dom";
 import { useNotify } from "react-admin";
+import { postApi, refreshApi } from "../utils/apiUtils";
 
 type onUpdateLikesType = (
   paperId: string,
@@ -66,40 +67,10 @@ export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentIt
             onUpdateLikes(currentItem.paperId, currentItem.likes + 1);
           }
         }
-   
-        fetch(`${api}/api/paperlikeonoff`, {
-          method: 'POST',
-          headers: { 'Content-Type' : 'application/json',
-                      'Gauth' : getCookie('access') },
-          body: JSON.stringify(payload)
-        })
+        postApi(api, `/api/paperlikeonoff`, JSON.stringify(payload))
         .then(response => {
           if (response.status === 401) {
-
-            fetch(`${api}/api/update/token`, {
-              headers: { 
-                'Refresh' : getCookie('refresh') 
-              }
-            }).then(response => {
-              if (response.status === 401) {
-                navigate('/login')
-                notify('Login time has expired')
-                throw new Error('로그아웃')
-              }
-              else if (response.status === 200) {
-                let jwtToken: string | null = response.headers.get('Gauth')
-                let refreshToken: string | null = response.headers.get('RefreshToken')
-
-                if (jwtToken) {
-                    setCookie('access', jwtToken)
-                }
-
-                if (refreshToken) {
-                    setCookie('refresh', refreshToken)
-                }
-              }
-            })
-            
+            refreshApi(api, notify, navigate)
           }
           return response;
           }

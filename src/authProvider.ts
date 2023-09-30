@@ -9,6 +9,7 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import * as Sentry from '@sentry/react';
 import { useNotify } from "react-admin";
 import { setCookie, getCookie, removeCookie } from './cookie';
+import { getApi } from './utils/apiUtils';
 
 
 // TypeScript users must reference the type: `AuthProvider`
@@ -65,18 +66,20 @@ export const authProvider = {
     },
     // called when the user clicks on the logout button
     logout: () => {
-      // const amp = async () => {
-      //   await amplitude.track("Logout");
-      //   await amplitude.reset()
-      // }
-      // amp()
-      if (process.env.NODE_ENV === 'production'){
-        amplitude.track("Logout");
-      }
-      //sessionStorage.removeItem('username');
+
       removeCookie('username')
       removeCookie('access')
-      //amplitude.reset()
+
+      var api ='';
+      if (process.env.NODE_ENV === 'development'){
+        api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
+      }
+      else if (process.env.NODE_ENV === 'production'){
+        api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
+        amplitude.track("Logout");
+      }
+      
+      getApi(api, '/api/logout')
       return Promise.resolve();
     },
     // called when the API returns an error
