@@ -103,7 +103,13 @@ const Workspaces = () => {
         throw new Error("워크스페이스 정보를 가져오는데 실패하였습니다")
     })
     .then(data => {
-        setWorkspacesArr(data.workspaces)
+        const workspacesWithBigIntIds = data.workspaces.map((workspace: any) => ({
+            ...workspace,
+            workspaceId: BigInt(workspace.workspaceId)
+          }));
+        
+          setWorkspacesArr(workspacesWithBigIntIds);
+        console.log(workspacesWithBigIntIds)
         return data.workspaces
     }),
     {

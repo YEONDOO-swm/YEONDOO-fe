@@ -102,7 +102,6 @@ export const Home = () => {
     useEffect(()=> {
       if (recentData) {
         const timer = setInterval(()=> {
-          console.log(recentData)
           setCurrentIndex((prevIndex) => (prevIndex + 1) % recentData.recommendedPapers.length)
         }, 5000)
 
@@ -299,6 +298,11 @@ export const Home = () => {
         </Box>
   )
 
+  const loadingRecentPaper = () => (
+    <Box sx={{height: '55px', width: '82%', borderRadius: '10px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)',
+      mb: 1, bgcolor: '#f9f9f9'}} className={loadingStyle.loading}></Box>
+  )
+
   const subTitle = (title: string) => (
     <Typography sx={{fontSize: '18px', fontWeight: '600', mb: 2}}>{title}</Typography>
   )
@@ -367,7 +371,8 @@ export const Home = () => {
           <UserMenu/>
         </Box>
         <Typography sx={{ml: '12.5vw', fontSize: '25px', fontWeight: '600'}}>
-          {workspaceTitle}
+          {/* {workspaceTitle} */}
+          Home
         </Typography>
         <Box sx={{display: 'flex', margin: '30px auto', justifyContent: 'center', alignItems: 'center'}}>
             <SearchTap
@@ -406,8 +411,15 @@ export const Home = () => {
     )):(
       <Box sx={{ml: '12.5vw', mt: 5}}>
         {subTitle('Recently papers')}
-        {recentData && recentData.recentlyPapers && recentPaper(recentData.recentlyPapers[0])}
-        {recentData && recentData.recentlyPapers && recentPaper(recentData.recentlyPapers[1])}
+        {isLoading ? <>
+          {loadingRecentPaper()}
+          {loadingRecentPaper()}
+        </>
+      :<>
+      {recentData.recentlyPapers && recentPaper(recentData.recentlyPapers[0])}
+      {recentData.recentlyPapers && recentPaper(recentData.recentlyPapers[1])}
+      </>
+        }
         <Box sx={{display: 'flex', mt: 5}}>
           <Box sx={{width: '30.5vw'}}>
             {subTitle('Recommended papers')}
@@ -431,8 +443,10 @@ export const Home = () => {
                       </Box>
                     </Box>
                     <Box sx={{display: 'flex', mb: 1.5}}>
-                      {paper.subject.map((sub: string) => (
-                          tag(sub)
+                      {paper.subject.map((sub: string, idx: number) => (
+                        <Box key={idx}>
+                          {tag(sub)}
+                        </Box>
                       ))}
                     </Box>
                     <Box sx={{display: 'flex', mb: 1.5}}>

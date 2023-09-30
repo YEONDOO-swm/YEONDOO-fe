@@ -22,7 +22,9 @@ const SideBarWorkspace = ({number}:{number: number}) => {
               lineHeight: 'normal',
               pt: 2,
               pb: 4
-          }}>{workspaceTitle}</Typography>
+          }}
+          onClick={()=>{window.location.replace("/home/"+workspaceId)}}
+          >{workspaceTitle}</Typography>
 
         <SideBarMenu img={home} title='Home' number={number} idx={0} url={"/home/"+workspaceId}/>
         <SideBarMenu img={works} title='My works' number={number} idx={1} url="/paperstorage"/>
