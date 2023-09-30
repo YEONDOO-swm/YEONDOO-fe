@@ -1,0 +1,16 @@
+.imageContainer {
+    height: 80px;
+    cursor: pointer;
+  }
+  
+  .imageContainer:hover .plusIcon {
+    display: none;
+  }
+  
+  .imageContainer:hover .plusIconHover {
+    display: block;
+  }
+  
+  .plusIconHover {
+    display: none;
+  }

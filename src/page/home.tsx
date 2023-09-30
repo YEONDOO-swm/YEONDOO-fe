@@ -21,6 +21,7 @@ import { useQuery } from "react-query";
 import PageLayout from "../layout/pageLayout";
 import arrow from "../asset/rightarrow.svg"
 import CustomButton from "../component/customButton";
+import styles from "../layout/home.module.css"
 
 type searchResultType = {
   query?: string;
@@ -86,7 +87,7 @@ export const Home = () => {
     const searchInputRef: React.MutableRefObject<HTMLInputElement | null> = useRef<HTMLInputElement | null>(null); // 채팅 입력창에 포거스 주기 위해
 
     const {data: recentData, isLoading} = useQuery(["home", workspaceId], ()=> 
-      fetch(`${api}/api/workspaceEnter?workspaceId=${workspaceId}`, {
+      fetch(`${api}/api/workspace/workspaceEnter?workspaceId=${workspaceId}`, {
         headers: {
           "Gauth": getCookie('access')
         }
@@ -275,7 +276,7 @@ export const Home = () => {
           <Typography sx={{fontWeight: 500}}>
             {recentlyPapers.title}
           </Typography>
-          <Box sx={{display: 'flex'}}>
+          <Box sx={{display: 'flex'}} onClick={()=>{navigate(`/paper?paperid=${recentlyPapers.paperId}`)}}>
             <Typography sx={{fontWeight: 500, color: '#617F5B', cursor: 'pointer', '&:hover':{
               color: '#445142'
             }}}>More</Typography>
@@ -295,25 +296,35 @@ export const Home = () => {
     </Box>
   )
 
-  const trend = (title: string, year: string) => (
-    <>
+  const trend = (title: string, date: string, url: string) => (
+    <Box>
       <Box sx={{display: 'flex', justifyContent: 'space-between', py: 1}}>
         <Box>
-          <Typography sx={{mb: 1, color: '#333', fontWeight: '600', fontSize: '18px'}}>
+          <Typography sx={{mb: 1, color: '#333', fontWeight: '600', fontSize: '18px'
+        , display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>
             {title}
           </Typography>
           <Typography sx={{color: '#666', fontSize: '15px'}}>
-            {year}
+            {date}
           </Typography>
         </Box>
-        <Box sx={{display: 'flex', alignItems: 'center'}}>
-          <Typography sx={{fontWeight: 500, color: '#617F5B'}}>More</Typography>
+        <Box sx={{display: 'flex', alignItems: 'center', cursor: 'pointer'}} onClick={()=>{window.open(url)}}>
+          <Typography sx={{fontWeight: 500, color: '#617F5B','&:hover':{
+              color: '#445142'
+            }}}>More</Typography>
           <img src={arrow}/>
         </Box>
       </Box>
-      <hr style={{backgroundColor: '#ddd', height: '1px', border: 0}}/>
-    </>
+      
+    </Box>
   )
+
+  const getWrapperTransformValue = () => {
+    const slideWidth = '27.5vw'; // 슬라이드 한 개의 너비
+    return `translateX(calc(-${currentIndex} * ${slideWidth}))`;
+  };
+  
+  const wrapperTransform = getWrapperTransformValue();
 
   useEffect(() => {
     if (process.env.NODE_ENV === 'production') {
@@ -387,45 +398,59 @@ export const Home = () => {
           <Box sx={{width: '30.5vw'}}>
             {subTitle('Recommended papers')}
             <Box sx={{width: '27.5vw', height: '32vh', borderRadius: '20px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)',
-            p:3}}>
-              <Box sx={{display: 'flex', justifyContent: 'space-between', mb: 2}}>
-                <Box sx={{fontWeight: '600', fontSize: '18px'}}>
-                  {recentData && recentData.recommendedPapers[currentIndex].title}
-                </Box>
-                <Box sx={{ marginTop: '-5px', display: 'flex', alignItems: 'center'}}>
-                  <HeartClick currentItem={examplePaper} paperlike={false} />
-                  <Typography sx={{color: '#617F5B', fontWeight: '600'}}>{recentData && recentData.recommendedPapers[currentIndex].likes}</Typography>
-                </Box>
-              </Box>
-              <Box sx={{display: 'flex', mb: 1.5}}>
-                {recentData && recentData.recommendedPapers[currentIndex].subject.map((sub: string) => (
-                    tag(sub)
+            }} className={styles.transitionContainer}>
+              <Box className={styles.transitionWrapper} style={{ transform: wrapperTransform }}>
+                {recentData && recentData.recommendedPapers.map((paper: any, idx: number) => (
+                  <Box key={idx} className={`${styles.transitionItem} ${
+                    idx === currentIndex ? styles.active : ''
+                  }`}
+                  sx={{
+                  p:3}}>
+
+                    <Box sx={{display: 'flex', justifyContent: 'space-between', mb: 2}}>
+                      <Box sx={{fontWeight: '600', fontSize: '18px'
+                    , display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>
+                        {paper.title}
+                      </Box>
+                      <Box sx={{ marginTop: '-5px', display: 'flex', alignItems: 'center'}}>
+                        <HeartClick currentItem={examplePaper} paperlike={false} />
+                        <Typography sx={{color: '#617F5B', fontWeight: '600'}}>{paper.likes}</Typography>
+                      </Box>
+                    </Box>
+                    <Box sx={{display: 'flex', mb: 1.5}}>
+                      {paper.subject.map((sub: string) => (
+                          tag(sub)
+                      ))}
+                    </Box>
+                    <Box sx={{display: 'flex', mb: 1.5}}>
+                      <Typography sx={{fontWeight: '500', mr: 1
+                    , display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}> 
+                        {(paper.authors.length > 3 
+                        ? paper.authors.slice(3).join(', ')
+                        : paper.authors.join(', '))} 
+                      </Typography>
+                      <Typography sx={{color: '#666'}}> 
+                        {paper.year}
+                      </Typography>
+                    </Box>
+                    <Box sx={{color: '#666', mb: 1.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>
+                      {paper.summary}
+                    </Box>
+                    <CustomButton title="Chat with AI" width="100%" click={()=>navigate('/paperstorage')}/>
+                  </Box>
                 ))}
-                {/* {tag('Tag')}
-                {tag('Tag')} */}
               </Box>
-              <Box sx={{display: 'flex', mb: 1.5}}>
-                <Typography sx={{fontWeight: '500', mr: 1, display: 'flex'}}> 
-                  {recentData && (recentData.recommendedPapers[currentIndex].authors.length > 3 
-                  ? recentData.recommendedPapers[currentIndex].authors.slice(3).join(', ')
-                  : recentData.recommendedPapers[currentIndex].authors.join(', '))} 
-                </Typography>
-                <Typography sx={{color: '#666'}}> 
-                  {recentData && recentData.recommendedPapers[currentIndex].year}
-                </Typography>
-              </Box>
-              <Box sx={{color: '#666', mb: 1.5}}>
-                {recentData && recentData.recommendedPapers[currentIndex].summary}
-              </Box>
-              <CustomButton title="Chat with AI" width="100%" click={()=>navigate('/paperstorage')}/>
             </Box>
           </Box>
           <Box sx={{width: '30vw'}}>
             {subTitle('Recent trends')}
             <Box sx={{width: '27.5vw', height: '32vh', borderRadius: '20px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)',
             px:3, py: 1}}>
-              {recentData && recentData.recentlyTrends.map((item: any) => (
-                trend(item.title, item.year)
+              {recentData && recentData.recentlyTrends.map((item: any, idx: number) => (
+                <Box key={idx}>
+                  {trend(item.title, item.date, item.url)}
+                  {idx!==recentData.recentlyTrends.length-1 && <hr style={{backgroundColor: '#ddd', height: '1px', border: 0}}/>}
+                </Box>
               ))}
               {/* {trend('title', '2021.09.12')}
               <hr style={{backgroundColor: '#ddd', height: '1px', border: 0}}/>

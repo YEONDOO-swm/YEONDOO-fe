@@ -1,0 +1,30 @@
+.transitionContainer {
+    display: flex;
+    width: 27.5vw;
+    overflow: hidden;
+  }
+  
+  .transitionWrapper {
+    display: flex;
+    transition: transform 0.5s ease;
+    will-change: transform;
+    /* overflow: hidden; */
+     /* 슬라이드 이외의 부분 숨김 */
+  }
+  
+  .transitionItem {
+    /* flex: 1;
+    min-width: 100%; */
+    flex: 0 0 27.5vw;
+    /* visibility: hidden; */
+    /* 슬라이드 컨텐츠의 스타일을 여기에 적용하세요 */
+  }
+  
+  /* 'active' 클래스를 사용하여 활성 슬라이드에만 표시 */
+  .active {
+    /* visibility: visible;  */
+    /* 활성 슬라이드만 표시 */
+    /* 활성 슬라이드에 대한 스타일을 여기에 적용하세요 */
+  }
+  
+  
