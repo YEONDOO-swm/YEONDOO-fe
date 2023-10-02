@@ -44,21 +44,6 @@ export type paperType = {
   url: string;
 }
 
-const examplePaper = {
-  paperId: '123',
-  title: 'attejtion',
-  summary: 'summary12423',
-  likes: 1,
-  isLike: false,
-  authors: [
-    'author1',
-    'author2'
-  ],
-  year: 1902,
-  conference: 'world conf',
-  cites: 123,
-  url: 'https://yeondoo.net',
-}
 
 export const Home = () => {
     // 유효성 검사
@@ -393,8 +378,8 @@ export const Home = () => {
           {loadingRecentPaper()}
         </>
       :<>
-      {recentData.recentlyPapers && recentPaper(recentData.recentlyPapers[0])}
-      {recentData.recentlyPapers && recentPaper(recentData.recentlyPapers[1])}
+      {recentData.recentlyPapers && recentData.recentlyPapers.length > 0 && recentPaper(recentData.recentlyPapers[0])}
+      {recentData.recentlyPapers && recentData.recentlyPapers.length > 1 && recentPaper(recentData.recentlyPapers[1])}
       </>
         }
         <Box sx={{display: 'flex', mt: 5}}>
