@@ -12,7 +12,7 @@ const SideBarWorkspace = ({number}:{number: number}) => {
     const workspaceId = sessionStorage.getItem('workspaceId')
     const workspaceTitle = sessionStorage.getItem('workspaceTitle')
     return (
-      <Box sx={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+      <Box sx={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', cursor: 'pointer'}}>
           <Typography sx={{
               color: 'white',
               textAlign: 'center',
@@ -22,7 +22,9 @@ const SideBarWorkspace = ({number}:{number: number}) => {
               lineHeight: 'normal',
               pt: 2,
               pb: 4
-          }}>{workspaceTitle}</Typography>
+          }}
+          onClick={()=>{window.location.replace("/home/"+workspaceId)}}
+          >{workspaceTitle}</Typography>
 
         <SideBarMenu img={home} title='Home' number={number} idx={0} url={"/home/"+workspaceId}/>
         <SideBarMenu img={works} title='My works' number={number} idx={1} url="/paperstorage"/>

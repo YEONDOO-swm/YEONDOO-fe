@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { CounterState } from '../reducer';
 import { useNavigate } from 'react-router-dom';
 import { useNotify } from 'react-admin';
+import { postApi, refreshApi } from '../utils/apiUtils';
 
 
 function valuetext(value: number) {
@@ -78,38 +79,10 @@ function ScoreSlider({id, score, paper}: {id: number, score?:number | null, pape
             score: newValue
         }
         if (paper){
-          fetch(`${api}/api/paper/result/score?workspaceId=${workspaceId}`, {
-              method: 'POST',
-              headers : { 'Content-Type' : 'application/json',
-            'Gauth': getCookie('access') },
-              body: JSON.stringify(payload)
-          }).then(response =>{
+          postApi(api, `/api/paper/result/score?workspaceId=${workspaceId}`, JSON.stringify(payload))
+          .then(response =>{
             if (response.status === 401) {
-
-              fetch(`${api}/api/update/token`, {
-                headers: { 
-                  'Refresh' : getCookie('refresh') 
-                }
-              }).then(response => {
-                if (response.status === 401) {
-                  navigate('/login')
-                  notify('Login time has expired')
-                  throw new Error('로그아웃')
-                }
-                else if (response.status === 200) {
-                  let jwtToken: string | null = response.headers.get('Gauth')
-                  let refreshToken: string | null = response.headers.get('RefreshToken')
-  
-                  if (jwtToken) {
-                      setCookie('access', jwtToken)
-                  }
-  
-                  if (refreshToken) {
-                      setCookie('refresh', refreshToken)
-                  }
-                }
-              })
-              
+              refreshApi(api, notify, navigate)
             }
             return response
           })
@@ -117,38 +90,10 @@ function ScoreSlider({id, score, paper}: {id: number, score?:number | null, pape
             Sentry.captureException(error)
           })
         } else {
-          fetch(`${api}/api/home/result/score?workspaceId=${workspaceId}`, {
-            method: 'POST',
-            headers : { 'Content-Type' : 'application/json',
-                        'Gauth': getCookie('access')},
-            body: JSON.stringify(payload)
-        }).then(response =>{
+          postApi(api, `/api/home/result/score?workspaceId=${workspaceId}`, JSON.stringify(payload))
+          .then(response =>{
           if (response.status === 401) {
-
-            fetch(`${api}/api/update/token`, {
-              headers: { 
-                'Refresh' : getCookie('refresh') 
-              }
-            }).then(response => {
-              if (response.status === 401) {
-                navigate('/login')
-                notify('Login time has expired')
-                throw new Error('로그아웃')
-              }
-              else if (response.status === 200) {
-                let jwtToken: string | null = response.headers.get('Gauth')
-                let refreshToken: string | null = response.headers.get('RefreshToken')
-
-                if (jwtToken) {
-                    setCookie('access', jwtToken)
-                }
-
-                if (refreshToken) {
-                    setCookie('refresh', refreshToken)
-                }
-              }
-            })
-            
+            refreshApi(api, notify, navigate)
           }
           return response
         })

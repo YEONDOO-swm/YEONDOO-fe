@@ -5,6 +5,7 @@ import { Title, UserMenu, useNotify } from 'react-admin'
 import { Button, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, MenuItem, Modal, Select, SelectChangeEvent, TextField, Typography } from '@mui/material'
 import plus from '../asset/plus.svg'
 import edit from '../asset/edit.svg'
+import plusHover from '../asset/plusHover.svg'
 import deleteIcon from '../asset/delete.svg'
 import { useQuery } from 'react-query'
 import { useSelector } from 'react-redux'
@@ -14,6 +15,11 @@ import { useNavigate } from 'react-router-dom'
 import * as Sentry from '@sentry/react';
 import CustomButton from '../component/customButton'
 import { studyFieldList } from '../sutdyFieldList'
+import { type } from 'os'
+import { error } from 'console'
+import styles from '../layout/loading.module.css'
+import pageStyles from '../layout/workspace.module.css'
+import { deleteApi, getApi, postApi, putApi, refreshApi } from '../utils/apiUtils'
 
 type workspaceEdit = {
     title?: string;
@@ -28,7 +34,7 @@ const initWorkspaceEdit = {
     title: '',
     description: '',
     studyField: '',
-    keywords: [''],
+    keywords: ['', '', ''],
     editDate: '',
     workspaceId: 0
 }
@@ -55,47 +61,27 @@ const Workspaces = () => {
     const [workspacesArr, setWorkspacesArr] = useState<workspaceEdit[]>([])
     const [curEditItem, setCurEditItem] = useState<workspaceEdit>(initWorkspaceEdit)
 
-    const handleClose = () => setOpen(false);
+    const handleClose = () => {
+        setOpen(false)
+        setWorkspace(initWorkspaceEdit)
+    };
 
-    const {data: workspaces, isLoading} = useQuery(['workspace'],async ()=> await fetch(`${api}/api/workspace/workspaces`
-    , {
-        headers: {
-            "Gauth": getCookie('access')
-        }
-    }).then(response => {
+    const {data: workspaces, isLoading} = useQuery(['workspace'],async ()=> await getApi(api, '/api/workspace/workspaces').then(response => {
         if (response.status === 200) {
             return response.json()
         } else if (response.status === 401) {
-
-            fetch(`${api}/api/update/token`, {
-              headers: { 
-                'Refresh' : getCookie('refresh') 
-              }
-            }).then(response => {
-              if (response.status === 401) {
-                navigate('/login')
-                notify('Login time has expired')
-                throw new Error('로그아웃')
-              }
-              else if (response.status === 200) {
-                let jwtToken: string | null = response.headers.get('Gauth')
-                let refreshToken: string | null = response.headers.get('RefreshToken')
-
-                if (jwtToken) {
-                    setCookie('access', jwtToken)
-                }
-
-                if (refreshToken) {
-                    setCookie('refresh', refreshToken)
-                }
-              }
-            })
-            
-          }
+            refreshApi(api, notify, navigate)
+        }
         throw new Error("워크스페이스 정보를 가져오는데 실패하였습니다")
     })
     .then(data => {
-        setWorkspacesArr(data.workspaces)
+        const workspacesWithBigIntIds = data.workspaces.map((workspace: any) => ({
+        ...workspace,
+        workspaceId: workspace.workspaceId //BigInt로 하면 다시 백으로 전송할때 문제가 생김 (Do not know how to serialize a BigInt)
+        }));
+    
+        setWorkspacesArr(workspacesWithBigIntIds);
+        console.log(workspacesWithBigIntIds)
         return data.workspaces
     }),
     {
@@ -111,6 +97,10 @@ const Workspaces = () => {
     }
 
     const handleSubmitWorkspace = () => {
+        if (!workspace.title) {
+            notify('Please enter workspace title', {type: 'error'})
+            return
+        }
         setOpen(false)
         const payload = {
             title: workspace && workspace.title,
@@ -118,21 +108,19 @@ const Workspaces = () => {
             studyField: workspace && workspace.studyField,
             keywords: workspace && workspace.keywords
         }
-        fetch(`${api}/api/workspace/workspaceCRUD`, {
-            method: 'POST',
-                headers : { 'Content-Type' : 'application/json',
-            'Gauth': getCookie('access') },
-            body: JSON.stringify(payload)
+        postApi(api, '/api/workspace/workspaceCRUD', payload)
+        .then(response => {
+            if (response.status === 200) {
+                return response.json()
+            } else if (response.status === 401) {
+                refreshApi(api, notify, navigate)
+            }
+            throw new Error("워크스페이스를 생성하는 데 실패하였습니다")
         })
-        .then(response => response.json())
         .then(data => {
-            console.log(data.workspaceId)
-            setWorkspace({...workspace, workspaceId: data.workspaceId, editDate: data.editDate})
-            // setWorkspace({...workspace, editDate: data.editDate})
-        
-            // setWorkspacesArr((prevArr) => [ workspace!, ...prevArr])
-            // setWorkspace(initWorkspaceEdit)
-            
+            setWorkspace({...workspace, workspaceId: data.workspaceId, editDate: data.editDate})  
+        }).catch(error => {
+            notify('Failed to create a workspace', {type: 'error'})
         })
     }
 
@@ -151,13 +139,19 @@ const Workspaces = () => {
 
     const handleDelete = (workspaceId: number) => {
         setDeleteOpen(false)
-        console.log(workspacesArr, workspaceId)
-        setWorkspacesArr((prevArr) => prevArr.filter((workspace) => workspace.workspaceId !== workspaceId));
-        fetch(`${api}/api/workspace/workspaceCRUD?workspaceId=${workspaceId}`, {
-            method: 'DELETE',
-                headers : { 'Content-Type' : 'application/json',
-            'Gauth': getCookie('access') }
-        }).then((response) => response)
+        
+        deleteApi(api, `/api/workspace/workspaceCRUD?workspaceId=${workspaceId}`)
+        .then((response) => {
+            if (response.status === 200) {
+                setWorkspacesArr((prevArr) => prevArr.filter((workspace) => workspace.workspaceId !== workspaceId));
+            } else if (response.status === 401) {
+                refreshApi(api, notify, navigate)
+            } else {
+                throw new Error("워크스페이스 삭제하는 데 실패하였습니다")
+            }
+        }).catch(error => {
+            notify('Failed to delete a workspace', {type: 'error'})
+        })
     }
 
     const handleEdit = (workspaceId: number) => {
@@ -173,16 +167,23 @@ const Workspaces = () => {
     }
 
     const handleEditWorkspace = (workspaceId: number) => {
+        if (!curEditItem.title) {
+            notify('Please enter workspace title', {type: 'error'})
+            return
+        }
         setOpen(false)
-        
 
-        fetch(`${api}/api/workspace/workspaceCRUD?workspaceId=${workspaceId}`, {
-            method: 'PUT',
-            headers : { 'Content-Type' : 'application/json',
-            'Gauth': getCookie('access') },
-            body: JSON.stringify(curEditItem)
-        }).then((response) => {
-            setWorkspacesArr((prevArr) => prevArr.map((workspace) => (workspace.workspaceId === workspaceId ? curEditItem : workspace)));
+        putApi(api, `/api/workspace/workspaceCRUD?workspaceId=${workspaceId}`, curEditItem)
+        .then((response) => {
+            if (response.status === 200) {
+                setWorkspacesArr((prevArr) => prevArr.map((workspace) => (workspace.workspaceId === workspaceId ? curEditItem : workspace)));
+            } else if (response.status === 401) {
+                refreshApi(api, notify, navigate)
+            } else {
+                throw new Error("워크스페이스 삭제하는 데 실패하였습니다")
+            }
+        }).catch(error => {
+            notify('Failed to edit a workspace', {type: 'error'})
         })
     }
 
@@ -196,7 +197,7 @@ const Workspaces = () => {
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: 1000,
+        width: '70%',
         bgcolor: 'white',
         // border: '2px solid #000',
         boxShadow: 24,
@@ -205,32 +206,56 @@ const Workspaces = () => {
         px: 8
       };
 
-    const card = (title: string, desc: string, date: string, wId: number) => (
-        <Box>
+    const card = (title: string, desc: string, date: string, wId: number, idx: number) => (
+        <Box key={idx} sx={{cursor: 'pointer'}}>
             <Box sx={{width: '320px', height: '210px', bgcolor: 'white', borderRadius: '20px', border: '1px solid #ddd',
             boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)'
-            ,p: 3, mr: 3, mb: 3, display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
-                <Box onClick={()=>goToWorkspace(wId, title)}>
+            ,position: 'relative'
+            ,p: 3, mr: 3, mb: 3, display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+            '&:hover': {
+                bgcolor: '#f5f5f5',
+                '& .editButton': {
+                    bgcolor: '#fff', // Edit 버튼에 대한 호버 효과 설정
+                  },
+                  '& .deleteButton': {
+                    bgcolor: '#fff', // Edit 버튼에 대한 호버 효과 설정
+                  },
+            }}}
+            onClick={()=>goToWorkspace(wId, title)}>
+                <Box >
                     <Typography sx={{color: '#333', fontSize: '18px', fontWeight: '600', mb: 2}}>{title}</Typography>
                     <Typography sx={{color: '#666', fontSize: '15px', fontWeight: '400', mb: 2}}>{desc}</Typography>
                 </Box>
                 <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end'}}>
                     <Box sx={{display: 'flex'}}>
-                        <Box sx={{display: 'flex', p: '2px 5px', justifyContent: 'center', alignItems: 'center', gap: '4px', borderRadius: '4px', border: '0.5px solid #999', mr: 1}}>
+                        <Box sx={{display: 'flex', p: '2px 5px', justifyContent: 'center', alignItems: 'center', gap: '4px', borderRadius: '4px', border: '0.5px solid #999', mr: 1,
+                        '&:hover': {
+                            bgcolor: '#f5f5f5',
+                        }}}
+                        onClick={(e)=>{
+                            e.stopPropagation()
+                            handleEdit(wId)
+                            }}
+                        className="editButton">
                             <img src={edit}/>
                             <Typography sx={{fontSize: '13px', fontWeight: 500, letterSpacing: '-0.13px', color: '#999'
                             ,cursor: 'pointer'}}
-                                onClick={()=>{
-                                    handleEdit(wId)
-                                    }}>
+                                >
                                 Edit
                             </Typography>
                         </Box>
-                        <Box sx={{display: 'flex', p: '2px 5px', justifyContent: 'center', alignItems: 'center', gap: '4px', borderRadius: '4px', border: '0.5px solid #999'}}>
+                        <Box sx={{display: 'flex', p: '2px 5px', justifyContent: 'center', alignItems: 'center', gap: '4px', borderRadius: '4px', border: '0.5px solid #999',
+                        '&:hover': {
+                            bgcolor: '#f2f1ed',
+                        }}}
+                        onClick={(e)=>{
+                            e.stopPropagation()
+                            handleDeleteClick(wId, title)}}
+                        className="deleteButton">
                             <img src={deleteIcon}/>
                             <Typography sx={{fontSize: '13px', fontWeight: 500, letterSpacing: '-0.13px', color: '#999'
                             ,cursor: 'pointer'}}
-                            onClick={()=>handleDeleteClick(wId, title)}>
+                            >
                                 Delete
                             </Typography>
                         </Box>
@@ -240,6 +265,13 @@ const Workspaces = () => {
                     </Typography>
                 </Box>
             </Box>
+        </Box>
+    )
+
+    const loadingCard = () => (
+        <Box sx={{width: '320px', height: '210px', bgcolor: '#f9f9f9', borderRadius: '20px'
+            ,p: 3, mr: 3, mb: 3}} className={styles.loading}>
+
         </Box>
     )
 
@@ -255,6 +287,44 @@ const Workspaces = () => {
                 />
         </Box>
     )
+
+    const workspaceKeywordsTextField = (title: string, value: any, isEdit: boolean) => {
+        let newKeywords = isEdit ? [...curEditItem!.keywords!] : [...workspace!.keywords!]
+        return <Box sx={{mb: 2}}>
+            <Typography id="modal-modal-description" sx={{ mt: 2, color: '#666' }}>
+                {title}
+            </Typography>
+            <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+                <TextField variant='outlined' 
+                    value={value[0]}
+                    placeholder='keyword1'
+                    sx={{width: '31%'}}
+                    onChange={(event: ChangeEvent<HTMLInputElement>)=>{
+                        newKeywords[0] = event.target.value
+                        isEdit ? setCurEditItem({...curEditItem, keywords: newKeywords})
+                        : setWorkspace({...workspace, keywords: newKeywords})}}
+                    />
+                <TextField variant='outlined' 
+                    value={value[1]}
+                    placeholder='keyword2'
+                    sx={{width: '31%'}}
+                    onChange={(event: ChangeEvent<HTMLInputElement>)=>{
+                        newKeywords[1] = event.target.value
+                        isEdit ? setCurEditItem({...curEditItem, keywords: newKeywords})
+                        : setWorkspace({...workspace, keywords: newKeywords})}}
+                    />
+                <TextField variant='outlined' 
+                    value={value[2]}
+                    placeholder='keyword3'
+                    sx={{width: '31%'}}
+                    onChange={(event: ChangeEvent<HTMLInputElement>)=>{
+                        newKeywords[2] = event.target.value
+                        isEdit ? setCurEditItem({...curEditItem, keywords: newKeywords})
+                        : setWorkspace({...workspace, keywords: newKeywords})}}
+                    />
+            </Box>
+        </Box>
+    }
   return (
     <PageLayout workspace={false} number={0}>
         <MetaTag title="연두 홈" description="궁금한 개념 질문 또는 논문 제목 검색을 하면 답변과 관련 논문을 제공합니다." keywords="논문, 검색, 질문, 개념, gpt"/>
@@ -262,21 +332,21 @@ const Workspaces = () => {
         <Box sx={{display: 'flex', justifyContent: 'flex-end', p:2, color: 'grey.700'}}>
           <UserMenu/>
         </Box>
-        <Box sx={{}}>
+        <Box>
             <Box sx={{mx: '7vw', my: '5vh', display: 'flex', flexWrap: 'wrap'}}>
                 <Box sx={{width: '320px', height: '210px', bgcolor: '#F5F5F5', borderRadius: '20px'
                 , display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
                 mr: 3, mb: 3}}>
-                    <img src={plus} onClick={handleAddWorkspace} style={{cursor: 'pointer'}}/>
+                    <Box className={pageStyles.imageContainer}>
+                        <img src={plus} onClick={handleAddWorkspace} className={pageStyles.plusIcon}/>
+                        <img src={plusHover} onClick={handleAddWorkspace} className={pageStyles.plusIconHover}/>
+                    </Box>
                     <Typography sx={{color: '#333', fontSize: '16px', fontWeight: '500'}}> Add a workspace</Typography>
                 </Box>
-                {/* {console.log(data)} */}
-                {(workspacesArr) && workspacesArr.map((workspace)=>(
-                    card(workspace.title!, workspace.description!, workspace.editDate!, workspace.workspaceId!)
+                {!isLoading && (workspacesArr) && workspacesArr.map((workspace, idx)=>(
+                    card(workspace.title!, workspace.description!, workspace.editDate!, workspace.workspaceId!, idx)
                 ))}
-                {/* {workspaces && workspaces.map((workspace:any)=>(
-                    card(workspace.title, workspace.description, workspace.editDate, workspace.workspaceId)
-                ))} */}
+                {isLoading && Array.from({ length: 5 }).map((_, index) => loadingCard())}
             </Box>
         </Box>
         <Modal open={open} onClose={handleClose}>
@@ -284,7 +354,7 @@ const Workspaces = () => {
                 <Typography id="modal-modal-title" variant="h6" component="h2" sx={{color: '#617F5B', fontWeight: 600, fontSize: '23px'}}>
                     {isEdit ? "Edit a workspace" :"Add a workspace"}
                 </Typography>
-                {!isEdit && workspaceTextField('Workspace Title', workspace!.title!, (event: ChangeEvent<HTMLInputElement>)=>{setWorkspace({...workspace, title: event?.target.value})})}
+                {!isEdit && workspaceTextField('Workspace Title*', workspace!.title!, (event: ChangeEvent<HTMLInputElement>)=>{setWorkspace({...workspace, title: event?.target.value})})}
                 {!isEdit && workspaceTextField('Workspace Description', workspace!.description!, (event: ChangeEvent<HTMLInputElement>)=>{setWorkspace({...workspace, description: event?.target.value})})}
                 {isEdit && workspaceTextField('Workspace Title', curEditItem!.title!, (event: ChangeEvent<HTMLInputElement>)=>{setCurEditItem({...curEditItem, title: event?.target.value})})}
                 {isEdit && workspaceTextField('Workspace Description', curEditItem!.description!, (event: ChangeEvent<HTMLInputElement>)=>{setCurEditItem({...curEditItem, description: event?.target.value})})}
@@ -302,15 +372,15 @@ const Workspaces = () => {
                         }}
                     >
                         <MenuItem value="NO">없음</MenuItem>
-                        {studyFieldList.map((studyField) => (
-                            <MenuItem value={studyField}>{studyField}</MenuItem>
+                        {studyFieldList.map((studyField, idx) => (
+                            <MenuItem key={idx} value={studyField}>{studyField}</MenuItem>
 
                         ))}
                         {/* <MenuItem value="직접 입력">직접 입력</MenuItem> */}
                     </Select>
                 </Box>
-                {!isEdit && workspaceTextField('Workspace Keywords or Interests', workspace!.keywords![0], (event: ChangeEvent<HTMLInputElement>)=>{setWorkspace({...workspace, keywords: [event.target.value]})})}
-                {isEdit && curEditItem && workspaceTextField('Workspace Keywords or Interests', curEditItem!.keywords![0], (event: ChangeEvent<HTMLInputElement>)=>{setCurEditItem({...curEditItem, keywords: [event.target.value]})})}
+                {!isEdit && workspaceKeywordsTextField('Workspace Keywords or Interests', workspace!.keywords, isEdit)}
+                {isEdit && curEditItem && workspaceKeywordsTextField('Workspace Keywords or Interests', curEditItem!.keywords!, isEdit)}
                 <Box sx={{display: 'flex', justifyContent: 'flex-end', mt: 5}}>
                     {!isEdit && <CustomButton title="Create new workspace" width= '200px' click={handleSubmitWorkspace} />}
                     {isEdit && <CustomButton title="Edit" width= '100px' click={()=>handleEditWorkspace(curEditItem!.workspaceId!)} />}

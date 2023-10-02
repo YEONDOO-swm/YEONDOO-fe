@@ -22,6 +22,7 @@ import { useMutation, useQuery } from "react-query";
 import { paperType } from "./home";
 import { useNavigate } from "react-router-dom";
 import PageLayout from "../layout/pageLayout";
+import { getApi, postApi, refreshApi } from "../utils/apiUtils";
 
 type paperLikePayload = {
     workspaceId: number | null;
@@ -56,38 +57,10 @@ export const PaperStorage = () => {
     }
 
     const { mutate } = useMutation(
-        (value: paperLikePayload)=> fetch(`${api}/api/paperlikeonoff`, {
-            method:'POST',
-            headers: { 'Content-Type' : 'application/json',
-        'Gauth': getCookie('access') },
-            body: JSON.stringify(value)
-        }).then(response => {
+        (value: paperLikePayload)=> postApi(api, `/api/paperlikeonoff`, value)
+        .then(response => {
             if (response.status === 401) {
-
-                fetch(`${api}/api/update/token`, {
-                  headers: { 
-                    'Refresh' : getCookie('refresh') 
-                  }
-                }).then(response => {
-                  if (response.status === 401) {
-                    navigate('/login')
-                    notify('Login time has expired')
-                    throw new Error('로그아웃')
-                  }
-                  else if (response.status === 200) {
-                    let jwtToken: string | null = response.headers.get('Gauth')
-                    let refreshToken: string | null = response.headers.get('RefreshToken')
-    
-                    if (jwtToken) {
-                        setCookie('access', jwtToken)
-                    }
-    
-                    if (refreshToken) {
-                        setCookie('refresh', refreshToken)
-                    }
-                  }
-                })
-                
+                refreshApi(api, notify, navigate)
               }
         }), {
             onError: (error) => {
@@ -109,57 +82,16 @@ export const PaperStorage = () => {
             on: false
         }
         mutate(payload)
-
-        // fetch(`${api}/api/paperlikeonoff`, {
-        //     method:'POST',
-        //     headers: { 'Content-Type' : 'application/json',
-        // 'Gauth': getCookie('access') },
-        //     body: JSON.stringify(payload)
-        // })
-        // .then(response => {
-        //     return response;
-        // })
-        // .catch(error => {
-        //     console.log("관심 논문 삭제에 실패하였습니다", error)
-        //     Sentry.captureException(error)
-        // })
         setOpen(false)
     }
 
-    const {data: papersInStorage, isLoading} = useQuery(['homesearch', api, workspaceId],()=> fetch(`${api}/api/container?workspaceId=${workspaceId}`
-    , {
-        headers: {
-            "Gauth": getCookie('access')
-        }
-    }).then(response => {
+    const {data: papersInStorage, isLoading} = useQuery(['homesearch', api, workspaceId],()=> 
+    getApi(api, `/api/container?workspaceId=${workspaceId}`)
+    .then(response => {
         if (response.status === 200) {
             return response.json()
         } else if (response.status === 401) {
-
-            fetch(`${api}/api/update/token`, {
-              headers: { 
-                'Refresh' : getCookie('refresh') 
-              }
-            }).then(response => {
-              if (response.status === 401) {
-                navigate('/login')
-                notify('Login time has expired')
-                throw new Error('로그아웃')
-              }
-              else if (response.status === 200) {
-                let jwtToken: string | null = response.headers.get('Gauth')
-                let refreshToken: string | null = response.headers.get('RefreshToken')
-
-                if (jwtToken) {
-                    setCookie('access', jwtToken)
-                }
-
-                if (refreshToken) {
-                    setCookie('refresh', refreshToken)
-                }
-              }
-            })
-            
+            refreshApi(api, notify, navigate)
           }
         throw new Error("논문 내 질의 히스토리 정보를 가져오는데 실패하였습니다")
     }),
@@ -169,26 +101,6 @@ export const PaperStorage = () => {
             Sentry.captureException(error)
         }
     })
-
-    // console.log(papersInStorage)
-
-    // const callGetApi = async () => {
-    //     setLoading(true)
-    //     try {
-    //         const response = await fetch(`${api}/api/container?workspaceId=${workspaceId}`, {
-    //             headers: {
-    //                 "Gauth": getCookie('access')
-    //             }
-    //         })
-    //         const data = await response.json()
-    //         setPapersInStorage(data)
-    //         setLoading(false)
-    //     } catch (error) {
-    //         console.error('관심 논문 정보를 불러오는데 실패하였습니다: ', error)
-    //         Sentry.captureException(error)
-    //         setLoading(false)
-    //     }
-    // }
 
     useEffect(() => {
         if (process.env.NODE_ENV === 'production') {

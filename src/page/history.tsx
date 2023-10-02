@@ -20,6 +20,7 @@ import { useSelector } from "react-redux";
 import { CounterState } from "../reducer";
 import { useQuery } from "react-query";
 import PageLayout from "../layout/pageLayout";
+import { getApi, refreshApi } from "../utils/apiUtils";
 
 type historySearchType = {
     results: resultType[]
@@ -40,40 +41,13 @@ export const History = () => {
     const notify = useNotify()
 
     const {data: results, isLoading} = useQuery(["historySearch", workspaceId], ()=>
-        fetch(`${api}/api/history/search?workspaceId=${workspaceId}`, {
-        headers: {
-            "Gauth": getCookie('access')
-        }
-        }).then(response => {
+        getApi(api, `/api/history/search?workspaceId=${workspaceId}`)
+        .then(response => {
             if (response.status === 200) {
                 return response.json()
             } else if (response.status === 401) {
-
-                fetch(`${api}/api/update/token`, {
-                  headers: { 
-                    'Refresh' : getCookie('refresh') 
-                  }
-                }).then(response => {
-                  if (response.status === 401) {
-                    navigate('/login')
-                    notify('Login time has expired')
-                    throw new Error('로그아웃')
-                  }
-                  else if (response.status === 200) {
-                    let jwtToken: string | null = response.headers.get('Gauth')
-                    let refreshToken: string | null = response.headers.get('RefreshToken')
-    
-                    if (jwtToken) {
-                        setCookie('access', jwtToken)
-                    }
-    
-                    if (refreshToken) {
-                        setCookie('refresh', refreshToken)
-                    }
-                  }
-                })
-                
-              }
+                refreshApi(api, notify, navigate)
+            }
             throw new Error("히스토리 정보를 가져오는데 실패하였습니다")
         })
         .then(data => data.results),

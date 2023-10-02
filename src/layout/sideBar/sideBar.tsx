@@ -17,8 +17,11 @@ const SideBar = ({number}:{number: number}) => {
             fontWeight: '600',
             lineHeight: 'normal',
             pt: 2,
-            pb: 4
-        }}>Yeondoo</Typography>
+            pb: 4,
+            cursor: 'pointer'
+        }}
+        onClick={()=>{window.location.replace('/workspaces')}}
+        >Yeondoo</Typography>
 
         <SideBarMenu img={Dashboard} title='Dashboard' number={number} idx={0} url="/workspace"/>
         <SideBarMenu img={Profile} title='My Library' number={number} idx={1} url="/mylibrary"/>
