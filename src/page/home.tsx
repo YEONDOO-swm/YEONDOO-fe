@@ -1,8 +1,8 @@
 import * as React from "react";
-import { Card, CardContent, FormControl, InputLabel, MenuItem, Select, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { Box, Container, InputAdornment, TextField, IconButton, Typography, Button } from "@mui/material";
+import { Card } from '@mui/material';
+import { Box, Typography} from "@mui/material";
 import { useState, useEffect, useRef, KeyboardEvent, MouseEvent } from "react";
-import { NumberFieldProps, Title, UserMenu, useAuthenticated, useNotify } from 'react-admin';
+import { Title, UserMenu, useAuthenticated, useNotify } from 'react-admin';
 import { useNavigate, useParams } from 'react-router-dom';
 import * as amplitude from '@amplitude/analytics-browser';
 import { SearchTap } from "../component/searchTap";
@@ -14,7 +14,6 @@ import scrollStyle from "../layout/scroll.module.css";
 import { color } from "../layout/color";
 import MetaTag from "../SEOMetaTag";
 import * as Sentry from '@sentry/react';
-import { getCookie, setCookie } from "../cookie";
 import { useSelector } from "react-redux";
 import { CounterState } from "../reducer";
 import { useQuery } from "react-query";
@@ -394,7 +393,7 @@ export const Home = () => {
                   }`}
                   sx={{
                   p:3}}>
-                    <Box sx={{display: 'flex', justifyContent: 'space-between', mb: 2}}>
+                    <Box sx={{display: 'flex', justifyContent: 'space-between', mb: 1.5}}>
                       <Box sx={{fontWeight: '600', fontSize: '18px'
                     , display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>
                         {paper.title}
@@ -404,9 +403,12 @@ export const Home = () => {
                         <Typography sx={{color: '#617F5B', fontWeight: '600'}}>{paper.likes}</Typography>
                       </Box>
                     </Box>
-                    <Box sx={{display: 'flex', mb: 1.5}}>
+                    <Box sx={{width: '23vw', display: 'flex', flexWrap:'', mb: 1.5, overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none',
+                  '&::-webkit-scrollbar': {
+                    display: 'none', /* Chrome 브라우저의 스크롤바 숨김 */
+                  }}}>
                       {paper.subject.map((sub: string, idx: number) => (
-                        <Box key={idx}>
+                        <Box key={idx} sx={{whiteSpace: 'nowrap'}}>
                           {tag(sub)}
                         </Box>
                       ))}
