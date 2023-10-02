@@ -395,7 +395,7 @@ export const Home = () => {
                   p:3}}>
                     <Box sx={{display: 'flex', justifyContent: 'space-between', mb: 1.5}}>
                       <Box sx={{fontWeight: '600', fontSize: '18px'
-                    , display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>
+                    , display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '25px'}}>
                         {paper.title}
                       </Box>
                       <Box sx={{ marginTop: '-5px', display: 'flex', alignItems: 'center'}}>
