@@ -15,7 +15,7 @@ const SideBarMenu = ({img, title, number, idx, url}: {img: any, title: string, n
         },
       mb: 0.5,
       cursor: 'pointer'
-    }} onClick={()=>window.location.replace(url)}>
+    }} onClick={()=>window.location.href =url}>
       <Box sx={{height: '100%',display: 'flex', alignItems: 'center', p: 2}}>
           <img src={img} style={{opacity: number===idx?1:0.5}}/>
           <Typography sx={{color: number===idx?'white':'rgba(255, 255, 255, 0.5)', ml: 2}}>
