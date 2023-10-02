@@ -425,7 +425,7 @@ export const Home = () => {
                     <Box sx={{color: '#666', mb: 1.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>
                       {paper.summary}
                     </Box>
-                    <CustomButton title="Chat with AI" width="100%" click={()=>navigate('/paperstorage')}/>
+                    <CustomButton title="Chat with AI" width="100%" click={()=>navigate(`/paper?paperid=${paper.paperId}`)}/>
                   </Box>
                 ))}
               </Box>

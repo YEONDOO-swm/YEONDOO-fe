@@ -131,9 +131,10 @@ export const PaperView = () => {
         setSearchTermInPaper("")
         const query = new URLSearchParams(window.location.search);
         const paperId: string = query.get('paperid') || '';
+        const keyNumber = Math.floor(Math.random()*1000000000)
         try {
-            setKey(Math.floor(Math.random()*1000000000))
-            const response = await postApi(api, `/api/paper/${paperId}?workspaceId=${workspaceId}&key=${key}`, JSON.stringify({question: searchTermInPaper}))
+            setKey(keyNumber)
+            const response = await postApi(api, `/api/paper/${paperId}?workspaceId=${workspaceId}&key=${keyNumber}`, JSON.stringify({question: searchTermInPaper}))
 
             if (response.status === 401) {
                 refreshApi(api, notify, navigate)
@@ -169,7 +170,7 @@ export const PaperView = () => {
             console.error("논문 내 질문 오류")
             Sentry.captureException(error)
         } finally {
-            const response = await fetch(`${api}/api/paper/${paperId}?workspaceId=${workspaceId}&key=${key}`)
+            const response = await fetch(`${api}/api/paper/${paperId}?workspaceId=${workspaceId}&key=${keyNumber}`)
             const data = await response.json()
             setResultId(data)
         }
