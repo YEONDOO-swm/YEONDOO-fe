@@ -400,7 +400,7 @@ export const Home = () => {
                         {paper.title}
                       </Box>
                       <Box sx={{ marginTop: '-5px', display: 'flex', alignItems: 'center'}}>
-                        <HeartClick currentItem={paper} onUpdateLikes={handleUpdateRecommendLikes} />
+                        <HeartClick currentItem={paper} onUpdateLikes={handleUpdateRecommendLikes} paperlike={paper.isLike}/>
                         <Typography sx={{color: '#617F5B', fontWeight: '600'}}>{paper.likes}</Typography>
                       </Box>
                     </Box>
@@ -441,11 +441,6 @@ export const Home = () => {
                   {idx!==recentData.recentlyTrends.length-1 && <hr style={{backgroundColor: '#ddd', height: '1px', border: 0}}/>}
                 </Box>
               ))}
-              {/* {trend('title', '2021.09.12')}
-              <hr style={{backgroundColor: '#ddd', height: '1px', border: 0}}/>
-              {trend('title', '2021.09.12')} */}
-              {/* <hr style={{backgroundColor: '#ddd', height: '1px', border: 0}}/>
-              {trend('title', '2021.09.12')} */}
             </Box>
           </Box>
         </Box>
