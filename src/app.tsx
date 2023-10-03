@@ -92,7 +92,7 @@ export const App = () => {
                         <CustomRoutes>
                             {/* <Route path="/" element={<Navigate to="/home" replace />} /> */}
                             
-                            <Route path="/home/:workspaceId" element={< Home />}/>
+                            <Route path="/home" element={< Home />}/>
                             <Route path="/paperstorage" element={< PaperStorage/>}/>
                             <Route path="/history" element={< History />}/>
                             <Route path="/userprofile" element={< UserProfile />}/>

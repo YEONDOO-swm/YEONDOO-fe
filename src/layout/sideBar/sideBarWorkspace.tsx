@@ -23,10 +23,10 @@ const SideBarWorkspace = ({number}:{number: number}) => {
               pt: 2,
               pb: 4
           }}
-          onClick={()=>{navigate("/home/"+workspaceId)}}
+          onClick={()=>{window.location.replace("/home?workspaceId="+workspaceId)}}
           >{workspaceTitle}</Typography>
 
-        <SideBarMenu img={home} title='Home' number={number} idx={0} url={"/home/"+workspaceId}/>
+        <SideBarMenu img={home} title='Home' number={number} idx={0} url={"/home?workspaceId="+workspaceId}/>
         <SideBarMenu img={works} title='My works' number={number} idx={1} url="/paperstorage"/>
         <SideBarMenu img={chat} title='Chat with AI' number={number} idx={2} url="/paper"/>
         <SideBarMenu img={history} title='History' number={number} idx={3} url="/history"/>
