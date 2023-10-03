@@ -189,7 +189,7 @@ const Workspaces = () => {
 
     const goToWorkspace = (workspaceId: number, workspaceTitle: string) => {
         sessionStorage.setItem('workspaceTitle', workspaceTitle)
-        navigate(`/home/${workspaceId}`)
+        navigate(`/home?workspaceId=${workspaceId}`)
     }
 
     const style = {

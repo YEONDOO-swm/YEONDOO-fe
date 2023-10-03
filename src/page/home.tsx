@@ -57,7 +57,9 @@ export const Home = () => {
 
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    const { workspaceId } = useParams()
+    // const { workspaceId } = useParams()
+    const query: URLSearchParams = new URLSearchParams(window.location.search); 
+    const workspaceId: string = query.get('workspaceId') || '';
     sessionStorage.setItem('workspaceId', workspaceId!)
     const workspaceTitle = sessionStorage.getItem('workspaceTitle')
     
@@ -113,7 +115,7 @@ export const Home = () => {
             amplitude.track("Home에서 검색")
           }
           
-          navigate(`/home/${workspaceId}?query=${searchTerm}`)
+          navigate(`/home?workspaceId=${workspaceId}&query=${searchTerm}`)
           performSearch()
           //window.location.href = `/home?query=${searchTerm}&type=${searchType}`
       }
