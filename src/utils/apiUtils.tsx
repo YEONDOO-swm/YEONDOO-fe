@@ -41,11 +41,13 @@ export const deleteApi = (apiEndPoint: string, api: string) => {
 }
 
 export const refreshApi = (apiEndPoint: string, notify: Function, navigate: Function) => {
-    return fetch(`${apiEndPoint}/api/update/token`, {
-        headers: {
-            'Refresh' : getCookie('refresh')
-        }
-    }).then(response => {
+    return fetch(`${apiEndPoint}/api/update/token`
+    // , {
+    //     headers: {
+    //         'Refresh' : getCookie('refresh')
+    //     }
+    // }
+    ).then(response => {
         if (response.status === 401) {
           navigate('/login')
           notify('Login time has expired')
@@ -53,7 +55,7 @@ export const refreshApi = (apiEndPoint: string, notify: Function, navigate: Func
         }
         else if (response.status === 200) {
           let jwtToken: string | null = response.headers.get('Gauth')
-          let refreshToken: string | null = response.headers.get('refresh')
+          let refreshToken: string | null = response.headers.get('RefreshToken')
 
           if (jwtToken) {
               setCookie('access', jwtToken)
