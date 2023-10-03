@@ -67,9 +67,6 @@ export const authProvider = {
     // called when the user clicks on the logout button
     logout: () => {
 
-      removeCookie('username')
-      removeCookie('access')
-
       var api ='';
       if (process.env.NODE_ENV === 'development'){
         api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
@@ -80,6 +77,9 @@ export const authProvider = {
       }
       
       getApi(api, '/api/logout')
+
+      removeCookie('username')
+      removeCookie('access')
       return Promise.resolve();
     },
     // called when the API returns an error
