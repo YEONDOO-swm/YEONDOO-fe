@@ -42,11 +42,11 @@ export const deleteApi = (apiEndPoint: string, api: string) => {
 
 export const refreshApi = (apiEndPoint: string, notify: Function, navigate: Function) => {
     return fetch(`${apiEndPoint}/api/update/token`
-    // , {
-    //     headers: {
-    //         'Refresh' : getCookie('refresh')
-    //     }
-    // }
+    , {
+        headers: {
+            'Refresh' : getCookie('refresh')
+        }
+    }
     ).then(response => {
         if (response.status === 401) {
           navigate('/login')
