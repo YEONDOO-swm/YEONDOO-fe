@@ -91,7 +91,6 @@ export const Home = () => {
     )
 
     useEffect(()=> {
-      refreshApi(api, notify, navigate)
       if (recentData) {
         const timer = setInterval(()=> {
           setCurrentIndex((prevIndex) => (prevIndex + 1) % recentData.recommendedPapers.length)
