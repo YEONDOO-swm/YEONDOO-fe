@@ -170,7 +170,7 @@ export const PaperView = () => {
             console.error("논문 내 질문 오류")
             Sentry.captureException(error)
         } finally {
-            const response = await fetch(`${api}/api/paper/${paperId}?workspaceId=${workspaceId}&key=${keyNumber}`)
+            const response = await getApi(api,`/api/paper/${paperId}?workspaceId=${workspaceId}&key=${keyNumber}`)
             const data = await response.json()
             setResultId(data)
         }
