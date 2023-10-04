@@ -134,7 +134,7 @@ export const PaperView = () => {
         const keyNumber = Math.floor(Math.random()*1000000000)
         try {
             setKey(keyNumber)
-            const response = await postApi(api, `/api/paper/${paperId}?workspaceId=${workspaceId}&key=${keyNumber}`, JSON.stringify({question: searchTermInPaper}))
+            const response = await postApi(api, `/api/paper/${paperId}?workspaceId=${workspaceId}&key=${keyNumber}`, {question: searchTermInPaper})
 
             if (response.status === 401) {
                 refreshApi(api, notify, navigate)
