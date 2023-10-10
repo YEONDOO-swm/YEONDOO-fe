@@ -54,7 +54,7 @@ export const App = () => {
         RouteChangeTracker()
     }
 
-    var api = ''; //var은 웬만해선x
+    let api = ''; //var은 웬만해선x
     if (process.env.NODE_ENV === 'development'){
       api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
     }
@@ -97,12 +97,12 @@ export const App = () => {
                             <Route path="/paperstorage" element={< PaperStorage/>}/>
                             <Route path="/history" element={< History />}/>
                             <Route path="/userprofile" element={< UserProfile />}/>
-                            <Route path="/paper" element={< PaperView />}/>
+                            {/* <Route path="/paper" element={< PaperView />}/> */}
                             <Route path="/historypaper" element={< HistoryPaper />} />
                             <Route path="/historytrash" element={< Trash />} />
                             <Route path="/pdfviewer" element={< PdfViewer />} />
                             <Route path="/workspaces" element={<Workspaces/>} />
-                            <Route path="/reader" element={<Reader/>} />
+                            <Route path="/paper" element={<Reader/>} />
 
                         </CustomRoutes>
                     </Admin>

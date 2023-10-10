@@ -252,7 +252,7 @@ export const Home = () => {
           <Typography sx={{fontWeight: 500}}>
             {recentlyPapers.title}
           </Typography>
-          <Box sx={{display: 'flex'}} onClick={()=>{navigate(`/paper?paperid=${recentlyPapers.paperId}`)}}>
+          <Box sx={{display: 'flex'}} onClick={()=>{window.open(`/paper?paperid=${recentlyPapers.paperId}`)}}>
             <Typography sx={{fontWeight: 500, color: '#617F5B', cursor: 'pointer', '&:hover':{
               color: '#445142'
             }}}>More</Typography>
@@ -429,7 +429,7 @@ export const Home = () => {
                     <Box sx={{color: '#666', mb: 1.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>
                       {paper.summary}
                     </Box>
-                    <CustomButton title="Chat with AI" width="100%" click={()=>navigate(`/paper?paperid=${paper.paperId}`)}/>
+                    <CustomButton title="Chat with AI" width="100%" click={()=>window.open(`/paper?paperid=${paper.paperId}`)}/>
                   </Box>
                 ))}
               </Box>
