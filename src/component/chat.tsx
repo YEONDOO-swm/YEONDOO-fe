@@ -44,8 +44,10 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef
     const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        scrollContainerRef.current?.scrollTo(0, scrollContainerRef.current.scrollHeight);
-      }, [data, enteredSearchTermInPaper, searchResultsInPaper]);
+        if (isChatOpen) {
+            scrollContainerRef.current?.scrollTo(0, scrollContainerRef.current.scrollHeight);
+        }
+      }, [isChatOpen, data, enteredSearchTermInPaper, searchResultsInPaper]);
 
     const handleChatOpen = () => {
         setIsChatOpen(!isChatOpen)
@@ -172,7 +174,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef
       {/* 직사각형 (예: 채널톡 스타일) */}
       {isChatOpen && <Box
         style={{
-          width: '300px',
+          width: '20vw',
           height: '500px',
           backgroundColor: '#ddd',
           position: 'absolute', // 부모(상위) 요소에 대한 상대 위치로 설정

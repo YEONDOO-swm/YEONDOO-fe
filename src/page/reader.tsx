@@ -91,16 +91,3 @@ const Reader = () => {
 }
 
 export default Reader
-
-// import React from 'react'
-
-// const ReaderC = () => {
-//     for (var prop in window) {
-// 		console.log(prop);
-// 	}
-//   return (
-//     <div>ReaderC</div>
-//   )
-// }
-
-// export default ReaderC
