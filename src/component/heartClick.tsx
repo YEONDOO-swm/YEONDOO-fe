@@ -67,7 +67,7 @@ export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentIt
             onUpdateLikes(currentItem.paperId, currentItem.likes + 1);
           }
         }
-        postApi(api, `/api/paperlikeonoff`, JSON.stringify(payload))
+        postApi(api, `/api/paperlikeonoff`, payload)
         .then(response => {
           if (response.status === 401) {
             refreshApi(api, notify, navigate)
