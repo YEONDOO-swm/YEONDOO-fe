@@ -20,6 +20,7 @@ jobs:
     - name: Generate environment variables file for production
       run: |
         echo "VITE_REACT_APP_AWS_SERVER=${{ secrets.VITE_REACT_APP_AWS_SERVER }}" >> $GITHUB_ENV
+        echo "VITE_READER_URL=${{ secrets.VITE_READER_URL }}" >> $GITHUB_ENV
         
     - name: npm install, build
       run: |
