@@ -392,42 +392,44 @@ export const Home = () => {
                 {recommendedPapers && recommendedPapers.map((paper: any, idx: number) => (
                   <Box key={idx} className={`${styles.transitionItem} ${
                     idx === currentIndex ? styles.active : ''
-                  }`}
-                  sx={{
-                  p:3}}>
-                    <Box sx={{display: 'flex', justifyContent: 'space-between', mb: 1.5}}>
-                      <Box sx={{fontWeight: '600', fontSize: '18px'
-                    , display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '25px'}}>
-                        {paper.title}
-                      </Box>
-                      <Box sx={{ marginTop: '-5px', display: 'flex', alignItems: 'center'}}>
-                        <HeartClick currentItem={paper} onUpdateLikes={handleUpdateRecommendLikes} paperlike={paper.isLike}/>
-                        <Typography sx={{color: '#617F5B', fontWeight: '600'}}>{paper.likes}</Typography>
-                      </Box>
-                    </Box>
-                    <Box sx={{width: '23vw', display: 'flex', flexWrap:'', mb: 1.5, overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none',
-                  '&::-webkit-scrollbar': {
-                    display: 'none', /* Chrome 브라우저의 스크롤바 숨김 */
-                  }}}>
-                      {paper.subject.map((sub: string, idx: number) => (
-                        <Box key={idx} sx={{whiteSpace: 'nowrap'}}>
-                          {tag(sub)}
+                    }`}
+                    sx={{
+                    p:3, display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
+                      <Box>
+                        <Box sx={{display: 'flex', justifyContent: 'space-between', mb: 1.5}}>
+                          <Box sx={{fontWeight: '600', fontSize: '18px'
+                        , display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '25px'}}>
+                            {paper.title}
+                          </Box>
+                          <Box sx={{ marginTop: '-5px', display: 'flex', alignItems: 'center'}}>
+                            <HeartClick currentItem={paper} onUpdateLikes={handleUpdateRecommendLikes} paperlike={paper.isLike}/>
+                            <Typography sx={{color: '#617F5B', fontWeight: '600'}}>{paper.likes}</Typography>
+                          </Box>
                         </Box>
-                      ))}
-                    </Box>
-                    <Box sx={{display: 'flex', mb: 1.5}}>
-                      <Typography sx={{fontWeight: '500', mr: 1
-                    , display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}> 
-                        {(paper.authors.length > 3 
-                        ? paper.authors.slice(3).join(', ')
-                        : paper.authors.join(', '))} 
-                      </Typography>
-                      <Typography sx={{color: '#666'}}> 
-                        {paper.year}
-                      </Typography>
-                    </Box>
-                    <Box sx={{color: '#666', mb: 1.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>
-                      {paper.summary}
+                        <Box sx={{width: '23vw', display: 'flex', flexWrap:'', mb: 1.5, overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none',
+                        '&::-webkit-scrollbar': {
+                          display: 'none', /* Chrome 브라우저의 스크롤바 숨김 */
+                        }}}>
+                          {paper.subject.map((sub: string, idx: number) => (
+                            <Box key={idx} sx={{whiteSpace: 'nowrap'}}>
+                              {tag(sub)}
+                            </Box>
+                          ))}
+                        </Box>
+                        <Box sx={{display: 'flex', mb: 1.5}}>
+                          <Typography sx={{fontWeight: '500', mr: 1
+                        , display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}> 
+                            {(paper.authors.length > 3 
+                            ? paper.authors.slice(3).join(', ')
+                            : paper.authors.join(', '))} 
+                          </Typography>
+                          <Typography sx={{color: '#666'}}> 
+                            {paper.year}
+                          </Typography>
+                        </Box>
+                        <Box sx={{color: '#666', mb: 1.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>
+                          {paper.summary}
+                        </Box>
                     </Box>
                     <CustomButton title="Chat with AI" width="100%" click={()=>window.open(`/paper?paperid=${paper.paperId}`)}/>
                   </Box>
