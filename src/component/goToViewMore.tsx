@@ -9,7 +9,7 @@ export const GoToViewMore = ({paperid}: {paperid:string}) => {
     const navigate = useNavigate()
 
     const handleViewMore = (paperId: string) => {
-        navigate(`/paper?paperid=${paperId}`)
+        window.open(`/paper?paperid=${paperId}`)
       }
 
     return (<Button variant ="contained" onClick={() => handleViewMore(paperid)}>
