@@ -38,6 +38,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef
     const [isFirstWord, setIsFirstWord] = useState<boolean>(true) // 스트리밍 응답 저장시 필요
     const [key, setKey] = useState<number>(); // 스트리밍 데이터 + 기본 데이터 받기 위해
     const [resultId, setResultId] = useState<number>(1)
+    const [tag, setTag] = useState<string>("")
 
     // const [isChatOpen, setIsChatOpen] = useState<boolean>(false)
     
@@ -49,7 +50,17 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef
         }
       }, [isChatOpen, data, enteredSearchTermInPaper, searchResultsInPaper]);
 
+    useEffect(() => {
+        setTag(selectedText.trim())
+        //setSearchTermInPaper(selectedText.trim())
+        
+    }, [selectedText])
+
     const handleChatOpen = () => {
+        if (isChatOpen) {
+            setTag("")
+            //setSearchTermInPaper("")
+        }
         setIsChatOpen(!isChatOpen)
     }
 
@@ -174,7 +185,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef
       {/* 직사각형 (예: 채널톡 스타일) */}
       {isChatOpen && <Box
         style={{
-          width: '20vw',
+          width: '350px',
           height: '500px',
           backgroundColor: '#ddd',
           position: 'absolute', // 부모(상위) 요소에 대한 상대 위치로 설정
