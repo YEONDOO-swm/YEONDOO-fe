@@ -39,6 +39,11 @@ const Reader = () => {
   const [isTabClicked, setIsTabClicked] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [data, setData] = useState()
+  const [curPageIndex, setCurPageIndex] = useState<number>(0)
+
+  const [isDragging, setIsDragging] = useState(false);
+  const [isDragged, setIsDragged] = useState(false)
+  const [chatPosition, setChatPosition] = useState({ x: 15 * window.innerWidth / 100, y: 85 * window.innerHeight / 100 });
 
   const receiveIsPdfRender = (e: MessageEvent) => {
     if (e.data.isPdfRender) {
@@ -47,6 +52,8 @@ const Reader = () => {
     else if (e.data.selectedText) {
       setIsChatOpen(true)
       setSelectedText(e.data.selectedText)
+    } else if (e.data && e.data.pageIndex >=0) {
+      setCurPageIndex(e.data.pageIndex)
     }
   }
   window.addEventListener('message', receiveIsPdfRender)
@@ -116,6 +123,32 @@ const Reader = () => {
     }
   }
 
+  const handleMouseDown = (e: any) => {
+    setIsDragging(true);
+  };
+
+  useEffect(()=>{
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    } 
+    return () => { // useEffect 동작 전에 실행
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging])
+
+  const handleMouseMove = (e: any) => {
+    if (!isDragging) return;
+    setIsDragged(true)
+
+    setChatPosition({ x: e.clientX, y: e.clientY });
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
   const tabHeight = 5
 
   return (
@@ -132,13 +165,17 @@ const Reader = () => {
         </Box>
         <Box sx={{
             position: 'absolute',
-            left: '15vw',
-            top: '85vh',
+            left: chatPosition.x,
+            top: chatPosition.y,
             zIndex: 999, // iframe 위로 보이게 하려면 zIndex 설정
-          }}>
+            cursor: isDragging ? 'grabbing' : 'grab',
+          }}
+          onMouseDown={handleMouseDown}>
           {!isLoading && (<Chat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} 
                               data={data} paperId={paperId} selectedText={selectedText}
-                              iframeRef={iframeRef}/>)}
+                              iframeRef={iframeRef} iframeRef2={iframeRef2} openedPaperNumber={openedPaperNumber}
+                              isDragged={isDragged} setIsDragged={setIsDragged}
+                              curPageIndex={curPageIndex}/>)}
         </Box>
         <Box sx={{height: `${100-tabHeight}%`}}> 
           {openedPaperNumber === 1

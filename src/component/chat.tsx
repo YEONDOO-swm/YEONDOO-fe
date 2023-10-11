@@ -23,7 +23,8 @@ type history = {
     score: number | null;
 }
 
-const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef}: {isChatOpen: boolean, setIsChatOpen: any, data: any, paperId: string, selectedText: string, iframeRef: any}) => {
+const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef, iframeRef2, openedPaperNumber, isDragged, setIsDragged, curPageIndex}: 
+    {isChatOpen: boolean, setIsChatOpen: any, data: any, paperId: string, selectedText: string, iframeRef: any, iframeRef2: any, openedPaperNumber: number, isDragged: boolean, setIsDragged: any, curPageIndex: number}) => {
     const notify = useNotify()
     const navigate = useNavigate()
 
@@ -52,16 +53,19 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef
 
     useEffect(() => {
         setTag(selectedText.trim())
-        //setSearchTermInPaper(selectedText.trim())
         
     }, [selectedText])
 
-    const handleChatOpen = () => {
-        if (isChatOpen) {
-            setTag("")
-            //setSearchTermInPaper("")
+    const handleChatOpen = (e: any) => {
+        e.preventDefault();
+        if (isDragged){
+            setIsDragged(false)
+        } else {
+            if (isChatOpen) {
+                setTag("")
+            }
+            setIsChatOpen(!isChatOpen)
         }
-        setIsChatOpen(!isChatOpen)
     }
 
     const handleSearchKeyDownInPaper = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -150,21 +154,21 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef
 	}
 
     const handleExportAnswer = (question: string, answer: string) => {
+        const iframeRefNum = openedPaperNumber === 1 ? iframeRef : iframeRef2
         const combinedText = `${question}\n\n${answer}`
-        console.log(combinedText)
         const chatNote = {
             type: 'note',
-            position: { pageIndex: 0, rects: [[35.2, 749.2, 57.2, 771.2]] },
+            position: { pageIndex: curPageIndex, rects: [[575.9580509977826, 420.80943015521063, 597.9580509977826, 442.80943015521063]] },
             color: '#000',
             comment: combinedText,
             tags: [],
             id: generateObjectKey(),
             dateCreated: (new Date()).toISOString(),
             dateModified: (new Date()).toISOString(),
-            pageLabel: '1',
-            sortIndex: '1',
+            pageLabel: curPageIndex+1,
+            sortIndex: curPageIndex+1,
         }
-        iframeRef.current.contentWindow.postMessage({chatNote: chatNote}, '*')
+        iframeRefNum.current.contentWindow.postMessage({chatNote: chatNote}, '*')
     }
   return (
     <div>
@@ -173,7 +177,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef
           width: '100px',
           height: '100px',
           borderRadius: '100%',
-          backgroundColor: '#ddd',
+          backgroundColor: '#bbb',
           position: 'absolute', // 부모(상위) 요소에 대한 상대 위치로 설정
           left: '50%', // 동그라미의 가로 중앙으로 이동
           top: '50%', // 동그라미의 세로 중앙으로 이동
