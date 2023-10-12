@@ -15,6 +15,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import loadingStyle from "../layout/loading.module.css"
 import { SearchTap } from './searchTap'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { ChatTextField } from './chatTextField'
 
 type history = {
     who: boolean;
@@ -39,7 +40,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef
     const [isFirstWord, setIsFirstWord] = useState<boolean>(true) // 스트리밍 응답 저장시 필요
     const [key, setKey] = useState<number>(); // 스트리밍 데이터 + 기본 데이터 받기 위해
     const [resultId, setResultId] = useState<number>(1)
-    const [tag, setTag] = useState<string>("")
+    const [draggeddText, setDraggedText] = useState<string>("")
 
     // const [isChatOpen, setIsChatOpen] = useState<boolean>(false)
     
@@ -52,8 +53,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef
       }, [isChatOpen, data, enteredSearchTermInPaper, searchResultsInPaper]);
 
     useEffect(() => {
-        setTag(selectedText.trim())
-        
+        setDraggedText(selectedText.trim())
     }, [selectedText])
 
     const handleChatOpen = (e: any) => {
@@ -62,7 +62,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef
             setIsDragged(false)
         } else {
             if (isChatOpen) {
-                setTag("")
+                setDraggedText("")
             }
             setIsChatOpen(!isChatOpen)
         }
@@ -285,13 +285,14 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef
                 )}
             </Box>
 
-            <SearchTap
+            <ChatTextField
                 searchTerm={searchTermInPaper}
                 onChange={setSearchTermInPaper}
                 onSearch={handleButtonClickInPaper}
                 onSearchKeyDown={handleSearchKeyDownInPaper}
                 placeholder="이 논문에서 실험 1의 결과를 요약해줘"
                 sx={{width: "100%", backgroundColor: "#FFFFFF"}}
+                selectedText={draggeddText}
             />
         </Box>
     </Box>}
