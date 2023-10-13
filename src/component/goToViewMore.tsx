@@ -13,6 +13,6 @@ export const GoToViewMore = ({paperid}: {paperid:string}) => {
       }
 
     return (<Button variant ="contained" onClick={() => handleViewMore(paperid)}>
-      Chat with AI
+      Study with AI
     </Button>)
 }

@@ -431,7 +431,7 @@ export const Home = () => {
                           {paper.summary}
                         </Box>
                     </Box>
-                    <CustomButton title="Chat with AI" width="100%" click={()=>window.open(`/paper?paperid=${paper.paperId}`)}/>
+                    <CustomButton title="Study with AI" width="100%" click={()=>window.open(`/paper?paperid=${paper.paperId}`)}/>
                   </Box>
                 ))}
               </Box>
