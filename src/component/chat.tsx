@@ -3,7 +3,6 @@ import { Button, Box, Typography, IconButton } from '@mui/material'
 import { color } from '../layout/color'
 import scrollStyle from "../layout/scroll.module.css"
 import CopyClick from './copyClick'
-import ScoreSlider from './scoreSlider'
 import * as amplitude from '@amplitude/analytics-browser';
 import { StringMap, useNotify } from 'react-admin'
 import * as Sentry from '@sentry/react';
@@ -15,6 +14,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import loadingStyle from "../layout/loading.module.css"
 import { SearchTap } from './searchTap'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { ChatTextField } from './chatTextField'
 
 type history = {
     who: boolean;
@@ -23,8 +23,8 @@ type history = {
     score: number | null;
 }
 
-const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef, iframeRef2, openedPaperNumber, isDragged, setIsDragged, curPageIndex}: 
-    {isChatOpen: boolean, setIsChatOpen: any, data: any, paperId: string, selectedText: string, iframeRef: any, iframeRef2: any, openedPaperNumber: number, isDragged: boolean, setIsDragged: any, curPageIndex: number}) => {
+const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, openedPaperNumber, curPageIndex, paperTitle}: 
+    {isChatOpen: boolean, setIsChatOpen: any, data: any, paperId: string, iframeRef: any, iframeRef2: any, openedPaperNumber: number, curPageIndex: number, paperTitle: any}) => {
     const notify = useNotify()
     const navigate = useNavigate()
 
@@ -39,11 +39,14 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef
     const [isFirstWord, setIsFirstWord] = useState<boolean>(true) // 스트리밍 응답 저장시 필요
     const [key, setKey] = useState<number>(); // 스트리밍 데이터 + 기본 데이터 받기 위해
     const [resultId, setResultId] = useState<number>(1)
-    const [tag, setTag] = useState<string>("")
+    const [draggeddText, setDraggedText] = useState<string>("")
 
     // const [isChatOpen, setIsChatOpen] = useState<boolean>(false)
     
     const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+
+    const refPaper = useSelector((state: CounterState) => state.refPaper)
+    const selectedText = useSelector((state: CounterState) => state.chatSelectedText)
 
     useEffect(() => {
         if (isChatOpen) {
@@ -52,8 +55,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef
       }, [isChatOpen, data, enteredSearchTermInPaper, searchResultsInPaper]);
 
     useEffect(() => {
-        setTag(selectedText.trim())
-        
+        setDraggedText(selectedText.trim())
     }, [selectedText])
 
     const handleChatOpen = (e: any) => {
@@ -62,7 +64,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef
             setIsDragged(false)
         } else {
             if (isChatOpen) {
-                setTag("")
+                setDraggedText("")
             }
             setIsChatOpen(!isChatOpen)
         }
@@ -98,9 +100,14 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef
         const query = new URLSearchParams(window.location.search);
         const paperId: string = query.get('paperid') || '';
         const keyNumber = Math.floor(Math.random()*1000000000)
+        const payload = {
+            paperIds: refPaper.paperId?[paperId, refPaper.paperId]:[paperId],
+            question: searchTermInPaper,
+            context: draggeddText,
+        }
         try {
             setKey(keyNumber)
-            const response = await postApi(api, `/api/paper/${paperId}?workspaceId=${workspaceId}&key=${keyNumber}`, {question: searchTermInPaper})
+            const response = await postApi(api, `/api/paper/${paperId}?workspaceId=${workspaceId}&key=${keyNumber}`, payload)
 
             if (response.status === 401) {
                 refreshApi(api, notify, navigate)
@@ -136,7 +143,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef
             console.error("논문 내 질문 오류")
             Sentry.captureException(error)
         } finally {
-            const response = await getApi(api,`/api/paper/${paperId}?workspaceId=${workspaceId}&key=${keyNumber}`)
+            const response = await getApi(api,`/api/paper/resultId?key=${keyNumber}`)
             const data = await response.json()
             setResultId(data)
         }
@@ -170,7 +177,38 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef
         }
         iframeRefNum.current.contentWindow.postMessage({chatNote: chatNote}, '*')
     }
-  return (
+
+    // 채팅 버튼 드래그 시 이동
+    const [chatPosition, setChatPosition] = useState({ x: 15 * window.innerWidth / 100, y: 85 * window.innerHeight / 100 });
+    const [isDragging, setIsDragging] = useState(false);
+    const [isDragged, setIsDragged] = useState(false)
+
+    const handleMouseDown = (e: any) => {
+        setIsDragging(true);
+    };
+
+    useEffect(()=>{
+        if (isDragging) {
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+        } 
+        return () => { // useEffect 동작 전에 실행
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+        };
+    }, [isDragging])
+
+    const handleMouseMove = (e: any) => {
+        if (!isDragging) return;
+        setIsDragged(true)
+
+        setChatPosition({ x: e.clientX, y: e.clientY });
+    };
+
+    const handleMouseUp = () => {
+        setIsDragging(false);
+    };
+    return (
     <div>
         <Box
         style={{
@@ -179,11 +217,13 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef
           borderRadius: '100%',
           backgroundColor: '#bbb',
           position: 'absolute', // 부모(상위) 요소에 대한 상대 위치로 설정
-          left: '50%', // 동그라미의 가로 중앙으로 이동
-          top: '50%', // 동그라미의 세로 중앙으로 이동
+          left: chatPosition.x,
+            top: chatPosition.y,
           transform: 'translate(-50%, -50%)', // 동그라미의 중심을 중앙으로 이동
+          cursor: isDragging ? 'grabbing' : 'grab',
         }}
         onClick={handleChatOpen}
+        onMouseDown={handleMouseDown}
         ></Box>
 
       {/* 직사각형 (예: 채널톡 스타일) */}
@@ -193,12 +233,14 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef
           height: '500px',
           backgroundColor: '#ddd',
           position: 'absolute', // 부모(상위) 요소에 대한 상대 위치로 설정
-          left: '0', // 동그라미의 왼쪽에 위치
-          top: '100%', // 동그라미의 아래에 위치
+          left: chatPosition.x,
+          top: chatPosition.y,
           transform: 'translate(0, -100%)', // 상단 중앙으로 이동
+          
         }}
       >
-        <Box sx={{ border: `1px solid ${color.mainGrey}`,  padding: '20px', height: '100%', borderRadius: '15px', backgroundColor: color.mainGrey, 
+        <Box sx={{width: '100%', bgcolor: '#fff'}}>{paperTitle}</Box>
+        <Box sx={{ border: `1px solid ${color.mainGrey}`,  padding: '20px', height: '90%', borderRadius: '15px', backgroundColor: color.mainGrey, 
         display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
         }}>
             <Box sx={{ overflowY: 'scroll' }} ref={scrollContainerRef} className={scrollStyle.scrollBar}>
@@ -217,7 +259,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef
                         {history.who ? <Typography sx={{mr: '10px'}}>👤</Typography> : 
                                 <Typography sx={{mr: '10px'}}>🍀</Typography>
                             }
-                        <Box sx={{width: '100%'}}>
+                        <Box sx={{width: '100%', display: 'flex', justifyContent: 'space-between'}}>
                             {history.content}
                             {history.who? null:
                             <Box sx={{ display: 'flex', flexDirection: 'row-reverse', mt: 1}}>
@@ -227,10 +269,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef
                                         <ExitToAppIcon/>
                                     </IconButton>
                                 </Box>
-                                <ScoreSlider id={history.id} score={history.score} paper={true}/>
                             </Box>}
-                            {/* {history.who? null:
-                            <ScoreSlider id={history.id} score={history.score} paper={true}/>} */}
                             
                         </Box>
                         
@@ -255,7 +294,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef
                                 <Box sx={{ marginRight: '10px' }}>
                                     <Typography>🍀</Typography>
                                 </Box>
-                                <Box sx={{width: '100%'}}>
+                                <Box sx={{width: '100%', display: 'flex', justifyContent: 'space-between'}}>
                                 
                                     {index>=searchResultsInPaper.length?(
                                         <Typography variant="body1" className={loadingStyle.loading}> <MoreHorizIcon /> </Typography>
@@ -271,7 +310,6 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef
                                                 <ExitToAppIcon/>
                                             </IconButton>
                                         </Box>
-                                        <ScoreSlider id={resultId} paper={true}/>
                                     </Box>}
                                 
                                 </Box>
@@ -285,13 +323,14 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, selectedText, iframeRef
                 )}
             </Box>
 
-            <SearchTap
+            <ChatTextField
                 searchTerm={searchTermInPaper}
                 onChange={setSearchTermInPaper}
                 onSearch={handleButtonClickInPaper}
                 onSearchKeyDown={handleSearchKeyDownInPaper}
                 placeholder="이 논문에서 실험 1의 결과를 요약해줘"
                 sx={{width: "100%", backgroundColor: "#FFFFFF"}}
+                selectedText={draggeddText}
             />
         </Box>
     </Box>}

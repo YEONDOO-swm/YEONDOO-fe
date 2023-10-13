@@ -2,13 +2,14 @@ import { Box, Button } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react'
 import { getCookie } from '../cookie';
 import { useQuery } from 'react-query';
-import { useSelector } from 'react-redux';
-import { CounterState } from '../reducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { CounterState, SET_CHAT_SELECTED_TEXT, SET_PAPERS_IN_STORAGE } from '../reducer';
 import { getApi, refreshApi } from '../utils/apiUtils';
-import { useNotify } from 'react-admin';
+import { SET_PAGE, useNotify } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
 import * as Sentry from '@sentry/react';
 import Chat from '../component/chat'
+import { error } from 'console';
 
 type paperInfo = {
   paperId: string;
@@ -31,7 +32,7 @@ const Reader = () => {
 
   const [isPdfCompleted, setIsPdfCompleted] = useState<boolean>(false)
   const [isChatOpen, setIsChatOpen] = useState<boolean>(false)
-  const [selectedText, setSelectedText] = useState<string>("")
+  //const [selectedText, setSelectedText] = useState<string>("")
   const [isMultiplePaper, setIsMultiplePaper] = useState<boolean>(false)
   const [openedPaperNumber, setOpenedPaperNumber] = useState<number>(1)
   const [firstPaperId, setFirstPaperId] = useState<string>("")
@@ -40,10 +41,8 @@ const Reader = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [data, setData] = useState()
   const [curPageIndex, setCurPageIndex] = useState<number>(0)
-
-  const [isDragging, setIsDragging] = useState(false);
-  const [isDragged, setIsDragged] = useState(false)
-  const [chatPosition, setChatPosition] = useState({ x: 15 * window.innerWidth / 100, y: 85 * window.innerHeight / 100 });
+  
+  const dispatch = useDispatch()
 
   const receiveIsPdfRender = (e: MessageEvent) => {
     if (e.data.isPdfRender) {
@@ -51,7 +50,11 @@ const Reader = () => {
     }
     else if (e.data.selectedText) {
       setIsChatOpen(true)
-      setSelectedText(e.data.selectedText)
+      dispatch({
+        type: SET_CHAT_SELECTED_TEXT,
+        data: e.data.selectedText
+      })
+      //setSelectedText(e.data.selectedText)
     } else if (e.data && e.data.pageIndex >=0) {
       setCurPageIndex(e.data.pageIndex)
     }
@@ -82,6 +85,25 @@ const Reader = () => {
             throw new Error("논문 정보를 가져오는데 실패하였습니다")
         })
       setIsLoading(false)
+      getApi(api, `/api/container?workspaceId=${workspaceId}`)
+      .then(response => 
+        {
+          if (response.status === 200) {
+            return response.json().then(data => {
+              dispatch({
+                type: SET_PAPERS_IN_STORAGE,
+                data: data
+              })
+            })
+          } else if (response.status === 401) {
+            refreshApi(api, notify, navigate)
+          }
+        })
+      
+      .catch(error => {
+        console.error('관심 논문 정보를 불러오는데 실패하였습니다: ', error)
+        Sentry.captureException(error)
+      })
     }
   }, [isPdfCompleted])
 
@@ -123,32 +145,6 @@ const Reader = () => {
     }
   }
 
-  const handleMouseDown = (e: any) => {
-    setIsDragging(true);
-  };
-
-  useEffect(()=>{
-    if (isDragging) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-    } 
-    return () => { // useEffect 동작 전에 실행
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [isDragging])
-
-  const handleMouseMove = (e: any) => {
-    if (!isDragging) return;
-    setIsDragged(true)
-
-    setChatPosition({ x: e.clientX, y: e.clientY });
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
   const tabHeight = 5
 
   return (
@@ -163,19 +159,13 @@ const Reader = () => {
             <Button onClick={handleClickTab2}> Tab2 </Button>
           </Box>}
         </Box>
-        <Box sx={{
-            position: 'absolute',
-            left: chatPosition.x,
-            top: chatPosition.y,
-            zIndex: 999, // iframe 위로 보이게 하려면 zIndex 설정
-            cursor: isDragging ? 'grabbing' : 'grab',
-          }}
-          onMouseDown={handleMouseDown}>
+        <Box >
           {!isLoading && (<Chat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} 
-                              data={data} paperId={paperId} selectedText={selectedText}
+                              data={data} paperId={paperId}
                               iframeRef={iframeRef} iframeRef2={iframeRef2} openedPaperNumber={openedPaperNumber}
-                              isDragged={isDragged} setIsDragged={setIsDragged}
-                              curPageIndex={curPageIndex}/>)}
+                              curPageIndex={curPageIndex}
+                              paperTitle={data && data?.paperInfo?.title}
+                              />)}
         </Box>
         <Box sx={{height: `${100-tabHeight}%`}}> 
           {openedPaperNumber === 1

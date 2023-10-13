@@ -14,8 +14,6 @@ import { PaperView } from './page/paperView';
 import { DarkTheme, MyTheme } from './layout/myTheme';
 import { Trash } from './page/trash';
 import { HistoryPaper } from './page/historyPaper';
-import ChannelService from './channelTalk/channelService';
-import ReactGA from "react-ga4"
 import RouteChangeTracker from './routeChangeTracker';
 import { Helmet } from 'react-helmet-async';
 import MetaTag from './SEOMetaTag'
@@ -36,6 +34,7 @@ import { SET_API } from './reducer';
 import PdfViewer from './component/pdfViewer/pdfViewer';
 import Workspaces from './page/workspaces';
 import Reader from './page/reader';
+import StudyWithAI from './page/studyWithAI';
 
 amplitude.init('fa2f5340585a6728ae2103fb05e56bec', {
     defaultTracking: {
@@ -102,6 +101,7 @@ export const App = () => {
                             <Route path="/historytrash" element={< Trash />} />
                             <Route path="/pdfviewer" element={< PdfViewer />} />
                             <Route path="/workspaces" element={<Workspaces/>} />
+                            <Route path="/selectpaper" element={<StudyWithAI/>} />
                             <Route path="/paper" element={<Reader/>} />
 
                         </CustomRoutes>

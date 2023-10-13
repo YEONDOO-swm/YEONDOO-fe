@@ -6,6 +6,7 @@ import chat from '../../asset/chat.svg'
 import home from '../../asset/home.svg'
 import works from '../../asset/works.svg'
 import history from '../../asset/history.svg'
+import study from '../../asset/study.svg'
 
 const SideBarWorkspace = ({number}:{number: number}) => {
     const navigate = useNavigate()
@@ -28,7 +29,7 @@ const SideBarWorkspace = ({number}:{number: number}) => {
 
         <SideBarMenu img={home} title='Home' number={number} idx={0} url={"/home?workspaceId="+workspaceId}/>
         <SideBarMenu img={works} title='My works' number={number} idx={1} url="/paperstorage"/>
-        <SideBarMenu img={chat} title='Chat with AI' number={number} idx={2} url="/paper"/>
+        <SideBarMenu img={study} title='Study with AI' number={number} idx={2} url="/selectpaper"/>
         <SideBarMenu img={history} title='History' number={number} idx={3} url="/history"/>
       </Box>
     )
