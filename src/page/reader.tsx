@@ -1,9 +1,9 @@
-import { Box, Button } from '@mui/material';
+import { Box, Button, Popper } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react'
 import { getCookie } from '../cookie';
 import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
-import { CounterState, SET_CHAT_SELECTED_TEXT, SET_PAPERS_IN_STORAGE } from '../reducer';
+import { CounterState, SET_ANNOTATIONS, SET_CHAT_SELECTED_TEXT, SET_PAPERS_IN_STORAGE } from '../reducer';
 import { getApi, refreshApi } from '../utils/apiUtils';
 import { SET_PAGE, useNotify } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
@@ -41,7 +41,7 @@ const Reader = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [data, setData] = useState()
   const [curPageIndex, setCurPageIndex] = useState<number>(0)
-  
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const dispatch = useDispatch()
 
   const receiveIsPdfRender = (e: MessageEvent) => {
@@ -57,6 +57,13 @@ const Reader = () => {
       //setSelectedText(e.data.selectedText)
     } else if (e.data && e.data.pageIndex >=0) {
       setCurPageIndex(e.data.pageIndex)
+    }
+    else if (e.data.annotations) {
+      dispatch({
+        type: SET_ANNOTATIONS,
+        data: e.data.annotations
+      })
+      navigate('/export')
     }
   }
   window.addEventListener('message', receiveIsPdfRender)
@@ -145,19 +152,53 @@ const Reader = () => {
     }
   }
 
+  const handleClickExportButton = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(anchorEl ? null : event?.currentTarget)
+  }
+
+  const handleClickSummary = () => {
+    let iframeRefNum = openedPaperNumber === 1 ? iframeRef : iframeRef2
+
+    if (iframeRefNum && iframeRefNum.current && iframeRefNum.current.contentWindow) {
+      console.log("ye")
+      iframeRefNum.current.contentWindow.postMessage({
+        isExportClicked: true
+      }, '*');
+    }
+  }
+
+
   const tabHeight = 5
+  const exportOpen = Boolean(anchorEl)
+  const exportId = exportOpen ? 'simple-popper' : undefined
 
   return (
     <div>
       <Box sx={{height: '100vh'}}>
-        <Box sx={{height: `${tabHeight}%`}}>
-          {isMultiplePaper ?<Button disabled>
-            Tap1
-          </Button>:
+        <Box sx={{height: `${tabHeight}%`, display: 'flex', justifyContent: 'space-between'}}>
           <Box>
-            <Button onClick={handleClickTab1}> Tab1 </Button>
-            <Button onClick={handleClickTab2}> Tab2 </Button>
-          </Box>}
+            {isMultiplePaper ?<Button disabled>
+              Tap1
+            </Button>:
+            <Box>
+              <Button onClick={handleClickTab1}> Tab1 </Button>
+              <Button onClick={handleClickTab2}> Tab2 </Button>
+            </Box>}
+          </Box>
+          <Button variant='contained' onClick={handleClickExportButton}>
+            Export
+          </Button>
+          <Popper id={exportId} open={exportOpen} anchorEl={anchorEl} sx={{zIndex: 999}}>
+            <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper',
+            display: 'flex', flexDirection: 'column' }}>
+              <Button>
+                Download PDF
+              </Button>
+              <Button onClick={handleClickSummary}>
+                Generate Summary
+              </Button>
+            </Box>
+          </Popper>
         </Box>
         <Box >
           {!isLoading && (<Chat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} 

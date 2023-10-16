@@ -35,6 +35,7 @@ import PdfViewer from './component/pdfViewer/pdfViewer';
 import Workspaces from './page/workspaces';
 import Reader from './page/reader';
 import StudyWithAI from './page/studyWithAI';
+import Export from './page/export';
 
 amplitude.init('fa2f5340585a6728ae2103fb05e56bec', {
     defaultTracking: {
@@ -103,6 +104,7 @@ export const App = () => {
                             <Route path="/workspaces" element={<Workspaces/>} />
                             <Route path="/selectpaper" element={<StudyWithAI/>} />
                             <Route path="/paper" element={<Reader/>} />
+                            <Route path="/export" element={<Export/>} />
 
                         </CustomRoutes>
                     </Admin>
