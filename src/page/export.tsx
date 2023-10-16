@@ -34,8 +34,18 @@ const Export = () => {
     }
 
     const handleGenerate = () => {
+        const updatedAnnotations = annotations.map((annotation:any) => {
+            const changeItem = {
+                ...annotation,
+                itemId: annotation.id,
+                itemType: annotation.type
+            }
+            delete changeItem.id
+            delete changeItem.type
+            return changeItem
+        })
         const payload = {
-            annotations: color==='All'?annotations:annotations?.filter((obj: any) => obj.color === color),
+            annotations: color==='All'?updatedAnnotations:updatedAnnotations?.filter((obj: any) => obj.color === color),
             fileFormat: fileFormat,
             purpose: purpose
         }
