@@ -17,6 +17,8 @@ export type CounterState = {
     },
     papersInStorage: Paper[];
     chatSelectedText: string;
+    annotations: any;
+    summaryAnswer: string;
 };
 
 export const SET_API = "SET_API"
@@ -24,6 +26,8 @@ export const SET_IS_OPEN_SELECT_REF = "SET_IS_OPEN_SELECT_REF"
 export const SET_REF_PAPER = "SET_REF_PAPER"
 export const SET_PAPERS_IN_STORAGE = "SET_PAPERS_IN_STORAGE"
 export const SET_CHAT_SELECTED_TEXT = "SET_CHAT_SELECTED_TEXT"
+export const SET_ANNOTATIONS = "SET_ANNOTATIONS"
+export const SET_SUMMARY_ANSWER = "SET_SUMMARY_ANSWER"
 
 const initState = {
     api: '',
@@ -34,6 +38,8 @@ const initState = {
     },
     papersInStorage: [],
     chatSelectedText: "",
+    annotations: null,
+    summaryAnswer: ""
 }
 
 export const reducer = (state:CounterState = initState, action:any) => {
@@ -62,6 +68,16 @@ export const reducer = (state:CounterState = initState, action:any) => {
             return {
                 ...state,
                 chatSelectedText: action.data
+            }
+        case SET_ANNOTATIONS:
+            return {
+                ...state,
+                annotations: action.data
+            }
+        case SET_SUMMARY_ANSWER:
+            return {
+                ...state,
+                summaryAnswer: action.data
             }
         default:
             return state;
