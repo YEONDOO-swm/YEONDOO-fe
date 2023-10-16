@@ -54,6 +54,7 @@ const Export = () => {
               }
             })
         .finally(() => setOpen(true))
+        .catch(error => console.log(error))
     }
     const style = {
         position: 'absolute' as 'absolute',

@@ -1,6 +1,6 @@
 export const color = {
     loadingColor: '#999999',
-    mainGreen: '#d8e6cd',
+    mainGreen: '#6B9762',
     secondaryGreen: '#92bb8e',
     appbarGreen: '#17594A',
     mainGrey: '#DCDCDC',
