@@ -20,6 +20,7 @@ import { error } from 'console'
 import styles from '../layout/loading.module.css'
 import pageStyles from '../layout/workspace.module.css'
 import { deleteApi, getApi, postApi, putApi, refreshApi } from '../utils/apiUtils'
+import { color } from '../layout/color'
 
 type workspaceEdit = {
     title?: string;
@@ -351,7 +352,7 @@ const Workspaces = () => {
         </Box>
         <Modal open={open} onClose={handleClose}>
             <Box sx={style}>
-                <Typography id="modal-modal-title" variant="h6" component="h2" sx={{color: '#617F5B', fontWeight: 600, fontSize: '23px'}}>
+                <Typography id="modal-modal-title" variant="h6" component="h2" sx={{color: color.mainGreen, fontWeight: 600, fontSize: '23px'}}>
                     {isEdit ? "Edit a workspace" :"Add a workspace"}
                 </Typography>
                 {!isEdit && workspaceTextField('Workspace Title*', workspace!.title!, (event: ChangeEvent<HTMLInputElement>)=>{setWorkspace({...workspace, title: event?.target.value})})}

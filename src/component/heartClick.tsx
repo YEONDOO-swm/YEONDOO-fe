@@ -13,6 +13,7 @@ import { paperType } from "../page/home";
 import { useNavigate } from "react-router-dom";
 import { useNotify } from "react-admin";
 import { postApi, refreshApi } from "../utils/apiUtils";
+import { color } from "../layout/color";
 
 type onUpdateLikesType = (
   paperId: string,
@@ -84,9 +85,9 @@ export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentIt
     return (
         <IconButton onClick={() => handleHeartClick(currentItem.paperId)}>
             {   paperIdArray.includes(currentItem.paperId) || isPaperLike ? (
-                <FavoriteIcon sx={{margin: '0', color: '#617F5B'}} />
+                <FavoriteIcon sx={{margin: '0', color: color.mainGreen}} />
                 ) : (
-                <FavoriteBorderIcon sx={{color: '#617F5B'}}/>
+                <FavoriteBorderIcon sx={{color: color.mainGreen}}/>
                 )
             }
         </IconButton>

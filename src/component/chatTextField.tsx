@@ -9,6 +9,7 @@ import { useQuery } from 'react-query';
 import { getApi, refreshApi } from '../utils/apiUtils';
 import { useNavigate } from 'react-router-dom';
 import * as Sentry from '@sentry/react';
+import { color } from '../layout/color';
 
 type SearchTapProps = {
     searchTerm: string;
@@ -173,7 +174,7 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
                             endAdornment: (
                             <InputAdornment position="end">
                                 <IconButton onClick={onSearch}>
-                                <SearchIcon sx={{color: '#617F5B'}}/>
+                                <SearchIcon sx={{color: color.mainGreen}}/>
                                 </IconButton>
                             </InputAdornment>
                             ),

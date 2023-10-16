@@ -253,7 +253,7 @@ export const Home = () => {
             {recentlyPapers.title}
           </Typography>
           <Box sx={{display: 'flex'}} onClick={()=>{window.open(`/paper?paperid=${recentlyPapers.paperId}`)}}>
-            <Typography sx={{fontWeight: 500, color: '#617F5B', cursor: 'pointer', '&:hover':{
+            <Typography sx={{fontWeight: 500, color: color.mainGreen, cursor: 'pointer', '&:hover':{
               color: '#445142'
             }}}>More</Typography>
             <img src={arrow}/>
@@ -290,7 +290,7 @@ export const Home = () => {
           </Typography>
         </Box>
         <Box sx={{display: 'flex', alignItems: 'center', cursor: 'pointer'}} onClick={()=>{window.open(url)}}>
-          <Typography sx={{fontWeight: 500, color: '#617F5B','&:hover':{
+          <Typography sx={{fontWeight: 500, color: color.mainGreen,'&:hover':{
               color: '#445142'
             }}}>More</Typography>
           <img src={arrow}/>
@@ -403,7 +403,7 @@ export const Home = () => {
                           </Box>
                           <Box sx={{ marginTop: '-5px', display: 'flex', alignItems: 'center'}}>
                             <HeartClick currentItem={paper} onUpdateLikes={handleUpdateRecommendLikes} paperlike={paper.isLike}/>
-                            <Typography sx={{color: '#617F5B', fontWeight: '600'}}>{paper.likes}</Typography>
+                            <Typography sx={{color: color.mainGreen, fontWeight: '600'}}>{paper.likes}</Typography>
                           </Box>
                         </Box>
                         <Box sx={{width: '23vw', display: 'flex', flexWrap:'', mb: 1.5, overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none',
