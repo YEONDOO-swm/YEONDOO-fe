@@ -205,27 +205,34 @@ export const Home = () => {
 
   const makePapersCard = (paper: any) => {
     return (
-      <Card key={paper.paperId} sx={{ marginBottom: '15px', border: `1px solid ${color.mainGrey}`, padding: '15px 25px', pb: '18px', borderRadius: '15px', backgroundColor: color.mainGrey}}>      
+      <Box key={paper.paperId} sx={{ marginBottom: '15px', border: `1px solid #ddd`, padding: '30px 40px', borderRadius: '15px', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)'}}>      
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignContent: 'center' }}>
-          <Box sx={{ flexGrow: 1 }}>
-            <Typography variant="h6">{paper.title}</Typography>
+          <Box>
+            <Typography sx={{fontSize: '18px', fontWeight: '600', color: '#333'}}>{paper.title}</Typography>
           </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <HeartClick currentItem={paper} onUpdateLikes={handleUpdateLikes} paperlike={paper.isLike}/>
-            <Typography variant="body2" sx={{ margin: '10px 0' }}>
+            <Typography variant="body2" sx={{ color: color.mainGreen, fontSize: '16px', fontWeight: 600 }}>
               {paper.likes}
             </Typography>
           </Box>
         </Box>
-          <Typography variant="body2"> {paper.authors.slice(0,3).join(", ")} / {paper.year} </Typography>
-          <Typography variant="body2" sx={{fontWeight: 'bold', display: 'inline'}}>Abstract: </Typography>
-          {paper.summary && paper.summary.length > 400 ? (
+        <Box sx={{display: 'flex', mb: 0.6}}>
+          <Typography sx={{color: '#111', fontSize: '15px', fontWeight: 500}}> {paper.authors.slice(0,3).join(", ")}  </Typography>
+          <Typography sx={{color: '#666', fontSize: '15px', fontWeight: 400, ml: 2}}>
+            {paper.year}
+          </Typography>
+        </Box>
+          {paper.summary && paper.summary.length > 300 ? (
             !expandedPaperArray.includes(paper.paperId) ? (
-              <Typography variant="body2" sx={{ display: 'inline' }}>
-                {paper.summary.slice(0, 400)}... <span onClick={() => handleViewMoreAbstract(paper.paperId)} style={{color: color.appbarGreen, borderBottom: `1px solid ${color.appbarGreen}`, cursor: 'pointer'}}>▼ More</span>
+              <Typography sx={{ display: 'inline',
+                 color: '#666', fontSize: '15px', fontWeight: 400, lineHeight: '23px' }}>
+                {paper.summary.slice(0, 300)}... <span onClick={() => handleViewMoreAbstract(paper.paperId)} style={{color: color.mainGreen, borderBottom: `1px solid ${color.mainGreen}`, cursor: 'pointer', fontWeight: 500}}
+                >▼ More</span>
               </Typography>
             ) : (
-                  <Typography variant="body2" sx={{display: 'inline'}}>{paper.summary}<span onClick={() => handleViewLessAbstract(paper.paperId)} style={{color: color.appbarGreen, borderBottom: `1px solid ${color.appbarGreen}`, cursor: 'pointer' }}>▲ Less</span>
+                <Typography variant="body2" sx={{display: 'inline',color: '#666', fontSize: '15px', fontWeight: 400, lineHeight: '23px'}}>
+                  {paper.summary}<span onClick={() => handleViewLessAbstract(paper.paperId)} style={{color: color.mainGreen, borderBottom: `1px solid ${color.mainGreen}`, cursor: 'pointer', fontWeight: 500}}>▲ Less</span>
                 </Typography>
             )
           ): (
@@ -242,7 +249,7 @@ export const Home = () => {
           </Box>
                 {/* Add other details for the paper */}
               
-      </Card>
+      </Box>
     )
   }
 
@@ -327,44 +334,52 @@ export const Home = () => {
 
     return (
       <PageLayout workspace={true} number={0}>
-    <div>
+    <div style={{height: '100vh'}}>
         <MetaTag title="연두 홈" description="궁금한 개념 질문 또는 논문 제목 검색을 하면 답변과 관련 논문을 제공합니다." keywords="논문, 검색, 질문, 개념, gpt"/>
         <Title title="Home" />
-        <Box sx={{display: 'flex', justifyContent: 'flex-end', p:2, color: 'grey.700'}}>
-          <UserMenu/>
-        </Box>
-        <Typography sx={{ml: '12.5vw', fontSize: '25px', fontWeight: '600'}}>
-          {/* {workspaceTitle} */}
-          Home
-        </Typography>
-        <Box sx={{display: 'flex', margin: '30px auto', justifyContent: 'center', alignItems: 'center'}}>
-            <SearchTap
-              searchTerm={searchTerm}
-              onChange={setSearchTerm}
-              onSearch={handleButtonClick}
-              onSearchKeyDown={handleSearchKeyDown}
-              placeholder="Attention is all you need"
-              firstBoxSx={{ width: '70%' }}
-              middleBoxSx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-              sx={{width: "100%"}}
-              heightSx={{height: '55px'}} />
+        <Box sx={{height: '27vh'}}>
+
+          <Box sx={{display: 'flex', justifyContent: 'flex-end', p:2, color: 'grey.700'}}>
+            <UserMenu/>
+          </Box>
+          <Typography sx={{ml: '12.5vw', fontSize: '25px', fontWeight: '600'}}>
+            {/* {workspaceTitle} */}
+            Home
+          </Typography>
+          <Box sx={{display: 'flex', margin: '30px auto', justifyContent: 'center', alignItems: 'center'}}>
+              <SearchTap
+                searchTerm={searchTerm}
+                onChange={setSearchTerm}
+                onSearch={handleButtonClick}
+                onSearchKeyDown={handleSearchKeyDown}
+                placeholder="Attention is all you need"
+                firstBoxSx={{ width: '70%' }}
+                middleBoxSx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                sx={{width: "100%"}}
+                heightSx={{height: '55px'}} />
+          </Box>
         </Box>
           
           {loading ? (
             
-              <Box className={loadingStyle.loading} sx={{margin: '0 30px 0 10px'}}>
-              <Card sx={{ display: 'flex', justifyContent: 'center', marginBottom: '15px', border: `1px solid ${color.loadingColor}`, height: '20vh', borderRadius: '15px', backgroundColor: color.loadingColor, opacity: '0.2'}} >
-              </Card>
-              <Card sx={{ display: 'flex', justifyContent: 'center', marginBottom: '15px', border: `1px solid ${color.mainGrey}`, height: '20vh', borderRadius: '15px', backgroundColor: color.loadingColor, opacity: '0.2'}} >
-              </Card>
+              <Box className={loadingStyle.loading} sx={{mx: '12.5vw'}}>
+                <Card sx={{ display: 'flex', justifyContent: 'center', marginBottom: '15px', border: `1px solid ${color.loadingColor}`, height: '20vh', borderRadius: '15px', backgroundColor: color.loadingColor, opacity: '0.2'}} >
+                </Card>
+                <Card sx={{ display: 'flex', justifyContent: 'center', marginBottom: '15px', border: `1px solid ${color.mainGrey}`, height: '20vh', borderRadius: '15px', backgroundColor: color.loadingColor, opacity: '0.2'}} >
+                </Card>
               </Box>
             
           ) :
         (searchResults ? ((isSearched) ? (
-          <Box sx={{height: '75vh', margin: '0 30px 0 10px', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
-            {searchResults.papers.map((paper: any) => (
-              makePapersCard(paper)
-            ))}
+          <Box sx={{mx: '12.5vw'}}>
+            <Typography sx={{height: '3vh', color: '#333', fontSize: '20px', fontWeight: 600, mb: 2}}>
+              Search Results
+            </Typography>
+            <Box sx={{height: '67.5vh',overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
+              {searchResults.papers.map((paper: any) => (
+                makePapersCard(paper)
+              ))}
+            </Box>
           </Box>
         )
       : (
@@ -372,7 +387,7 @@ export const Home = () => {
         <Typography> 검색 결과가 없습니다.</Typography>
       </Box>
     )):(
-      <Box sx={{ml: '12.5vw', mt: 5}}>
+      <Box sx={{ml: '12.5vw'}}>
         {subTitle('Recently papers')}
         {isLoading ? <>
           {loadingRecentPaper()}
