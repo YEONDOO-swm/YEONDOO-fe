@@ -1,9 +1,11 @@
 export const color = {
     loadingColor: '#999999',
-    mainGreen: '#d8e6cd',
+    mainGreen: '#6B9762',
+    hoverGreen: '#617F5B',
     secondaryGreen: '#92bb8e',
     appbarGreen: '#17594A',
     mainGrey: '#DCDCDC',
     secondaryGrey: '#ededed',
-    white: '#FFFFFF'
+    white: '#FFFFFF',
+    arxiv: '#c05f5f',
 }

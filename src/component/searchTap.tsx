@@ -3,6 +3,7 @@ import { Box, SxProps, TextField, IconButton, InputAdornment, CardContent, Conta
 import SearchIcon from "@mui/icons-material/Search";
 import { useNotify } from "react-admin";
 import { MouseEvent } from "react";
+import { color } from "../layout/color";
 
 type SearchTapProps = {
   searchTerm: string;
@@ -61,16 +62,16 @@ export const SearchTap: React.FC<SearchTapProps> = ({
                 value={searchTerm}
                 onChange={handleChange}
                 onKeyDown={onSearchKeyDown}
-                sx={{ ...sx, color: '#617F5B'}}
+                sx={{ ...sx, color: color.mainGreen}}
                 InputProps={{
                     endAdornment: (
                     <InputAdornment position="end">
                         <IconButton onClick={onSearch}>
-                        <SearchIcon sx={{color: '#617F5B'}}/>
+                        <SearchIcon sx={{color: color.mainGreen}}/>
                         </IconButton>
                     </InputAdornment>
                     ),
-                    sx: {...heightSx, border: '1px solid #617F5B', borderRadius: '10px'}
+                    sx: {...heightSx, border: `1px solid ${color.mainGreen}`, borderRadius: '10px'}
                 }}
                 />
         </Box>
