@@ -22,6 +22,8 @@ import arrow from "../asset/rightarrow.svg"
 import CustomButton from "../component/customButton";
 import styles from "../layout/home.module.css"
 import { getApi, refreshApi } from "../utils/apiUtils";
+import MoreButton from "../component/moreButton";
+import LessButton from "../component/lessButton";
 
 type searchResultType = {
   query?: string;
@@ -227,12 +229,13 @@ export const Home = () => {
             !expandedPaperArray.includes(paper.paperId) ? (
               <Typography sx={{ display: 'inline',
                  color: '#666', fontSize: '15px', fontWeight: 400, lineHeight: '23px' }}>
-                {paper.summary.slice(0, 300)}... <span onClick={() => handleViewMoreAbstract(paper.paperId)} style={{color: color.mainGreen, borderBottom: `1px solid ${color.mainGreen}`, cursor: 'pointer', fontWeight: 500}}
-                >▼ More</span>
+                {paper.summary.slice(0, 300)}... 
+                <MoreButton handleViewMoreAbstract={handleViewMoreAbstract} paperId={paper.paperId} />
               </Typography>
             ) : (
                 <Typography variant="body2" sx={{display: 'inline',color: '#666', fontSize: '15px', fontWeight: 400, lineHeight: '23px'}}>
-                  {paper.summary}<span onClick={() => handleViewLessAbstract(paper.paperId)} style={{color: color.mainGreen, borderBottom: `1px solid ${color.mainGreen}`, cursor: 'pointer', fontWeight: 500}}>▲ Less</span>
+                  {paper.summary}
+                  <LessButton handleViewLessAbstract={handleViewLessAbstract} paperId={paper.paperId} />
                 </Typography>
             )
           ): (
