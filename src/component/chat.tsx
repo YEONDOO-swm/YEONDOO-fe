@@ -7,7 +7,7 @@ import * as amplitude from '@amplitude/analytics-browser';
 import { StringMap, useNotify } from 'react-admin'
 import * as Sentry from '@sentry/react';
 import { getApi, postApi, refreshApi } from '../utils/apiUtils'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { CounterState } from '../reducer'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -15,12 +15,15 @@ import loadingStyle from "../layout/loading.module.css"
 import { SearchTap } from './searchTap'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { ChatTextField } from './chatTextField'
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 type history = {
     who: boolean;
     content: string;
     id: number;
     score: number | null;
+    position?: any;
+    text?: any;
 }
 
 const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, openedPaperNumber, curPageIndex, paperTitle}: 
@@ -35,11 +38,13 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
     const [searchTermInPaper, setSearchTermInPaper] = useState<string>(""); // 변화하는 입력값
     const [enteredSearchTermInPaper, setEnteredSearchTermInPaper] = useState<string[]>([]); // 전체 입력값
     const [searchResultsInPaper, setSearchResultsInPaper] = useState<string[]>([])
+    const [searchResultsProof, setSearchResultsProof] = useState<any[]>([])
 
     const [isFirstWord, setIsFirstWord] = useState<boolean>(true) // 스트리밍 응답 저장시 필요
     const [key, setKey] = useState<number>(); // 스트리밍 데이터 + 기본 데이터 받기 위해
     const [resultId, setResultId] = useState<number>(1)
     const [draggeddText, setDraggedText] = useState<string>("")
+    const [prevProofId, setPrevProofId] = useState<string>("")
 
     // const [isChatOpen, setIsChatOpen] = useState<boolean>(false)
     
@@ -47,6 +52,8 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
 
     const refPaper = useSelector((state: CounterState) => state.refPaper)
     const selectedText = useSelector((state: CounterState) => state.chatSelectedText)
+
+    const dispatch = useDispatch()
 
     useEffect(() => {
         if (isChatOpen) {
@@ -111,33 +118,39 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
 
             if (response.status === 401) {
                 refreshApi(api, notify, navigate)
-              }
-            const reader = response.body!.getReader()
-            const decoder = new TextDecoder()
-
-            while (true) {
-                const { value, done } = await reader.read()
-                if (done) {
-                    setIsFirstWord(true)
-                    break
-                }
-
-                const decodedChunk = decoder.decode(value, { stream: true });
-
-                setSearchResultsInPaper((prevSearchResults: string[]) => {
-                    if (isFirstWord) {
-                        setIsFirstWord(false)
-                        return [...prevSearchResults, decodedChunk]
-                    } else {
-                        const lastItem = prevSearchResults[prevSearchResults.length -1]
-                        const updatedResults = prevSearchResults.slice(0, -1)
-                        return [...updatedResults, lastItem + decodedChunk]
-                    }
-
-                })
-
-                
             }
+
+            // 일반 통신 방식
+            const data = await response.json()
+            setSearchResultsInPaper((prevResults: string[]) => [...prevResults, data.answer])
+            setSearchResultsProof((prevProof: any[]) => [...prevProof, {
+                position: data.position,
+                text: data.text
+            }])
+            // 스트리밍
+            // const reader = response.body!.getReader()
+            // const decoder = new TextDecoder()
+
+            // while (true) {
+            //     const { value, done } = await reader.read()
+            //     if (done) {
+            //         setIsFirstWord(true)
+            //         break
+            //     }
+
+            //     const decodedChunk = decoder.decode(value, { stream: true });
+
+            //     setSearchResultsInPaper((prevSearchResults: string[]) => {
+            //         if (isFirstWord) {
+            //             setIsFirstWord(false)
+            //             return [...prevSearchResults, decodedChunk]
+            //         } else {
+            //             const lastItem = prevSearchResults[prevSearchResults.length -1]
+            //             const updatedResults = prevSearchResults.slice(0, -1)
+            //             return [...updatedResults, lastItem + decodedChunk]
+            //         }
+            //     })
+            // }
         } 
         catch(error) {
             console.error("논문 내 질문 오류")
@@ -172,10 +185,37 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
             id: generateObjectKey(),
             dateCreated: (new Date()).toISOString(),
             dateModified: (new Date()).toISOString(),
-            pageLabel: curPageIndex+1,
-            sortIndex: curPageIndex+1,
+            pageLabel: `${curPageIndex+1}`,
+            //sortIndex: curPageIndex+1,
         }
         iframeRefNum.current.contentWindow.postMessage({chatNote: chatNote}, '*')
+    }
+
+    const handleIndicateProof = (position: any, proofText: string) => {
+        // 히스토리일 경우에는 paperId 없음
+        const paperId = position.paperId
+        
+        // delete position.id
+        // delete position.type
+        // delete position.paperId
+        const proofId = generateObjectKey()
+        const payload = {
+            type: 'highlight',
+            text: proofText,
+            position: position,
+            color: '#000',
+            comment: "답변 근거입니다. 다른 답변 근거를 클릭하면 사라집니다.",
+            tags: [],
+            id: proofId,
+            dateCreated: (new Date()).toISOString(),
+            dateModified: (new Date()).toISOString(),
+            pageLabel: `${position.pageIndex+1}`,
+            //sortIndex: curPageIndex+1,
+        }
+        
+        const iframeRefNum = openedPaperNumber === 1 ? iframeRef : iframeRef2
+        iframeRefNum.current.contentWindow.postMessage({proof: payload, proofId: prevProofId}, '*')
+        setPrevProofId(proofId)
     }
 
     // 채팅 버튼 드래그 시 이동
@@ -268,6 +308,9 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                     <IconButton onClick={() => handleExportAnswer(data.paperHistory[index-1].content, history.content)}>
                                         <ExitToAppIcon/>
                                     </IconButton>
+                                    <IconButton onClick={() => handleIndicateProof(history.position, history?.text)}>
+                                        <HelpOutlineIcon/>
+                                    </IconButton>
                                 </Box>
                             </Box>}
                             
@@ -308,6 +351,9 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                             <CopyClick contents={searchResultsInPaper[index]}/>
                                             <IconButton onClick={() => handleExportAnswer(term, searchResultsInPaper[index])}>
                                                 <ExitToAppIcon/>
+                                            </IconButton>
+                                            <IconButton onClick={() => handleIndicateProof(searchResultsProof[index].position, searchResultsProof[index].text)}>
+                                                <HelpOutlineIcon/>
                                             </IconButton>
                                         </Box>
                                     </Box>}
