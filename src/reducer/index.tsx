@@ -39,7 +39,7 @@ const initState = {
     papersInStorage: [],
     chatSelectedText: "",
     annotations: null,
-    summaryAnswer: ""
+    summaryAnswer: "",
 }
 
 export const reducer = (state:CounterState = initState, action:any) => {
