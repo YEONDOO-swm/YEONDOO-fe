@@ -21,6 +21,8 @@ jobs:
       run: |
         echo "VITE_REACT_APP_AWS_SERVER=${{ secrets.VITE_REACT_APP_AWS_SERVER }}" >> $GITHUB_ENV
         echo "VITE_READER_URL=${{ secrets.VITE_READER_URL }}" >> $GITHUB_ENV
+        echo "VITE_GOOGLE_CLINET_ID=${{ secrets.VITE_GOOGLE_CLINET_ID }}" >> $GITHUB_ENV
+        echo "VITE_AMPLITUDE_ID=${{ secrets.VITE_AMPLITUDE_ID }}" >> $GITHUB_ENV
         
     - name: npm install, build
       run: |
