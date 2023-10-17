@@ -257,7 +257,7 @@ export const Home = () => {
   }
 
   const recentPaper = (recentlyPapers: any) => (
-    <Box sx={{height: '55px', width: '82%', borderRadius: '10px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)',
+    <Box sx={{height: '55px', borderRadius: '10px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)',
       display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 2, mb: 1}}>
           <Typography sx={{fontWeight: 500}}>
             {recentlyPapers.title}
@@ -272,7 +272,7 @@ export const Home = () => {
   )
 
   const loadingRecentPaper = () => (
-    <Box sx={{height: '55px', width: '82%', borderRadius: '10px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)',
+    <Box sx={{height: '55px', borderRadius: '10px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)',
       mb: 1, bgcolor: '#f9f9f9'}} className={loadingStyle.loading}></Box>
   )
 
@@ -337,15 +337,11 @@ export const Home = () => {
 
     return (
       <PageLayout workspace={true} number={0}>
-    <div style={{height: '100vh'}}>
+    <div>
         <MetaTag title="연두 홈" description="궁금한 개념 질문 또는 논문 제목 검색을 하면 답변과 관련 논문을 제공합니다." keywords="논문, 검색, 질문, 개념, gpt"/>
         <Title title="Home" />
-        <Box sx={{height: '27vh'}}>
-
-          <Box sx={{display: 'flex', justifyContent: 'flex-end', p:2, color: 'grey.700'}}>
-            <UserMenu/>
-          </Box>
-          <Typography sx={{ml: '12.5vw', fontSize: '25px', fontWeight: '600'}}>
+        <Box>
+          <Typography sx={{fontSize: '25px', fontWeight: '600'}}>
             {/* {workspaceTitle} */}
             Home
           </Typography>
@@ -356,7 +352,7 @@ export const Home = () => {
                 onSearch={handleButtonClick}
                 onSearchKeyDown={handleSearchKeyDown}
                 placeholder="Attention is all you need"
-                firstBoxSx={{ width: '70%' }}
+                firstBoxSx={{ width: '100%' }}
                 middleBoxSx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
                 sx={{width: "100%"}}
                 heightSx={{height: '55px'}} />
@@ -365,7 +361,7 @@ export const Home = () => {
           
           {loading ? (
             
-              <Box className={loadingStyle.loading} sx={{mx: '12.5vw'}}>
+              <Box className={loadingStyle.loading} >
                 <Card sx={{ display: 'flex', justifyContent: 'center', marginBottom: '15px', border: `1px solid ${color.loadingColor}`, height: '20vh', borderRadius: '15px', backgroundColor: color.loadingColor, opacity: '0.2'}} >
                 </Card>
                 <Card sx={{ display: 'flex', justifyContent: 'center', marginBottom: '15px', border: `1px solid ${color.mainGrey}`, height: '20vh', borderRadius: '15px', backgroundColor: color.loadingColor, opacity: '0.2'}} >
@@ -374,7 +370,7 @@ export const Home = () => {
             
           ) :
         (searchResults ? ((isSearched && searchResults.papers.length > 0) ? (
-          <Box sx={{mx: '12.5vw'}}>
+          <Box>
             <Typography sx={{height: '3vh', color: '#333', fontSize: '20px', fontWeight: 600, mb: 2}}>
               Search Results
             </Typography>
@@ -386,11 +382,11 @@ export const Home = () => {
           </Box>
         )
       : (
-      <Box sx={{mx: '12.5vw'}}>
+      <Box>
         <Typography sx={{height: '3vh', color: '#333', fontSize: '20px', fontWeight: 600}}> No Search Results</Typography>
       </Box>
     )):(
-      <Box sx={{ml: '12.5vw'}}>
+      <Box>
         {subTitle('Recently papers')}
         {isLoading ? <>
           {loadingRecentPaper()}
@@ -401,8 +397,8 @@ export const Home = () => {
       {recentData.recentlyPapers && recentData.recentlyPapers.length > 1 && recentPaper(recentData.recentlyPapers[1])}
       </>
         }
-        <Box sx={{display: 'flex', mt: 5}}>
-          <Box sx={{width: '30.5vw'}}>
+        <Box sx={{display: 'flex', mt: 5, width: '60.5vw'}}>
+          <Box sx={{width: '31.5vw'}}>
             {subTitle('Recommended papers')}
             <Box sx={{width: '27.5vw', height: '32vh', borderRadius: '20px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)',
             }} className={styles.transitionContainer}>
@@ -449,13 +445,14 @@ export const Home = () => {
                           {paper.summary}
                         </Box>
                     </Box>
-                    <CustomButton title="Study with AI" width="100%" click={()=>window.open(`/paper?paperid=${paper.paperId}`)}/>
+                    <GoToViewMore paperid={paper.paperId}/>
+                    {/* <CustomButton title="Study with AI" width="100%" click={()=>window.open(`/paper?paperid=${paper.paperId}`)}/> */}
                   </Box>
                 ))}
               </Box>
             </Box>
           </Box>
-          <Box sx={{width: '30vw'}}>
+          <Box sx={{width: '31vw'}}>
             {subTitle('Recent trends')}
             <Box sx={{width: '27.5vw', height: '32vh', borderRadius: '20px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)',
             px:3, py: 1}}>

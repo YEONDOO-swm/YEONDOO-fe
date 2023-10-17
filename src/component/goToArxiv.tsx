@@ -27,17 +27,18 @@ export const GoToArxiv = ({url, paperId}: {url: string, paperId: string}) => {
     }
     return (
         <>
-            <Box onClick={() => handleViewPaper(url)} sx={{display: 'inline-flex', padding: '8px 40px',
+            <Box onClick={() => handleViewPaper(url)} sx={{display: 'inline-flex', padding: '0px 40px', height: '40px',
                                                             justifyContent: 'center', alignItems: 'center', gap: '10px',
                                                             borderRadius: '8px', border: `2px solid ${color.arxiv}`,
+                                                            bgcolor: color.arxiv,
                                                             '&:hover': {
-                                                                bgcolor: color.arxiv,
+                                                                bgcolor: color.hoverArxiv,
                                                                 cursor: 'pointer'
                                                             }}}
                                                             onMouseEnter={handleMouseEnter}
                                                             onMouseLeave={handleMouseLeave}>
-                <img src={isHovered?arxivHover:arxiv}/>
-                <Typography sx={{color: isHovered?color.white:color.arxiv, fontSize: '15px', fontWeight: 700}}>
+                <img src={arxivHover}/>
+                <Typography sx={{color: color.white, fontSize: '15px', fontWeight: 700}}>
                     Arxiv
                 </Typography>
             </Box>
