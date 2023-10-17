@@ -37,13 +37,6 @@ import Reader from './page/reader';
 import StudyWithAI from './page/studyWithAI';
 import Export from './page/export';
 
-amplitude.init('fa2f5340585a6728ae2103fb05e56bec', {
-    defaultTracking: {
-        pageViews: false,
-        formInteractions: false,
-    }
-});
-
 // react-query client 설정
 const queryClient = new QueryClient()
 
@@ -55,12 +48,25 @@ export const App = () => {
     }
 
     let api = ''; //var은 웬만해선x
+    let amplitudeID = ''
+    let clientId = '';
     if (process.env.NODE_ENV === 'development'){
       api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
+      amplitudeID = `${import.meta.env.VITE_AMPLITUDE_ID}`
+      clientId = `${import.meta.env.VITE_GOOGLE_CLIENT_ID}`
     }
     else if (process.env.NODE_ENV === 'production'){
       api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
+      amplitudeID = `${process.env.VITE_AMPLITUDE_ID}`
+      clientId = `${process.env.VITE_GOOGLE_CLIENT_ID}`
     }
+
+    amplitude.init(amplitudeID, {
+        defaultTracking: {
+            pageViews: false,
+            formInteractions: false,
+        }
+    });
 
     const dispatch = useDispatch()
 
@@ -73,7 +79,7 @@ export const App = () => {
     
     return (
         <QueryClientProvider client={queryClient}>
-            <GoogleOAuthProvider clientId="499303710660-ps4rmdcpmci178dbaqro07ial11bevlj.apps.googleusercontent.com">
+            <GoogleOAuthProvider clientId={clientId}>
                 {/* <Helmet>
                     <title>연두</title>
                 </Helmet> */}

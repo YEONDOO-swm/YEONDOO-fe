@@ -373,7 +373,7 @@ export const Home = () => {
               </Box>
             
           ) :
-        (searchResults ? ((isSearched) ? (
+        (searchResults ? ((isSearched && searchResults.papers.length > 0) ? (
           <Box sx={{mx: '12.5vw'}}>
             <Typography sx={{height: '3vh', color: '#333', fontSize: '20px', fontWeight: 600, mb: 2}}>
               Search Results
@@ -386,8 +386,8 @@ export const Home = () => {
           </Box>
         )
       : (
-      <Box sx={{m:3}}>
-        <Typography> 검색 결과가 없습니다.</Typography>
+      <Box sx={{mx: '12.5vw'}}>
+        <Typography sx={{height: '3vh', color: '#333', fontSize: '20px', fontWeight: 600}}> No Search Results</Typography>
       </Box>
     )):(
       <Box sx={{ml: '12.5vw'}}>
