@@ -122,7 +122,7 @@ export const Trash = () => {
     }
 
     return (
-        <PageLayout workspace={true} number={3}>
+        <PageLayout workspace={true} number={1}>
             <MetaTag title="Papers in Trash - Yeondoo" description="사용자가 관심 해제한 논문의 리스트를 볼 수 있고, 복구할 수 있습니다." keywords="히스토리, 관심 해제, 복구, 논문"/>
             <Title title="History"/>
             <Box sx={{height: 50}}></Box>

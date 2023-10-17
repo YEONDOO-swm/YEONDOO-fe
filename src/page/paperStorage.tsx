@@ -23,6 +23,7 @@ import { paperType } from "./home";
 import { useNavigate } from "react-router-dom";
 import PageLayout from "../layout/pageLayout";
 import { getApi, postApi, refreshApi } from "../utils/apiUtils";
+import trash from "../asset/trash.svg"
 
 type paperLikePayload = {
     workspaceId: number | null;
@@ -107,75 +108,137 @@ export const PaperStorage = () => {
             amplitude.track("관심 논문 Page Viewed");
         }
     }, []);
+
+    const makePapersCard = (paper: paperType) => {
+        return (
+        <Box key={paper.paperId} sx={{ my: '15px', pb: '30px',
+        borderRadius: '20px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)'}}>
+            
+            <Box sx={{display: 'flex', justifyContent:'space-between', padding: '0px 10px 0px 40px'}}>
+                <Box sx={{pt: '30px'}}>
+                    <Typography sx={{color: '#333', fontSize: '18px', fontWeight: 600}}>
+                        {paper.title}
+                    </Typography>
+                    <Box sx={{display: 'flex', gap: 2}}>
+                        <Typography sx={{color: '#111', fontSize: '15px', fontWeight: 500}}>
+                            {(paper.authors.length > 3 
+                            ? paper.authors.slice(3).join(', ') +"..."
+                            : paper.authors.join(', '))}
+                        </Typography>
+                        <Typography sx={{color: '#666', fontSize: '15px', fontWeight: 400}}>
+                            {paper.year}
+                        </Typography>
+                    </Box>
+                    {/* <Typography variant="body1">
+                        cites: {paper.cites}
+                    </Typography> */}
+                </Box>
+                <Box sx={{pt: '5px', display: 'flex', flexDirection:'column', justifyContent: 'space-between', alignItems: 'flex-end'}}> 
+                    {/* <HeartClick currentItem={paper} home={false} callGetApi={callGetApi}/> */}
+                    <IconButton onClick={()=> handleCancelClick(paper.paperId, paper.title)} >
+                        <ClearIcon />
+                    </IconButton>
+                </Box> 
+                
+            </Box>
+            <Box sx={{display: 'flex', mt: '15px', padding: '0px 40px'}}>
+                <GoToArxiv url={paper.url} paperId={paper.paperId}/>
+                    <Box sx={{width:'15px'}}></Box>
+                <GoToViewMore paperid={paper.paperId} />
+            </Box>
+        </Box>
+        )
+      }
+      
+      const trashButton = () => {
+        return (
+            <Box sx={{display: 'inline-flex', px: '20px', justifyContent: 'center', alignItems: 'center', gap: '10px',
+            borderRadius: '8px', bgcolor: '#777', height: '35px',
+            '&:hover': {
+                bgcolor: '#555',
+                cursor: 'pointer'
+            }}}
+            onClick={()=>{navigate('/trash')}}>
+                <img src={trash}/>
+                <Typography sx={{color: color.white, fontSize: '15px', fontWeight: '700'}}>
+                    Trash
+                </Typography>
+            </Box>
+        )
+      }
+
+      const addMyPdfButton = () => {
+        return (
+            <Box sx={{display: 'inline-flex', px: '20px', justifyContent: 'center', alignItems: 'center', gap: '10px',
+            borderRadius: '8px', bgcolor: color.hoverGreen, height: '35px',
+            '&:hover': {
+                bgcolor: color.appbarGreen,
+                cursor: 'pointer'
+            }}}
+            onClick={()=>{}}>
+                <img src={trash}/>
+                <Typography sx={{color: color.white, fontSize: '15px', fontWeight: '700'}}>
+                    Add My PDF
+                </Typography>
+            </Box>
+        )
+      }
     
     return (
     <PageLayout workspace={true} number={1}>
         <MetaTag title="Working Papers - Yeondoo" description="사용자가 선택한 관심 논문 리스트를 볼 수 있습니다." keywords="히스토리, 논문, AI, 관심 논문, 찜"/>
         <Title title="Working Papers" />
-        <Box sx={{height: 50}}></Box>
-          {isLoading?(
-            <Box sx={{height: '75vh', margin: '0 30px 0 10px', padding: '10px'}} className={loadingStyle.loading}>
-                <Card sx={{height: '15vh', padding: '15px', borderRadius: '15px', margin: '15px', display: 'flex', justifyContent:'space-between', backgroundColor: color.loadingColor, opacity: '0.2'}}>
-                </Card>
-                <Card sx={{height: '15vh', padding: '15px', borderRadius: '15px', margin: '15px', display: 'flex', justifyContent:'space-between', backgroundColor: color.loadingColor, opacity: '0.2'}}>
-                </Card>
+        <Box>
+            <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+                <Typography sx={{fontSize: '25px', fontWeight: '600'}}>
+                    {/* {workspaceTitle} */}
+                    My works
+                </Typography>
+                <Box sx={{display: 'flex', gap: 1}}>
+                    {trashButton()}
+                    {addMyPdfButton()}
+                </Box>
             </Box>
-          ):(
-            <Box sx={{height: '75vh', margin: '0 30px 0 10px', padding: '10px', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
-                 <Dialog
-                    open={open}
-                    onClose={()=>setOpen(false)}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                    >
-                        <DialogTitle id="alert-dialog-title">
-                            {"Yeondoo"}
-                        </DialogTitle>
-                        <DialogContent>
-                            <DialogContentText id="alert-dialog-description">
-                            Are you sure you want to delete "{curPaperTitle}" from Working Papers?
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={()=>setOpen(false)}>No</Button>
-                            <Button onClick={()=>curPaperId!==null && handleCancel(curPaperId)} autoFocus>
-                            Yes
-                            </Button>
-                        </DialogActions>
-                    </Dialog> 
-                {(papersInStorage && papersInStorage.length>0) ? papersInStorage.map((paper: paperType) => (
-                    !paperIdArray.includes(paper.paperId) && (
-                            <Card key={paper.paperId} sx={{padding: '15px 10px 18px 25px', borderRadius: '15px', margin: '15px'}}>
-                                <Box sx={{display: 'flex', justifyContent:'space-between'}}>
-                                    <Box>
-                                        <Typography variant="h6">
-                                            {paper.title}
-                                        </Typography>
-                                        <Typography variant="body1">
-                                            {paper.authors?.length >1 ?paper.authors.join(', '):paper.authors} / {paper.year}
-                                        </Typography>
-                                        {/* <Typography variant="body1">
-                                            cites: {paper.cites}
-                                        </Typography> */}
-                                    </Box>
-                                    <Box sx={{ margin:'0px 10px', display: 'flex', flexDirection:'column', justifyContent: 'space-between', alignItems: 'flex-end'}}> 
-                                        {/* <HeartClick currentItem={paper} home={false} callGetApi={callGetApi}/> */}
-                                        <IconButton onClick={()=> handleCancelClick(paper.paperId, paper.title)} >
-                                            <ClearIcon />
-                                        </IconButton>
-                                    </Box> 
-                                </Box>
-                                <Box sx={{display: 'flex', mt: 1}}>
-                                    <GoToArxiv url={paper.url} paperId={paper.paperId}/>
-                                        <Box sx={{width:'15px'}}></Box>
-                                    <GoToViewMore paperid={paper.paperId} />
-                                </Box>
-                            </Card>
-                        
-                    )
-                )):<Typography sx={{m:3}}>No Working Papers</Typography>}
-            </Box>
-          )}
+            <Box sx={{height: 30}}></Box>
+            {isLoading?(
+                <Box  className={loadingStyle.loading}>
+                    <Card sx={{height: '15vh', borderRadius: '15px', display: 'flex', justifyContent:'space-between', backgroundColor: color.loadingColor, opacity: '0.2', mb: 2}}>
+                    </Card>
+                    <Card sx={{height: '15vh',borderRadius: '15px', display: 'flex', justifyContent:'space-between', backgroundColor: color.loadingColor, opacity: '0.2'}}>
+                    </Card>
+                </Box>
+            ):(
+                <Box sx={{height: '75vh', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
+                    <Dialog
+                        open={open}
+                        onClose={()=>setOpen(false)}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                        >
+                            <DialogTitle id="alert-dialog-title">
+                                {"Yeondoo"}
+                            </DialogTitle>
+                            <DialogContent>
+                                <DialogContentText id="alert-dialog-description">
+                                Are you sure you want to delete "{curPaperTitle}" from Working Papers?
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={()=>setOpen(false)}>No</Button>
+                                <Button onClick={()=>curPaperId!==null && handleCancel(curPaperId)} autoFocus>
+                                Yes
+                                </Button>
+                            </DialogActions>
+                        </Dialog> 
+                    {(papersInStorage && papersInStorage.length>0) ? papersInStorage.map((paper: paperType) => (
+                        !paperIdArray.includes(paper.paperId) && (
+                                makePapersCard(paper)
+                            
+                        )
+                    )):<Typography sx={{m:3}}>No Working Papers</Typography>}
+                </Box>
+            )}
+        </Box>
 
     </PageLayout>
 )};

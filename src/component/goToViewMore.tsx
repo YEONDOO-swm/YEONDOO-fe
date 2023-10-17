@@ -25,17 +25,18 @@ export const GoToViewMore = ({paperid}: {paperid:string}) => {
       }
 
     return (
-      <Box onClick={() => handleViewMore(paperid)} sx={{display: 'inline-flex', padding: '8px 40px',
+      <Box onClick={() => handleViewMore(paperid)} sx={{display: 'inline-flex', padding: '8px 40px', height: '40px',
                                                             justifyContent: 'center', alignItems: 'center', gap: '10px',
-                                                            borderRadius: '8px', border: `2px solid ${color.hoverGreen}`,
+                                                            borderRadius: '8px', border: `2px solid ${color.mainGreen}`,
+                                                            bgcolor: color.mainGreen,
                                                             '&:hover': {
                                                                 bgcolor: color.hoverGreen,
                                                                 cursor: 'pointer'
                                                             }}}
                                                             onMouseEnter={handleMouseEnter}
                                                             onMouseLeave={handleMouseLeave}>
-                <img src={isHovered?study:studyHover}/>
-                <Typography sx={{color: isHovered?color.white:color.hoverGreen, fontSize: '15px', fontWeight: 700}}>
+                <img src={study}/>
+                <Typography sx={{color: isHovered?color.white:color.white, fontSize: '15px', fontWeight: 700}}>
                     Study with AI
                 </Typography>
             </Box>

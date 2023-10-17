@@ -7,5 +7,6 @@ export const color = {
     mainGrey: '#DCDCDC',
     secondaryGrey: '#ededed',
     white: '#FFFFFF',
-    arxiv: '#c05f5f',
+    arxiv: '#ba6868',
+    hoverArxiv: '#A94343'
 }

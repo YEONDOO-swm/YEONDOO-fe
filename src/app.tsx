@@ -105,7 +105,7 @@ export const App = () => {
                             <Route path="/userprofile" element={< UserProfile />}/>
                             {/* <Route path="/paper" element={< PaperView />}/> */}
                             <Route path="/historypaper" element={< HistoryPaper />} />
-                            <Route path="/historytrash" element={< Trash />} />
+                            <Route path="/trash" element={< Trash />} />
                             <Route path="/pdfviewer" element={< PdfViewer />} />
                             <Route path="/workspaces" element={<Workspaces/>} />
                             <Route path="/selectpaper" element={<StudyWithAI/>} />

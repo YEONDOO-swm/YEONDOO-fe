@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import PageLayout from '../layout/pageLayout'
+import WorkspacePageLayout from '../layout/workspacePageLayout'
 import MetaTag from '../SEOMetaTag'
 import { Title, UserMenu, useNotify } from 'react-admin'
 import { Button, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, MenuItem, Modal, Select, SelectChangeEvent, TextField, Typography } from '@mui/material'
@@ -327,7 +327,7 @@ const Workspaces = () => {
         </Box>
     }
   return (
-    <PageLayout workspace={false} number={0}>
+    <WorkspacePageLayout workspace={false} number={0}>
         <MetaTag title="연두 홈" description="궁금한 개념 질문 또는 논문 제목 검색을 하면 답변과 관련 논문을 제공합니다." keywords="논문, 검색, 질문, 개념, gpt"/>
         <Title title="Home" />
         <Box sx={{display: 'flex', justifyContent: 'flex-end', p:2, color: 'grey.700'}}>
@@ -410,7 +410,7 @@ const Workspaces = () => {
                 </Button>
             </DialogActions>
         </Dialog> 
-    </PageLayout>
+    </WorkspacePageLayout>
   )
 }
 
