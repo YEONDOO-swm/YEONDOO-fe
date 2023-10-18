@@ -360,13 +360,17 @@ export const Home = () => {
         </Box>
           
           {loading ? (
-            
+            <>
+              <Typography sx={{height: '3vh', color: '#333', fontSize: '20px', fontWeight: 600, mb: 2}}>
+                Search Results
+              </Typography>
               <Box className={loadingStyle.loading} >
                 <Card sx={{ display: 'flex', justifyContent: 'center', marginBottom: '15px', border: `1px solid ${color.loadingColor}`, height: '20vh', borderRadius: '15px', backgroundColor: color.loadingColor, opacity: '0.2'}} >
                 </Card>
-                <Card sx={{ display: 'flex', justifyContent: 'center', marginBottom: '15px', border: `1px solid ${color.mainGrey}`, height: '20vh', borderRadius: '15px', backgroundColor: color.loadingColor, opacity: '0.2'}} >
+                <Card sx={{ display: 'flex', justifyContent: 'center', marginBottom: '15px', border: `1px solid ${color.mainGrey}`, height: '18vh', borderRadius: '15px', backgroundColor: color.loadingColor, opacity: '0.2'}} >
                 </Card>
               </Box>
+            </>
             
           ) :
         (searchResults ? ((isSearched && searchResults.papers.length > 0) ? (

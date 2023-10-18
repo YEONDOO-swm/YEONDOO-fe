@@ -78,8 +78,8 @@ export const HistoryPaper = () => {
                 <Box sx={{ height: '80vh'}} className={loadingStyle.loading}>
                 
                 <Box sx={{height: '75vh'}}>
-                    <Card sx={{ p: 2, mb: 1, height: '15vh', backgroundColor: color.loadingColor, opacity: '0.2'}}></Card>                  
-                    <Card sx={{ p: 2, mb: 1, height: '15vh', backgroundColor: color.loadingColor, opacity: '0.2'}}></Card>                  
+                    <Box sx={{ p: 2, mb: '15px', height: '15vh', backgroundColor: color.loadingColor, opacity: '0.2', borderRadius: '10px'}}></Box>                  
+                    <Box sx={{ p: 2, mb: 1, height: '15vh', backgroundColor: color.loadingColor, opacity: '0.2', borderRadius: '10px'}}></Box>                  
                 </Box>
                 
             </Box>
@@ -122,7 +122,7 @@ export const HistoryPaper = () => {
                         return acc;
                       }, []).map((mergedItems: paperHistoryPair[], mergedIndex: number) => (
                         
-                            <Box sx={{ p: '20px', mb: 1, borderRadius: '10px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)'}}>
+                            <Box sx={{ p: '20px', mb: '15px', borderRadius: '10px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)'}}>
                                 <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
 
                                   <Typography sx={{ color: '#333', fontSize: '18px', marginBottom: 1.5, fontWeight: 600, display: 'inline-block' }}>          

@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google'
 //import { jwt_decode } from 'jwt-decode'
 import { useGoogleLogin } from '@react-oauth/google';
@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import { CounterState } from '../reducer';
 import { useNotify } from 'react-admin';
 import loginIllust from '../asset/login.svg'
+import spinner from "../asset/spinner.gif"
 
 var api: string = '';
 
@@ -19,6 +20,7 @@ type loginPayload = {
 
 export const Login = () => {
     const api: string = useSelector((state: CounterState) => state.api)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const notify = useNotify()
 
@@ -31,7 +33,6 @@ export const Login = () => {
         {
             onSuccess: (data) => {
                 const response = data
-
                 if (response.status === 401) {
                     notify('Invalid user')
                     console.log("유효하지 않음")
@@ -54,12 +55,14 @@ export const Login = () => {
                 response.json().then((data)=> {
                     setCookie('username', data.username)
                     window.location.href = "/workspaces"
-                }).catch(error => console.log(error))
+                })
+                .catch(error => console.log(error))
             }
         }
     )
     const login = useGoogleLogin({
         onSuccess: async tokenResponse => {
+            setIsLoading(true)
             const payload: loginPayload = {
                 authCode: tokenResponse.code
             }
@@ -74,8 +77,12 @@ export const Login = () => {
       });
   return (
     <React.Fragment>
-        <Box sx={{display: 'flex'}}>
-            <Box sx={{height: '100vh', width: '50%', bgcolor: color.mainGreen,
+        {isLoading?
+        <Box sx={{display: 'flex', width: '100vw', height: '100vh', justifyContent: 'center', alignItems: 'center'}}>
+            <img src={spinner} alt="로딩" width="10%"/>
+        </Box>
+        :<Box sx={{display: 'flex'}}>
+            <Box sx={{height: '100vh', width: '70%', bgcolor: color.mainGreen,
                     display: 'flex', flexDirection: 'column', alignItems: 'center',
                     position: 'relative'}}>
                 <Box sx={{bgcolor: '#fff', marginTop: '13vh', width: '60vh', height: '60vh',
@@ -90,7 +97,7 @@ export const Login = () => {
                     <Typography sx={{fontSize: '15px', fontWeight: 400}}>Experience new paper study with Yeondoo</Typography>
                 </Box>
             </Box>
-            <Box sx={{height: '100vh', width: '50%', display:'flex', justifyContent: 'center', alignItems:"center"}}>
+            <Box sx={{height: '100vh', width: '30%', display:'flex', justifyContent: 'center', alignItems:"center"}}>
                 <Box sx={{display: 'inline-flex', padding: '50px 60px', flexDirection: 'column', alignItems: 'center', gap: '25px',
                         borderRadius: '20px', border: '1px solid #ddd', boxShadow: '0px 0px 20px 0px rgba(0, 0, 0, 0.05)'}}>
                     <Box>
@@ -117,7 +124,7 @@ export const Login = () => {
                 </Box>
             </Box>
         </Box>
-
+    }
     </React.Fragment>
   )
 }

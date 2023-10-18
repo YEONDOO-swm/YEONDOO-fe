@@ -111,9 +111,8 @@ export const PaperStorage = () => {
 
     const makePapersCard = (paper: paperType) => {
         return (
-        <Box key={paper.paperId} sx={{ my: '15px', pb: '30px',
+        <Box key={paper.paperId} sx={{ mb: '15px', pb: '30px',
         borderRadius: '20px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)'}}>
-            
             <Box sx={{display: 'flex', justifyContent:'space-between', padding: '0px 10px 0px 40px'}}>
                 <Box sx={{pt: '30px'}}>
                     <Typography sx={{color: '#333', fontSize: '18px', fontWeight: 600}}>
@@ -199,13 +198,13 @@ export const PaperStorage = () => {
                     {addMyPdfButton()}
                 </Box>
             </Box>
-            <Box sx={{height: 30}}></Box>
+            <Box sx={{height: 40}}></Box>
             {isLoading?(
-                <Box  className={loadingStyle.loading}>
-                    <Card sx={{height: '15vh', borderRadius: '15px', display: 'flex', justifyContent:'space-between', backgroundColor: color.loadingColor, opacity: '0.2', mb: 2}}>
-                    </Card>
-                    <Card sx={{height: '15vh',borderRadius: '15px', display: 'flex', justifyContent:'space-between', backgroundColor: color.loadingColor, opacity: '0.2'}}>
-                    </Card>
+                <Box className={loadingStyle.loading}>
+                    <Box sx={{height: '18vh', borderRadius: '15px', display: 'flex', justifyContent:'space-between', backgroundColor: color.loadingColor, opacity: '0.2', mb: '15px'}}>
+                    </Box>
+                    <Box sx={{height: '15vh',borderRadius: '15px', display: 'flex', justifyContent:'space-between', backgroundColor: color.loadingColor, opacity: '0.2'}}>
+                    </Box>
                 </Box>
             ):(
                 <Box sx={{height: '75vh', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
