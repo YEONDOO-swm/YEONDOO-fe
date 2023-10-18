@@ -69,7 +69,7 @@ export const Trash = () => {
 
 
     const { mutate } = useMutation(
-        (value: string[]) => postApi(api, `/api/history/trash?workspaceId=${workspaceId}`, JSON.stringify(value))
+        (value: string[]) => postApi(api, `/api/history/trash?workspaceId=${workspaceId}`, value)
         .then(response => {
             if (response.status === 401) {
                 refreshApi(api, notify, navigate)
