@@ -192,7 +192,7 @@ export const PaperStorage = () => {
             <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
                 <Typography sx={{fontSize: '25px', fontWeight: '600'}}>
                     {/* {workspaceTitle} */}
-                    My works
+                    My Works
                 </Typography>
                 <Box sx={{display: 'flex', gap: 1}}>
                     {trashButton()}

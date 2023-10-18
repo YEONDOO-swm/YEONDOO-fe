@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Card, CardContent, Typography, Box, Checkbox, Button, getPaperUtilityClass } from '@mui/material';
 import { Title, useAuthenticated, useNotify } from 'react-admin';
-import { useEffect, useState, FormEvent } from "react";
+import { useEffect, useState, MouseEvent } from "react";
 import * as amplitude from '@amplitude/analytics-browser';
 import { UserProfileCheck } from "../component/userProfileCheck";
 import { SearchTap } from "../component/searchTap";
@@ -19,6 +19,10 @@ import { CounterState } from "../reducer";
 import { useMutation, useQuery } from "react-query";
 import PageLayout from "../layout/pageLayout";
 import { getApi, postApi, refreshApi } from "../utils/apiUtils";
+import restore from "../asset/restore.svg"
+import works from "../asset/works.svg"
+import { styled } from '@mui/material/styles';
+
 
 type papersInTrashType = {
     paperId: string;
@@ -36,6 +40,7 @@ export const Trash = () => {
     
     const [checkedItems, setCheckedItems] = useState<string[]>([])
     const [submittedItems, setSubmittedItems] = useState<string[]>([])
+    const [isSelectedAll, setIsSelectedAll] = useState<boolean>(false)
 
     const navigate = useNavigate()
 
@@ -78,9 +83,10 @@ export const Trash = () => {
         }
     )
 
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (event: any) => {
         event.preventDefault();
-        // console.log(checkedItems)
+        
+        setIsSelectedAll(false)
         if (checkedItems.length === 0){
             notify("Please select the paper you want to restore", {type: 'error'})
         }
@@ -97,6 +103,7 @@ export const Trash = () => {
     }
 
     const handleCheckBoxChange = (paperId: string) => {
+        setIsSelectedAll(false)
         if (checkedItems.includes(paperId)){
             setCheckedItems(checkedItems.filter((paper: string) => paper !== paperId))
             
@@ -105,7 +112,7 @@ export const Trash = () => {
         }
     }
 
-    const handleCheckAllItems = () => { 
+    const handleCheckAllItems = () => {
         var allItemList: string[] = []
         var isCheckedAll: boolean = true
         for (var i=0; i<papersInTrash.length; i++){
@@ -116,21 +123,106 @@ export const Trash = () => {
         }
         if (isCheckedAll) {
             setCheckedItems([])
+            setIsSelectedAll(false)
         } else{
             setCheckedItems(allItemList)
+            setIsSelectedAll(true)
         }
     }
+
+    const restoreButton = () => {
+        return (
+            <Box sx={{display: 'inline-flex', px: '20px', justifyContent: 'center', alignItems: 'center', gap: '10px',
+            borderRadius: '8px', bgcolor: '#777', height: '35px',
+            '&:hover': {
+                bgcolor: '#555',
+                cursor: 'pointer'
+            }}}
+            onClick={handleSubmit}>
+                <img src={restore}/>
+                <Typography sx={{color: color.white, fontSize: '15px', fontWeight: '700'}}>
+                    Restore
+                </Typography>
+            </Box>
+        )
+    }
+
+    const backToMyWorksButton = () => {
+        return (
+            <Box sx={{display: 'inline-flex', px: '20px', justifyContent: 'center', alignItems: 'center', gap: '10px',
+            borderRadius: '8px', bgcolor: color.hoverGreen, height: '35px',
+            '&:hover': {
+                bgcolor: color.appbarGreen,
+                cursor: 'pointer'
+            }}}
+            onClick={()=>{navigate('/paperstorage')}}>
+                <img src={works}/>
+                <Typography sx={{color: color.white, fontSize: '15px', fontWeight: '700'}}>
+                    Back to My Works
+                </Typography>
+            </Box>
+        )
+    }
+    const BpIcon = styled('span')(({ theme }) => ({
+        borderRadius: 3,
+        width: '20px',
+        height: '20px',
+        boxShadow:
+          theme.palette.mode === 'dark'
+            ? '0 0 0 1px rgb(16 22 26 / 40%)'
+            : 'inset 0 0 0 1px rgba(16,22,26,.2), inset 0 -1px 0 rgba(16,22,26,.1)',
+        backgroundColor: theme.palette.mode === 'dark' ? '#394b59' : '#f5f8fa',
+        backgroundImage:
+          theme.palette.mode === 'dark'
+            ? 'linear-gradient(180deg,hsla(0,0%,100%,.05),hsla(0,0%,100%,0))'
+            : 'linear-gradient(180deg,hsla(0,0%,100%,.8),hsla(0,0%,100%,0))',
+        '.Mui-focusVisible &': {
+          outline: '2px solid #d9d9d9',
+          outlineOffset: 2,
+        },
+        'input:hover ~ &': {
+          backgroundColor: theme.palette.mode === 'dark' ? '#30404d' : '#ebf1f5',
+        },
+        'input:disabled ~ &': {
+          boxShadow: 'none',
+          background:
+            theme.palette.mode === 'dark' ? 'rgba(57,75,89,.5)' : 'rgba(206,217,224,.5)',
+        },
+      }));
+
+      const BpCheckedIcon = styled(BpIcon)({
+        backgroundColor: color.mainGreen,
+        backgroundImage: 'linear-gradient(180deg,hsla(0,0%,100%,.1),hsla(0,0%,100%,0))',
+        '&:before': {
+          display: 'block',
+          width: '20px',
+          height: '20px',
+          backgroundImage:
+            "url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath" +
+            " fill-rule='evenodd' clip-rule='evenodd' d='M12 5c-.28 0-.53.11-.71.29L7 9.59l-2.29-2.3a1.003 " +
+            "1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29s.53-.11.71-.29l5-5A1.003 1.003 0 0012 5z' fill='%23fff'/%3E%3C/svg%3E\")",
+          content: '""',
+        },
+        'input:hover ~ &': {
+          backgroundColor: color.mainGreen,
+        },
+      });
 
     return (
         <PageLayout workspace={true} number={1}>
             <MetaTag title="Papers in Trash - Yeondoo" description="사용자가 관심 해제한 논문의 리스트를 볼 수 있고, 복구할 수 있습니다." keywords="히스토리, 관심 해제, 복구, 논문"/>
             <Title title="History"/>
-            <Box sx={{height: 50}}></Box>
+            <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+                <Typography sx={{fontSize: '25px', fontWeight: '600'}}>
+                    Trash
+                </Typography>
+                <Box sx={{display: 'flex', gap: 1}}>
+                    {restoreButton()}
+                    {backToMyWorksButton()}
+                </Box>
+            </Box>
             {isLoading ? (
                 <Box sx={{ height: '80vh'}} className={loadingStyle.loading}>
-                    <Box sx={{}}>
-                        <HistoryNav page="trash" />
-                    </Box>
                     <Box sx={{ m: 2}}>
                         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1}}>
                             <Button variant="outlined" sx={{mr: 1}} onClick={handleCheckAllItems} disabled> Select All </Button>
@@ -144,47 +236,52 @@ export const Trash = () => {
 
                         </Card>
                     </Box>
-                    
                 </Box>
             ) : (
                 (papersInTrash && papersInTrash.length>0) ? (
-                <Box sx={{  height: '80vh'}}>
-                    <Box sx={{}}>
-                        <HistoryNav page="trash" />
-                    </Box>
-                    <Box sx={{ m: 2}}>
-                        <form onSubmit={handleSubmit} >
-                            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1}}>
-                                <Button variant="outlined" sx={{mr: 1}} onClick={handleCheckAllItems}> Select All </Button>
-                                <Button type="submit" variant="contained"> Recover </Button>
+                <Box >
+                
+                    <Box sx={{mt: 3}}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1, px: '10px'}}>
+                            <Box sx={{display: 'flex', alignItems: 'center', gap: 0.5}}>
+                                <Checkbox color="success" 
+                                checked={isSelectedAll} 
+                                checkedIcon={<BpCheckedIcon/>}
+                                icon={<BpIcon/>}
+                                onChange={handleCheckAllItems} />
+                                <Typography sx={{color: '#333', fontSize: '18px', fontWeight: 500}}>
+                                    Select All
+                                </Typography>
                             </Box>
-                            <Box sx={{height: '70vh', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
-                                {papersInTrash && ( papersInTrash.map((paper: papersInTrashType)=>(
-                                    !submittedItems.includes(paper.paperId) &&
-                                    <Card key={paper.paperId} sx={{ mb: '10px', display: 'flex', alignItems: 'center', width: '100%'}}>
-                                        <Checkbox color="success"
-                                        checked={checkedItems.includes(paper.paperId)}
-                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 25 } }} 
-                                        onChange={()=>{handleCheckBoxChange(paper.paperId)}}/> 
-                                        <Box sx={{ p:1 }}>
-                                            {paper.title}
-                                        </Box>
-                                    </Card>
-                                ))
-                    
-                                )}
-                            </Box>
-                        </form>
+                            {/* {restoreButton()}                         */}
+                        </Box>
+                        <Box sx={{height: '70vh', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
+                            {papersInTrash && ( papersInTrash.map((paper: papersInTrashType)=>(
+                                !submittedItems.includes(paper.paperId) &&
+                                <Box key={paper.paperId} sx={{ mb: '10px', display: 'flex', alignItems: 'center', width: '100%',
+                                borderRadius: '10px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)',
+                                padding: '10px', gap: 0.5}}>
+                                    <Checkbox color="success"
+                                    checked={checkedItems.includes(paper.paperId)}
+                                    checkedIcon={<BpCheckedIcon/>}
+                                    icon={<BpIcon/>}
+                                    onChange={()=>{handleCheckBoxChange(paper.paperId)}}/> 
+                                    <Box sx={{color: '#333', fontSize: '16px', fontWeight: 500 }}>
+                                        {paper.title}
+                                    </Box>
+                                </Box>
+                            ))
+                
+                            )}
+                        </Box>
+                        {/* </form> */}
                     </Box>
                     
                 </Box>)
                 : ( 
                 <Box sx={{  height: '80vh'}}>
-                    <Box sx={{}}>
-                        <HistoryNav page="trash" />
-                    </Box>
                     <Typography sx={{m:3}}>
-                    No papers in trash
+                        No papers in trash
                     </Typography>
                 </Box>
                 )
