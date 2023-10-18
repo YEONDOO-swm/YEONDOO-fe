@@ -101,10 +101,9 @@ export const App = () => {
                             
                             <Route path="/home" element={< Home />}/>
                             <Route path="/paperstorage" element={< PaperStorage/>}/>
-                            <Route path="/history" element={< History />}/>
+                            <Route path="/history" element={< HistoryPaper />}/>
                             <Route path="/userprofile" element={< UserProfile />}/>
                             {/* <Route path="/paper" element={< PaperView />}/> */}
-                            <Route path="/historypaper" element={< HistoryPaper />} />
                             <Route path="/trash" element={< Trash />} />
                             <Route path="/pdfviewer" element={< PdfViewer />} />
                             <Route path="/workspaces" element={<Workspaces/>} />
