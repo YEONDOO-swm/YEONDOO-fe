@@ -22,6 +22,7 @@ import { getApi, postApi, refreshApi } from "../utils/apiUtils";
 import restore from "../asset/restore.svg"
 import works from "../asset/works.svg"
 import { styled } from '@mui/material/styles';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 
 type papersInTrashType = {
@@ -287,11 +288,10 @@ export const Trash = () => {
                     
                 </Box>)
                 : ( 
-                <Box sx={{  height: '80vh'}}>
-                    <Typography sx={{m:3}}>
-                        No papers in trash
-                    </Typography>
-                </Box>
+                    <Box sx={{height: '70vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 2}}>
+                        <DeleteForeverIcon sx={{fontSize: '180px'}} />
+                        <Typography sx={{color: '#333', fontSize: '22px', fontWeight: 600}}>No Papers In Trash</Typography>
+                    </Box>
                 )
             )}
         

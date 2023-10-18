@@ -17,6 +17,7 @@ import { useQuery } from 'react-query';
 import PageLayout from '../layout/pageLayout';
 import { getApi, refreshApi } from '../utils/apiUtils';
 import arrow from '../asset/rightarrow.svg'
+import TelegramIcon from '@mui/icons-material/Telegram';
 
 type paperHistory = {
   paperId: string;
@@ -84,7 +85,8 @@ export const HistoryPaper = () => {
                 
             </Box>
             ):(
-                <Box sx={{ height: '80vh' }}>
+                (searchHistory && searchHistory.length > 0) ?
+                  <Box sx={{ height: '80vh' }}>
                   <Box sx={{height: '75vh', overflowY: 'scroll' }} className={scrollStyle.scrollBar}>
                     {searchHistory &&
                       searchHistory.reduce((acc: paperHistoryPair[][], item: paperHistory, index: number) => {
@@ -155,10 +157,13 @@ export const HistoryPaper = () => {
                                 
                             </Box>
                         
-                      ))}
-                  </Box>
-                </Box>
-
+                        ))}
+                        </Box>
+                        </Box>
+                : <Box sx={{height: '70vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 2}}>
+                    <TelegramIcon sx={{fontSize: '180px'}}/>
+                    <Typography sx={{color: '#333', fontSize: '22px', fontWeight: 600}}>No Chat History</Typography>
+                  </Box> 
             )}
         </PageLayout>
     )

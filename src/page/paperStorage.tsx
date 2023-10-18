@@ -24,6 +24,7 @@ import { useNavigate } from "react-router-dom";
 import PageLayout from "../layout/pageLayout";
 import { getApi, postApi, refreshApi } from "../utils/apiUtils";
 import trash from "../asset/trash.svg"
+import PostAddIcon from '@mui/icons-material/PostAdd';
 
 type paperLikePayload = {
     workspaceId: number | null;
@@ -234,7 +235,10 @@ export const PaperStorage = () => {
                                 makePapersCard(paper)
                             
                         )
-                    )):<Typography sx={{m:3}}>No Working Papers</Typography>}
+                    )):<Box sx={{height: '70vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 2}}>
+                            <PostAddIcon sx={{fontSize: '180px'}}/>
+                            <Typography sx={{ color: '#333', fontSize: '22px', fontWeight: 600}}>No Papers In My Works</Typography>
+                        </Box>}
                 </Box>
             )}
         </Box>

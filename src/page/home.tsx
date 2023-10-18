@@ -397,6 +397,14 @@ export const Home = () => {
           {loadingRecentPaper()}
         </>
       :<>
+      {recentData && recentData.recentlyPapers.length === 0 && 
+      <Box sx={{height: '55px', borderRadius: '10px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)',
+      display: 'flex', alignItems: 'center', px: 2, mb: 1}}>
+          <Typography sx={{fontWeight: 500}}>
+            No Recently Papers
+          </Typography>
+          
+      </Box>}
       {recentData.recentlyPapers && recentData.recentlyPapers.length > 0 && recentPaper(recentData.recentlyPapers[0])}
       {recentData.recentlyPapers && recentData.recentlyPapers.length > 1 && recentPaper(recentData.recentlyPapers[1])}
       </>
