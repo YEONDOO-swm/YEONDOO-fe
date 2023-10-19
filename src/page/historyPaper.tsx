@@ -17,6 +17,7 @@ import { useQuery } from 'react-query';
 import PageLayout from '../layout/pageLayout';
 import { getApi, refreshApi } from '../utils/apiUtils';
 import arrow from '../asset/rightarrow.svg'
+import TelegramIcon from '@mui/icons-material/Telegram';
 
 type paperHistory = {
   paperId: string;
@@ -78,13 +79,14 @@ export const HistoryPaper = () => {
                 <Box sx={{ height: '80vh'}} className={loadingStyle.loading}>
                 
                 <Box sx={{height: '75vh'}}>
-                    <Card sx={{ p: 2, mb: 1, height: '15vh', backgroundColor: color.loadingColor, opacity: '0.2'}}></Card>                  
-                    <Card sx={{ p: 2, mb: 1, height: '15vh', backgroundColor: color.loadingColor, opacity: '0.2'}}></Card>                  
+                    <Box sx={{ p: 2, mb: '15px', height: '15vh', backgroundColor: color.loadingColor, opacity: '0.2', borderRadius: '10px'}}></Box>                  
+                    <Box sx={{ p: 2, mb: 1, height: '15vh', backgroundColor: color.loadingColor, opacity: '0.2', borderRadius: '10px'}}></Box>                  
                 </Box>
                 
             </Box>
             ):(
-                <Box sx={{ height: '80vh' }}>
+                (searchHistory && searchHistory.length > 0) ?
+                  <Box sx={{ height: '80vh' }}>
                   <Box sx={{height: '75vh', overflowY: 'scroll' }} className={scrollStyle.scrollBar}>
                     {searchHistory &&
                       searchHistory.reduce((acc: paperHistoryPair[][], item: paperHistory, index: number) => {
@@ -122,7 +124,7 @@ export const HistoryPaper = () => {
                         return acc;
                       }, []).map((mergedItems: paperHistoryPair[], mergedIndex: number) => (
                         
-                            <Box sx={{ p: '20px', mb: 1, borderRadius: '10px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)'}}>
+                            <Box sx={{ p: '20px', mb: '15px', borderRadius: '10px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)'}}>
                                 <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
 
                                   <Typography sx={{ color: '#333', fontSize: '18px', marginBottom: 1.5, fontWeight: 600, display: 'inline-block' }}>          
@@ -155,10 +157,13 @@ export const HistoryPaper = () => {
                                 
                             </Box>
                         
-                      ))}
-                  </Box>
-                </Box>
-
+                        ))}
+                        </Box>
+                        </Box>
+                : <Box sx={{height: '70vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 2}}>
+                    <TelegramIcon sx={{fontSize: '180px'}}/>
+                    <Typography sx={{color: '#333', fontSize: '22px', fontWeight: 600}}>No Chat History</Typography>
+                  </Box> 
             )}
         </PageLayout>
     )

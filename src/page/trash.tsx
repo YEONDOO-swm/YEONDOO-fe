@@ -22,6 +22,7 @@ import { getApi, postApi, refreshApi } from "../utils/apiUtils";
 import restore from "../asset/restore.svg"
 import works from "../asset/works.svg"
 import { styled } from '@mui/material/styles';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 
 type papersInTrashType = {
@@ -222,19 +223,27 @@ export const Trash = () => {
                 </Box>
             </Box>
             {isLoading ? (
-                <Box sx={{ height: '80vh'}} className={loadingStyle.loading}>
-                    <Box sx={{ m: 2}}>
-                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1}}>
-                            <Button variant="outlined" sx={{mr: 1}} onClick={handleCheckAllItems} disabled> Select All </Button>
-                            <Button type="submit" variant="contained" disabled> Restore </Button>
+                <Box sx={{mt: 3}}>
+                    <Box sx={{display: 'flex', alignItems: 'center', gap: 0.5, px: '10px', mb:1}}>
+                        <Checkbox color="success" 
+                        checked={isSelectedAll} 
+                        checkedIcon={<BpCheckedIcon/>}
+                        icon={<BpIcon/>}
+                        disabled />
+                        <Typography sx={{color: color.loadingColor, fontSize: '18px', fontWeight: 500}}>
+                            Select All
+                        </Typography>
+                    </Box>
+                    <Box className={loadingStyle.loading}>
+                        <Box>
+                            
+                            <Box sx={{ mb: '15px', height: '5vh', backgroundColor: color.loadingColor, opacity: '0.2', borderRadius: '10px'}}>
+
+                            </Box>
+                            <Box sx={{ mb: '15px', height: '5vh', backgroundColor: color.loadingColor, opacity: '0.2', borderRadius: '10px'}}>
+
+                            </Box>
                         </Box>
-                    
-                        <Card sx={{ mb: '10px', height: '5vh', backgroundColor: color.loadingColor, opacity: '0.2', marginBottom: '10px'}}>
-
-                        </Card>
-                        <Card sx={{ mb: '10px', height: '5vh', backgroundColor: color.loadingColor, opacity: '0.2'}}>
-
-                        </Card>
                     </Box>
                 </Box>
             ) : (
@@ -258,7 +267,7 @@ export const Trash = () => {
                         <Box sx={{height: '70vh', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
                             {papersInTrash && ( papersInTrash.map((paper: papersInTrashType)=>(
                                 !submittedItems.includes(paper.paperId) &&
-                                <Box key={paper.paperId} sx={{ mb: '10px', display: 'flex', alignItems: 'center', width: '100%',
+                                <Box key={paper.paperId} sx={{ mb: '15px', display: 'flex', alignItems: 'center', width: '100%',
                                 borderRadius: '10px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)',
                                 padding: '10px', gap: 0.5}}>
                                     <Checkbox color="success"
@@ -279,11 +288,10 @@ export const Trash = () => {
                     
                 </Box>)
                 : ( 
-                <Box sx={{  height: '80vh'}}>
-                    <Typography sx={{m:3}}>
-                        No papers in trash
-                    </Typography>
-                </Box>
+                    <Box sx={{height: '70vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 2}}>
+                        <DeleteForeverIcon sx={{fontSize: '180px'}} />
+                        <Typography sx={{color: '#333', fontSize: '22px', fontWeight: 600}}>No Papers In Trash</Typography>
+                    </Box>
                 )
             )}
         
