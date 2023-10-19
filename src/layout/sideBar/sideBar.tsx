@@ -24,7 +24,7 @@ const SideBar = ({number}:{number: number}) => {
         >Yeondoo</Typography>
 
         <SideBarMenu img={Dashboard} title='Dashboard' number={number} idx={0} url="/workspace"/>
-        <SideBarMenu img={Profile} title='My Library' number={number} idx={1} url="/mylibrary"/>
+        <SideBarMenu img={Profile} title='My Library' number={number} idx={1} url="/library"/>
 
         
     </Box>

@@ -4,7 +4,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useNotify } from "react-admin";
 import { MouseEvent } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { CounterState, SET_CHAT_SELECTED_TEXT, SET_IS_OPEN_SELECT_REF, SET_REF_PAPER } from '../reducer';
+import { CounterState, SET_CHAT_SELECTED_TEXT, SET_IS_OPEN_SELECT_REF, SET_REF_PAPER, SET_SECOND_PAPER } from '../reducer';
 import { useQuery } from 'react-query';
 import { getApi, refreshApi } from '../utils/apiUtils';
 import { useNavigate } from 'react-router-dom';
@@ -87,6 +87,13 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
     const handleSetRef = (paperId: string, paperTitle: string) => {
       dispatch({
         type: SET_REF_PAPER,
+        data: {
+          paperId: paperId,
+          paperTitle: paperTitle,
+        }
+      })
+      dispatch({
+        type: SET_SECOND_PAPER,
         data: {
           paperId: paperId,
           paperTitle: paperTitle,

@@ -35,13 +35,14 @@ const Reader = () => {
   //const [selectedText, setSelectedText] = useState<string>("")
   const [isMultiplePaper, setIsMultiplePaper] = useState<boolean>(false)
   const [openedPaperNumber, setOpenedPaperNumber] = useState<number>(1)
-  const [firstPaperId, setFirstPaperId] = useState<string>("")
-  const [secondPaperId, setSecondPaperId] = useState<string>("2310.03745")
+  const [paperInfo, setPaperInfo] = useState<any>()
   const [isTabClicked, setIsTabClicked] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [data, setData] = useState()
   const [curPageIndex, setCurPageIndex] = useState<number>(0)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+
+  const secondPaper = useSelector((state: CounterState) => state.secondPaper)
   const dispatch = useDispatch()
 
   const receiveIsPdfRender = (e: MessageEvent) => {
@@ -83,7 +84,7 @@ const Reader = () => {
                       paperId: paperId,
                       paperItems: data.paperInfo.paperItems,
                     }, '*');
-                    setFirstPaperId(paperId)
+                    setPaperInfo(data.paperInfo)
                   }
                 })
             } else if (response.status === 401) {
@@ -116,7 +117,7 @@ const Reader = () => {
 
   useEffect(()=>{
     if (isTabClicked){
-      getApi(api, `/api/paper/${openedPaperNumber=== 1 ? firstPaperId : secondPaperId}?workspaceId=${workspaceId}`) 
+      getApi(api, `/api/paper/${openedPaperNumber=== 1 ? paperInfo.paperId : secondPaper.paperId}?workspaceId=${workspaceId}`) 
         .then(response => {
             if (response.status === 200) {
                 return response.json().then(data => {
@@ -124,7 +125,7 @@ const Reader = () => {
 
                   if (iframeRefNum && iframeRefNum.current && iframeRefNum.current.contentWindow) {
                     iframeRefNum.current.contentWindow.postMessage({
-                      paperId: openedPaperNumber=== 1 ? firstPaperId : secondPaperId,
+                      paperId: openedPaperNumber=== 1 ? paperInfo.paperId : secondPaper.paperId,
                       paperItems: data.paperInfo.paperItems,
                     }, '*');
                   }
@@ -160,7 +161,6 @@ const Reader = () => {
     let iframeRefNum = openedPaperNumber === 1 ? iframeRef : iframeRef2
 
     if (iframeRefNum && iframeRefNum.current && iframeRefNum.current.contentWindow) {
-      console.log("ye")
       iframeRefNum.current.contentWindow.postMessage({
         isExportClicked: true
       }, '*');
@@ -177,13 +177,11 @@ const Reader = () => {
       <Box sx={{height: '100vh'}}>
         <Box sx={{height: `${tabHeight}%`, display: 'flex', justifyContent: 'space-between'}}>
           <Box>
-            {isMultiplePaper ?<Button disabled>
-              Tap1
-            </Button>:
+            
             <Box>
-              <Button onClick={handleClickTab1}> Tab1 </Button>
-              <Button onClick={handleClickTab2}> Tab2 </Button>
-            </Box>}
+              <Button onClick={handleClickTab1}> {data && paperInfo.title} </Button>
+              {secondPaper.paperId && <Button onClick={handleClickTab2}> {secondPaper.paperTitle} </Button>}
+            </Box>
           </Box>
           <Button variant='contained' onClick={handleClickExportButton}>
             Export
@@ -205,7 +203,7 @@ const Reader = () => {
                               data={data} paperId={paperId}
                               iframeRef={iframeRef} iframeRef2={iframeRef2} openedPaperNumber={openedPaperNumber}
                               curPageIndex={curPageIndex}
-                              paperTitle={data && data?.paperInfo?.title}
+                              paperTitle={data && paperInfo?.title}
                               />)}
         </Box>
         <Box sx={{height: `${100-tabHeight}%`}}> 
