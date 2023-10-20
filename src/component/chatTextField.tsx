@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { MouseEventHandler } from 'react'
 import { Box, SxProps, TextField, IconButton, InputAdornment, CardContent, Container, Button, Modal, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNotify } from "react-admin";
@@ -10,11 +10,15 @@ import { getApi, refreshApi } from '../utils/apiUtils';
 import { useNavigate } from 'react-router-dom';
 import * as Sentry from '@sentry/react';
 import { color } from '../layout/color';
+import send from '../asset/send.png'
+import SendIcon from '@mui/icons-material/Send';
+import ClearIcon from '@mui/icons-material/Clear';
+import AddIcon from '@mui/icons-material/Add';
 
 type SearchTapProps = {
     searchTerm: string;
     onChange: (value: string) => void;
-    onSearch: (value: MouseEvent<HTMLButtonElement>) => void;
+    onSearch: any;
     onSearchKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void;
     placeholder?: string;
     firstBoxSx?: SxProps;
@@ -128,14 +132,17 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
   
     return (
 
-        <Box sx={{bgcolor: 'white'}}>
+        <Box sx={{bgcolor: 'white', p: '10px'}}>
             {refPaper.paperId
-            ?<Box sx={{display: 'flex', alignItems: 'center'}}>
-              <Button onClick={handleOpenSelectModal}>{refPaper.paperTitle}</Button>
-              <Button onClick={handleDeleteRef}>x</Button>
+            ?<Box sx={{display: 'inline-flex', alignItems: 'center', gap: 1, pl: 2, pr: 1, py: 0.4, mb: 1,
+            borderRadius: '100px', border: `1px solid ${color.mainGreen}`, cursor: 'pointer'}}>
+              <Typography sx={{fontSize: '13px', color: color.mainGreen, fontWeight: 500}} onClick={handleOpenSelectModal}>{refPaper.paperTitle}</Typography>
+              <ClearIcon onClick={handleDeleteRef} sx={{cursor: 'pointer', color: color.mainGreen, fontSize: '15px', ml: 0.7,}}/>
             </Box>
-            :<Box>
-              <Button onClick={handleOpenSelectModal}>레퍼런스 논문 선택</Button>
+            :<Box onClick={handleOpenSelectModal} sx={{display: 'inline-flex', alignItems: 'center', gap: 1, pl: 1, pr: 2, py: 0.4, mb: 1,
+                borderRadius: '100px', border: `1px solid ${color.mainGreen}`, cursor: 'pointer'}}>
+              <AddIcon sx={{fontSize: '15px', color: color.mainGreen}}/>
+              <Typography sx={{fontSize: '13px', color: color.mainGreen, fontWeight: 500}}>Select another paper</Typography>
             </Box>}
             <Modal
               open={isOpenSelectRef}
@@ -157,43 +164,62 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
                 </Typography>
               </Box>
             </Modal>
-            {selectedText && (selectedText.length>30 ? 
-            <Box sx={{display: 'flex'}}>
-              <Box sx={{display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', bgcolor: '#ddd', borderRadius: '20px', m: 1, px: 1,}}>
-                    {selectedText} 
+            {selectedText && (selectedText.length>12 ? 
+            <Box sx={{display: 'flex', alignItems: 'center', bgcolor: color.mainGreen, borderRadius: '100px', mb: 1}}>
+              <Box sx={{display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden', mx: 1, my: 0.5, px: 1,}}>
+                <Typography sx={{color: color.white, fontSize: '13px', fontWeight: 500}}>
+                  {selectedText} 
+                </Typography>
               </Box>
-              <Button onClick={handleDeleteSelectedText}>x</Button>
-            </Box>:<Box sx={{display: 'flex'}}><Box sx={{display: 'inline-block', bgcolor: '#ddd', borderRadius: '20px', m: 1, px: 1}}>
-                {selectedText}
-            </Box>
-            <Button onClick={handleDeleteSelectedText}>x</Button></Box>)}
+              <ClearIcon onClick={handleDeleteSelectedText} sx={{cursor: 'pointer', color: color.white, fontSize: '15px', mr: 1}}/>
+            </Box>:
+            <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
+              <Box sx={{display: 'inline-flex', pl: 2, py: 0.5, alignItems: 'center',
+                        bgcolor: color.mainGreen, borderRadius: '100px'}}>
+                  <Typography sx={{color: color.white, fontSize: '13px', fontWeight: 500}}>
+                    {selectedText} 
+                  </Typography>
+                <ClearIcon onClick={handleDeleteSelectedText} sx={{cursor: 'pointer', color: color.white, fontSize: '15px', ml: 0.7, mr: 1}}/>
+              </Box>
+            </Box>)}
             <Box sx={firstBoxSx}>
-                    <Box sx={middleBoxSx}>
-                        <TextField
+                    <Box sx={{height: '45px',display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+                    , color: '#333', backgroundColor: '#f5f5f5', borderRadius: '10px'}}>
+                        <input
                         id="search"
                         type="search"
-                        variant="outlined"
-                        multiline
-                        inputProps={{
-                            maxLength: maxLengthLimit,
-                        }}
-                        inputRef={searchInputRef}
+                        // variant="outlined"
+                        // multiline
+                        // inputProps={{
+                        //     maxLength: maxLengthLimit,
+                        // }}
+                        ref={searchInputRef}
                         placeholder={placeholder}
                         value={searchTerm}
                         onChange={handleChange}
                         onKeyDown={onSearchKeyDown}
-                        sx={{ ...sx, color: '#fff'}}
-                        InputProps={{
-                            endAdornment: (
-                            <InputAdornment position="end">
-                                <IconButton onClick={onSearch}>
-                                <SearchIcon sx={{color: color.mainGreen}}/>
-                                </IconButton>
-                            </InputAdornment>
-                            ),
-                            sx: {...heightSx, border: '1px solid #fff', borderRadius: '10px'}
-                        }}
+                        onClick={()=>{searchInputRef.current?.focus();}}
+                        style={{ color: '#333', backgroundColor: '#f5f5f5', borderRadius: '10px', width: '100%', paddingLeft: '10px',
+                        border: 'none', outline: 'none',
+                        fontSize: '15px'}}
+                        // InputProps={{
+                        //     endAdornment: (
+                        //     <InputAdornment position="end">
+                                // <IconButton onClick={onSearch} sx={{bgcolor: color.mainGreen, my:1, height: '35px', width: '35px'}}>
+                                // <SearchIcon sx={{color: color.mainGreen}}/>
+                                // </IconButton>
+                        //     </InputAdornment>
+                        //     ),
+                        //     sx: {...heightSx, border: '1px solid #fff', borderRadius: '10px', height: '50px'}
+                        // }}
                         />
+                        <div
+                        onClick={onSearch} style={{display: 'flex', justifyContent: 'center', alignItems: 'center'
+                        , backgroundColor: color.mainGreen, marginTop:1, marginBottom: 1, height: '35px', width: '38px',
+                        borderRadius: '100%', marginRight: '5px', cursor: 'pointer'}}>
+                          <SendIcon sx={{color: color.white, transform: 'rotate(-45deg)', ml: 0.5, mb: 0.5, fontSize: '18px'}}/>
+                        </div>
+                        
                 </Box>
             </Box>     
         </Box>

@@ -1,4 +1,4 @@
-import { Box, Button, Popper } from '@mui/material';
+import { Box, Button, Popper, Typography } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react'
 import { getCookie } from '../cookie';
 import { useQuery } from 'react-query';
@@ -9,10 +9,23 @@ import { SET_PAGE, useNotify } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
 import * as Sentry from '@sentry/react';
 import Chat from '../component/chat'
+import { color } from '../layout/color';
 
 type paperInfo = {
   paperId: string;
   paperItems: any
+}
+const PopUpButton = ({title, clickEvent}: {title: string, clickEvent: any}) => {
+  const [isHovered, setIsHovered] = useState<boolean>(false)
+  return (
+    <Box sx={{p: 1, '&:hover':{cursor: 'pointer'}}} onClick={clickEvent}
+          onMouseEnter={()=>{setIsHovered(true)}}
+          onMouseLeave={()=>{setIsHovered(false)}}>
+      <Typography sx={{fontSize: '15px', fontWeight: isHovered?600:500}}>
+        {title}
+      </Typography>
+    </Box>
+  )
 }
 
 const Reader = () => {
@@ -47,6 +60,8 @@ const Reader = () => {
   const [proofPayload, setProofPayload] = useState<any>()
   const isUpdatedDone = useSelector((state: CounterState) => state.isUpdatedDone)
   const [prevProofId, setPrevProofId] = useState<string>("")
+
+  const [curTab, setCurTab] = useState<number>(1)
 
   const receiveIsPdfRender = (e: MessageEvent) => {
     if (e.data.isPdfRender) {
@@ -160,6 +175,7 @@ const Reader = () => {
 
   useEffect(()=>{
       if (openedPaperNumber === paperId) {
+        setCurTab(1)
         const firstPayload = sessionStorage.getItem("firstPaper")
         if (firstPayload) {
           const firstPayloadParse = JSON.parse(firstPayload)
@@ -168,6 +184,7 @@ const Reader = () => {
             }
         }
       } else {
+        setCurTab(2)
         const secondPayload = sessionStorage.getItem("secondPaper")
         const storeSecondPaper = () => getApi(api, `/api/paper/${openedPaperNumber}?workspaceId=${workspaceId}`) 
           .then(response => {
@@ -219,10 +236,12 @@ const Reader = () => {
 
   const handleClickTab1 = () => {
       setOpenedPaperNumber(paperId)
+      setCurTab(1)
   }
 
   const handleClickTab2 = () => {
       setOpenedPaperNumber(secondPaper.paperId)
+      setCurTab(2)
   }
 
   const handleClickExportButton = (event: React.MouseEvent<HTMLElement>) => {
@@ -244,33 +263,59 @@ const Reader = () => {
   const exportOpen = Boolean(anchorEl)
   const exportId = exportOpen ? 'simple-popper' : undefined
 
+  const [isHoveredOne, setIsHoveredOne] = useState<boolean>(false)
+  const [isHoveredTwo, setIsHoveredTwo] = useState<boolean>(false)
+
+  useEffect(()=>{
+    console.log("changed", secondPaper.paperId)
+  }, [secondPaper])
+
   return (
     <div>
-      <Box sx={{height: '100vh'}}>
-        <Box sx={{height: `${tabHeight}%`, display: 'flex', justifyContent: 'space-between'}}>
-          <Box>
-            
-            <Box>
-              <Button onClick={handleClickTab1}> {data && paperInfo.title} </Button>
-              {secondPaper.paperId && <Button onClick={handleClickTab2}> {secondPaper.paperTitle} </Button>}
+      <Box sx={{height: '100vh', overflow: 'hidden'}}>
+        <Box sx={{height: `45px`, display: 'flex', justifyContent: 'space-between', bgcolor: color.mainGreen}}>
+          <Box sx={{height: '100%', display: 'flex'}}>
+            <Box onClick={handleClickTab1}
+                onMouseEnter={()=>{setIsHoveredOne(true)}}
+                onMouseLeave={()=>{setIsHoveredOne(false)}}
+                sx={{height: '100%', px: 4, cursor: 'pointer', display: 'flex', alignItems: 'center',
+                bgcolor: curTab === 1?color.white:(isHoveredOne?"rgba(255, 255, 255, 0.5)":null)}}> 
+                <Typography sx={{fontSize: '15px', fontWeight: curTab === 1?600:500, color:curTab === 1?color.appbarGreen:(isHoveredOne?color.appbarGreen:color.white)}}>
+                  {data && (paperInfo.title.length>25?paperInfo.title.slice(0,25)+"...":paperInfo.title)} 
+                </Typography>
+            </Box>
+            {secondPaper.paperId && 
+            <Box onClick={handleClickTab2}
+              onMouseEnter={()=>{setIsHoveredTwo(true)}}
+              onMouseLeave={()=>{setIsHoveredTwo(false)}}
+              sx={{height: '100%', px: 4, cursor: 'pointer', display: 'flex', alignItems: 'center',
+                bgcolor: curTab === 2?color.white:(isHoveredTwo?"rgba(255, 255, 255, 0.5)":null)}}
+              >
+              <Typography sx={{fontSize: '15px', fontWeight: curTab === 2?600:500, color:curTab === 2?color.appbarGreen:(isHoveredTwo?color.appbarGreen:color.white)}}>
+                {secondPaper.paperTitle.length>25?secondPaper.paperTitle.slice(0,25)+"...":secondPaper.paperTitle} 
+              </Typography>
+            </Box>}
+          </Box>
+          <Box sx={{height: '100%', display: 'flex', alignItems: 'center', px: 4}}>
+            <Box onClick={handleClickExportButton}
+                  sx={{borderRadius: '7px', border: '1px solid rgba(255, 255, 255, 0.30)', bgcolor: color.white, px: 4, py:0.5,
+                    boxShadow: '0px 2px 0px 0px #D4DBE1', '&:hover': {cursor: 'pointer'}}}>
+                <Typography sx={{fontSize: '15px', fontWeight: 600, color: color.appbarGreen}}>
+                  EXPORT
+                </Typography>
             </Box>
           </Box>
-          <Button variant='contained' onClick={handleClickExportButton}>
-            Export
-          </Button>
-          <Popper id={exportId} open={exportOpen} anchorEl={anchorEl} sx={{zIndex: 999}}>
-            <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper',
-            display: 'flex', flexDirection: 'column' }}>
-              <Button>
-                Download PDF
-              </Button>
-              <Button onClick={handleClickSummary}>
-                Generate Summary
-              </Button>
+          <Popper id={exportId} open={exportOpen} anchorEl={anchorEl} sx={{zIndex: 999, width: '250px'}}>
+            <Box sx={{ p: 1, bgcolor: 'background.paper',
+            display: 'flex', flexDirection: 'column', alignItems: 'center',
+            borderRadius: '5px', border: '1px solid #ddd', boxShadow: '0px 5px 5px rgba(0, 0, 0, 0.1), 0px -5px 5px rgba(0, 0, 0, 0.1)',
+            mr: 4, mt: 1 }}>
+              <PopUpButton title="Download PDF" clickEvent={null}/>
+              <PopUpButton title="Generate Summary" clickEvent={handleClickSummary} />
             </Box>
           </Popper>
         </Box>
-        <Box >
+        <Box>
           {!isLoading && (<Chat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} 
                               data={data} paperId={paperId}
                               iframeRef={iframeRef} iframeRef2={iframeRef2} openedPaperNumber={openedPaperNumber}
@@ -280,7 +325,7 @@ const Reader = () => {
                               prevProofId={prevProofId} setPrevProofId={setPrevProofId}
                               />)}
         </Box>
-        <Box sx={{height: `${100-tabHeight}%`}}> 
+        <Box sx={{height: `calc(100vh - 45px)`}}> 
           {openedPaperNumber === paperId
           ?<iframe src={readerUrl} width="100%" height="100%" ref={iframeRef}></iframe>
           :<iframe src={readerUrl} width="100%" height="100%" ref={iframeRef2}></iframe>}
