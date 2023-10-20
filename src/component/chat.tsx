@@ -16,6 +16,8 @@ import { SearchTap } from './searchTap'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { ChatTextField } from './chatTextField'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import chatProfile from '../asset/chatProfile.png';
+import deleteIcon from '../asset/delete.svg'
 
 type history = {
     who: boolean;
@@ -298,39 +300,52 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
     return (
     <div>
         <Box
-        style={{
-          width: '100px',
-          height: '100px',
+        sx={{
+          width: '90px',
+          height: '90px',
           borderRadius: '100%',
-          backgroundColor: '#bbb',
+          backgroundColor: isChatOpen?color.hoverGreen: color.mainGreen,
           position: 'absolute', // 부모(상위) 요소에 대한 상대 위치로 설정
           left: chatPosition.x,
-            top: chatPosition.y,
+          top: chatPosition.y,
           transform: 'translate(-50%, -50%)', // 동그라미의 중심을 중앙으로 이동
           cursor: isDragging ? 'grabbing' : 'grab',
+          boxShadow: '0px 5px 5px rgba(0, 0, 0, 0.1), 0px -5px 5px rgba(0, 0, 0, 0.1)',
+          '&:hover':{
+            bgcolor: color.hoverGreen
+          }
         }}
         onClick={handleChatOpen}
         onMouseDown={handleMouseDown}
-        ></Box>
+        >
+            <img src={chatProfile} style={{marginTop: '25px', marginLeft: '25px'}} draggable={false}/>
+        </Box>
 
       {/* 직사각형 (예: 채널톡 스타일) */}
       {isChatOpen && <Box
         style={{
-          width: '350px',
-          height: '500px',
-          backgroundColor: '#ddd',
+          width: '400px',
+          height: '550px',
+          //backgroundColor: '#ddd',
           position: 'absolute', // 부모(상위) 요소에 대한 상대 위치로 설정
           left: chatPosition.x,
           top: chatPosition.y,
-          transform: 'translate(0, -100%)', // 상단 중앙으로 이동
+          transform: 'translate(0, -95%)', // 상단 중앙으로 이동
           
         }}
       >
-        <Box sx={{width: '100%', bgcolor: '#fff'}}>{paperTitle}</Box>
-        <Box sx={{ border: `1px solid ${color.mainGrey}`,  padding: '20px', height: '90%', borderRadius: '15px', backgroundColor: color.mainGrey, 
+        <Box sx={{width: '100%', height:'30px', bgcolor: '#333', color: color.white, px: 1,
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+            <Typography sx={{fontSize: '15px', fontWeight: 600}}>
+                {paperTitle}
+            </Typography>
+            <img src={deleteIcon} style={{width: '18px', cursor: 'pointer'}} onClick={()=>{setIsChatOpen(false)}}/>
+        </Box>
+        <Box sx={{ border: `1px solid ${color.mainGrey}`,  height: '90%'
+        , backgroundColor: '#f5f5f5', 
         display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
         }}>
-            <Box sx={{ overflowY: 'scroll' }} ref={scrollContainerRef} className={scrollStyle.scrollBar}>
+            <Box sx={{ overflowY: 'scroll', px: '20px', pt: '20px' }} ref={scrollContainerRef} className={scrollStyle.scrollBar}>
                 {data.paperHistory &&
                 data.paperHistory.map((history: history, index: number) => (
                 <Box
@@ -462,7 +477,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                 onChange={setSearchTermInPaper}
                 onSearch={handleButtonClickInPaper}
                 onSearchKeyDown={handleSearchKeyDownInPaper}
-                placeholder="이 논문에서 실험 1의 결과를 요약해줘"
+                placeholder="Ask any question"
                 sx={{width: "100%", backgroundColor: "#FFFFFF"}}
                 selectedText={draggeddText}
             />

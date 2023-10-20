@@ -1,13 +1,9 @@
-<svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="icon" clip-path="url(#clip0_10_887)">
-<g id="Group 15">
-<line id="Line 7" x1="8.11089" y1="8.18198" x2="1.74693" y2="1.81802" stroke="#999999" stroke-linecap="round"/>
-<line id="Line 8" x1="1.74695" y1="8.18199" x2="8.11091" y2="1.81803" stroke="#999999" stroke-linecap="round"/>
+<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="btn_close">
+<circle id="Ellipse 70" cx="14" cy="14" r="14" fill="white"/>
+<g id="Group 24">
+<rect id="Rectangle 178" width="2.89946" height="14.631" rx="1.44973" transform="matrix(0.764028 0.645183 -0.702671 0.711515 18.2812 8)" fill="#333333"/>
+<rect id="Rectangle 179" width="2.89946" height="14.631" rx="1.44973" transform="matrix(-0.764028 0.645183 0.702671 0.711515 10.2812 8)" fill="#333333"/>
 </g>
 </g>
-<defs>
-<clipPath id="clip0_10_887">
-<rect width="10" height="10" fill="white"/>
-</clipPath>
-</defs>
 </svg>
