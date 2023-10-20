@@ -26,7 +26,7 @@ import { getApi, postApi, refreshApi } from "../utils/apiUtils";
 import trash from "../asset/trash.svg"
 import PostAddIcon from '@mui/icons-material/PostAdd';
 
-type paperLikePayload = {
+export type paperLikePayload = {
     workspaceId: number | null;
     paperId: string;
     on: boolean;
@@ -144,7 +144,7 @@ export const PaperStorage = () => {
             <Box sx={{display: 'flex', mt: '15px', padding: '0px 40px'}}>
                 <GoToArxiv url={paper.url} paperId={paper.paperId}/>
                     <Box sx={{width:'15px'}}></Box>
-                <GoToViewMore paperid={paper.paperId} />
+                <GoToViewMore paperid={paper.paperId} workspaceId={workspaceId}/>
             </Box>
         </Box>
         )

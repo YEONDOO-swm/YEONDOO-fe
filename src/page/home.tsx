@@ -43,6 +43,8 @@ export type paperType = {
   conference: string;
   cites: number;
   url: string;
+  workspaceId: number;
+  workspaceTitle: string;
 }
 
 
@@ -61,8 +63,8 @@ export const Home = () => {
 
     // const { workspaceId } = useParams()
     const query: URLSearchParams = new URLSearchParams(window.location.search); 
-    const workspaceId: string = query.get('workspaceId') || '';
-    sessionStorage.setItem('workspaceId', workspaceId!)
+    const workspaceId: number = Number(query.get('workspaceId'));
+    sessionStorage.setItem('workspaceId', String(workspaceId))
     const workspaceTitle = sessionStorage.getItem('workspaceTitle')
     
     const [searchTerm, setSearchTerm] = useState<string>(""); // 사용자가 치고있는 질문
@@ -248,7 +250,7 @@ export const Home = () => {
             <GoToArxiv url={paper.url} paperId={paper.paperId}/>
 
             <Box sx={{width: '15px'}}></Box>
-            <GoToViewMore paperid={paper.paperId} />
+            <GoToViewMore paperid={paper.paperId} workspaceId={workspaceId}/>
           </Box>
                 {/* Add other details for the paper */}
               
@@ -457,7 +459,7 @@ export const Home = () => {
                           {paper.summary}
                         </Box>
                     </Box>
-                    <GoToViewMore paperid={paper.paperId}/>
+                    <GoToViewMore paperid={paper.paperId} workspaceId={workspaceId}/>
                     {/* <CustomButton title="Study with AI" width="100%" click={()=>window.open(`/paper?paperid=${paper.paperId}`)}/> */}
                   </Box>
                 ))}
