@@ -4,7 +4,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useNotify } from "react-admin";
 import { MouseEvent } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { CounterState, SET_CHAT_SELECTED_TEXT, SET_IS_OPEN_SELECT_REF, SET_REF_PAPER, SET_SECOND_PAPER } from '../reducer';
+import { CounterState, SET_CHAT_SELECTED, SET_IS_OPEN_SELECT_REF, SET_REF_PAPER, SET_SECOND_PAPER } from '../reducer';
 import { useQuery } from 'react-query';
 import { getApi, refreshApi } from '../utils/apiUtils';
 import { useNavigate } from 'react-router-dom';
@@ -115,8 +115,14 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
 
     const handleDeleteSelectedText = () => {
       dispatch({
-        type: SET_CHAT_SELECTED_TEXT,
-        data: ""
+        type: SET_CHAT_SELECTED,
+        data: {
+          selectedText: "",
+          position: {
+            pageIndex: 0,
+            rects: []
+          }
+        }
       })
     }
   

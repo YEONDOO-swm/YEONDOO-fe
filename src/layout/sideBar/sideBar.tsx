@@ -23,7 +23,7 @@ const SideBar = ({number}:{number: number}) => {
         onClick={()=>{window.location.replace('/workspaces')}}
         >Yeondoo</Typography>
 
-        <SideBarMenu img={Dashboard} title='Dashboard' number={number} idx={0} url="/workspace"/>
+        <SideBarMenu img={Dashboard} title='Dashboard' number={number} idx={0} url="/workspaces"/>
         <SideBarMenu img={Profile} title='My Library' number={number} idx={1} url="/library"/>
 
         

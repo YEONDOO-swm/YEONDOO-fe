@@ -3,13 +3,12 @@ import React, { useEffect, useRef, useState } from 'react'
 import { getCookie } from '../cookie';
 import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
-import { CounterState, SET_ANNOTATIONS, SET_CHAT_SELECTED_TEXT, SET_PAPERS_IN_STORAGE } from '../reducer';
+import { CounterState, SET_ANNOTATIONS, SET_CHAT_SELECTED, SET_IS_UPDATED_DONE, SET_PAPERS_IN_STORAGE, SET_SECOND_PAPER } from '../reducer';
 import { getApi, refreshApi } from '../utils/apiUtils';
 import { SET_PAGE, useNotify } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
 import * as Sentry from '@sentry/react';
 import Chat from '../component/chat'
-import { error } from 'console';
 
 type paperInfo = {
   paperId: string;
@@ -18,7 +17,7 @@ type paperInfo = {
 
 const Reader = () => {
   const api: string = useSelector((state: CounterState) => state.api)
-  const workspaceId = Number(sessionStorage.getItem("workspaceId"));
+  
   const readerUrl = process.env.NODE_ENV === 'development' ? import.meta.env.VITE_READER_URL : process.env.VITE_READER_URL
 
   const notify = useNotify()
@@ -29,14 +28,14 @@ const Reader = () => {
 
   const query = new URLSearchParams(window.location.search);
   const paperId: string = query.get('paperid') || '';
+  const workspaceId: number = Number(query.get('workspaceId'));
 
   const [isPdfCompleted, setIsPdfCompleted] = useState<boolean>(false)
   const [isChatOpen, setIsChatOpen] = useState<boolean>(false)
   //const [selectedText, setSelectedText] = useState<string>("")
   const [isMultiplePaper, setIsMultiplePaper] = useState<boolean>(false)
-  const [openedPaperNumber, setOpenedPaperNumber] = useState<number>(1)
+  const [openedPaperNumber, setOpenedPaperNumber] = useState<string>(paperId)
   const [paperInfo, setPaperInfo] = useState<any>()
-  const [isTabClicked, setIsTabClicked] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [data, setData] = useState()
   const [curPageIndex, setCurPageIndex] = useState<number>(0)
@@ -45,17 +44,23 @@ const Reader = () => {
   const secondPaper = useSelector((state: CounterState) => state.secondPaper)
   const dispatch = useDispatch()
 
+  const [proofPayload, setProofPayload] = useState<any>()
+  const isUpdatedDone = useSelector((state: CounterState) => state.isUpdatedDone)
+  const [prevProofId, setPrevProofId] = useState<string>("")
+
   const receiveIsPdfRender = (e: MessageEvent) => {
     if (e.data.isPdfRender) {
       setIsPdfCompleted(e.data.isPdfRender)
     }
-    else if (e.data.selectedText) {
+    else if (e.data.selectedText && e.data.position) {
       setIsChatOpen(true)
       dispatch({
-        type: SET_CHAT_SELECTED_TEXT,
-        data: e.data.selectedText
+        type: SET_CHAT_SELECTED,
+        data: {
+          selectedText: e.data.selectedText,
+          position: e.data.position
+        }
       })
-      //setSelectedText(e.data.selectedText)
     } else if (e.data && e.data.pageIndex >=0) {
       setCurPageIndex(e.data.pageIndex)
     }
@@ -66,8 +71,41 @@ const Reader = () => {
       })
       navigate('/export')
     }
+    else if (e.data.isUpdatedDone) {
+      dispatch({
+        type: SET_IS_UPDATED_DONE,
+        data: true
+      })
+    }
   }
-  window.addEventListener('message', receiveIsPdfRender)
+
+  useEffect(()=>{
+    if (isUpdatedDone && proofPayload) {
+      const timeoutId = setTimeout(() => {
+        let iframeRefNum = openedPaperNumber === paperId ? iframeRef : iframeRef2;
+        if (iframeRefNum && iframeRefNum.current && iframeRefNum.current.contentWindow) {
+          iframeRefNum.current.contentWindow.postMessage({
+            proof: proofPayload,
+            proofId: prevProofId
+          }, '*');
+        }
+        setPrevProofId(proofPayload.id);
+        setProofPayload(null);
+        dispatch({
+          type: SET_IS_UPDATED_DONE,
+          data: false
+        });
+      }, 800);
+
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }
+  }, [isUpdatedDone, proofPayload])
+
+  useEffect(()=>{
+    window.addEventListener('message', receiveIsPdfRender, false)
+  },[])
 
   useEffect(()=>{
     if (isPdfCompleted) {
@@ -76,6 +114,11 @@ const Reader = () => {
             if (response.status === 200) {
                 return response.json().then(data => {
                   setData(data)
+                  const firstPayload = {
+                    paperId: paperId,
+                    paperItems: data.paperInfo.paperItems
+                  }
+                  sessionStorage.setItem("firstPaper", JSON.stringify(firstPayload))
                   if (iframeRef && iframeRef.current && iframeRef.current.contentWindow) {
                     iframeRef.current.contentWindow.postMessage({ 
                       workspaceId: workspaceId,
@@ -116,41 +159,70 @@ const Reader = () => {
   }, [isPdfCompleted])
 
   useEffect(()=>{
-    if (isTabClicked){
-      getApi(api, `/api/paper/${openedPaperNumber=== 1 ? paperInfo.paperId : secondPaper.paperId}?workspaceId=${workspaceId}`) 
-        .then(response => {
-            if (response.status === 200) {
-                return response.json().then(data => {
-                  let iframeRefNum = openedPaperNumber === 1 ? iframeRef : iframeRef2
+      if (openedPaperNumber === paperId) {
+        const firstPayload = sessionStorage.getItem("firstPaper")
+        if (firstPayload) {
+          const firstPayloadParse = JSON.parse(firstPayload)
+          if (iframeRef && iframeRef.current && iframeRef.current.contentWindow) {
+              iframeRef.current.contentWindow.postMessage(firstPayloadParse, '*');
+            }
+        }
+      } else {
+        const secondPayload = sessionStorage.getItem("secondPaper")
+        const storeSecondPaper = () => getApi(api, `/api/paper/${openedPaperNumber}?workspaceId=${workspaceId}`) 
+          .then(response => {
+              if (response.status === 200) {
+                  return response.json().then(data => {
+                    //let iframeRefNum = openedPaperNumber === paperInfo.paperId ? iframeRef : iframeRef2
+                    
+                    const secondPayload = {
+                      paperId: openedPaperNumber,
+                      paperItems: data.paperInfo.paperItems
+                    }
+                    sessionStorage.setItem("secondPaper", JSON.stringify(secondPayload))
+                    dispatch({
+                      type: SET_SECOND_PAPER,
+                      data: {
+                        paperId: openedPaperNumber,
+                        paperTitle: data.paperInfo.title,
+                      }
+                    })
+                    if (iframeRef2 && iframeRef2.current && iframeRef2.current.contentWindow) {
+                        iframeRef2.current.contentWindow.postMessage({
+                          paperId: openedPaperNumber,
+                          paperItems: data.paperInfo.paperItems,
+                        }, '*');
+                    }
+                  })
+              } else if (response.status === 401) {
+                  refreshApi(api, notify, navigate)
+                }
+              throw new Error("논문 정보를 가져오는데 실패하였습니다")
+          })
+        if (secondPayload) {
+          const secondPayloadParse = JSON.parse(secondPayload)
+          
+          if (secondPayloadParse.paperId === openedPaperNumber) {
+            if (iframeRef2 && iframeRef2.current && iframeRef2.current.contentWindow) {
+                iframeRef2.current.contentWindow.postMessage(secondPayloadParse, '*');
+            }
+          }
+          else {
+            storeSecondPaper()
+          }
+        } else {
+          storeSecondPaper()
+        }
+      }
+  }, [openedPaperNumber])
 
-                  if (iframeRefNum && iframeRefNum.current && iframeRefNum.current.contentWindow) {
-                    iframeRefNum.current.contentWindow.postMessage({
-                      paperId: openedPaperNumber=== 1 ? paperInfo.paperId : secondPaper.paperId,
-                      paperItems: data.paperInfo.paperItems,
-                    }, '*');
-                  }
-                })
-            } else if (response.status === 401) {
-                refreshApi(api, notify, navigate)
-              }
-            throw new Error("논문 정보를 가져오는데 실패하였습니다")
-        })
-      setIsTabClicked(false)
-    }
-  }, [isTabClicked])
 
   const handleClickTab1 = () => {
-    if (openedPaperNumber === 2) {
-      setOpenedPaperNumber(1)
-      setIsTabClicked(true)
-    }
+      setOpenedPaperNumber(paperId)
   }
 
   const handleClickTab2 = () => {
-    if (openedPaperNumber === 1){
-      setOpenedPaperNumber(2)
-      setIsTabClicked(true)
-    }
+      setOpenedPaperNumber(secondPaper.paperId)
   }
 
   const handleClickExportButton = (event: React.MouseEvent<HTMLElement>) => {
@@ -158,7 +230,7 @@ const Reader = () => {
   }
 
   const handleClickSummary = () => {
-    let iframeRefNum = openedPaperNumber === 1 ? iframeRef : iframeRef2
+    let iframeRefNum = openedPaperNumber === paperInfo.paperId ? iframeRef : iframeRef2
 
     if (iframeRefNum && iframeRefNum.current && iframeRefNum.current.contentWindow) {
       iframeRefNum.current.contentWindow.postMessage({
@@ -202,12 +274,14 @@ const Reader = () => {
           {!isLoading && (<Chat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} 
                               data={data} paperId={paperId}
                               iframeRef={iframeRef} iframeRef2={iframeRef2} openedPaperNumber={openedPaperNumber}
-                              curPageIndex={curPageIndex}
+                              curPageIndex={curPageIndex} setOpenedPaperNumber={setOpenedPaperNumber}
                               paperTitle={data && paperInfo?.title}
+                              proofPayload={proofPayload} setProofPayload={setProofPayload}
+                              prevProofId={prevProofId} setPrevProofId={setPrevProofId}
                               />)}
         </Box>
         <Box sx={{height: `${100-tabHeight}%`}}> 
-          {openedPaperNumber === 1
+          {openedPaperNumber === paperId
           ?<iframe src={readerUrl} width="100%" height="100%" ref={iframeRef}></iframe>
           :<iframe src={readerUrl} width="100%" height="100%" ref={iframeRef2}></iframe>}
         </Box>

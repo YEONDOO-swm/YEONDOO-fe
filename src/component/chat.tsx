@@ -9,7 +9,7 @@ import * as Sentry from '@sentry/react';
 import { getApi, postApi, refreshApi } from '../utils/apiUtils'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { CounterState } from '../reducer'
+import { CounterState, SET_IS_UPDATED_DONE, SET_SECOND_PAPER } from '../reducer'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import loadingStyle from "../layout/loading.module.css"
 import { SearchTap } from './searchTap'
@@ -22,12 +22,14 @@ type history = {
     content: string;
     id: number;
     score: number | null;
-    position?: any;
-    text?: any;
+    positions?: any;
 }
 
-const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, openedPaperNumber, curPageIndex, paperTitle}: 
-    {isChatOpen: boolean, setIsChatOpen: any, data: any, paperId: string, iframeRef: any, iframeRef2: any, openedPaperNumber: number, curPageIndex: number, paperTitle: any}) => {
+const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, openedPaperNumber
+    , setOpenedPaperNumber, curPageIndex, paperTitle, proofPayload, setProofPayload, prevProofId, setPrevProofId}: 
+    {isChatOpen: boolean, setIsChatOpen: any, data: any, paperId: string, iframeRef: any, iframeRef2: any, openedPaperNumber: string
+        , setOpenedPaperNumber: any, curPageIndex: number, paperTitle: any,
+    proofPayload: any, setProofPayload: any, prevProofId: string, setPrevProofId: any}) => {
     const notify = useNotify()
     const navigate = useNavigate()
 
@@ -44,14 +46,17 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
     const [key, setKey] = useState<number>(); // 스트리밍 데이터 + 기본 데이터 받기 위해
     const [resultId, setResultId] = useState<number>(1)
     const [draggeddText, setDraggedText] = useState<string>("")
-    const [prevProofId, setPrevProofId] = useState<string>("")
+    // const [prevProofId, setPrevProofId] = useState<string>("")
+    //const [proofPayload, setProofPayload] = useState<any>()
 
     // const [isChatOpen, setIsChatOpen] = useState<boolean>(false)
     
     const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
     const refPaper = useSelector((state: CounterState) => state.refPaper)
-    const selectedText = useSelector((state: CounterState) => state.chatSelectedText)
+    const {selectedText, position} = useSelector((state: CounterState) => state.chatSelected)
+    const isUpdatedDone = useSelector((state: CounterState) => state.isUpdatedDone)
+    const secondPaper = useSelector((state: CounterState) => state.secondPaper)
 
     const dispatch = useDispatch()
 
@@ -110,7 +115,8 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
         const payload = {
             paperIds: refPaper.paperId?[paperId, refPaper.paperId]:[paperId],
             question: searchTermInPaper,
-            context: draggeddText,
+            context: draggeddText ? draggeddText : null,
+            position: draggeddText ? position : null,
         }
         try {
             setKey(keyNumber)
@@ -124,8 +130,22 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
             const data = await response.json()
             setSearchResultsInPaper((prevResults: string[]) => [...prevResults, data.answer])
             setSearchResultsProof((prevProof: any[]) => [...prevProof, {
-                position: data.position,
-                text: data.text
+                firstPaperPosition: (data.positions && data.positions.length > 0) && 
+                {
+                    paperId: data.positions[0].paperId,
+                    position: {
+                        pageIndex: data.positions[0].pageIndex,
+                        rects: data.positions[0].rects,
+                    }
+                },
+                secondPaperPosition: (data.positions && data.positions.length > 1) && 
+                {
+                    paperId: data.positions[1].paperId,
+                    position: {
+                        pageIndex: data.positions[1].pageIndex,
+                        rects: data.positions[1].rects,
+                    }
+                },
             }])
             // 스트리밍
             // const reader = response.body!.getReader()
@@ -174,7 +194,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
 	}
 
     const handleExportAnswer = (question: string, answer: string) => {
-        const iframeRefNum = openedPaperNumber === 1 ? iframeRef : iframeRef2
+        const iframeRefNum = openedPaperNumber === paperId ? iframeRef : iframeRef2
         const combinedText = `${question}\n\n${answer}`
         const chatNote = {
             type: 'note',
@@ -191,9 +211,8 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
         iframeRefNum.current.contentWindow.postMessage({chatNote: chatNote}, '*')
     }
 
-    const handleIndicateProof = (position: any, proofText: string) => {
+    const handleIndicateProof = (chatPaperId: string, rect: number[], pageIndex: number) => {
         // 히스토리일 경우에는 paperId 없음
-        const paperId = position.paperId
         
         // delete position.id
         // delete position.type
@@ -201,10 +220,13 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
         const proofId = generateObjectKey()
         const payload = {
             type: 'highlight',
-            text: proofText,
-            position: position,
+            text: '',
+            position: {
+                pageIndex: pageIndex,
+                rects: [rect]
+            },
             color: '#000',
-            comment: "답변 근거입니다. 다른 답변 근거를 클릭하면 사라집니다.",
+            comment: "",
             tags: [],
             id: proofId,
             dateCreated: (new Date()).toISOString(),
@@ -212,10 +234,17 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
             pageLabel: `${position.pageIndex+1}`,
             //sortIndex: curPageIndex+1,
         }
-        
-        const iframeRefNum = openedPaperNumber === 1 ? iframeRef : iframeRef2
-        iframeRefNum.current.contentWindow.postMessage({proof: payload, proofId: prevProofId}, '*')
-        setPrevProofId(proofId)
+        if (chatPaperId === openedPaperNumber) {
+            const iframeRefNum = chatPaperId === paperId ? iframeRef : iframeRef2
+            if (iframeRefNum && iframeRefNum.current && iframeRefNum.current.contentWindow) {
+                iframeRefNum.current.contentWindow.postMessage({proof: payload, proofId: prevProofId}, '*')
+            }
+            //setOpenedPaperNumber(chatPaperId)
+            setPrevProofId(proofId)
+        } else {
+            setProofPayload(payload)
+            setOpenedPaperNumber(chatPaperId)
+        }
     }
 
     // 채팅 버튼 드래그 시 이동
@@ -308,16 +337,41 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                     <IconButton onClick={() => handleExportAnswer(data.paperHistory[index-1].content, history.content)}>
                                         <ExitToAppIcon/>
                                     </IconButton>
-                                    <IconButton onClick={() => handleIndicateProof(history.position, history?.text)}>
+                                    {/* <IconButton onClick={() => handleIndicateProof(history.position, history?.text)}>
                                         <HelpOutlineIcon/>
-                                    </IconButton>
+                                    </IconButton> */}
                                 </Box>
-                            </Box>}
-                            
+                            </Box>}    
                         </Box>
-                        
                     </Box>
-                    
+                    <Box sx={{display: 'inline-block'}}>
+                                {!history.positions?null:
+                                <>
+                                    <Box sx={{display: 'inline-block'}}>
+                                        {history.positions.length > 0&& history.positions[0].rects.map((proof: any, idx: number) => (
+                                            <Box sx={{bgcolor: color.secondaryGreen}} onClick={() => handleIndicateProof(history.positions[0].paperId, proof, history.positions[0].pageIndex)}>
+                                                base {idx}
+                                            </Box>
+                                        ))}
+                                    </Box>
+                                    <Box sx={{display: 'inline-block'}}>
+                                    {history.positions.length > 1&& history.positions[1].rects.map((proof: any, idx: number) => (
+                                        <Box sx={{bgcolor: color.arxiv}} onClick={() => handleIndicateProof(history.positions[1].paperId, proof, history.positions[1].pageIndex)}>
+                                            base {idx}
+                                        </Box>
+                                    ))}
+                                </Box>
+                                </>
+                                }
+                                {/* {history.positions?null:
+                                <Box sx={{display: 'inline-block'}}>
+                                    {history.positions.length > 0&& history.positions[0].rects.map((proof: any, idx: number) => (
+                                        <Box sx={{bgcolor: color.secondaryGreen}} onClick={() => handleIndicateProof(history.positions[0].paperId, proof, history.positions[0].pageIndex)}>
+                                            base {idx}
+                                        </Box>
+                                    ))}
+                                </Box>} */}
+                            </Box>
                 </Box>
                 
                 ))}
@@ -352,15 +406,31 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                             <IconButton onClick={() => handleExportAnswer(term, searchResultsInPaper[index])}>
                                                 <ExitToAppIcon/>
                                             </IconButton>
-                                            <IconButton onClick={() => handleIndicateProof(searchResultsProof[index].position, searchResultsProof[index].text)}>
+                                            {/* <IconButton onClick={() => handleIndicateProof(searchResultsProof[index].position, searchResultsProof[index].text)}>
                                                 <HelpOutlineIcon/>
-                                            </IconButton>
+                                            </IconButton> */}
                                         </Box>
                                     </Box>}
-                                
                                 </Box>
                             </Box>
-                            
+                            <Box sx={{display: 'inline-block'}}>
+                                {index>= searchResultsInPaper.length?null:
+                                <Box sx={{display: 'inline-block'}}>
+                                    {searchResultsProof[index].firstPaperPosition && searchResultsProof[index].firstPaperPosition.position.rects.map((proof: any, idx: number) => (
+                                        <Box sx={{bgcolor: color.secondaryGreen}} onClick={() => handleIndicateProof(searchResultsProof[index].firstPaperPosition.paperId, proof, searchResultsProof[index].firstPaperPosition.position.pageIndex)}>
+                                            base {idx}
+                                        </Box>
+                                    ))}
+                                </Box>}
+                                {index>= searchResultsInPaper.length?null:
+                                <Box sx={{display: 'inline-block'}}>
+                                    {searchResultsProof[index].secondPaperPosition && searchResultsProof[index].secondPaperPosition.position.rects.map((proof: any, idx: number) => (
+                                        <Box sx={{bgcolor: color.arxiv}} onClick={() => handleIndicateProof(searchResultsProof[index].secondPaperPosition.paperId, proof, searchResultsProof[index].secondPaperPosition.position.pageIndex)}>
+                                            base {idx}
+                                        </Box>
+                                    ))}
+                                </Box>}
+                            </Box>
                         </Box>
                         
                     </div>

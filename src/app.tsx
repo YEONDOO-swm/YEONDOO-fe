@@ -36,6 +36,7 @@ import Workspaces from './page/workspaces';
 import Reader from './page/reader';
 import StudyWithAI from './page/studyWithAI';
 import Export from './page/export';
+import Library from './page/library';
 
 // react-query client 설정
 const queryClient = new QueryClient()
@@ -110,6 +111,7 @@ export const App = () => {
                             <Route path="/selectpaper" element={<StudyWithAI/>} />
                             <Route path="/paper" element={<Reader/>} />
                             <Route path="/export" element={<Export/>} />
+                            <Route path="/library" element={<Library/>} />
 
                         </CustomRoutes>
                     </Admin>

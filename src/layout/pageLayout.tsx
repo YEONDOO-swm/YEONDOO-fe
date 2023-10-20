@@ -20,7 +20,7 @@ const PageLayout = (props: any) => {
         
             <Box sx={{width: '100%', height: '100vh', borderTopLeftRadius: '5vh', borderBottomLeftRadius: '5vh',
             bgcolor: 'white'}}>
-                <Box sx={{display: 'flex', justifyContent: 'flex-end', p:2, color: 'grey.700', bgcolor: 'white'}}>
+                <Box sx={{display: 'flex', justifyContent: 'flex-end', p:2, color: 'grey.700'}}>
                     <UserMenu/>
                 </Box>
                 <Box sx={{px: '12.5vw'}}>
