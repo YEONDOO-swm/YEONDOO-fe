@@ -127,8 +127,58 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
             }
 
             // 일반 통신 방식
+            // const data = await response.json()
+            // setSearchResultsInPaper((prevResults: string[]) => [...prevResults, data.answer])
+            // setSearchResultsProof((prevProof: any[]) => [...prevProof, {
+            //     firstPaperPosition: (data.positions && data.positions.length > 0) && 
+            //     {
+            //         paperId: data.positions[0].paperId,
+            //         position: {
+            //             pageIndex: data.positions[0].pageIndex,
+            //             rects: data.positions[0].rects,
+            //         }
+            //     },
+            //     secondPaperPosition: (data.positions && data.positions.length > 1) && 
+            //     {
+            //         paperId: data.positions[1].paperId,
+            //         position: {
+            //             pageIndex: data.positions[1].pageIndex,
+            //             rects: data.positions[1].rects,
+            //         }
+            //     },
+            // }])
+            // 스트리밍
+            const reader = response.body!.getReader()
+            const decoder = new TextDecoder()
+
+            while (true) {
+                const { value, done } = await reader.read()
+                if (done) {
+                    setIsFirstWord(true)
+                    break
+                }
+
+                const decodedChunk = decoder.decode(value, { stream: true });
+
+                setSearchResultsInPaper((prevSearchResults: string[]) => {
+                    if (isFirstWord) {
+                        setIsFirstWord(false)
+                        return [...prevSearchResults, decodedChunk]
+                    } else {
+                        const lastItem = prevSearchResults[prevSearchResults.length -1]
+                        const updatedResults = prevSearchResults.slice(0, -1)
+                        return [...updatedResults, lastItem + decodedChunk]
+                    }
+                })
+            }
+        } 
+        catch(error) {
+            console.error("논문 내 질문 오류")
+            Sentry.captureException(error)
+        } finally {
+            const response = await getApi(api,`/api/paper/result/chat?key=${keyNumber}&workspaceId=${workspaceId}&paperId=${paperId}`)
             const data = await response.json()
-            setSearchResultsInPaper((prevResults: string[]) => [...prevResults, data.answer])
+            //setSearchResultsInPaper((prevResults: string[]) => [...prevResults, data.answer])
             setSearchResultsProof((prevProof: any[]) => [...prevProof, {
                 firstPaperPosition: (data.positions && data.positions.length > 0) && 
                 {
@@ -147,38 +197,6 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                     }
                 },
             }])
-            // 스트리밍
-            // const reader = response.body!.getReader()
-            // const decoder = new TextDecoder()
-
-            // while (true) {
-            //     const { value, done } = await reader.read()
-            //     if (done) {
-            //         setIsFirstWord(true)
-            //         break
-            //     }
-
-            //     const decodedChunk = decoder.decode(value, { stream: true });
-
-            //     setSearchResultsInPaper((prevSearchResults: string[]) => {
-            //         if (isFirstWord) {
-            //             setIsFirstWord(false)
-            //             return [...prevSearchResults, decodedChunk]
-            //         } else {
-            //             const lastItem = prevSearchResults[prevSearchResults.length -1]
-            //             const updatedResults = prevSearchResults.slice(0, -1)
-            //             return [...updatedResults, lastItem + decodedChunk]
-            //         }
-            //     })
-            // }
-        } 
-        catch(error) {
-            console.error("논문 내 질문 오류")
-            Sentry.captureException(error)
-        } finally {
-            const response = await getApi(api,`/api/paper/resultId?key=${keyNumber}`)
-            const data = await response.json()
-            setResultId(data)
         }
     }
     const generateObjectKey = () => {
@@ -414,7 +432,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                 </Box>
                             </Box>
                             <Box sx={{display: 'inline-block'}}>
-                                {index>= searchResultsInPaper.length?null:
+                                {index>= searchResultsProof.length?null:
                                 <Box sx={{display: 'inline-block'}}>
                                     {searchResultsProof[index].firstPaperPosition && searchResultsProof[index].firstPaperPosition.position.rects.map((proof: any, idx: number) => (
                                         <Box sx={{bgcolor: color.secondaryGreen}} onClick={() => handleIndicateProof(searchResultsProof[index].firstPaperPosition.paperId, proof, searchResultsProof[index].firstPaperPosition.position.pageIndex)}>
@@ -422,7 +440,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                         </Box>
                                     ))}
                                 </Box>}
-                                {index>= searchResultsInPaper.length?null:
+                                {index>= searchResultsProof.length?null:
                                 <Box sx={{display: 'inline-block'}}>
                                     {searchResultsProof[index].secondPaperPosition && searchResultsProof[index].secondPaperPosition.position.rects.map((proof: any, idx: number) => (
                                         <Box sx={{bgcolor: color.arxiv}} onClick={() => handleIndicateProof(searchResultsProof[index].secondPaperPosition.paperId, proof, searchResultsProof[index].secondPaperPosition.position.pageIndex)}>
