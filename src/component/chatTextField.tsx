@@ -1,4 +1,4 @@
-import React, { MouseEventHandler } from 'react'
+import React, { MouseEventHandler, useState } from 'react'
 import { Box, SxProps, TextField, IconButton, InputAdornment, CardContent, Container, Button, Modal, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNotify } from "react-admin";
@@ -14,6 +14,9 @@ import send from '../asset/send.png'
 import SendIcon from '@mui/icons-material/Send';
 import ClearIcon from '@mui/icons-material/Clear';
 import AddIcon from '@mui/icons-material/Add';
+import { paperType } from '../page/home';
+import scrollStyle from "../layout/scroll.module.css"
+
 
 type SearchTapProps = {
     searchTerm: string;
@@ -35,10 +38,26 @@ const style = {
   transform: 'translate(-50%, -50%)',
   width: 400,
   bgcolor: 'background.paper',
-  border: '2px solid #000',
+  border: '2px solid #eee',
+  borderRadius: '50px 0px 0px 0px',
   boxShadow: 24,
   p: 4,
 };
+
+const PaperBox = ({handleClickPaper, paper}: {handleClickPaper: any, paper: paperType}) => {
+  const [isHovered, setIsHovered] = useState<boolean>(false)
+  return (
+      <Box onClick={() => handleClickPaper(paper.paperId)} 
+      onMouseEnter={()=>{setIsHovered(true)}}
+      onMouseLeave={()=>{setIsHovered(false)}}
+      sx={{py: 1, borderBottom: '1px solid #eee', cursor: 'pointer', bgcolor: isHovered?"#f5f5f5":color.white}}>
+          <Typography sx={{color: isHovered?color.mainGreen:'#666', fontSize: '15px', fontWeight: '400',
+                          }}>
+              {paper.title}
+          </Typography>
+      </Box>
+  )
+}
 
 export const ChatTextField: React.FC<SearchTapProps> = ({
     searchTerm,
@@ -142,7 +161,7 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
             :<Box onClick={handleOpenSelectModal} sx={{display: 'inline-flex', alignItems: 'center', gap: 1, pl: 1, pr: 2, py: 0.4, mb: 1,
                 borderRadius: '100px', border: `1px solid ${color.mainGreen}`, cursor: 'pointer'}}>
               <AddIcon sx={{fontSize: '15px', color: color.mainGreen}}/>
-              <Typography sx={{fontSize: '13px', color: color.mainGreen, fontWeight: 500}}>Select another paper</Typography>
+              <Typography sx={{fontSize: '13px', color: color.mainGreen, fontWeight: 500}}>Select reference paper</Typography>
             </Box>}
             <Modal
               open={isOpenSelectRef}
@@ -154,14 +173,16 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
                 <Typography id="modal-modal-title" variant="h6" component="h2">
                   Select Reference Paper
                 </Typography>
-                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                <Box sx={{width: '100%', height: '2px', bgcolor: color.secondaryGreen, mt: 3}}></Box>
+                <Box sx={{height: '30vh', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
                   {papersInStorage && papersInStorage.map((paper: any) => (
                     <>
-                    <Button onClick={() => handleSetRef(paper.paperId, paper.title)}>{paper.title}</Button><br/>
+                    {/* <Button onClick={() => handleSetRef(paper.paperId, paper.title)}>{paper.title}</Button><br/> */}
+                      <PaperBox paper={paper} handleClickPaper={() => handleSetRef(paper.paperId, paper.title)} />
                     </>
                       
                   ))}
-                </Typography>
+                </Box>
               </Box>
             </Modal>
             {selectedText && (selectedText.length>12 ? 
