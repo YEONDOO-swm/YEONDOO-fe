@@ -6,7 +6,7 @@ import { Button, Box, Dialog, DialogActions, DialogContent, DialogContentText, D
 import plus from '../asset/plus.svg'
 import edit from '../asset/edit.svg'
 import plusHover from '../asset/plusHover.svg'
-import deleteIcon from '../asset/delete.svg'
+import deleteIcon from '../asset/deleteIcon.svg'
 import { useQuery } from 'react-query'
 import { useSelector } from 'react-redux'
 import { CounterState } from '../reducer'
