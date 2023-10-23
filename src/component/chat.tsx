@@ -29,7 +29,7 @@ type history = {
     id: number;
     score: number | null;
     positions?: any;
-    paperItems: any;
+    paperDetailList: any;
     context: string;
 }
 
@@ -377,11 +377,11 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                     >
                         {history.who && <Box>
                                 <Box sx={{display: 'flex', gap: 1}}>
-                                    {history.paperItems.map((paper: any) => (
+                                    {history.paperDetailList.map((paper: any) => (
                                         <Box sx={{display: 'inline-flex', alignItems: 'center', gap: 1, pl: 2, pr: 1, py: 0.4, mb: 1,
                                         borderRadius: '100px', border: `1px solid ${color.white}`, cursor: 'pointer'}}>
                                         <Typography sx={{fontSize: '13px', color: color.white, fontWeight: 500}} onClick={()=>{setOpenedPaperNumber(paper.paperId)}}>
-                                            #{paper.paperTitle.length > 10 ? paper.paperTitle.slice(0,10)+"..." : paper.paperTitle}
+                                            #{paper.title.length > 10 ? paper.title.slice(0,10)+"..." : paper.title}
                                         </Typography>
                                         </Box>
                                         ))

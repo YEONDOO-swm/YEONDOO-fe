@@ -6,9 +6,13 @@ import { postApi, refreshApi } from '../utils/apiUtils'
 import { useNotify } from 'react-admin'
 import { useNavigate } from 'react-router-dom'
 import CopyClick from '../component/copyClick'
+import exportChat from '../asset/exportIcon.png'
+import { color } from '../layout/color'
+import scrollStyle from "../layout/scroll.module.css"
+import chat from "../asset/chatProfile.png"
 
 const Export = () => {
-    const [color, setColor] = useState<string>('All')
+    const [colorSum, setColorSum] = useState<string>('All')
     const [fileFormat, setFileFormat] = useState<string>('Markdown')
     const [purpose, setPurpose] = useState<string>('Not selected')
     const [open, setOpen] = React.useState(false);
@@ -24,7 +28,7 @@ const Export = () => {
     const dispatch = useDispatch()
 
     const handleColorChange = (event: SelectChangeEvent) => {
-        setColor(event.target.value);
+        setColorSum(event.target.value);
       };
     const handleFileFormatChange = (event: SelectChangeEvent) => {
         setFileFormat(event.target.value)
@@ -45,7 +49,7 @@ const Export = () => {
             return changeItem
         })
         const payload = {
-            annotations: color==='All'?updatedAnnotations:updatedAnnotations?.filter((obj: any) => obj.color === color),
+            annotations: colorSum==='All'?updatedAnnotations:updatedAnnotations?.filter((obj: any) => obj.color === color),
             fileFormat: fileFormat,
             purpose: purpose
         }
@@ -77,18 +81,44 @@ const Export = () => {
         boxShadow: 24,
         p: 4,
       };
+
+    const chatProfile = () => {
+        return (
+            <Box sx={{width: '35px', height: '35px', borderRadius: '100%', bgcolor: color.mainGreen,
+                display: 'flex', justifyContent: 'center', alignItems: 'center', mr: 1}}>
+                <img src={chat} alt="chat profile" style={{width: '18px', height: '18px'}}/>
+            </Box>
+        )
+    }
   return (
-    <Box sx={{p: 10, display: 'flex', flexDirection: 'column'}}>
-        <Typography variant='h5'>
-            Select a color for the content you wish to summarize
-        </Typography>
-        <FormControl sx={{width: '30%'}}>
+    <Box sx={{display: 'flex', flexDirection: 'column', mt: 3}}>
+        {open?
+        <Box sx={{px: 4, pt: 1, pb: 4}}>
+            <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
+                <CopyClick contents={summaryAnswer} />
+            </Box>
+            <Box sx={{overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
+                <Typography sx={{fontSize: '16px', color: '#666'}}>
+                    {summaryAnswer}
+                </Typography>
+            </Box>
+        </Box>
+        :<>
+        <Box sx={{px: 4, overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
+        <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+            {chatProfile()}
+            <Typography sx={{fontSize: '20px', fontWeight: 500, color: '#333', width: '90%'}}>
+                Select a color for the content you wish to summarize
+            </Typography>
+        </Box>
+        <FormControl sx={{width: '30%', ml: 5.5, mt: 2}}>
             <InputLabel id="demo-simple-select-label">Color</InputLabel>
             <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={color}
+                value={colorSum}
                 onChange={handleColorChange}
+                sx={{bgcolor: '#fff', border: '1px solid #ddd'}}
             >
                 <MenuItem value="All">All</MenuItem>
                 <MenuItem value="#ffd400">Yellow</MenuItem>
@@ -101,43 +131,56 @@ const Export = () => {
                 <MenuItem value="#aaaaaa">Grey</MenuItem>
             </Select>
         </FormControl>
-        <Typography variant='h5'>
-            Select a file format
-        </Typography>
-        <FormControl>
-            <FormLabel id="demo-radio-buttons-group-label">File Format</FormLabel>
+        <Box sx={{display: 'flex', alignItems: 'center', gap: 1, mt: 3}}>
+            {chatProfile()}
+            <Typography sx={{fontSize: '20px', fontWeight: 500, color: '#333'}}>
+                Select a file format
+            </Typography>
+        </Box>
+        <FormControl sx={{ ml: 5.5}}>
+            {/* <FormLabel id="demo-radio-buttons-group-label">File Format</FormLabel> */}
             <RadioGroup
                 aria-labelledby="demo-radio-buttons-group-label"
                 name="radio-buttons-group"
                 value={fileFormat}
                 onChange={handleFileFormatChange}
+                sx={{stroke: '#ddd'}}
             >
-                <FormControlLabel value="Markdown" control={<Radio />} label="Markdown" />
-                <FormControlLabel value="Text" control={<Radio />} label="Text" />
-                <FormControlLabel value="Image" control={<Radio />} label="Image" />
+                <FormControlLabel value="Markdown" control={<Radio />} label="Markdown" sx={{color: "#444"}}/>
+                <FormControlLabel value="Text" control={<Radio />} label="Text" sx={{color: "#444"}}/>
+                <FormControlLabel value="Image" control={<Radio />} label="Image" sx={{color: "#444"}}/>
             </RadioGroup>
         </FormControl>
-        <Typography variant='h5'>
-            Select the export purpose.
-        </Typography>
-        <FormControl>
-            <FormLabel id="demo-radio-buttons-group-label">Purpose</FormLabel>
+        <Box sx={{display: 'flex', alignItems: 'center', gap: 1, mt: 2}}>
+            {chatProfile()}
+            <Typography sx={{fontSize: '20px', fontWeight: 500, color: '#333'}}>
+                Select a export purpose
+            </Typography>
+        </Box>
+        <FormControl sx={{ ml: 5.5}}>
+            {/* <FormLabel id="demo-radio-buttons-group-label">Purpose</FormLabel> */}
             <RadioGroup
                 aria-labelledby="demo-radio-buttons-group-label"
                 name="radio-buttons-group"
                 value={purpose}
                 onChange={handlePurposeChange}
+                sx={{stroke: '#ddd'}}
             >
-                <FormControlLabel value="Not selected" control={<Radio />} label="Not selected" />
-                <FormControlLabel value="Seminar" control={<Radio />} label="Seminar" />
-                <FormControlLabel value="Research Log" control={<Radio />} label="Research Log" />
+                <FormControlLabel value="Not selected" control={<Radio />} label="Not selected" sx={{color: "#444"}}/>
+                <FormControlLabel value="Seminar" control={<Radio />} label="Seminar" sx={{color: "#444"}}/>
+                <FormControlLabel value="Research Log" control={<Radio />} label="Research Log" sx={{color: "#444"}}/>
             </RadioGroup>
         </FormControl>
-        
-        <Button variant='contained' sx={{width: '10%'}} onClick={handleGenerate}>
-            Generate
-        </Button>
-        <Modal
+        </Box>
+        <Box onClick={handleGenerate} sx={{bottom: 0, width: '100%', position: 'fixed',
+                    display: 'flex', justifyContent: 'center', alignItems: 'center',
+                    bgcolor: color.mainGreen, height: '50px', cursor: 'pointer'}}>
+            <Typography sx={{fontSize: 20, fontWeight: 500, color: color.white}}>
+                Generate
+            </Typography>
+        </Box>
+        </>}
+        {/* <Modal
             open={open}
             onClose={handleClose}
             aria-labelledby="modal-modal-title"
@@ -152,7 +195,7 @@ const Export = () => {
             </Typography>
             <CopyClick contents={summaryAnswer} />
             </Box>
-      </Modal>
+      </Modal> */}
     </Box>
   )
 }
