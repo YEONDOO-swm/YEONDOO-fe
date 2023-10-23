@@ -323,6 +323,7 @@ const Reader = () => {
                               paperTitle={data && paperInfo?.title}
                               proofPayload={proofPayload} setProofPayload={setProofPayload}
                               prevProofId={prevProofId} setPrevProofId={setPrevProofId}
+                              paperInfo={paperInfo}
                               />)}
         </Box>
         <Box sx={{height: `calc(100vh - 45px)`}}> 

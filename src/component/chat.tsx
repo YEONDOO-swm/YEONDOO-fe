@@ -18,6 +18,10 @@ import { ChatTextField } from './chatTextField'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import chatProfile from '../asset/chatProfile.png';
 import deleteIcon from '../asset/delete.svg'
+import chat from '../asset/chatProfile.png'
+import search from '../asset/searchIcon.svg'
+import searchBlack from '../asset/searchBlack.svg'
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 type history = {
     who: boolean;
@@ -25,13 +29,15 @@ type history = {
     id: number;
     score: number | null;
     positions?: any;
+    paperItems: any;
+    context: string;
 }
 
 const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, openedPaperNumber
-    , setOpenedPaperNumber, curPageIndex, paperTitle, proofPayload, setProofPayload, prevProofId, setPrevProofId}: 
+    , setOpenedPaperNumber, curPageIndex, paperTitle, proofPayload, setProofPayload, prevProofId, setPrevProofId, paperInfo}: 
     {isChatOpen: boolean, setIsChatOpen: any, data: any, paperId: string, iframeRef: any, iframeRef2: any, openedPaperNumber: string
         , setOpenedPaperNumber: any, curPageIndex: number, paperTitle: any,
-    proofPayload: any, setProofPayload: any, prevProofId: string, setPrevProofId: any}) => {
+    proofPayload: any, setProofPayload: any, prevProofId: string, setPrevProofId: any, paperInfo: any}) => {
     const notify = useNotify()
     const navigate = useNavigate()
 
@@ -40,7 +46,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
     const workspaceId = Number(sessionStorage.getItem("workspaceId"));
 
     const [searchTermInPaper, setSearchTermInPaper] = useState<string>(""); // 변화하는 입력값
-    const [enteredSearchTermInPaper, setEnteredSearchTermInPaper] = useState<string[]>([]); // 전체 입력값
+    const [enteredSearchTermInPaper, setEnteredSearchTermInPaper] = useState<any[]>([]); // 전체 입력값
     const [searchResultsInPaper, setSearchResultsInPaper] = useState<string[]>([])
     const [searchResultsProof, setSearchResultsProof] = useState<any[]>([])
 
@@ -108,7 +114,10 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
 
     const performSearchInPaper = async () => {
         if (searchTermInPaper != ''){
-            setEnteredSearchTermInPaper((prevEnteredSearchTerm: string[])=>[...prevEnteredSearchTerm, searchTermInPaper])      
+            setEnteredSearchTermInPaper((prevEnteredSearchTerm: any[])=>[...prevEnteredSearchTerm, 
+                {searchTerm: searchTermInPaper, 
+                draggedText: draggeddText,
+                refPaper: refPaper}])      
         }
         setSearchTermInPaper("")
         const query = new URLSearchParams(window.location.search);
@@ -348,125 +357,267 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
             <Box sx={{ overflowY: 'scroll', px: '20px', pt: '20px' }} ref={scrollContainerRef} className={scrollStyle.scrollBar}>
                 {data.paperHistory &&
                 data.paperHistory.map((history: history, index: number) => (
-                <Box
-                    key={`history-${index}`}
-                    sx={{
-                    backgroundColor: history.who ? 'white' : color.secondaryGrey,
-                    padding: '10px',
-                    marginBottom: '10px',
-                    borderRadius: '10px',
-                    }}
-                >
-                    <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
-                        {history.who ? <Typography sx={{mr: '10px'}}>👤</Typography> : 
-                                <Typography sx={{mr: '10px'}}>🍀</Typography>
-                            }
-                        <Box sx={{width: '100%', display: 'flex', justifyContent: 'space-between'}}>
-                            {history.content}
-                            {history.who? null:
-                            <Box sx={{ display: 'flex', flexDirection: 'row-reverse', mt: 1}}>
-                                <Box sx={{ml: 1, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                                    <CopyClick contents={history.content}/>
-                                    <IconButton onClick={() => handleExportAnswer(data.paperHistory[index-1].content, history.content)}>
-                                        <ExitToAppIcon/>
-                                    </IconButton>
-                                    {/* <IconButton onClick={() => handleIndicateProof(history.position, history?.text)}>
-                                        <HelpOutlineIcon/>
-                                    </IconButton> */}
+                <Box sx={{display: 'flex', flexDirection: history.who?'row-reverse':'row', alignItems: 'flex-start'}}>
+                    {history.who ? null : 
+                        <Box sx={{width: '30px', height: '30px', borderRadius: '100%', bgcolor: color.mainGreen,
+                            display: 'flex', justifyContent: 'center', alignItems: 'center', mr: 1}}>
+                            <img src={chat} alt="chat profile" style={{width: '15px', height: '15px'}}/>
+                        </Box>}     
+                    <Box
+                        key={`history-${index}`}
+                        sx={{
+                        backgroundColor: history.who ? color.mainGreen : color.white,
+                        border: history.who ? null : '1px solid #eee',
+                        boxShadow: history.who ? null : '0px 5px 15px 0px rgba(0, 0, 0, 0.07)',
+                        padding: '16px',
+                        marginBottom: '10px',
+                        borderRadius: history.who ? '15px 0px 15px 15px' : '0px 15px 15px 15px',
+                        maxWidth: history.who ? '300px' : '300px'
+                        }}
+                    >
+                        {history.who && <Box>
+                                <Box sx={{display: 'flex', gap: 1}}>
+                                    {history.paperItems.map((paper: any) => (
+                                        <Box sx={{display: 'inline-flex', alignItems: 'center', gap: 1, pl: 2, pr: 1, py: 0.4, mb: 1,
+                                        borderRadius: '100px', border: `1px solid ${color.white}`, cursor: 'pointer'}}>
+                                        <Typography sx={{fontSize: '13px', color: color.white, fontWeight: 500}} onClick={()=>{setOpenedPaperNumber(paper.paperId)}}>
+                                            #{paper.paperTitle.length > 10 ? paper.paperTitle.slice(0,10)+"..." : paper.paperTitle}
+                                        </Typography>
+                                        </Box>
+                                        ))
+                                    }
                                 </Box>
-                            </Box>}    
+                                <Box>
+                                {history.context.length>20 ? 
+                                <Box sx={{display: 'flex', alignItems: 'center', bgcolor: color.white, borderRadius: '100px', mb: 1}}>
+                                <Box sx={{display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden', mx: 1, my: 0.5, px: 1,}}>
+                                    <Typography sx={{color: color.mainGreen, fontSize: '13px', fontWeight: 500}}>
+                                    {history.context} 
+                                    </Typography>
+                                </Box>
+                                </Box>:
+                                <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
+                                <Box sx={{display: 'inline-flex', px: 2, py: 0.5, alignItems: 'center',
+                                            bgcolor: color.white, borderRadius: '100px'}}>
+                                    <Typography sx={{color: color.mainGreen, fontSize: '13px', fontWeight: 500}}>
+                                        {history.context} 
+                                    </Typography>
+                                </Box>
+                                </Box>}
+                                </Box>
+                        </Box>}
+                        <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                            
+                            <Box sx={{}}>
+                                <Typography sx={{fontSize: '14px' , color: history.who ? color.white : '#333'}}>
+                                    {history.content}
+                                </Typography>
+                                   
+                            </Box>
                         </Box>
-                    </Box>
-                    <Box sx={{display: 'inline-block'}}>
-                                {!history.positions?null:
-                                <>
-                                    <Box sx={{display: 'inline-block'}}>
-                                        {history.positions.length > 0&& history.positions[0].rects.map((proof: any, idx: number) => (
-                                            <Box sx={{bgcolor: color.secondaryGreen}} onClick={() => handleIndicateProof(history.positions[0].paperId, proof, history.positions[0].pageIndex)}>
-                                                base {idx}
+                        {!history.who && <Box sx={{display: 'inline-block', mt: 1}}>
+                                    {!history.positions?null:
+                                    <>
+                                        <Box sx={{display: 'inline-block'}}>
+                                            {history.positions.length > 0&& history.positions[0].rects.map((proof: any, idx: number) => (
+                                                <Box sx={{bgcolor: '#222', px: 1, borderRadius: '100px', display: 'flex', gap: 1, mr: 1}} onClick={() => handleIndicateProof(history.positions[0].paperId, proof, history.positions[0].pageIndex)}>
+                                                    <img src={search} alt="search" />
+                                                    <Typography sx={{fontSize: '15px', color: color.white}}>
+                                                        base {idx}
+                                                    </Typography>
+                                                </Box>
+                                            ))}
+                                        </Box>
+                                        <Box sx={{display: 'inline-block'}}>
+                                            {history.positions.length > 1&& history.positions[1].rects.map((proof: any, idx: number) => (
+                                                <Box sx={{bgcolor: '#fff', border: '1px solid #222', px: 1, borderRadius: '100px', display: 'flex', gap: 1, mr: 1}} onClick={() => handleIndicateProof(history.positions[1].paperId, proof, history.positions[1].pageIndex)}>
+                                                    <img src={searchBlack} alt="search" />
+                                                    <Typography sx={{fontSize: '15px', color: '#222'}}>
+                                                        base {idx}
+                                                    </Typography>
+                                                </Box>
+                                            ))}
+                                    </Box>
+                                    </>
+                                    }
+                                    {history.who? null:
+                                    <Box>
+                                        <Box sx={{display: 'flex'}}>
+                                            <CopyClick contents={history.content}/>
+                                            <Box sx={{width: '30px', height: '30px', borderRadius: '100%', border: '1px solid #ddd',
+                                                    display: 'flex', justifyContent: 'center', alignItems: 'center', ml: 1}} onClick={() => handleExportAnswer(data.paperHistory[index-1].content, history.content)}>
+                                                <ExitToAppIcon sx={{color: '#333', fontSize: '19px'}}/>
                                             </Box>
+                                            {/* <IconButton onClick={() => handleExportAnswer(data.paperHistory[index-1].content, history.content)}>
+                                                <ExitToAppIcon/>
+                                            </IconButton> */}
+                                        </Box>
+                                    </Box>} 
+                                </Box>}
+                    </Box>
+                </Box>
+                ))}
+                {
+                    paperInfo && (
+                        <Box sx={{display: 'flex'}}>
+                            <Box sx={{width: '30px', height: '30px', borderRadius: '100%', bgcolor: color.mainGreen,
+                                display: 'flex', justifyContent: 'center', alignItems: 'center', mr: 1}}>
+                                <img src={chat} alt="chat profile" style={{width: '15px', height: '15px'}}/>
+                            </Box>
+                            <Box sx={{ backgroundColor: color.white,
+                                border: '1px solid #eee',
+                                boxShadow: '0px 5px 15px 0px rgba(0, 0, 0, 0.07)',
+                                padding: '16px',
+                                marginBottom: '10px',
+                                borderRadius: '0px 15px 15px 15px',
+                                maxWidth: '300px'}}>
+                                <Typography sx={{fontSize: '15px', fontWeight: 600, color: '#333'}}>
+                                    INSIGHTS
+                                </Typography>
+                                <Box sx={{}}>
+                                    <Box sx={{maxWidth: '300px', mb: 1}}>
+                                        {paperInfo.insights.map((insight: any, index: number) => (
+                                            <Typography sx={{fontSize: '14px', color: '#333'}}>
+                                                {index+1}. {insight}
+                                            </Typography>      
                                         ))}
                                     </Box>
-                                    <Box sx={{display: 'inline-block'}}>
-                                    {history.positions.length > 1&& history.positions[1].rects.map((proof: any, idx: number) => (
-                                        <Box sx={{bgcolor: color.arxiv}} onClick={() => handleIndicateProof(history.positions[1].paperId, proof, history.positions[1].pageIndex)}>
-                                            base {idx}
-                                        </Box>
-                                    ))}
+                                        
+                                        
                                 </Box>
-                                </>
-                                }
-                                {/* {history.positions?null:
-                                <Box sx={{display: 'inline-block'}}>
-                                    {history.positions.length > 0&& history.positions[0].rects.map((proof: any, idx: number) => (
-                                        <Box sx={{bgcolor: color.secondaryGreen}} onClick={() => handleIndicateProof(history.positions[0].paperId, proof, history.positions[0].pageIndex)}>
-                                            base {idx}
-                                        </Box>
-                                    ))}
-                                </Box>} */}
                             </Box>
-                </Box>
-                
-                ))}
+                        </Box>
+                    )
+                }
                 {enteredSearchTermInPaper && searchResultsInPaper && (
                 <>
-                    {enteredSearchTermInPaper.map((term: string, index:number) => (
-                    <div key={index}>
-                        
-                        <Box sx={{ display: 'flex', backgroundColor: "white", padding: '10px', marginBottom: '10px', borderRadius: '10px'}}>
-                            <Box sx={{ display: 'flex', alignItems: 'flex-start', marginRight: '10px' }}>
-                                <Typography>👤</Typography>
-                            </Box>
-                            <Typography variant="body1">{term}</Typography>
-                        </Box> 
-                        <Box sx={{ backgroundColor: color.secondaryGrey, padding: '10px', marginBottom: '10px', borderRadius: '10px'}}>
-                            <Box sx={{display: 'flex', alignItems: 'flex-start'}}>
-                                <Box sx={{ marginRight: '10px' }}>
-                                    <Typography>🍀</Typography>
+                    {enteredSearchTermInPaper.map((term: any, index:number) => (
+                    <Box key={index}>
+                        <Box sx={{ display: 'flex', flexDirection: 'row-reverse'}}>
+                            <Box
+                                sx={{
+                                backgroundColor: color.mainGreen ,
+                                
+                                padding: '16px',
+                                marginBottom: '10px',
+                                borderRadius: '15px 0px 15px 15px' ,
+                                maxWidth: '300px'
+                                }}
+                            >
+                            <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                                <Box>
+                                    <Box sx={{display: 'flex', gap: 1}}>
+                                        <Box sx={{display: 'inline-flex', alignItems: 'center', gap: 1, px: 2, py: 0.4, mb: 1,
+                                        borderRadius: '100px', border: `1px solid ${color.white}`, cursor: 'pointer'}}>
+                                            <Typography sx={{fontSize: '13px', color: color.white, fontWeight: 500}} onClick={()=>{setOpenedPaperNumber(paperInfo.paperId)}}>
+                                                #{paperInfo && paperInfo.title.length > 10 ? paperInfo.title.slice(0,10)+"..." : paperInfo.paperTitle}
+                                            </Typography>
+                                        </Box>
+                                        {term.refPaper.paperTitle && <Box sx={{display: 'inline-flex', alignItems: 'center', gap: 1, px: 2, py: 0.4, mb: 1,
+                                        borderRadius: '100px', border: `1px solid ${color.white}`, cursor: 'pointer'}}>
+                                            <Typography sx={{fontSize: '13px', color: color.white, fontWeight: 500}} onClick={()=>{setOpenedPaperNumber(term.refPaper.paperId)}}>
+                                                #{term.refPaper.paperTitle.length > 10 ? term.refPaper.paperTitle.slice(0,10)+"..." : term.refPaper.paperTitle}
+                                            </Typography>
+                                        </Box>}
+                                            
+                                    </Box>
+                                    <Box>
+                                    {term.draggedText && (term.draggedText.length>15 ? 
+                                    <Box sx={{display: 'flex', alignItems: 'center', bgcolor: color.white, borderRadius: '100px', mb: 1}}>
+                                    <Box sx={{display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden', mx: 1, my: 0.5, px: 1,}}>
+                                        <Typography sx={{color: color.mainGreen, fontSize: '13px', fontWeight: 500}}>
+                                        {term.draggedText} 
+                                        </Typography>
+                                    </Box>
+                                    </Box>:
+                                    <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
+                                    <Box sx={{display: 'inline-flex', px: 2, py: 0.5, alignItems: 'center',
+                                                bgcolor: color.white, borderRadius: '100px'}}>
+                                        <Typography sx={{color: color.mainGreen, fontSize: '13px', fontWeight: 500}}>
+                                            {term.draggedText} 
+                                        </Typography>
+                                    </Box>
+                                    </Box>)}
+                                    </Box>
+                                    <Typography sx={{fontSize: '14px' , color: color.white}}>
+                                        {term.searchTerm}
+                                    </Typography>
+                                    
                                 </Box>
-                                <Box sx={{width: '100%', display: 'flex', justifyContent: 'space-between'}}>
+                            </Box>
+                        
+                            {/* <Typography variant="body1" sx={{display:'inline-block', color: color.white, fontSize: '14px'}}>{term}</Typography> */}
+                        </Box>
+                    </Box>
+                    <Box sx={{display: 'flex'}}>
+                        <Box sx={{width: '30px', height: '30px', borderRadius: '100%', bgcolor: color.mainGreen,
+                            display: 'flex', justifyContent: 'center', alignItems: 'center', mr: 1}}>
+                            <img src={chat} alt="chat profile" style={{width: '15px', height: '15px'}}/>
+                        </Box>
+                        <Box sx={{ backgroundColor: color.white,
+                            border: '1px solid #eee',
+                            boxShadow: '0px 5px 15px 0px rgba(0, 0, 0, 0.07)',
+                            padding: '16px',
+                            marginBottom: '10px',
+                            borderRadius: '0px 15px 15px 15px',
+                            maxWidth: '300px'}}>
+                            <Box sx={{display: 'flex', alignItems: 'flex-start'}}>
+                                <Box sx={{maxWidth: '300px', display: 'flex', justifyContent: 'space-between', mb: 1}}>
                                 
                                     {index>=searchResultsInPaper.length?(
                                         <Typography variant="body1" className={loadingStyle.loading}> <MoreHorizIcon /> </Typography>
                                     ):(
                                         <Typography variant="body1">{searchResultsInPaper[index]}</Typography>                 
-                                    )}
-                                    
-                                    {index>= searchResultsInPaper.length?null:
-                                    <Box sx={{display: 'flex', flexDirection: 'row-reverse', mt: 1}}>
-                                        <Box sx={{ml: 1, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                                            <CopyClick contents={searchResultsInPaper[index]}/>
-                                            <IconButton onClick={() => handleExportAnswer(term, searchResultsInPaper[index])}>
-                                                <ExitToAppIcon/>
-                                            </IconButton>
-                                            {/* <IconButton onClick={() => handleIndicateProof(searchResultsProof[index].position, searchResultsProof[index].text)}>
-                                                <HelpOutlineIcon/>
-                                            </IconButton> */}
-                                        </Box>
-                                    </Box>}
+                                    )}       
                                 </Box>
                             </Box>
                             <Box sx={{display: 'inline-block'}}>
                                 {index>= searchResultsProof.length?null:
                                 <Box sx={{display: 'inline-block'}}>
                                     {searchResultsProof[index].firstPaperPosition && searchResultsProof[index].firstPaperPosition.position.rects.map((proof: any, idx: number) => (
-                                        <Box sx={{bgcolor: color.secondaryGreen}} onClick={() => handleIndicateProof(searchResultsProof[index].firstPaperPosition.paperId, proof, searchResultsProof[index].firstPaperPosition.position.pageIndex)}>
-                                            base {idx}
+                                        // <Box sx={{bgcolor: color.secondaryGreen}} onClick={() => handleIndicateProof(searchResultsProof[index].firstPaperPosition.paperId, proof, searchResultsProof[index].firstPaperPosition.position.pageIndex)}>
+                                        //     base {idx}
+                                        // </Box>
+                                        <Box sx={{bgcolor: '#222', px: 1, borderRadius: '100px', display: 'flex', gap: 1, mr: 1}} onClick={() => handleIndicateProof(searchResultsProof[index].firstPaperPosition.paperId, proof, searchResultsProof[index].firstPaperPosition.position.pageIndex)}>
+                                            <img src={search} alt="search" />
+                                            <Typography sx={{fontSize: '15px', color: color.white}}>
+                                                base {idx}
+                                            </Typography>
                                         </Box>
                                     ))}
                                 </Box>}
                                 {index>= searchResultsProof.length?null:
                                 <Box sx={{display: 'inline-block'}}>
                                     {searchResultsProof[index].secondPaperPosition && searchResultsProof[index].secondPaperPosition.position.rects.map((proof: any, idx: number) => (
-                                        <Box sx={{bgcolor: color.arxiv}} onClick={() => handleIndicateProof(searchResultsProof[index].secondPaperPosition.paperId, proof, searchResultsProof[index].secondPaperPosition.position.pageIndex)}>
-                                            base {idx}
+                                        // <Box sx={{bgcolor: color.arxiv}} onClick={() => handleIndicateProof(searchResultsProof[index].secondPaperPosition.paperId, proof, searchResultsProof[index].secondPaperPosition.position.pageIndex)}>
+                                        //     base {idx}
+                                        // </Box>
+                                        <Box sx={{bgcolor: '#fff', border: '1px solid #222', px: 1, borderRadius: '100px', display: 'flex', gap: 1, mr: 1}} onClick={() => handleIndicateProof(searchResultsProof[index].secondPaperPosition.paperId, proof, searchResultsProof[index].secondPaperPosition.position.pageIndex)}>
+                                            <img src={searchBlack} alt="search" />
+                                            <Typography sx={{fontSize: '15px', color: '#222'}}>
+                                                base {idx}
+                                            </Typography>
                                         </Box>
                                     ))}
                                 </Box>}
+                                {index>= searchResultsInPaper.length?null:
+                                    <Box sx={{}}>
+                                        <Box sx={{display: 'flex', flexDirection: 'row'}}>
+                                            <CopyClick contents={searchResultsInPaper[index]}/>
+                                            {/* <IconButton onClick={() => handleExportAnswer(term, searchResultsInPaper[index])}>
+                                                <ExitToAppIcon/>
+                                            </IconButton> */}
+                                            <Box sx={{width: '30px', height: '30px', borderRadius: '100%', border: '1px solid #ddd',
+                                                    display: 'flex', justifyContent: 'center', alignItems: 'center', ml: 1}} onClick={() => handleExportAnswer(term, searchResultsInPaper[index])}>
+                                                <ExitToAppIcon sx={{color: '#333', fontSize: '19px'}}/>
+                                            </Box>
+                                            
+                                        </Box>
+                                    </Box>}
                             </Box>
                         </Box>
-                        
-                    </div>
+                        </Box>
+                    </Box>
                     ))}
                 </>
                 )}
