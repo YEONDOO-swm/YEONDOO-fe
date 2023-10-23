@@ -206,7 +206,7 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
                     </>
                       
                   )):
-                  paperInfo && paperInfo.references.map((paper: any) => (
+                  paperInfo && paperInfo.references && paperInfo.references.map((paper: any) => (
                     <PaperBox paper={paper} handleClickPaper={()=>handleSetRef(paper.paperId, paper.title)} />
                   ))
                   }
