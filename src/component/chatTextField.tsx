@@ -16,6 +16,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import AddIcon from '@mui/icons-material/Add';
 import { paperType } from '../page/home';
 import scrollStyle from "../layout/scroll.module.css"
+import deleteIcon from "../asset/deleteIcon.svg"
 
 
 type SearchTapProps = {
@@ -177,6 +178,9 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
               aria-describedby="modal-modal-description"
             >
               <Box sx={style}>
+                <img src={deleteIcon} style={{width: '20px', position: 'absolute', left: '90%',
+                                              transform: 'translate(100%, -100%)', cursor: 'pointer'}}
+                      onClick={handleClose}/>
                 <Typography id="modal-modal-title" variant="h6" component="h2">
                   Select Reference Paper
                 </Typography>

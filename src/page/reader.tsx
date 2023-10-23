@@ -12,6 +12,7 @@ import Chat from '../component/chat'
 import { color } from '../layout/color';
 import scrollStyle from "../layout/scroll.module.css"
 import Export from './export';
+import deleteIcon from '../asset/deleteIcon.svg'
 
 type paperInfo = {
   paperId: string;
@@ -299,7 +300,10 @@ const Reader = () => {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-            <Box sx={{height: '70vh', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
+            <Box sx={{height: '70vh'}}>
+            <img src={deleteIcon} style={{width: '20px', position: 'absolute', left: '90%',
+                                            transform: 'translate(150%, -80%)', cursor: 'pointer'}}
+                      onClick={handleClose}/>
               <Export/>
             </Box>
           </Box>
