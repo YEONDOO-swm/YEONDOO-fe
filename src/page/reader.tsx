@@ -299,10 +299,6 @@ const Reader = () => {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-            {/* <Typography id="modal-modal-title" variant="h6" component="h2" sx={{pt: 4, px: 4}}>
-              Export
-            </Typography>
-            <Box sx={{width: '90%', height: '2px', bgcolor: color.secondaryGreen, mt: 3, mx: 4}}></Box> */}
             <Box sx={{height: '70vh', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
               <Export/>
             </Box>

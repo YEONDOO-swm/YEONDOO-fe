@@ -631,6 +631,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                 placeholder="Ask any question"
                 sx={{width: "100%", backgroundColor: "#FFFFFF"}}
                 selectedText={draggeddText}
+                paperInfo={paperInfo}
             />
         </Box>
     </Box>}

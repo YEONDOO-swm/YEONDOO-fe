@@ -1,5 +1,5 @@
 import React, { MouseEventHandler, useState } from 'react'
-import { Box, SxProps, TextField, IconButton, InputAdornment, CardContent, Container, Button, Modal, Typography } from "@mui/material";
+import { Box, SxProps, TextField, IconButton, InputAdornment, CardContent, Container, Button, Modal, Typography, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNotify } from "react-admin";
 import { MouseEvent } from "react";
@@ -28,7 +28,8 @@ type SearchTapProps = {
     middleBoxSx?: SxProps;
     sx?: SxProps;
     heightSx ?: SxProps;
-    selectedText?: string,
+    selectedText?: string;
+    paperInfo: any;
   };
 
 const style = {
@@ -70,6 +71,7 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
     sx,
     heightSx,
     selectedText,
+    paperInfo
   }) => {
     const maxLengthLimit: number = 300
     const searchInputRef = React.useRef<HTMLInputElement | null>(null);
@@ -148,6 +150,11 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
         }
       })
     }
+
+    const [refPaperList, setRefPaperList] = useState<string>("My library")
+    const handlerefPaperListChange = (event: SelectChangeEvent) => {
+      setRefPaperList(event.target.value);
+    };
   
     return (
 
@@ -173,15 +180,32 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
                 <Typography id="modal-modal-title" variant="h6" component="h2">
                   Select Reference Paper
                 </Typography>
-                <Box sx={{width: '100%', height: '2px', bgcolor: color.secondaryGreen, mt: 3}}></Box>
+                <FormControl sx={{width: '50%', mt: 2}} size='small'>
+                  <InputLabel id="demo-simple-select-label">Papers</InputLabel>
+                  <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={refPaperList}
+                      onChange={handlerefPaperListChange}
+                      sx={{bgcolor: '#fff', border: '1px solid #ddd'}}
+                  >
+                      <MenuItem value="My library">My library</MenuItem>
+                      <MenuItem value="Paper reference">Paper reference</MenuItem>
+                  </Select>
+              </FormControl>
+                <Box sx={{width: '100%', height: '2px', bgcolor: color.secondaryGreen, mt: 1}}></Box>
                 <Box sx={{height: '30vh', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
-                  {papersInStorage && papersInStorage.map((paper: any) => (
+                  {refPaperList === 'My library' ? papersInStorage && papersInStorage.map((paper: any) => (
                     <>
                     {/* <Button onClick={() => handleSetRef(paper.paperId, paper.title)}>{paper.title}</Button><br/> */}
                       <PaperBox paper={paper} handleClickPaper={() => handleSetRef(paper.paperId, paper.title)} />
                     </>
                       
-                  ))}
+                  )):
+                  paperInfo && paperInfo.references.map((paper: any) => (
+                    <PaperBox paper={paper} handleClickPaper={()=>handleSetRef(paper.paperId, paper.title)} />
+                  ))
+                  }
                 </Box>
               </Box>
             </Modal>
