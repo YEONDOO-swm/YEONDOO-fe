@@ -1,4 +1,4 @@
-import { Box, Button, Popper, Typography } from '@mui/material';
+import { Box, Button, Modal, Popper, Typography } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react'
 import { getCookie } from '../cookie';
 import { useQuery } from 'react-query';
@@ -10,6 +10,8 @@ import { useNavigate } from 'react-router-dom';
 import * as Sentry from '@sentry/react';
 import Chat from '../component/chat'
 import { color } from '../layout/color';
+import scrollStyle from "../layout/scroll.module.css"
+import Export from './export';
 
 type paperInfo = {
   paperId: string;
@@ -27,6 +29,18 @@ const PopUpButton = ({title, clickEvent}: {title: string, clickEvent: any}) => {
     </Box>
   )
 }
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 600,
+  bgcolor: 'background.paper',
+  border: '2px solid #eee',
+  borderRadius: '50px 0px 0px 0px',
+  boxShadow: 24,
+  
+};
 
 const Reader = () => {
   const api: string = useSelector((state: CounterState) => state.api)
@@ -63,6 +77,12 @@ const Reader = () => {
 
   const [curTab, setCurTab] = useState<number>(1)
 
+  const [isOpenExport, setIsOpenExport] = useState<boolean>(false)
+
+  const handleClose = () => {
+    setIsOpenExport(false)
+  }
+
   const receiveIsPdfRender = (e: MessageEvent) => {
     if (e.data.isPdfRender) {
       setIsPdfCompleted(e.data.isPdfRender)
@@ -84,7 +104,7 @@ const Reader = () => {
         type: SET_ANNOTATIONS,
         data: e.data.annotations
       })
-      navigate('/export')
+      setIsOpenExport(true)
     }
     else if (e.data.isUpdatedDone) {
       dispatch({
@@ -249,8 +269,7 @@ const Reader = () => {
   }
 
   const handleClickSummary = () => {
-    let iframeRefNum = openedPaperNumber === paperInfo.paperId ? iframeRef : iframeRef2
-
+    let iframeRefNum = openedPaperNumber === paperId ? iframeRef : iframeRef2
     if (iframeRefNum && iframeRefNum.current && iframeRefNum.current.contentWindow) {
       iframeRefNum.current.contentWindow.postMessage({
         isExportClicked: true
@@ -273,13 +292,27 @@ const Reader = () => {
   return (
     <div>
       <Box sx={{height: '100vh', overflow: 'hidden'}}>
+        <Modal
+          open={isOpenExport}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Box sx={{height: '70vh', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
+              <Export/>
+            </Box>
+          </Box>
+        </Modal>
+        <Box sx={{height: '5px', bgcolor: color.mainGreen}}></Box>
         <Box sx={{height: `45px`, display: 'flex', justifyContent: 'space-between', bgcolor: color.mainGreen}}>
           <Box sx={{height: '100%', display: 'flex'}}>
             <Box onClick={handleClickTab1}
                 onMouseEnter={()=>{setIsHoveredOne(true)}}
                 onMouseLeave={()=>{setIsHoveredOne(false)}}
                 sx={{height: '100%', px: 4, cursor: 'pointer', display: 'flex', alignItems: 'center',
-                bgcolor: curTab === 1?color.white:(isHoveredOne?"rgba(255, 255, 255, 0.5)":null)}}> 
+                bgcolor: curTab === 1?color.white:(isHoveredOne?"rgba(255, 255, 255, 0.5)":null),
+                borderRadius: '15px 15px 0px 0px'}}> 
                 <Typography sx={{fontSize: '15px', fontWeight: curTab === 1?600:500, color:curTab === 1?color.appbarGreen:(isHoveredOne?color.appbarGreen:color.white)}}>
                   {data && (paperInfo.title.length>25?paperInfo.title.slice(0,25)+"...":paperInfo.title)} 
                 </Typography>
@@ -289,7 +322,8 @@ const Reader = () => {
               onMouseEnter={()=>{setIsHoveredTwo(true)}}
               onMouseLeave={()=>{setIsHoveredTwo(false)}}
               sx={{height: '100%', px: 4, cursor: 'pointer', display: 'flex', alignItems: 'center',
-                bgcolor: curTab === 2?color.white:(isHoveredTwo?"rgba(255, 255, 255, 0.5)":null)}}
+                bgcolor: curTab === 2?color.white:(isHoveredTwo?"rgba(255, 255, 255, 0.5)":null),
+                borderRadius: '15px 15px 0px 0px'}}
               >
               <Typography sx={{fontSize: '15px', fontWeight: curTab === 2?600:500, color:curTab === 2?color.appbarGreen:(isHoveredTwo?color.appbarGreen:color.white)}}>
                 {secondPaper.paperTitle.length>25?secondPaper.paperTitle.slice(0,25)+"...":secondPaper.paperTitle} 
@@ -323,6 +357,7 @@ const Reader = () => {
                               paperTitle={data && paperInfo?.title}
                               proofPayload={proofPayload} setProofPayload={setProofPayload}
                               prevProofId={prevProofId} setPrevProofId={setPrevProofId}
+                              paperInfo={paperInfo}
                               />)}
         </Box>
         <Box sx={{height: `calc(100vh - 45px)`}}> 

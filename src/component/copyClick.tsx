@@ -1,4 +1,4 @@
-import { Button } from '@mui/material'
+import { Box, Button } from '@mui/material'
 import React from 'react'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { useNotify } from 'react-admin';
@@ -11,9 +11,14 @@ const CopyClick = ({contents}:{contents: string}) => {
         notify('Copied', {type:'success'})
     };
   return (
-    <Button variant="outlined" onClick={()=>handleCopy(contents)} sx={{mr:1, p:0, minWidth: 'fit-content', border: 'none', '&:hover':{border: 'none', color: color.secondaryGreen}}}>
-        <ContentCopyIcon sx={{ fontSize: "20px" }}/>
-    </Button>
+    <Box sx={{width: '30px', height: '30px', borderRadius: '100%', border: '1px solid #ddd',
+    display: 'flex', justifyContent: 'center', alignItems: 'center'}} onClick={()=>handleCopy(contents)}>
+
+        <ContentCopyIcon sx={{ fontSize: "18px", color: '#333' }}/>
+    </Box>
+    // <Button variant="outlined" onClick={()=>handleCopy(contents)} sx={{mr:1, p:0, minWidth: 'fit-content', border: 'none', '&:hover':{border: 'none', color: color.secondaryGreen}}}>
+    //     <ContentCopyIcon sx={{ fontSize: "20px" }}/>
+    // </Button>
   )
 }
 
