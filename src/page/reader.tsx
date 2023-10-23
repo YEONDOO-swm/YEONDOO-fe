@@ -308,13 +308,15 @@ const Reader = () => {
             </Box>
           </Box>
         </Modal>
+        <Box sx={{height: '5px', bgcolor: color.mainGreen}}></Box>
         <Box sx={{height: `45px`, display: 'flex', justifyContent: 'space-between', bgcolor: color.mainGreen}}>
           <Box sx={{height: '100%', display: 'flex'}}>
             <Box onClick={handleClickTab1}
                 onMouseEnter={()=>{setIsHoveredOne(true)}}
                 onMouseLeave={()=>{setIsHoveredOne(false)}}
                 sx={{height: '100%', px: 4, cursor: 'pointer', display: 'flex', alignItems: 'center',
-                bgcolor: curTab === 1?color.white:(isHoveredOne?"rgba(255, 255, 255, 0.5)":null)}}> 
+                bgcolor: curTab === 1?color.white:(isHoveredOne?"rgba(255, 255, 255, 0.5)":null),
+                borderRadius: '15px 15px 0px 0px'}}> 
                 <Typography sx={{fontSize: '15px', fontWeight: curTab === 1?600:500, color:curTab === 1?color.appbarGreen:(isHoveredOne?color.appbarGreen:color.white)}}>
                   {data && (paperInfo.title.length>25?paperInfo.title.slice(0,25)+"...":paperInfo.title)} 
                 </Typography>
@@ -324,7 +326,8 @@ const Reader = () => {
               onMouseEnter={()=>{setIsHoveredTwo(true)}}
               onMouseLeave={()=>{setIsHoveredTwo(false)}}
               sx={{height: '100%', px: 4, cursor: 'pointer', display: 'flex', alignItems: 'center',
-                bgcolor: curTab === 2?color.white:(isHoveredTwo?"rgba(255, 255, 255, 0.5)":null)}}
+                bgcolor: curTab === 2?color.white:(isHoveredTwo?"rgba(255, 255, 255, 0.5)":null),
+                borderRadius: '15px 15px 0px 0px'}}
               >
               <Typography sx={{fontSize: '15px', fontWeight: curTab === 2?600:500, color:curTab === 2?color.appbarGreen:(isHoveredTwo?color.appbarGreen:color.white)}}>
                 {secondPaper.paperTitle.length>25?secondPaper.paperTitle.slice(0,25)+"...":secondPaper.paperTitle} 
