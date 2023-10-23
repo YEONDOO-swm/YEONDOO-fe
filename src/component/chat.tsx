@@ -476,7 +476,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                 </Typography>
                                 <Box sx={{}}>
                                     <Box sx={{maxWidth: '300px', mb: 1}}>
-                                        {paperInfo.insights.map((insight: any, index: number) => (
+                                        {paperInfo && paperInfo.insights.map((insight: any, index: number) => (
                                             <Typography sx={{fontSize: '14px', color: '#333'}}>
                                                 {index+1}. {insight}
                                             </Typography>      
