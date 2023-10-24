@@ -670,6 +670,8 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                 sx={{width: "100%", backgroundColor: "#FFFFFF"}}
                 selectedText={draggeddText}
                 paperInfo={paperInfo}
+                setOpenedPaperNumber={setOpenedPaperNumber}
+                setCurTab={setCurTab}
             />
         </Box>
     </Box>}
