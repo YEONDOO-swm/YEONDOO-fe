@@ -16,7 +16,8 @@ import deleteIcon from '../asset/deleteIcon.svg'
 
 type paperInfo = {
   paperId: string;
-  paperItems: any
+  paperTitle: string;
+  paperItems: any;
 }
 const PopUpButton = ({title, clickEvent}: {title: string, clickEvent: any}) => {
   const [isHovered, setIsHovered] = useState<boolean>(false)
@@ -131,7 +132,7 @@ const Reader = () => {
           type: SET_IS_UPDATED_DONE,
           data: false
         });
-      }, 800);
+      }, 1200);
 
       return () => {
         clearTimeout(timeoutId);
@@ -152,6 +153,7 @@ const Reader = () => {
                   setData(data)
                   const firstPayload = {
                     paperId: paperId,
+                    paperTitle: data.paperInfo.title,
                     paperItems: data.paperInfo.paperItems
                   }
                   sessionStorage.setItem("firstPaper", JSON.stringify(firstPayload))
@@ -215,6 +217,7 @@ const Reader = () => {
                     
                     const secondPayload = {
                       paperId: openedPaperNumber,
+                      paperTitle: data.paperInfo.title,
                       paperItems: data.paperInfo.paperItems
                     }
                     sessionStorage.setItem("secondPaper", JSON.stringify(secondPayload))
@@ -241,6 +244,13 @@ const Reader = () => {
           const secondPayloadParse = JSON.parse(secondPayload)
           
           if (secondPayloadParse.paperId === openedPaperNumber) {
+            dispatch({
+              type: SET_SECOND_PAPER,
+              data: {
+                paperId: openedPaperNumber,
+                paperTitle: secondPayloadParse.paperTitle,
+              }
+            })
             if (iframeRef2 && iframeRef2.current && iframeRef2.current.contentWindow) {
                 iframeRef2.current.contentWindow.postMessage(secondPayloadParse, '*');
             }
@@ -285,10 +295,6 @@ const Reader = () => {
 
   const [isHoveredOne, setIsHoveredOne] = useState<boolean>(false)
   const [isHoveredTwo, setIsHoveredTwo] = useState<boolean>(false)
-
-  useEffect(()=>{
-    console.log("changed", secondPaper.paperId)
-  }, [secondPaper])
 
   return (
     <div>
@@ -361,7 +367,7 @@ const Reader = () => {
                               paperTitle={data && paperInfo?.title}
                               proofPayload={proofPayload} setProofPayload={setProofPayload}
                               prevProofId={prevProofId} setPrevProofId={setPrevProofId}
-                              paperInfo={paperInfo}
+                              paperInfo={paperInfo} setCurTab={setCurTab}
                               />)}
         </Box>
         <Box sx={{height: `calc(100vh - 45px)`}}> 
