@@ -486,15 +486,18 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                 borderRadius: '0px 15px 15px 15px',
                                 maxWidth: '300px'}}>
                                 <Typography sx={{fontSize: '15px', fontWeight: 600, color: '#333'}}>
-                                    INSIGHTS
+                                    Summary
                                 </Typography>
                                 <Box sx={{}}>
                                     <Box sx={{maxWidth: '300px', mb: 1}}>
-                                        {paperInfo && paperInfo.insights.map((insight: any, index: number) => (
+                                        {/* {paperInfo && paperInfo.insights.map((insight: any, index: number) => (
                                             <Typography key={index} sx={{fontSize: '14px', color: '#333'}}>
                                                 {index+1}. {insight}
                                             </Typography>      
-                                        ))}
+                                        ))} */}
+                                        <Typography sx={{fontSize: '14px', color: '#333'}}>
+                                            {paperInfo && paperInfo.summary}
+                                        </Typography>
                                     </Box> 
                                 </Box>
                                 <Typography sx={{fontSize: '15px', fontWeight: 600, color: '#333'}}>

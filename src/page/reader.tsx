@@ -13,6 +13,10 @@ import { color } from '../layout/color';
 import scrollStyle from "../layout/scroll.module.css"
 import Export from './export';
 import deleteIcon from '../asset/deleteIcon.svg'
+import fs from 'fs';
+// import pdfWorker from '../../pdf-worker/src';
+// import { createRequire } from "module";
+// const require = createRequire(import.meta.url);
 
 type paperInfo = {
   paperId: string;
@@ -288,6 +292,13 @@ const Reader = () => {
     }
   }
 
+  const handleClickDownloadPdf = async() => {
+    // const fs = require('fs');
+    // const pdfWorker = require('../../pdf-worker/src');
+    // let buf = fs.readFileSync(`https://browse.arxiv.org/pdf/${paperId}.pdf`);
+    // buf = await pdfWorker.writeAnnotations(buf, []);
+  }
+
 
   const tabHeight = 5
   const exportOpen = Boolean(anchorEl)
@@ -354,7 +365,7 @@ const Reader = () => {
             display: 'flex', flexDirection: 'column', alignItems: 'center',
             borderRadius: '5px', border: '1px solid #ddd', boxShadow: '0px 5px 5px rgba(0, 0, 0, 0.1), 0px -5px 5px rgba(0, 0, 0, 0.1)',
             mr: 4, mt: 1 }}>
-              <PopUpButton title="Download PDF" clickEvent={null}/>
+              <PopUpButton title="Download PDF" clickEvent={handleClickDownloadPdf}/>
               <PopUpButton title="Generate Summary" clickEvent={handleClickSummary} />
             </Box>
           </Popper>
