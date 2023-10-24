@@ -34,10 +34,9 @@ type history = {
 }
 
 const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, openedPaperNumber
-    , setOpenedPaperNumber, curPageIndex, paperTitle, proofPayload, setProofPayload, prevProofId, setPrevProofId, paperInfo}: 
-    {isChatOpen: boolean, setIsChatOpen: any, data: any, paperId: string, iframeRef: any, iframeRef2: any, openedPaperNumber: string
-        , setOpenedPaperNumber: any, curPageIndex: number, paperTitle: any,
-    proofPayload: any, setProofPayload: any, prevProofId: string, setPrevProofId: any, paperInfo: any}) => {
+    , setOpenedPaperNumber, curPageIndex, paperTitle, proofPayload, setProofPayload, prevProofId, setPrevProofId, paperInfo, setCurTab}: 
+    {isChatOpen: boolean, setIsChatOpen: any, data: any, paperId: string, iframeRef: any, iframeRef2: any, openedPaperNumber: string, setOpenedPaperNumber: any, curPageIndex: number, paperTitle: any,
+    proofPayload: any, setProofPayload: any, prevProofId: string, setPrevProofId: any, paperInfo: any, setCurTab: any}) => {
     const notify = useNotify()
     const navigate = useNavigate()
 
@@ -50,7 +49,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
     const [searchResultsInPaper, setSearchResultsInPaper] = useState<string[]>([])
     const [searchResultsProof, setSearchResultsProof] = useState<any[]>([])
 
-    const [isFirstWord, setIsFirstWord] = useState<boolean>(true) // 스트리밍 응답 저장시 필요
+    // const [isFirstWord, setIsFirstWord] = useState<boolean>(true) // 스트리밍 응답 저장시 필요
     const [key, setKey] = useState<number>(); // 스트리밍 데이터 + 기본 데이터 받기 위해
     const [resultId, setResultId] = useState<number>(1)
     const [draggeddText, setDraggedText] = useState<string>("")
@@ -161,26 +160,27 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
             // 스트리밍
             const reader = response.body!.getReader()
             const decoder = new TextDecoder()
+            const lenOfSearchResults = searchResultsInPaper.length
 
             while (true) {
                 const { value, done } = await reader.read()
-                if (done) {
-                    setIsFirstWord(true)
-                    break
-                }
-
                 const decodedChunk = decoder.decode(value, { stream: true });
 
-                setSearchResultsInPaper((prevSearchResults: string[]) => {
-                    if (isFirstWord) {
-                        setIsFirstWord(false)
-                        return [...prevSearchResults, decodedChunk]
-                    } else {
-                        const lastItem = prevSearchResults[prevSearchResults.length -1]
-                        const updatedResults = prevSearchResults.slice(0, -1)
-                        return [...updatedResults, lastItem + decodedChunk]
-                    }
-                })
+                //done: False -> done: True 여도 console.log('done')이 먼저 출력
+                if (done) {
+                    break
+                } else {
+                    setSearchResultsInPaper((prevSearchResults: string[]) => {
+                        const curlenOfSearchResults = searchResultsInPaper.length
+                        if (lenOfSearchResults === curlenOfSearchResults) {
+                            return [...prevSearchResults, decodedChunk]
+                        } else {
+                            const lastItem = prevSearchResults[prevSearchResults.length -1]
+                            const updatedResults = prevSearchResults.slice(0, -1)
+                            return [...updatedResults, lastItem + decodedChunk]
+                        }
+                    })
+                }   
             }
         } 
         catch(error) {
@@ -210,6 +210,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
             }])
         }
     }
+
     const generateObjectKey = () => {
 		let len = 8;
 		let allowedKeyChars = '23456789ABCDEFGHIJKLMNPQRSTUVWXYZ';
@@ -343,9 +344,9 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
           
         }}
       >
-        <Box sx={{width: '100%', height:'30px', bgcolor: '#333', color: color.white, px: 1,
+        <Box sx={{width: '100%', height:'35px', bgcolor: '#333', color: color.white, px: 1,
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-            <Typography sx={{fontSize: '15px', fontWeight: 600}}>
+            <Typography sx={{fontSize: '15px', fontWeight: 500}}>
                 {paperTitle}
             </Typography>
             <img src={deleteIcon} style={{width: '18px', cursor: 'pointer'}} onClick={()=>{setIsChatOpen(false)}}/>
@@ -357,7 +358,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
             <Box sx={{ overflowY: 'scroll', px: '20px', pt: '20px' }} ref={scrollContainerRef} className={scrollStyle.scrollBar}>
                 {data.paperHistory &&
                 data.paperHistory.map((history: history, index: number) => (
-                <Box sx={{display: 'flex', flexDirection: history.who?'row-reverse':'row', alignItems: 'flex-start'}}>
+                <Box key={index} sx={{display: 'flex', flexDirection: history.who?'row-reverse':'row', alignItems: 'flex-start'}}>
                     {history.who ? null : 
                         <Box sx={{width: '30px', height: '30px', borderRadius: '100%', bgcolor: color.mainGreen,
                             display: 'flex', justifyContent: 'center', alignItems: 'center', mr: 1}}>
@@ -377,10 +378,16 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                     >
                         {history.who && <Box>
                                 <Box sx={{display: 'flex', gap: 1}}>
-                                    {history.paperDetailList.map((paper: any) => (
-                                        <Box sx={{display: 'inline-flex', alignItems: 'center', gap: 1, pl: 2, pr: 1, py: 0.4, mb: 1,
+                                    {history.paperDetailList.map((paper: any, index: number) => (
+                                        <Box key={index} sx={{display: 'inline-flex', alignItems: 'center', gap: 1, pl: 2, pr: 1, py: 0.4, mb: 1,
                                         borderRadius: '100px', border: `1px solid ${color.white}`, cursor: 'pointer'}}>
-                                        <Typography sx={{fontSize: '13px', color: color.white, fontWeight: 500}} onClick={()=>{setOpenedPaperNumber(paper.paperId)}}>
+                                        <Typography sx={{fontSize: '13px', color: color.white, fontWeight: 500}} onClick={() => 
+                                            { setOpenedPaperNumber(paper.paperId) 
+                                              if (paper.paperId === paperId){
+                                                setCurTab(1)
+                                              } else {
+                                                setCurTab(2)
+                                              }}}>
                                             #{paper.title.length > 10 ? paper.title.slice(0,10)+"..." : paper.title}
                                         </Typography>
                                         </Box>
@@ -389,16 +396,15 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                 </Box>
                                 <Box>
                                 {history.context.length>20 ? 
-                                <Box sx={{display: 'flex', alignItems: 'center', bgcolor: color.white, borderRadius: '100px', mb: 1}}>
-                                <Box sx={{display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden', mx: 1, my: 0.5, px: 1,}}>
+                                <Box sx={{display: 'flex', alignItems: 'center', bgcolor: color.white, borderRadius: '100px', mb: 1, cursor: 'pointer'}}>
+                                <Box sx={{display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden', mx: 1, my: 0.5, px: 1, cursor: 'pointer'}}>
                                     <Typography sx={{color: color.mainGreen, fontSize: '13px', fontWeight: 500}}>
                                     {history.context} 
                                     </Typography>
                                 </Box>
                                 </Box>:
                                 <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
-                                <Box sx={{display: 'inline-flex', px: 2, py: 0.5, alignItems: 'center',
-                                            bgcolor: color.white, borderRadius: '100px'}}>
+                                <Box sx={{display: 'inline-flex', px: 2, py: 0.5, alignItems: 'center', bgcolor: color.white, borderRadius: '100px'}}>
                                     <Typography sx={{color: color.mainGreen, fontSize: '13px', fontWeight: 500}}>
                                         {history.context} 
                                     </Typography>
@@ -420,7 +426,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                     <>
                                         <Box sx={{display: 'inline-block'}}>
                                             {history.positions.length > 0&& history.positions[0].rects.map((proof: any, idx: number) => (
-                                                <Box sx={{bgcolor: '#222', px: 1, borderRadius: '100px', display: 'flex', gap: 1, mr: 1}} onClick={() => handleIndicateProof(history.positions[0].paperId, proof, history.positions[0].pageIndex)}>
+                                                <Box key={idx} sx={{bgcolor: '#222', px: 1, borderRadius: '100px', display: 'flex', gap: 1, mr: 1, cursor: 'pointer'}} onClick={() => handleIndicateProof(history.positions[0].paperId, proof, history.positions[0].pageIndex)}>
                                                     <img src={search} alt="search" />
                                                     <Typography sx={{fontSize: '15px', color: color.white}}>
                                                         base {idx}
@@ -430,7 +436,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                         </Box>
                                         <Box sx={{display: 'inline-block'}}>
                                             {history.positions.length > 1&& history.positions[1].rects.map((proof: any, idx: number) => (
-                                                <Box sx={{bgcolor: '#fff', border: '1px solid #222', px: 1, borderRadius: '100px', display: 'flex', gap: 1, mr: 1}} onClick={() => handleIndicateProof(history.positions[1].paperId, proof, history.positions[1].pageIndex)}>
+                                                <Box key={idx} sx={{bgcolor: '#fff', border: '1px solid #222', px: 1, borderRadius: '100px', display: 'flex', gap: 1, mr: 1, cursor: 'pointer'}} onClick={() => handleIndicateProof(history.positions[1].paperId, proof, history.positions[1].pageIndex)}>
                                                     <img src={searchBlack} alt="search" />
                                                     <Typography sx={{fontSize: '15px', color: '#222'}}>
                                                         base {idx}
@@ -445,7 +451,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                         <Box sx={{display: 'flex'}}>
                                             <CopyClick contents={history.content}/>
                                             <Box sx={{width: '30px', height: '30px', borderRadius: '100%', border: '1px solid #ddd',
-                                                    display: 'flex', justifyContent: 'center', alignItems: 'center', ml: 1}} onClick={() => handleExportAnswer(data.paperHistory[index-1].content, history.content)}>
+                                                    display: 'flex', justifyContent: 'center', alignItems: 'center', ml: 1, cursor: 'pointer'}} onClick={() => handleExportAnswer(data.paperHistory[index-1].content, history.content)}>
                                                 <ExitToAppIcon sx={{color: '#333', fontSize: '19px'}}/>
                                             </Box>
                                             {/* <IconButton onClick={() => handleExportAnswer(data.paperHistory[index-1].content, history.content)}>
@@ -477,7 +483,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                 <Box sx={{}}>
                                     <Box sx={{maxWidth: '300px', mb: 1}}>
                                         {paperInfo && paperInfo.insights.map((insight: any, index: number) => (
-                                            <Typography sx={{fontSize: '14px', color: '#333'}}>
+                                            <Typography key={index} sx={{fontSize: '14px', color: '#333'}}>
                                                 {index+1}. {insight}
                                             </Typography>      
                                         ))}
@@ -509,13 +515,15 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                     <Box sx={{display: 'flex', gap: 1}}>
                                         <Box sx={{display: 'inline-flex', alignItems: 'center', gap: 1, px: 2, py: 0.4, mb: 1,
                                         borderRadius: '100px', border: `1px solid ${color.white}`, cursor: 'pointer'}}>
-                                            <Typography sx={{fontSize: '13px', color: color.white, fontWeight: 500}} onClick={()=>{setOpenedPaperNumber(paperInfo.paperId)}}>
+                                            <Typography sx={{fontSize: '13px', color: color.white, fontWeight: 500}} onClick={()=>{setOpenedPaperNumber(paperInfo.paperId)
+                                            setCurTab(1)}}>
                                                 #{paperInfo && paperInfo.title.length > 10 ? paperInfo.title.slice(0,10)+"..." : paperInfo.paperTitle}
                                             </Typography>
                                         </Box>
                                         {term.refPaper.paperTitle && <Box sx={{display: 'inline-flex', alignItems: 'center', gap: 1, px: 2, py: 0.4, mb: 1,
                                         borderRadius: '100px', border: `1px solid ${color.white}`, cursor: 'pointer'}}>
-                                            <Typography sx={{fontSize: '13px', color: color.white, fontWeight: 500}} onClick={()=>{setOpenedPaperNumber(term.refPaper.paperId)}}>
+                                            <Typography sx={{fontSize: '13px', color: color.white, fontWeight: 500}} onClick={()=>{setOpenedPaperNumber(term.refPaper.paperId)
+                                            setCurTab(2)}}>
                                                 #{term.refPaper.paperTitle.length > 10 ? term.refPaper.paperTitle.slice(0,10)+"..." : term.refPaper.paperTitle}
                                             </Typography>
                                         </Box>}
@@ -523,16 +531,15 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                     </Box>
                                     <Box>
                                     {term.draggedText && (term.draggedText.length>15 ? 
-                                    <Box sx={{display: 'flex', alignItems: 'center', bgcolor: color.white, borderRadius: '100px', mb: 1}}>
-                                    <Box sx={{display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden', mx: 1, my: 0.5, px: 1,}}>
+                                    <Box sx={{display: 'flex', alignItems: 'center', bgcolor: color.white, borderRadius: '100px', mb: 1, cursor: 'pointer'}}>
+                                    <Box sx={{display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden', mx: 1, my: 0.5, px: 1, cursor: 'pointer'}}>
                                         <Typography sx={{color: color.mainGreen, fontSize: '13px', fontWeight: 500}}>
                                         {term.draggedText} 
                                         </Typography>
                                     </Box>
                                     </Box>:
                                     <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
-                                    <Box sx={{display: 'inline-flex', px: 2, py: 0.5, alignItems: 'center',
-                                                bgcolor: color.white, borderRadius: '100px'}}>
+                                    <Box sx={{display: 'inline-flex', px: 2, py: 0.5, alignItems: 'center', bgcolor: color.white, borderRadius: '100px'}}>
                                         <Typography sx={{color: color.mainGreen, fontSize: '13px', fontWeight: 500}}>
                                             {term.draggedText} 
                                         </Typography>
@@ -578,7 +585,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                         // <Box sx={{bgcolor: color.secondaryGreen}} onClick={() => handleIndicateProof(searchResultsProof[index].firstPaperPosition.paperId, proof, searchResultsProof[index].firstPaperPosition.position.pageIndex)}>
                                         //     base {idx}
                                         // </Box>
-                                        <Box sx={{bgcolor: '#222', px: 1, borderRadius: '100px', display: 'flex', gap: 1, mr: 1}} onClick={() => handleIndicateProof(searchResultsProof[index].firstPaperPosition.paperId, proof, searchResultsProof[index].firstPaperPosition.position.pageIndex)}>
+                                        <Box key={idx} sx={{bgcolor: '#222', px: 1, borderRadius: '100px', display: 'flex', gap: 1, mr: 1, cursor: 'pointer'}} onClick={() => handleIndicateProof(searchResultsProof[index].firstPaperPosition.paperId, proof, searchResultsProof[index].firstPaperPosition.position.pageIndex)}>
                                             <img src={search} alt="search" />
                                             <Typography sx={{fontSize: '15px', color: color.white}}>
                                                 base {idx}
@@ -592,7 +599,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                         // <Box sx={{bgcolor: color.arxiv}} onClick={() => handleIndicateProof(searchResultsProof[index].secondPaperPosition.paperId, proof, searchResultsProof[index].secondPaperPosition.position.pageIndex)}>
                                         //     base {idx}
                                         // </Box>
-                                        <Box sx={{bgcolor: '#fff', border: '1px solid #222', px: 1, borderRadius: '100px', display: 'flex', gap: 1, mr: 1}} onClick={() => handleIndicateProof(searchResultsProof[index].secondPaperPosition.paperId, proof, searchResultsProof[index].secondPaperPosition.position.pageIndex)}>
+                                        <Box key={idx} sx={{bgcolor: '#fff', border: '1px solid #222', px: 1, borderRadius: '100px', display: 'flex', gap: 1, mr: 1, cursor: 'pointer'}} onClick={() => handleIndicateProof(searchResultsProof[index].secondPaperPosition.paperId, proof, searchResultsProof[index].secondPaperPosition.position.pageIndex)}>
                                             <img src={searchBlack} alt="search" />
                                             <Typography sx={{fontSize: '15px', color: '#222'}}>
                                                 base {idx}
@@ -608,7 +615,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                                 <ExitToAppIcon/>
                                             </IconButton> */}
                                             <Box sx={{width: '30px', height: '30px', borderRadius: '100%', border: '1px solid #ddd',
-                                                    display: 'flex', justifyContent: 'center', alignItems: 'center', ml: 1}} onClick={() => handleExportAnswer(term, searchResultsInPaper[index])}>
+                                                    display: 'flex', justifyContent: 'center', alignItems: 'center', ml: 1, cursor: 'pointer'}} onClick={() => handleExportAnswer(term, searchResultsInPaper[index])}>
                                                 <ExitToAppIcon sx={{color: '#333', fontSize: '19px'}}/>
                                             </Box>
                                             

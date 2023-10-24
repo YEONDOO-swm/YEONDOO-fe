@@ -199,11 +199,11 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
               </FormControl>
                 <Box sx={{width: '100%', height: '2px', bgcolor: color.secondaryGreen, mt: 1}}></Box>
                 <Box sx={{height: '30vh', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
-                  {refPaperList === 'My library' ? papersInStorage && papersInStorage.map((paper: any) => (
-                    <>
+                  {refPaperList === 'My library' ? papersInStorage && papersInStorage.map((paper: any, idx: number) => (
+                    <Box key={idx}>
                     {/* <Button onClick={() => handleSetRef(paper.paperId, paper.title)}>{paper.title}</Button><br/> */}
                       <PaperBox paper={paper} handleClickPaper={() => handleSetRef(paper.paperId, paper.title)} />
-                    </>
+                    </Box>
                       
                   )):
                   paperInfo && paperInfo.references && paperInfo.references.map((paper: any) => (
@@ -263,7 +263,11 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
                         // }}
                         />
                         <div
-                        onClick={onSearch} style={{display: 'flex', justifyContent: 'center', alignItems: 'center'
+                        onClick={(e)=>{
+                          onSearch(e)
+                          searchInputRef.current?.focus()
+                        }} 
+                        style={{display: 'flex', justifyContent: 'center', alignItems: 'center'
                         , backgroundColor: color.mainGreen, marginTop:1, marginBottom: 1, height: '35px', width: '38px',
                         borderRadius: '100%', marginRight: '5px', cursor: 'pointer'}}>
                           <SendIcon sx={{color: color.white, transform: 'rotate(-45deg)', ml: 0.5, mb: 0.5, fontSize: '18px'}}/>
