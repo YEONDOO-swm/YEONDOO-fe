@@ -31,6 +31,8 @@ type SearchTapProps = {
     heightSx ?: SxProps;
     selectedText?: string;
     paperInfo: any;
+    setOpenedPaperNumber?:any
+    setCurTab: any;
   };
 
 const style = {
@@ -72,7 +74,9 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
     sx,
     heightSx,
     selectedText,
-    paperInfo
+    paperInfo,
+    setOpenedPaperNumber,
+    setCurTab,
   }) => {
     const maxLengthLimit: number = 300
     const searchInputRef = React.useRef<HTMLInputElement | null>(null);
@@ -125,6 +129,8 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
           paperTitle: paperTitle,
         }
       })
+      setOpenedPaperNumber(paperId)
+      setCurTab(2)
       handleClose()
     }
 
