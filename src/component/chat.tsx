@@ -22,6 +22,8 @@ import chat from '../asset/chatProfile.png'
 import search from '../asset/searchIcon.svg'
 import searchBlack from '../asset/searchBlack.svg'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import SendIcon from '@mui/icons-material/Send';
+
 
 type history = {
     who: boolean;
@@ -53,6 +55,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
     const [key, setKey] = useState<number>(); // 스트리밍 데이터 + 기본 데이터 받기 위해
     const [resultId, setResultId] = useState<number>(1)
     const [draggeddText, setDraggedText] = useState<string>("")
+    const [exampleQuestion, setExampleQuestion] = useState<string>("")
     // const [prevProofId, setPrevProofId] = useState<string>("")
     //const [proofPayload, setProofPayload] = useState<any>()
 
@@ -111,12 +114,17 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
         performSearchInPaper();
     }
 
-    const performSearchInPaper = async () => {
+    const performSearchInPaper = async (question=undefined) => {
         if (searchTermInPaper != ''){
             setEnteredSearchTermInPaper((prevEnteredSearchTerm: any[])=>[...prevEnteredSearchTerm, 
                 {searchTerm: searchTermInPaper, 
                 draggedText: draggeddText,
                 refPaper: refPaper}])      
+        } else if (question) {
+            setEnteredSearchTermInPaper((prevEnteredSearchTerm: any[])=>[...prevEnteredSearchTerm, 
+                {searchTerm: question, 
+                draggedText: draggeddText,
+                refPaper: refPaper}])  
         }
         setSearchTermInPaper("")
         const query = new URLSearchParams(window.location.search);
@@ -124,7 +132,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
         const keyNumber = Math.floor(Math.random()*1000000000)
         const payload = {
             paperIds: refPaper.paperId?[paperId, refPaper.paperId]:[paperId],
-            question: searchTermInPaper,
+            question: question? question : searchTermInPaper,
             context: draggeddText ? draggeddText : null,
             position: draggeddText ? position : null,
         }
@@ -487,9 +495,29 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                                 {index+1}. {insight}
                                             </Typography>      
                                         ))}
-                                    </Box>
-                                        
-                                        
+                                    </Box> 
+                                </Box>
+                                <Typography sx={{fontSize: '15px', fontWeight: 600, color: '#333'}}>
+                                    Example Questions
+                                </Typography>
+                                <Box sx={{}}>
+                                    <Box sx={{maxWidth: '300px', mb: 1}}>
+                                        {paperInfo && paperInfo.questions.map((question: any, index: number) => (
+                                            <Box key={index} sx={{display: 'flex', alignItems: 'center'}}>
+                                                <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'
+                                                        , backgroundColor: color.mainGreen, height: '15px', width: '15px',
+                                                        borderRadius: '100%', marginRight: '5px', cursor: 'pointer'}}
+                                                    onClick={()=> {
+                                                        performSearchInPaper(question)
+                                                    }}>
+                                                    <SendIcon sx={{color: color.white, transform: 'rotate(-45deg)', ml: 0.3, mb: 0.2, fontSize: '10px'}}/>
+                                                </Box>
+                                                <Typography key={index} sx={{fontSize: '14px', color: '#333'}}>
+                                                    {question}
+                                                </Typography>      
+                                            </Box>
+                                        ))}
+                                    </Box> 
                                 </Box>
                             </Box>
                         </Box>
