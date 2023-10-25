@@ -27,7 +27,7 @@ jobs:
     - name: npm install, build
       run: |
         cd pdf-worker
-        npm install
+        npm install --force
         npm run build
         cd ..
         npm install --legacy-peer-deps
