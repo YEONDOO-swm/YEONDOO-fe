@@ -54,7 +54,7 @@ const StudyWithAI = () => {
     })
 
     const handleClickPaper = (paperId: string) => {
-        window.open(`/paper?paperid=${paperId}`)
+        window.open(`/paper?workspaceId=${workspaceId}&paperid=${paperId}`)
     }
   return (
     <PageLayout workspace={true} number={2}>
