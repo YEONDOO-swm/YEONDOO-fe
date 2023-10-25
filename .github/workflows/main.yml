@@ -28,6 +28,9 @@ jobs:
       run: |
         npm install --legacy-peer-deps
         npm run build
+        cd pdf-worker
+        npm install
+        npm run build
         
     - name: Deploy
       uses: reggionick/s3-deploy@v3
