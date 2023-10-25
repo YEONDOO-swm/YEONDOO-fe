@@ -264,7 +264,7 @@ export const Home = () => {
           <Typography sx={{fontWeight: 500}}>
             {recentlyPapers.title}
           </Typography>
-          <Box sx={{display: 'flex'}} onClick={()=>{window.open(`/paper?paperid=${recentlyPapers.paperId}`)}}>
+          <Box sx={{display: 'flex'}} onClick={()=>{window.open(`/paper?workspaceId=${workspaceId}&aperid=${recentlyPapers.paperId}`)}}>
             <Typography sx={{fontWeight: 500, color: color.mainGreen, cursor: 'pointer', '&:hover':{
               color: '#445142'
             }}}>More</Typography>

@@ -135,10 +135,11 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
             question: question? question : searchTermInPaper,
             context: draggeddText ? draggeddText : null,
             position: draggeddText ? position : null,
+            key: keyNumber,
         }
         try {
             setKey(keyNumber)
-            const response = await postApi(api, `/api/paper/${paperId}?workspaceId=${workspaceId}&key=${keyNumber}`, payload)
+            const response = await postApi(api, `/api/paper/${paperId}?workspaceId=${workspaceId}`, payload)
 
             if (response.status === 401) {
                 refreshApi(api, notify, navigate)
@@ -485,16 +486,16 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                 marginBottom: '10px',
                                 borderRadius: '0px 15px 15px 15px',
                                 maxWidth: '300px'}}>
-                                <Typography sx={{fontSize: '15px', fontWeight: 600, color: '#333'}}>
+                                <Typography sx={{fontSize: '14px', color: '#333'}}>
+                                    Hello. This is '{paperInfo.title}' paper. You can ask any question about this paper. <br/>
+                                    You can choose another paper you want to ask question together. <br/>
+                                    Also, you can ask question about selected text by clicking push to chat button in pdf viewer when you drag the text.
+                                </Typography>
+                                {/* <Typography sx={{fontSize: '15px', fontWeight: 600, color: '#333'}}>
                                     Summary
                                 </Typography>
                                 <Box sx={{}}>
                                     <Box sx={{maxWidth: '300px', mb: 1}}>
-                                        {/* {paperInfo && paperInfo.insights.map((insight: any, index: number) => (
-                                            <Typography key={index} sx={{fontSize: '14px', color: '#333'}}>
-                                                {index+1}. {insight}
-                                            </Typography>      
-                                        ))} */}
                                         <Typography sx={{fontSize: '14px', color: '#333'}}>
                                             {paperInfo && paperInfo.summary}
                                         </Typography>
@@ -521,7 +522,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                             </Box>
                                         ))}
                                     </Box> 
-                                </Box>
+                                </Box> */}
                             </Box>
                         </Box>
                     )
