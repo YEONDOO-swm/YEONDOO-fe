@@ -112,6 +112,34 @@ const Reader = () => {
       })
       setIsOpenExport(true)
     }
+    else if (e.data.pdfAnnotations) {
+      const pdfWorker = require('../../pdf-worker/src');
+
+      fetch(`https://browse.arxiv.org/pdf/${paperId}.pdf`)
+      .then((response) => response.arrayBuffer())
+      .then(async(arrayBuffer) => {
+        let buf = await pdfWorker.writeAnnotations(arrayBuffer, e.data.pdfAnnotations);
+
+        const uint8Array = new Uint8Array(buf)
+        const blob = new Blob([uint8Array], {type: 'application/pdf'})
+        const blobUrl = URL.createObjectURL(blob)
+
+        const a = document.createElement('a')
+        a.href = blobUrl
+        a.download = 'download.pdf'
+        a.style.display = 'none'
+
+        document.body.appendChild(a)
+        a.click()
+
+        document.body.removeChild(a);
+        URL.revokeObjectURL(blobUrl);
+
+      })
+      .catch((error) => {
+        console.error('파일을 가져오는 중 오류가 발생했습니다.', error);
+      });
+    }
     else if (e.data.isUpdatedDone) {
       dispatch({
         type: SET_IS_UPDATED_DONE,
@@ -293,10 +321,53 @@ const Reader = () => {
   }
 
   const handleClickDownloadPdf = async() => {
-    // const fs = require('fs');
-    // const pdfWorker = require('../../pdf-worker/src');
-    // let buf = fs.readFileSync(`https://browse.arxiv.org/pdf/${paperId}.pdf`);
-    // buf = await pdfWorker.writeAnnotations(buf, []);
+    let iframeRefNum = openedPaperNumber === paperId ? iframeRef : iframeRef2
+    if (iframeRefNum && iframeRefNum.current && iframeRefNum.current.contentWindow) {
+      iframeRefNum.current.contentWindow.postMessage({
+        isDownloadPdfClicked: true
+      }, '*');
+    }
+    //const fs = require('fs');
+    // const pdfWorker = require('../../../pdf-worker/src');
+    // // let reader = new FileReader();
+    // // let buf = reader.readAsText(`https://browse.arxiv.org/pdf/${paperId}.pdf`)
+
+    // fetch(`https://browse.arxiv.org/pdf/${paperId}.pdf`)
+    // .then((response) => response.arrayBuffer())
+    // .then((arrayBuffer) => {
+    //   const reader = new FileReader();
+    //   reader.onload = function() {
+    //     // 읽어온 파일 내용은 reader.result에 있습니다.
+    //     const fileContent = reader.result;
+    //     console.log(fileContent);
+    //   };
+    //   //let buf = reader.readAsText(blob);
+    //   console.log(arrayBuffer)
+    //   const uint8ArrayBuffer = new Uint8Array(arrayBuffer);
+    //   let buf = pdfWorker.writeAnnotations(arrayBuffer, []);
+    //   console.log(buf)
+    //   //var buffer = Buffer.from(buf)
+
+    //   const uint8Array = new Uint8Array(arrayBuffer)
+    //   const blob = new Blob([uint8Array], {type: 'application/pdf'})
+    //   const blobUrl = URL.createObjectURL(blob)
+
+    //   const a = document.createElement('a')
+    //   a.href = blobUrl
+    //   a.download = 'download.pdf'
+    //   a.style.display = 'none'
+
+    //   document.body.appendChild(a)
+    //   a.click()
+
+    //   document.body.removeChild(a);
+    //   URL.revokeObjectURL(blobUrl);
+
+    // })
+    // .catch((error) => {
+    //   console.error('파일을 가져오는 중 오류가 발생했습니다.', error);
+    // });
+    //let buf = fs.readFileSync(`https://browse.arxiv.org/pdf/${paperId}.pdf`);
   }
 
 
