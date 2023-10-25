@@ -91,7 +91,7 @@ const Export = () => {
         )
     }
   return (
-    <Box sx={{display: 'flex', flexDirection: 'column', mt: 3}}>
+    <Box sx={{display: 'flex', flexDirection: 'column', mt: 4}}>
         {open?
         <Box sx={{px: 4, pt: 1, pb: 4}}>
             <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
