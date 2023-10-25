@@ -26,10 +26,11 @@ jobs:
         
     - name: npm install, build
       run: |
-        npm install --legacy-peer-deps
-        npm run build
         cd pdf-worker
         npm install
+        npm run build
+        cd ..
+        npm install --legacy-peer-deps
         npm run build
         
     - name: Deploy
