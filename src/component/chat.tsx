@@ -135,10 +135,11 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
             question: question? question : searchTermInPaper,
             context: draggeddText ? draggeddText : null,
             position: draggeddText ? position : null,
+            key: keyNumber,
         }
         try {
             setKey(keyNumber)
-            const response = await postApi(api, `/api/paper/${paperId}?workspaceId=${workspaceId}&key=${keyNumber}`, payload)
+            const response = await postApi(api, `/api/paper/${paperId}?workspaceId=${workspaceId}`, payload)
 
             if (response.status === 401) {
                 refreshApi(api, notify, navigate)
