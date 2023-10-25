@@ -114,11 +114,17 @@ const Reader = () => {
     }
     else if (e.data.pdfAnnotations) {
       const pdfWorker = require('../../pdf-worker/src');
-
+      const annotationsWithAuthor = e.data.pdfAnnotations.map((anno: any) => {
+        const changeItem = {
+          ...anno,
+          authorName: ""
+        }
+        return changeItem
+      })
       fetch(`https://browse.arxiv.org/pdf/${paperId}.pdf`)
       .then((response) => response.arrayBuffer())
       .then(async(arrayBuffer) => {
-        let buf = await pdfWorker.writeAnnotations(arrayBuffer, e.data.pdfAnnotations);
+        let buf = await pdfWorker.writeAnnotations(arrayBuffer, annotationsWithAuthor);
 
         const uint8Array = new Uint8Array(buf)
         const blob = new Blob([uint8Array], {type: 'application/pdf'})
