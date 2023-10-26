@@ -12,6 +12,7 @@ import { color } from '../layout/color'
 import scrollStyle from "../layout/scroll.module.css"
 import { paperType } from './home'
 import study from '../asset/studyGreen.svg'
+// var Mermaid = require('react-mermaid');
 
 const PaperBox = ({handleClickPaper, paper}: {handleClickPaper: any, paper: paperType}) => {
     const [isHovered, setIsHovered] = useState<boolean>(false)
@@ -77,6 +78,13 @@ const StudyWithAI = () => {
                 </Box>
             </Box>
         </Box>
+        {/* <Mermaid name="diagram">
+        graph TD;
+          A--{'>'}B;
+          A--{'>'}C;
+          B--{'>'}D;
+          C--{'>'}D;
+      </Mermaid> */}
     </PageLayout>
   )
 }

@@ -169,7 +169,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
             // 스트리밍
             const reader = response.body!.getReader()
             const decoder = new TextDecoder()
-            const lenOfSearchResults = searchResultsInPaper.length
+            const lenOfSearchResults = searchResultsInPaper ? searchResultsInPaper.length : 0
 
             while (true) {
                 const { value, done } = await reader.read()
@@ -404,7 +404,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                     }
                                 </Box>
                                 <Box>
-                                {history.context.length>20 ? 
+                                {history && history.context && (history.context.length>20 ? 
                                 <Box sx={{display: 'flex', alignItems: 'center', bgcolor: color.white, borderRadius: '100px', mb: 1, cursor: 'pointer'}}>
                                 <Box sx={{display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden', mx: 1, my: 0.5, px: 1, cursor: 'pointer'}}>
                                     <Typography sx={{color: color.mainGreen, fontSize: '13px', fontWeight: 500}}>
@@ -418,7 +418,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                         {history.context} 
                                     </Typography>
                                 </Box>
-                                </Box>}
+                                </Box>)}
                                 </Box>
                         </Box>}
                         <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
@@ -434,8 +434,8 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                     {!history.positions?null:
                                     <>
                                         <Box sx={{display: 'inline-block'}}>
-                                            {history.positions.length > 0&& history.positions[0].rects.map((proof: any, idx: number) => (
-                                                <Box key={idx} sx={{bgcolor: '#222', px: 1, borderRadius: '100px', display: 'flex', gap: 1, mr: 1, cursor: 'pointer'}} onClick={() => handleIndicateProof(history.positions[0].paperId, proof, history.positions[0].pageIndex)}>
+                                            {history.positions && history.positions.length > 0&& history.positions[0].rects.map((proof: any, idx: number) => (
+                                                <Box key={idx} sx={{bgcolor: '#333', px: 1, borderRadius: '100px', display: 'flex', gap: 1, mr: 1, cursor: 'pointer'}} onClick={() => handleIndicateProof(history.positions[0].paperId, proof, history.positions[0].pageIndex)}>
                                                     <img src={search} alt="search" />
                                                     <Typography sx={{fontSize: '15px', color: color.white}}>
                                                         base {idx}
@@ -444,10 +444,10 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                             ))}
                                         </Box>
                                         <Box sx={{display: 'inline-block'}}>
-                                            {history.positions.length > 1&& history.positions[1].rects.map((proof: any, idx: number) => (
-                                                <Box key={idx} sx={{bgcolor: '#fff', border: '1px solid #222', px: 1, borderRadius: '100px', display: 'flex', gap: 1, mr: 1, cursor: 'pointer'}} onClick={() => handleIndicateProof(history.positions[1].paperId, proof, history.positions[1].pageIndex)}>
+                                            {history.positions && history.positions.length > 1&& history.positions[1].rects.map((proof: any, idx: number) => (
+                                                <Box key={idx} sx={{bgcolor: '#fff', border: '1px solid #333', px: 1, borderRadius: '100px', display: 'flex', gap: 1, mr: 1, cursor: 'pointer'}} onClick={() => handleIndicateProof(history.positions[1].paperId, proof, history.positions[1].pageIndex)}>
                                                     <img src={searchBlack} alt="search" />
-                                                    <Typography sx={{fontSize: '15px', color: '#222'}}>
+                                                    <Typography sx={{fontSize: '15px', color: '#333'}}>
                                                         base {idx}
                                                     </Typography>
                                                 </Box>
@@ -552,7 +552,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                                 #{paperInfo && paperInfo.title.length > 10 ? paperInfo.title.slice(0,10)+"..." : paperInfo.paperTitle}
                                             </Typography>
                                         </Box>
-                                        {term.refPaper.paperTitle && <Box sx={{display: 'inline-flex', alignItems: 'center', gap: 1, px: 2, py: 0.4, mb: 1,
+                                        {term.refPaper && term.refPaper.paperTitle && <Box sx={{display: 'inline-flex', alignItems: 'center', gap: 1, px: 2, py: 0.4, mb: 1,
                                         borderRadius: '100px', border: `1px solid ${color.white}`, cursor: 'pointer'}}>
                                             <Typography sx={{fontSize: '13px', color: color.white, fontWeight: 500}} onClick={()=>{setOpenedPaperNumber(term.refPaper.paperId)
                                             setCurTab(2)}}>
@@ -604,9 +604,9 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                 <Box sx={{maxWidth: '300px', display: 'flex', justifyContent: 'space-between', mb: 1}}>
                                 
                                     {index>=searchResultsInPaper.length?(
-                                        <Typography variant="body1" className={loadingStyle.loading}> <MoreHorizIcon /> </Typography>
+                                        <Typography className={loadingStyle.loading}> <MoreHorizIcon /> </Typography>
                                     ):(
-                                        <Typography variant="body1">{searchResultsInPaper[index]}</Typography>                 
+                                        <Typography sx={{fontSize: '14px', color: '#333'}}>{searchResultsInPaper[index]}</Typography>                 
                                     )}       
                                 </Box>
                             </Box>
@@ -617,7 +617,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                         // <Box sx={{bgcolor: color.secondaryGreen}} onClick={() => handleIndicateProof(searchResultsProof[index].firstPaperPosition.paperId, proof, searchResultsProof[index].firstPaperPosition.position.pageIndex)}>
                                         //     base {idx}
                                         // </Box>
-                                        <Box key={idx} sx={{bgcolor: '#222', px: 1, borderRadius: '100px', display: 'flex', gap: 1, mr: 1, cursor: 'pointer'}} onClick={() => handleIndicateProof(searchResultsProof[index].firstPaperPosition.paperId, proof, searchResultsProof[index].firstPaperPosition.position.pageIndex)}>
+                                        <Box key={idx} sx={{bgcolor: '#333', px: 1, borderRadius: '100px', display: 'flex', gap: 1, mr: 1, cursor: 'pointer'}} onClick={() => handleIndicateProof(searchResultsProof[index].firstPaperPosition.paperId, proof, searchResultsProof[index].firstPaperPosition.position.pageIndex)}>
                                             <img src={search} alt="search" />
                                             <Typography sx={{fontSize: '15px', color: color.white}}>
                                                 base {idx}
@@ -631,9 +631,9 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                         // <Box sx={{bgcolor: color.arxiv}} onClick={() => handleIndicateProof(searchResultsProof[index].secondPaperPosition.paperId, proof, searchResultsProof[index].secondPaperPosition.position.pageIndex)}>
                                         //     base {idx}
                                         // </Box>
-                                        <Box key={idx} sx={{bgcolor: '#fff', border: '1px solid #222', px: 1, borderRadius: '100px', display: 'flex', gap: 1, mr: 1, cursor: 'pointer'}} onClick={() => handleIndicateProof(searchResultsProof[index].secondPaperPosition.paperId, proof, searchResultsProof[index].secondPaperPosition.position.pageIndex)}>
+                                        <Box key={idx} sx={{bgcolor: '#fff', border: '1px solid #333', px: 1, borderRadius: '100px', display: 'flex', gap: 1, mr: 1, cursor: 'pointer'}} onClick={() => handleIndicateProof(searchResultsProof[index].secondPaperPosition.paperId, proof, searchResultsProof[index].secondPaperPosition.position.pageIndex)}>
                                             <img src={searchBlack} alt="search" />
-                                            <Typography sx={{fontSize: '15px', color: '#222'}}>
+                                            <Typography sx={{fontSize: '15px', color: '#333'}}>
                                                 base {idx}
                                             </Typography>
                                         </Box>

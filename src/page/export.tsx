@@ -1,5 +1,5 @@
 import { Box, Button, FormControl, FormControlLabel, FormLabel, InputLabel, MenuItem, Modal, Radio, RadioGroup, Select, SelectChangeEvent, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { CounterState, SET_SUMMARY_ANSWER } from '../reducer'
 import { postApi, refreshApi } from '../utils/apiUtils'
@@ -10,6 +10,10 @@ import exportChat from '../asset/exportIcon.png'
 import { color } from '../layout/color'
 import scrollStyle from "../layout/scroll.module.css"
 import chat from "../asset/chatProfile.png"
+import Mermaid from '../component/mermaid'
+import downloadjs from "downloadjs"
+import { toPng } from "html-to-image"
+import DownloadButton from '../component/downloadButton'
 
 const Export = () => {
     const [colorSum, setColorSum] = useState<string>('All')
@@ -26,6 +30,8 @@ const Export = () => {
     const notify = useNotify()
     const navigate = useNavigate()
     const dispatch = useDispatch()
+
+    const ref = useRef<HTMLDivElement>(null)
 
     const handleColorChange = (event: SelectChangeEvent) => {
         setColorSum(event.target.value);
@@ -60,7 +66,10 @@ const Export = () => {
                 return response.json().then(data => {
                   dispatch({
                     type: SET_SUMMARY_ANSWER,
-                    data: data.exportResult
+                    data: {
+                        mermaid: data.mermaid,
+                        answer: data.exportResult,
+                    }
                   })
                 })
               } else if (response.status === 401) {
@@ -90,18 +99,38 @@ const Export = () => {
             </Box>
         )
     }
+
+    const handleDownloadImg = useCallback(async() => {
+        if (ref.current) {
+            downloadjs(await toPng(ref.current), "test.png")
+        }
+    }, [])
+
   return (
     <Box sx={{display: 'flex', flexDirection: 'column', mt: 4}}>
         {open?
         <Box sx={{px: 4, pt: 1, pb: 4}}>
-            <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
-                <CopyClick contents={summaryAnswer} />
-            </Box>
-            <Box sx={{overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
-                <Typography sx={{fontSize: '16px', color: '#666'}}>
-                    {summaryAnswer}
-                </Typography>
-            </Box>
+            {summaryAnswer.mermaid ? (
+                <Box>
+                    <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
+                        <DownloadButton clickEvent={handleDownloadImg} />
+                    </Box>
+                    <Box ref={ref} sx={{bgcolor: color.white, display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                        <Mermaid chart={summaryAnswer.answer} />
+                    </Box>
+                </Box>
+            ) : (
+                <Box>
+                    <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
+                        <CopyClick contents={summaryAnswer.answer} />
+                    </Box>
+                    <Box sx={{overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
+                        <Typography sx={{fontSize: '16px', color: '#666'}}>
+                            {summaryAnswer.answer}
+                        </Typography>
+                    </Box>
+                </Box>
+            )}
         </Box>
         :<>
         <Box sx={{px: 4, overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
