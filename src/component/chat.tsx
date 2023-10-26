@@ -327,6 +327,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
           position: 'absolute', // 부모(상위) 요소에 대한 상대 위치로 설정
           left: chatPosition.x,
           top: chatPosition.y,
+          zIndex:5,
           transform: 'translate(-50%, -50%)', // 동그라미의 중심을 중앙으로 이동
           cursor: isDragging ? 'grabbing' : 'grab',
           boxShadow: '0px 5px 5px rgba(0, 0, 0, 0.1), 0px -5px 5px rgba(0, 0, 0, 0.1)',
@@ -349,6 +350,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
           position: 'absolute', // 부모(상위) 요소에 대한 상대 위치로 설정
           left: chatPosition.x,
           top: chatPosition.y,
+          zIndex: 10,
           transform: 'translate(0, -95%)', // 상단 중앙으로 이동
           
         }}

@@ -13,7 +13,7 @@ import { color } from '../layout/color';
 import scrollStyle from "../layout/scroll.module.css"
 import Export from './export';
 import deleteIcon from '../asset/deleteIcon.svg'
-import fs from 'fs';
+import spinner from '../asset/spinner.gif'
 // import pdfWorker from '../../pdf-worker/src';
 // import { createRequire } from "module";
 // const require = createRequire(import.meta.url);
@@ -69,7 +69,7 @@ const Reader = () => {
   const [isMultiplePaper, setIsMultiplePaper] = useState<boolean>(false)
   const [openedPaperNumber, setOpenedPaperNumber] = useState<string>(paperId)
   const [paperInfo, setPaperInfo] = useState<any>()
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+  // const [isLoading, setIsLoading] = useState<boolean>(true)
   const [data, setData] = useState()
   const [curPageIndex, setCurPageIndex] = useState<number>(0)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -84,6 +84,9 @@ const Reader = () => {
   const [curTab, setCurTab] = useState<number>(1)
 
   const [isOpenExport, setIsOpenExport] = useState<boolean>(false)
+
+  const [isFirstPageLoading, setIsFirstPageLoading] = useState<boolean>(true)
+  const [isSecondPageLoading, setIsSecondPageLoading] = useState<boolean>(false)
 
   const handleClose = () => {
     setIsOpenExport(false)
@@ -211,7 +214,7 @@ const Reader = () => {
               }
             throw new Error("논문 정보를 가져오는데 실패하였습니다")
         })
-      setIsLoading(false)
+      // setIsLoading(false)
       getApi(api, `/api/container?workspaceId=${workspaceId}`)
       .then(response => 
         {
@@ -226,7 +229,9 @@ const Reader = () => {
             refreshApi(api, notify, navigate)
           }
         })
-      
+      .finally(()=> {
+        setIsFirstPageLoading(false)
+      })
       .catch(error => {
         console.error('관심 논문 정보를 불러오는데 실패하였습니다: ', error)
         Sentry.captureException(error)
@@ -278,6 +283,9 @@ const Reader = () => {
                 }
               throw new Error("논문 정보를 가져오는데 실패하였습니다")
           })
+          .finally(() => {
+            setIsSecondPageLoading(false)
+          })
         if (secondPayload) {
           const secondPayloadParse = JSON.parse(secondPayload)
           
@@ -294,9 +302,11 @@ const Reader = () => {
             }
           }
           else {
+            setIsSecondPageLoading(true)
             storeSecondPaper()
           }
         } else {
+          setIsSecondPageLoading(true)
           storeSecondPaper()
         }
       }
@@ -333,48 +343,18 @@ const Reader = () => {
         isDownloadPdfClicked: true
       }, '*');
     }
-    //const fs = require('fs');
-    // const pdfWorker = require('../../../pdf-worker/src');
-    // // let reader = new FileReader();
-    // // let buf = reader.readAsText(`https://browse.arxiv.org/pdf/${paperId}.pdf`)
-
-    // fetch(`https://browse.arxiv.org/pdf/${paperId}.pdf`)
-    // .then((response) => response.arrayBuffer())
-    // .then((arrayBuffer) => {
-    //   const reader = new FileReader();
-    //   reader.onload = function() {
-    //     // 읽어온 파일 내용은 reader.result에 있습니다.
-    //     const fileContent = reader.result;
-    //     console.log(fileContent);
-    //   };
-    //   //let buf = reader.readAsText(blob);
-    //   console.log(arrayBuffer)
-    //   const uint8ArrayBuffer = new Uint8Array(arrayBuffer);
-    //   let buf = pdfWorker.writeAnnotations(arrayBuffer, []);
-    //   console.log(buf)
-    //   //var buffer = Buffer.from(buf)
-
-    //   const uint8Array = new Uint8Array(arrayBuffer)
-    //   const blob = new Blob([uint8Array], {type: 'application/pdf'})
-    //   const blobUrl = URL.createObjectURL(blob)
-
-    //   const a = document.createElement('a')
-    //   a.href = blobUrl
-    //   a.download = 'download.pdf'
-    //   a.style.display = 'none'
-
-    //   document.body.appendChild(a)
-    //   a.click()
-
-    //   document.body.removeChild(a);
-    //   URL.revokeObjectURL(blobUrl);
-
-    // })
-    // .catch((error) => {
-    //   console.error('파일을 가져오는 중 오류가 발생했습니다.', error);
-    // });
-    //let buf = fs.readFileSync(`https://browse.arxiv.org/pdf/${paperId}.pdf`);
   }
+
+  const loadingBox = (text: string) => (
+    <Box sx={{position: 'absolute', width: '100%', top: '85vh', display: 'flex',
+      justifyContent: 'center', alignItems: 'center'}}>
+        <Box sx={{height: '7vh', bgcolor: '#505053', width: '500px', borderRadius: '100px',
+      boxShadow: 10, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+          <img src={spinner} alt="로딩" width="8%"/>
+          <Typography sx={{fontSize: '15px', fontWeight: 500, color: '#eee'}}> {text} </Typography>
+        </Box>
+      </Box>
+  )
 
 
   const tabHeight = 5
@@ -448,7 +428,7 @@ const Reader = () => {
           </Popper>
         </Box>
         <Box>
-          {!isLoading && (<Chat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} 
+          {(!isFirstPageLoading) && (<Chat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} 
                               data={data} paperId={paperId}
                               iframeRef={iframeRef} iframeRef2={iframeRef2} openedPaperNumber={openedPaperNumber}
                               curPageIndex={curPageIndex} setOpenedPaperNumber={setOpenedPaperNumber}
@@ -458,7 +438,9 @@ const Reader = () => {
                               paperInfo={paperInfo} setCurTab={setCurTab}
                               />)}
         </Box>
-        <Box sx={{height: `calc(100vh - 45px)`}}> 
+        <Box sx={{height: `calc(100vh - 45px)`}}>
+          {isFirstPageLoading && loadingBox('Paper Information Loading...')}
+          {isSecondPageLoading && loadingBox('Reference Paper Information Loading...')}
           {openedPaperNumber === paperId
           ?<iframe src={readerUrl} width="100%" height="100%" ref={iframeRef}></iframe>
           :<iframe src={readerUrl} width="100%" height="100%" ref={iframeRef2}></iframe>}

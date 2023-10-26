@@ -19,7 +19,7 @@ import { getCookie, setCookie } from "../cookie";
 import { useSelector } from "react-redux";
 import { CounterState } from "../reducer";
 import { useMutation, useQuery } from "react-query";
-import { paperType } from "./home";
+import { paperType, tag } from "./home";
 import { useNavigate } from "react-router-dom";
 import PageLayout from "../layout/pageLayout";
 import { getApi, postApi, refreshApi } from "../utils/apiUtils";
@@ -119,6 +119,16 @@ export const PaperStorage = () => {
                     <Typography sx={{color: '#333', fontSize: '18px', fontWeight: 600}}>
                         {paper.title}
                     </Typography>
+                    {paper.subject && <Box sx={{width: '23vw', display: 'flex', flexWrap:'', mt: 1, mb: 0.5, overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none',
+                        '&::-webkit-scrollbar': {
+                          display: 'none', /* Chrome 브라우저의 스크롤바 숨김 */
+                        }}}>
+                          {paper.subject.map((sub: string, idx: number) => (
+                            <Box key={idx} sx={{whiteSpace: 'nowrap'}}>
+                              {tag(sub)}
+                            </Box>
+                          ))}
+                    </Box>}
                     <Box sx={{display: 'flex', gap: 2}}>
                         <Typography sx={{color: '#111', fontSize: '15px', fontWeight: 500}}>
                             {(paper.authors.length > 3 

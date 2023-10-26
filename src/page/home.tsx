@@ -45,8 +45,15 @@ export type paperType = {
   url: string;
   workspaceId: number;
   workspaceTitle: string;
+  subject?: string[];
 }
 
+export const tag = (tag: string) => (
+  <Box sx={{padding: '2px 10px', borderRadius: '5px', border: '1px solid #ddd', fontSize: '14px',
+  display: 'inline-block', mr: 0.6}}>
+    #{tag}
+  </Box>
+)
 
 export const Home = () => {
     // 유효성 검사
@@ -280,13 +287,6 @@ export const Home = () => {
 
   const subTitle = (title: string) => (
     <Typography sx={{fontSize: '18px', fontWeight: '600', mb: 2}}>{title}</Typography>
-  )
-
-  const tag = (tag: string) => (
-    <Box sx={{padding: '2px 10px', borderRadius: '5px', border: '1px solid #ddd', fontSize: '14px',
-    display: 'inline-block', mr: 0.6}}>
-      #{tag}
-    </Box>
   )
 
   const trend = (title: string, date: string, url: string) => (
