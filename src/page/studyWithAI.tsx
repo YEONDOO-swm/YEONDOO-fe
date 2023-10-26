@@ -20,7 +20,7 @@ const PaperBox = ({handleClickPaper, paper}: {handleClickPaper: any, paper: any}
         <Box onClick={() => handleClickPaper(paper.paperId, paper.userPdf)} 
         onMouseEnter={()=>{setIsHovered(true)}}
         onMouseLeave={()=>{setIsHovered(false)}}
-        sx={{py: 1, borderBottom: '1px solid #eee', cursor: 'pointer', bgcolor: isHovered?"#f5f5f5":color.white}}>
+        sx={{py: 1, px: 1, borderBottom: '1px solid #eee', cursor: 'pointer', bgcolor: isHovered?"#f5f5f5":color.white}}>
             <Typography sx={{color: isHovered?color.mainGreen:'#666', fontSize: '18px', fontWeight: '400',
                             }}>
                 {paper.title}
@@ -71,7 +71,7 @@ const StudyWithAI = () => {
                     </Box>
                     <Box sx={{width: '35vw', height: '2px', bgcolor: color.secondaryGreen, mt: 3}}></Box>
                 </Box>
-                <Box sx={{height: '84%', ml: 2, overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
+                <Box sx={{height: '84%', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
                     {!isLoading && papersInStorage.map((paper: any) => (
                         <PaperBox paper={paper} handleClickPaper={handleClickPaper} />
                     ))}

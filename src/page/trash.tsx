@@ -20,7 +20,9 @@ import { useMutation, useQuery } from "react-query";
 import PageLayout from "../layout/pageLayout";
 import { getApi, postApi, refreshApi } from "../utils/apiUtils";
 import restore from "../asset/restore.svg"
+import restoreGrey from "../asset/restoreGrey.svg"
 import works from "../asset/works.svg"
+import worksGrey from "../asset/worksGrey.svg"
 import { styled } from '@mui/material/styles';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
@@ -28,6 +30,47 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 type papersInTrashType = {
     paperId: string;
     title: string;
+}
+
+const restoreButton = (props:any) => {
+    const [isHovered, setIsHovered] = useState<boolean>(false)
+    return (
+        <Box sx={{display: 'inline-flex', px: '20px', justifyContent: 'center', alignItems: 'center', gap: '10px',
+        borderRadius: '8px', height: '35px', border: '2px solid #777',
+        '&:hover': {
+            bgcolor: '#777',
+            cursor: 'pointer'
+        }}}
+        onMouseEnter={()=>{setIsHovered(true)}}
+        onMouseLeave={()=>{setIsHovered(false)}}
+        onClick={props.handleSubmit}>
+            {isHovered?<img src={restore}/>:<img src={restoreGrey}/>}
+            <Typography sx={{color: isHovered?color.white :'#777', fontSize: '15px', fontWeight: '700'}}>
+                Restore
+            </Typography>
+        </Box>
+    )
+}
+
+const backToMyWorksButton = () => {
+    const [isHovered, setIsHovered] = useState<boolean>(false)
+    const navigate = useNavigate()
+    return (
+        <Box sx={{display: 'inline-flex', px: '20px', justifyContent: 'center', alignItems: 'center', gap: '10px',
+        borderRadius: '8px', border: `2px solid ${color.hoverGreen}`, height: '35px',
+        '&:hover': {
+            bgcolor: color.hoverGreen,
+            cursor: 'pointer'
+        }}}
+        onMouseEnter={()=>{setIsHovered(true)}}
+        onMouseLeave={()=>{setIsHovered(false)}}
+        onClick={()=>{navigate('/paperstorage')}}>
+            {isHovered?<img src={works} width="22px"/>:<img src={worksGrey} width="22px"/>}
+            <Typography sx={{color: isHovered?color.white:color.hoverGreen, fontSize: '15px', fontWeight: '700'}}>
+                Back to My Works
+            </Typography>
+        </Box>
+    )
 }
 
 export const Trash = () => {
@@ -131,39 +174,7 @@ export const Trash = () => {
         }
     }
 
-    const restoreButton = () => {
-        return (
-            <Box sx={{display: 'inline-flex', px: '20px', justifyContent: 'center', alignItems: 'center', gap: '10px',
-            borderRadius: '8px', bgcolor: '#777', height: '35px',
-            '&:hover': {
-                bgcolor: '#555',
-                cursor: 'pointer'
-            }}}
-            onClick={handleSubmit}>
-                <img src={restore}/>
-                <Typography sx={{color: color.white, fontSize: '15px', fontWeight: '700'}}>
-                    Restore
-                </Typography>
-            </Box>
-        )
-    }
-
-    const backToMyWorksButton = () => {
-        return (
-            <Box sx={{display: 'inline-flex', px: '20px', justifyContent: 'center', alignItems: 'center', gap: '10px',
-            borderRadius: '8px', bgcolor: color.hoverGreen, height: '35px',
-            '&:hover': {
-                bgcolor: color.appbarGreen,
-                cursor: 'pointer'
-            }}}
-            onClick={()=>{navigate('/paperstorage')}}>
-                <img src={works}/>
-                <Typography sx={{color: color.white, fontSize: '15px', fontWeight: '700'}}>
-                    Back to My Works
-                </Typography>
-            </Box>
-        )
-    }
+    
     const BpIcon = styled('span')(({ theme }) => ({
         borderRadius: 3,
         width: '20px',
@@ -218,7 +229,7 @@ export const Trash = () => {
                     Trash
                 </Typography>
                 <Box sx={{display: 'flex', gap: 1}}>
-                    {restoreButton()}
+                    {restoreButton({handleSubmit})}
                     {backToMyWorksButton()}
                 </Box>
             </Box>
