@@ -25,6 +25,7 @@ type paperHistory = {
   content: string;
   title: string;
   url: string;
+  userPdf: boolean;
 }
 
 type paperHistoryPair = {
@@ -33,6 +34,7 @@ type paperHistoryPair = {
   title: string;
   who: boolean;
   paperId: string;
+  userPdf: boolean;
 }
 
 export const HistoryPaper = () => {
@@ -99,14 +101,16 @@ export const HistoryPaper = () => {
                                 content: item.content,
                                 title: item.title,
                                 who: item.who,
-                                paperId: item.paperId
+                                paperId: item.paperId,
+                                userPdf: item.userPdf,
                               },
                               {
                                 id: index + 1,
                                 content: nextItem.content,
                                 title: nextItem.title,
                                 who: nextItem.who,
-                                paperId: nextItem.paperId
+                                paperId: nextItem.paperId,
+                                userPdf: nextItem.userPdf,
                               },
                             ]);
                           } else {
@@ -116,7 +120,8 @@ export const HistoryPaper = () => {
                                 content: item.content,
                                 title: item.title,
                                 who: item.who,
-                                paperId: item.paperId
+                                paperId: item.paperId,
+                                userPdf: item.userPdf,
                               },
                             ]);
                           }
@@ -130,7 +135,7 @@ export const HistoryPaper = () => {
                                   <Typography sx={{ color: '#333', fontSize: '18px', marginBottom: 1.5, fontWeight: 600, display: 'inline-block' }}>          
                                       {mergedItems[0].title}
                                   </Typography>
-                                  <Box sx={{display: 'flex', transform: 'translateY(-8px)'}} onClick={()=>{navigate(`/paper?workspaceId=${workspaceId}&paperid=${mergedItems[0].paperId}`)}}>
+                                  <Box sx={{display: 'flex', transform: 'translateY(-8px)'}} onClick={()=>{navigate(`/paper?workspaceId=${workspaceId}&paperid=${mergedItems[0].paperId}&userPdf=${mergedItems[0].userPdf}`)}}>
                                     <Typography sx={{fontWeight: 500, color: color.mainGreen, cursor: 'pointer', '&:hover':{
                                       color: '#445142'
                                     }}}>More</Typography>

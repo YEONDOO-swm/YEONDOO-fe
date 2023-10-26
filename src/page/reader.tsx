@@ -195,7 +195,8 @@ const Reader = () => {
                   const firstPayload = {
                     paperId: paperId,
                     paperTitle: data.paperInfo.title,
-                    paperItems: data.paperInfo.paperItems
+                    paperItems: data.paperInfo.paperItems,
+                    userPdf: data.paperInfo.userPdf,
                   }
                   sessionStorage.setItem("firstPaper", JSON.stringify(firstPayload))
                   if (iframeRef && iframeRef.current && iframeRef.current.contentWindow) {
@@ -205,6 +206,7 @@ const Reader = () => {
                       refresh: getCookie('refresh'),
                       paperId: paperId,
                       paperItems: data.paperInfo.paperItems,
+                      userPdf: data.paperInfo.userPdf,
                     }, '*');
                     setPaperInfo(data.paperInfo)
                   }
@@ -261,7 +263,8 @@ const Reader = () => {
                     const secondPayload = {
                       paperId: openedPaperNumber,
                       paperTitle: data.paperInfo.title,
-                      paperItems: data.paperInfo.paperItems
+                      paperItems: data.paperInfo.paperItems,
+                      userPdf: data.paperInfo.userPdf,
                     }
                     sessionStorage.setItem("secondPaper", JSON.stringify(secondPayload))
                     dispatch({
@@ -275,6 +278,7 @@ const Reader = () => {
                         iframeRef2.current.contentWindow.postMessage({
                           paperId: openedPaperNumber,
                           paperItems: data.paperInfo.paperItems,
+                          userPdf: data.paperInfo.userPdf,
                         }, '*');
                     }
                   })

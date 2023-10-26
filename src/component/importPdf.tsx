@@ -3,13 +3,13 @@ import React, { useRef, useState } from 'react';
 import CustomButton from './customButton';
 import { color } from '../layout/color';
 import { postApi, refreshApi } from '../utils/apiUtils';
-import { useSelector } from 'react-redux';
-import { CounterState } from '../reducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { CounterState, SET_USER_PDF_LIST } from '../reducer';
 import { getCookie } from '../cookie';
 import { useNotify } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
 
-const ImportPdf = () => {
+const ImportPdf = ({setIsOpenImportPdf}:{setIsOpenImportPdf: any}) => {
     //화면에 출력되는 파일
     const [selectedImages, setSelectedImages] = useState([]);
     //서버에 보내지는 파일
@@ -22,6 +22,7 @@ const ImportPdf = () => {
 
     const notify = useNotify()
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const onSelectFile = (e: any) => {
         e.preventDefault();
@@ -85,10 +86,19 @@ const ImportPdf = () => {
             else {
                 response.json()
                 .then(data => {
-                    
+                    dispatch({
+                        type: SET_USER_PDF_LIST,
+                        data: {
+                            title: selectedFiles.name.slice(0, -4),
+                            paperId: data.paperId,
+                            url: data.url,
+                        }
+                    })
                 })
 
             }
+        }).finally(() => {
+            setIsOpenImportPdf(false)
         })
     }
 
@@ -114,9 +124,9 @@ const ImportPdf = () => {
                     color: '#999',
                     alignItems: 'center',
                 }}>
-                    <Typography>
-                        {selectedImages.length === 1 && attachFile}
-                    </Typography>
+                    
+                    {selectedImages.length === 1 && attachFile}
+                    
                 </Box>
                 <Box onClick={(e)=>{inputRef.current && inputRef.current.click()}}
                     sx={{

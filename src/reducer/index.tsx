@@ -33,6 +33,11 @@ export type CounterState = {
         answer: string;
     };
     isUpdatedDone: boolean;
+    userPdfList: {
+        paperId: string;
+        title: string;
+        url: string;
+    }[]
 };
 
 export const SET_API = "SET_API"
@@ -44,6 +49,7 @@ export const SET_CHAT_SELECTED = "SET_CHAT_SELECTED"
 export const SET_ANNOTATIONS = "SET_ANNOTATIONS"
 export const SET_SUMMARY_ANSWER = "SET_SUMMARY_ANSWER"
 export const SET_IS_UPDATED_DONE = "SET_IS_UPDATED_DONE"
+export const SET_USER_PDF_LIST = "SET_USER_PDF_LIST"
 
 const initState = {
     api: '',
@@ -70,6 +76,7 @@ const initState = {
         paperTitle: "",
     },
     isUpdatedDone: false,
+    userPdfList: [],
 }
 
 export const reducer = (state:CounterState = initState, action:any) => {
@@ -118,6 +125,11 @@ export const reducer = (state:CounterState = initState, action:any) => {
             return {
                 ...state,
                 isUpdatedDone: action.data
+            }
+        case SET_USER_PDF_LIST:
+            return {
+                ...state,
+                userPdfList: [...state.userPdfList, action.data]
             }
         default:
             return state;

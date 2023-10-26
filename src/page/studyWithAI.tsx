@@ -14,10 +14,10 @@ import { paperType } from './home'
 import study from '../asset/studyGreen.svg'
 // var Mermaid = require('react-mermaid');
 
-const PaperBox = ({handleClickPaper, paper}: {handleClickPaper: any, paper: paperType}) => {
+const PaperBox = ({handleClickPaper, paper}: {handleClickPaper: any, paper: any}) => {
     const [isHovered, setIsHovered] = useState<boolean>(false)
     return (
-        <Box onClick={() => handleClickPaper(paper.paperId)} 
+        <Box onClick={() => handleClickPaper(paper.paperId, paper.userPdf)} 
         onMouseEnter={()=>{setIsHovered(true)}}
         onMouseLeave={()=>{setIsHovered(false)}}
         sx={{py: 1, borderBottom: '1px solid #eee', cursor: 'pointer', bgcolor: isHovered?"#f5f5f5":color.white}}>
@@ -54,8 +54,8 @@ const StudyWithAI = () => {
           }
     })
 
-    const handleClickPaper = (paperId: string) => {
-        window.open(`/paper?workspaceId=${workspaceId}&paperid=${paperId}`)
+    const handleClickPaper = (paperId: string, userPdf: boolean) => {
+        window.open(`/paper?workspaceId=${workspaceId}&paperid=${paperId}&userPdf=${userPdf}`)
     }
   return (
     <PageLayout workspace={true} number={2}>
