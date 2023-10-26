@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Card, CardContent, Box, Typography, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
+import { Card, CardContent, Box, Typography, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Modal } from '@mui/material';
 import { Title, useAuthenticated, useNotify } from 'react-admin';
 import * as amplitude from '@amplitude/analytics-browser';
 import { useEffect, useState } from "react";
@@ -25,6 +25,8 @@ import PageLayout from "../layout/pageLayout";
 import { getApi, postApi, refreshApi } from "../utils/apiUtils";
 import trash from "../asset/trash.svg"
 import PostAddIcon from '@mui/icons-material/PostAdd';
+import deleteIcon from "../asset/deleteIcon.svg"
+import ImportPdf from "../component/importPdf";
 
 export type paperLikePayload = {
     workspaceId: number | null;
@@ -32,6 +34,18 @@ export type paperLikePayload = {
     on: boolean;
 }
 
+const style = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 600,
+    bgcolor: 'background.paper',
+    border: '2px solid #eee',
+    borderRadius: '50px 0px 0px 0px',
+    boxShadow: 24,
+    p: 4,
+  };
 
 export const PaperStorage = () => {
     useAuthenticated();
@@ -48,6 +62,8 @@ export const PaperStorage = () => {
 
     const [curPaperId, setCurPaperId] = useState<string | null>(null)
     const [curPaperTitle, setCurPaperTitle] = useState<string>('')
+
+    const [isOpenImportPdf, setIsOpenImportPdf] = useState<boolean>(false)
 
     const navigate = useNavigate()
     const notify = useNotify()
@@ -185,13 +201,17 @@ export const PaperStorage = () => {
                 bgcolor: color.appbarGreen,
                 cursor: 'pointer'
             }}}
-            onClick={()=>{}}>
+            onClick={()=>{setIsOpenImportPdf(true)}}>
                 <img src={trash}/>
                 <Typography sx={{color: color.white, fontSize: '15px', fontWeight: '700'}}>
                     Add My PDF
                 </Typography>
             </Box>
         )
+      }
+
+      const handleClose = () => {
+        setIsOpenImportPdf(false)
       }
     
     return (
@@ -252,6 +272,25 @@ export const PaperStorage = () => {
                 </Box>
             )}
         </Box>
-
+        <Modal
+            open={isOpenImportPdf}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
+            <Box sx={style}>
+                <Box sx={{height: '200px'}}>
+                <img src={deleteIcon} style={{width: '20px', position: 'absolute', left: '90%',
+                                                transform: 'translate(150%, -80%)', cursor: 'pointer'}}
+                            onClick={handleClose}/>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Upload pdf file
+                    </Typography>
+                    <Box sx={{py: 3}}>
+                        <ImportPdf />
+                    </Box>
+                </Box>
+            </Box>
+        </Modal>
     </PageLayout>
 )};
