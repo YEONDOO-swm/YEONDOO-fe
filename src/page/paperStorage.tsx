@@ -24,9 +24,12 @@ import { useNavigate } from "react-router-dom";
 import PageLayout from "../layout/pageLayout";
 import { getApi, postApi, refreshApi } from "../utils/apiUtils";
 import trash from "../asset/trash.svg"
+import trashGrey from "../asset/trashGrey.svg"
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import deleteIcon from "../asset/deleteIcon.svg"
 import ImportPdf from "../component/importPdf";
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export type paperLikePayload = {
     workspaceId: number | null;
@@ -52,6 +55,48 @@ const style = {
     boxShadow: 24,
     p: 4,
   };
+
+const trashButton = () => {
+    const [isHovered, setIsHovered] = useState<boolean>(false)
+    const navigate = useNavigate()
+    return (
+        <Box sx={{display: 'inline-flex', px: '20px', justifyContent: 'center', alignItems: 'center', gap: '10px',
+        borderRadius: '8px', height: '35px', border: '2px solid #777',
+        '&:hover': {
+            bgcolor: '#777',
+            cursor: 'pointer'
+        }}}
+        onMouseEnter={()=>{setIsHovered(true)}}
+        onMouseLeave={()=>{setIsHovered(false)}}
+        onClick={()=>{navigate('/trash')}}>
+            {/* <img src={trashGrey}/> */}
+            <DeleteIcon sx={{color: isHovered?color.white :'#777'}}/>
+            <Typography sx={{color: isHovered?color.white :'#777', fontSize: '15px', fontWeight: '700'}}>
+                Trash
+            </Typography>
+        </Box>
+    )
+}
+
+const addMyPdfButton = (props:any) => {
+    const [isHovered, setIsHovered] = useState<boolean>(false)
+    return (
+        <Box sx={{display: 'inline-flex', px: '20px', justifyContent: 'center', alignItems: 'center', gap: '10px',
+        borderRadius: '8px', border: `2px solid ${color.hoverGreen}`, height: '35px',
+        '&:hover': {
+            bgcolor: color.hoverGreen,
+            cursor: 'pointer'
+        }}}
+        onMouseEnter={()=>{setIsHovered(true)}}
+        onMouseLeave={()=>{setIsHovered(false)}}
+        onClick={()=>{props.setIsOpenImportPdf(true)}}>
+            <PictureAsPdfIcon sx={{color: isHovered?color.white:color.hoverGreen}}/>
+            <Typography sx={{color: isHovered?color.white:color.hoverGreen, fontSize: '15px', fontWeight: '700'}}>
+                Add My PDF
+            </Typography>
+        </Box>
+    )
+  }
 
 export const PaperStorage = () => {
     useAuthenticated();
@@ -214,40 +259,6 @@ export const PaperStorage = () => {
         </Box>
         )
       }
-      
-      const trashButton = () => {
-        return (
-            <Box sx={{display: 'inline-flex', px: '20px', justifyContent: 'center', alignItems: 'center', gap: '10px',
-            borderRadius: '8px', bgcolor: '#777', height: '35px',
-            '&:hover': {
-                bgcolor: '#555',
-                cursor: 'pointer'
-            }}}
-            onClick={()=>{navigate('/trash')}}>
-                <img src={trash}/>
-                <Typography sx={{color: color.white, fontSize: '15px', fontWeight: '700'}}>
-                    Trash
-                </Typography>
-            </Box>
-        )
-      }
-
-      const addMyPdfButton = () => {
-        return (
-            <Box sx={{display: 'inline-flex', px: '20px', justifyContent: 'center', alignItems: 'center', gap: '10px',
-            borderRadius: '8px', bgcolor: color.hoverGreen, height: '35px',
-            '&:hover': {
-                bgcolor: color.appbarGreen,
-                cursor: 'pointer'
-            }}}
-            onClick={()=>{setIsOpenImportPdf(true)}}>
-                <img src={trash}/>
-                <Typography sx={{color: color.white, fontSize: '15px', fontWeight: '700'}}>
-                    Add My PDF
-                </Typography>
-            </Box>
-        )
-      }
 
       const handleClose = () => {
         setIsOpenImportPdf(false)
@@ -265,7 +276,7 @@ export const PaperStorage = () => {
                 </Typography>
                 <Box sx={{display: 'flex', gap: 1}}>
                     {trashButton()}
-                    {addMyPdfButton()}
+                    {addMyPdfButton({setIsOpenImportPdf})}
                 </Box>
             </Box>
             <Box sx={{height: 40}}></Box>

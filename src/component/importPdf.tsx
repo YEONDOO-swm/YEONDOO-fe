@@ -18,7 +18,9 @@ const ImportPdf = ({setIsOpenImportPdf}:{setIsOpenImportPdf: any}) => {
     const api: string = useSelector((state: CounterState) => state.api)
     const workspaceId = Number(sessionStorage.getItem("workspaceId"));
 
-    const inputRef = useRef(null)
+    const inputRef = useRef<HTMLInputElement>(null)
+
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const notify = useNotify()
     const navigate = useNavigate()
@@ -69,7 +71,7 @@ const ImportPdf = ({setIsOpenImportPdf}:{setIsOpenImportPdf: any}) => {
         });
 
     const handleClickUpload = () => {
-
+        setIsLoading(true)
         const formData = new FormData();
         console.log(selectedFiles, selectedFiles.name)
         formData.append('file', selectedFiles)
@@ -99,6 +101,7 @@ const ImportPdf = ({setIsOpenImportPdf}:{setIsOpenImportPdf: any}) => {
             }
         }).finally(() => {
             setIsOpenImportPdf(false)
+            setIsLoading(false)
         })
     }
 
@@ -123,7 +126,9 @@ const ImportPdf = ({setIsOpenImportPdf}:{setIsOpenImportPdf: any}) => {
                     width: '78%',
                     color: '#999',
                     alignItems: 'center',
-                }}>
+                    cursor: 'pointer'
+                }}
+                onClick={(e)=>{inputRef.current && inputRef.current.click()}}>
                     
                     {selectedImages.length === 1 && attachFile}
                     
@@ -156,7 +161,7 @@ const ImportPdf = ({setIsOpenImportPdf}:{setIsOpenImportPdf: any}) => {
             {/* )} */}
         </Box>
         <Box sx={{display: 'flex', justifyContent: 'flex-end', mt: 10}}>
-            <CustomButton title="Upload" width="100px" click={handleClickUpload}/>
+            {isLoading? <CustomButton title="Upload" width="100px" click={handleClickUpload} disabled={true}/>:<CustomButton title="Upload" width="100px" click={handleClickUpload}/>}
         </Box> 
 
       </Box>
