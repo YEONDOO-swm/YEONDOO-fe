@@ -14,6 +14,7 @@ import scrollStyle from "../layout/scroll.module.css"
 import Export from './export';
 import deleteIcon from '../asset/deleteIcon.svg'
 import spinner from '../asset/spinner.gif'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 // import pdfWorker from '../../pdf-worker/src';
 // import { createRequire } from "module";
 // const require = createRequire(import.meta.url);
@@ -46,6 +47,37 @@ const style = {
   borderRadius: '50px 0px 0px 0px',
   boxShadow: 24,
   
+};
+
+const LoadingCompletedBox = ({text}: {text: string}) => {
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    // 1초 후에 로딩 박스를 숨깁니다.
+    const timeoutId = setTimeout(() => {
+      setVisible(false);
+    }, 1000);
+
+    return () => {
+      // 컴포넌트가 언마운트되면 타이머를 클리어합니다.
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
+  if (!visible) {
+    return null; // 로딩 박스가 숨겨진 경우 null을 반환하여 렌더링하지 않습니다.
+  }
+
+  return (
+    <Box sx={{position: 'absolute', width: '100%', top: '85vh', display: 'flex',
+      justifyContent: 'center', alignItems: 'center'}}>
+      <Box sx={{height: '7vh', bgcolor: '#505053', width: '500px', borderRadius: '100px',
+        boxShadow: 10, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+        <CheckCircleIcon sx={{color: color.white, mr: 1}}/>
+        <Typography sx={{fontSize: '15px', fontWeight: 500, color: '#eee'}}> {text} </Typography>
+      </Box>
+    </Box>
+  );
 };
 
 const Reader = () => {
@@ -360,6 +392,20 @@ const Reader = () => {
       </Box>
   )
 
+  // const loadingCompletedBox = (text: string) => (
+  //   <Box sx={{position: 'absolute', width: '100%', top: '85vh', display: 'flex',
+  //     justifyContent: 'center', alignItems: 'center',
+  //     opacity: 1, // 초기 투명도를 설정
+  //     transition: 'opacity 1s', // 투명도에 1초 트랜지션 적용
+  //   }}>
+  //       <Box sx={{height: '7vh', bgcolor: '#505053', width: '500px', borderRadius: '100px',
+  //     boxShadow: 10, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+  //         <img src={spinner} alt="로딩" width="8%"/>
+  //         <Typography sx={{fontSize: '15px', fontWeight: 500, color: '#eee'}}> {text} </Typography>
+  //       </Box>
+  //     </Box>
+  // )
+
 
   const tabHeight = 5
   const exportOpen = Boolean(anchorEl)
@@ -443,8 +489,8 @@ const Reader = () => {
                               />)}
         </Box>
         <Box sx={{height: `calc(100vh - 45px)`}}>
-          {isFirstPageLoading && loadingBox('Paper Information Loading...')}
-          {isSecondPageLoading && loadingBox('Reference Paper Information Loading...')}
+          {isFirstPageLoading ? loadingBox('Paper Information Loading...') : <LoadingCompletedBox text='Loading Completed'/>}
+          {(!isSecondPageLoading && isPdfCompleted) ? <LoadingCompletedBox text='Loading Completed'/> : loadingBox('Reference Paper Information Loading...')}
           {openedPaperNumber === paperId
           ?<iframe src={readerUrl} width="100%" height="100%" ref={iframeRef}></iframe>
           :<iframe src={readerUrl} width="100%" height="100%" ref={iframeRef2}></iframe>}
