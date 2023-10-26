@@ -5,7 +5,7 @@ import { Title, useNotify } from 'react-admin'
 import { Box, Typography } from '@mui/material'
 import { GoToArxiv } from '../component/goToArxiv'
 import { GoToViewMore } from '../component/goToViewMore'
-import { paperType } from './home'
+import { paperType, tag } from './home'
 import { useSelector } from 'react-redux'
 import { CounterState } from '../reducer'
 import { useNavigate } from 'react-router-dom'
@@ -46,12 +46,12 @@ const Library = () => {
         <Box key={paper.paperId} sx={{ mb: '15px', pb: '30px',
         borderRadius: '20px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)'}}>
             <Box sx={{display: 'flex', justifyContent:'space-between', padding: '0px 10px 0px 40px'}}>
-                <Box sx={{pt: '30px', width: '100%'}}>
+                <Box sx={{pt: '30px', width: '100%', pr: '20px'}}>
                     <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
                         <Typography sx={{color: '#333', fontSize: '18px', fontWeight: 600}}>
                             {paper.title}
                         </Typography>
-                        <Box sx={{display: 'flex', alignItems: 'center', transform: 'translateY(-2vh)'}}>
+                        <Box sx={{display: 'flex', alignItems: 'center', transform: 'translate(2vh, -2vh)'}}>
                             <Typography sx={{fontWeight: 500, color: color.mainGreen,'&:hover':{
                                 color: '#445142',
                                 cursor: 'pointer',
@@ -62,6 +62,16 @@ const Library = () => {
                             <img src={arrow}/>
                         </Box>
                     </Box>
+                    {paper.subject && <Box sx={{width: '100%', display: 'flex', flexWrap:'', mt: 1, mb: 0.5, overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none',
+                    '&::-webkit-scrollbar': {
+                        display: 'none', /* Chrome 브라우저의 스크롤바 숨김 */
+                    }}}>
+                        {paper.subject.map((sub: string, idx: number) => (
+                        <Box key={idx} sx={{whiteSpace: 'nowrap'}}>
+                            {tag(sub)}
+                        </Box>
+                        ))}
+                    </Box>}
                     <Box sx={{display: 'flex', gap: 2}}>
                         <Typography sx={{color: '#111', fontSize: '15px', fontWeight: 500}}>
                             {(paper.authors.length > 3 
