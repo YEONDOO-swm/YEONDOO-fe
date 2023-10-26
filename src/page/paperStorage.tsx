@@ -34,6 +34,12 @@ export type paperLikePayload = {
     on: boolean;
 }
 
+export type userPdfPaper = {
+    title: string;
+    paperId: string;
+    url: string;
+}
+
 const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -64,6 +70,8 @@ export const PaperStorage = () => {
     const [curPaperTitle, setCurPaperTitle] = useState<string>('')
 
     const [isOpenImportPdf, setIsOpenImportPdf] = useState<boolean>(false)
+
+    const userPdfList = useSelector((state: CounterState) => state.userPdfList)
 
     const navigate = useNavigate()
     const notify = useNotify()
@@ -170,7 +178,38 @@ export const PaperStorage = () => {
             <Box sx={{display: 'flex', mt: '15px', padding: '0px 40px'}}>
                 <GoToArxiv url={paper.url} paperId={paper.paperId}/>
                     <Box sx={{width:'15px'}}></Box>
-                <GoToViewMore paperid={paper.paperId} workspaceId={workspaceId}/>
+                <GoToViewMore paperid={paper.paperId} workspaceId={workspaceId} userPdf={paper.userPdf}/>
+            </Box>
+        </Box>
+        )
+      }
+
+      const makeUserPapersCard = (paper: userPdfPaper) => {
+        return (
+        <Box key={paper.paperId} sx={{ mb: '15px', pb: '30px', bgcolor: '#F1F8F0',
+        borderRadius: '20px', border: `1px solid ${color.mainGreen}`, boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)'}}>
+            <Box sx={{display: 'flex', justifyContent:'space-between', padding: '0px 10px 0px 40px'}}>
+                <Box sx={{pt: '30px'}}>
+                    <Typography sx={{color: '#333', fontSize: '18px', fontWeight: 600}}>
+                        {paper.title}
+                    </Typography>
+                    
+                    {/* <Typography variant="body1">
+                        cites: {paper.cites}
+                    </Typography> */}
+                </Box>
+                <Box sx={{pt: '5px', display: 'flex', flexDirection:'column', justifyContent: 'space-between', alignItems: 'flex-end'}}> 
+                    {/* <HeartClick currentItem={paper} home={false} callGetApi={callGetApi}/> */}
+                    <IconButton onClick={()=> handleCancelClick(paper.paperId, paper.title)} >
+                        <ClearIcon />
+                    </IconButton>
+                </Box> 
+                
+            </Box>
+            <Box sx={{display: 'flex', mt: '15px', padding: '0px 40px'}}>
+                {/* <GoToArxiv url={paper.url} paperId={paper.paperId}/>
+                    <Box sx={{width:'15px'}}></Box> */}
+                <GoToViewMore paperid={paper.paperId} workspaceId={workspaceId} userPdf={true}/>
             </Box>
         </Box>
         )
@@ -260,6 +299,11 @@ export const PaperStorage = () => {
                                 </Button>
                             </DialogActions>
                         </Dialog> 
+                    {(userPdfList && userPdfList.length>0) && userPdfList.map((paper:userPdfPaper) => (
+                        !paperIdArray.includes(paper.paperId) && (
+                            makeUserPapersCard(paper)   
+                    )
+                    ))}
                     {(papersInStorage && papersInStorage.length>0) ? papersInStorage.map((paper: paperType) => (
                         !paperIdArray.includes(paper.paperId) && (
                                 makePapersCard(paper)
@@ -287,7 +331,7 @@ export const PaperStorage = () => {
                         Upload pdf file
                     </Typography>
                     <Box sx={{py: 3}}>
-                        <ImportPdf />
+                        <ImportPdf setIsOpenImportPdf={setIsOpenImportPdf}/>
                     </Box>
                 </Box>
             </Box>

@@ -9,7 +9,7 @@ import { useState } from "react";
 
 
 
-export const GoToViewMore = ({paperid, workspaceId}: {paperid:string, workspaceId: number}) => {
+export const GoToViewMore = ({paperid, workspaceId, userPdf}: {paperid:string, workspaceId: number, userPdf?:boolean}) => {
     const [isHovered, setIsHovered] = useState(false);
 
     const handleMouseEnter = () => {
@@ -21,7 +21,7 @@ export const GoToViewMore = ({paperid, workspaceId}: {paperid:string, workspaceI
     };
 
     const handleViewMore = (paperId: string) => {
-        window.open(`/paper?workspaceId=${workspaceId}&paperid=${paperId}`)
+        window.open(`/paper?workspaceId=${workspaceId}&userPdf=${userPdf}&paperid=${paperId}`)
       }
 
     return (

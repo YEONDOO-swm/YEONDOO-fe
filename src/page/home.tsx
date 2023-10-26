@@ -46,6 +46,7 @@ export type paperType = {
   workspaceId: number;
   workspaceTitle: string;
   subject?: string[];
+  userPdf?: boolean;
 }
 
 export const tag = (tag: string) => (
@@ -257,7 +258,7 @@ export const Home = () => {
             <GoToArxiv url={paper.url} paperId={paper.paperId}/>
 
             <Box sx={{width: '15px'}}></Box>
-            <GoToViewMore paperid={paper.paperId} workspaceId={workspaceId}/>
+            <GoToViewMore paperid={paper.paperId} workspaceId={workspaceId} userPdf={paper.userPdf}/>
           </Box>
                 {/* Add other details for the paper */}
               
@@ -271,7 +272,7 @@ export const Home = () => {
           <Typography sx={{fontWeight: 500}}>
             {recentlyPapers.title}
           </Typography>
-          <Box sx={{display: 'flex'}} onClick={()=>{window.open(`/paper?workspaceId=${workspaceId}&aperid=${recentlyPapers.paperId}`)}}>
+          <Box sx={{display: 'flex'}} onClick={()=>{window.open(`/paper?workspaceId=${workspaceId}&aperid=${recentlyPapers.paperId}&userPdf=false`)}}>
             <Typography sx={{fontWeight: 500, color: color.mainGreen, cursor: 'pointer', '&:hover':{
               color: '#445142'
             }}}>More</Typography>
@@ -459,7 +460,7 @@ export const Home = () => {
                           {paper.summary}
                         </Box>
                     </Box>
-                    <GoToViewMore paperid={paper.paperId} workspaceId={workspaceId}/>
+                    <GoToViewMore paperid={paper.paperId} workspaceId={workspaceId} userPdf={false}/>
                     {/* <CustomButton title="Study with AI" width="100%" click={()=>window.open(`/paper?paperid=${paper.paperId}`)}/> */}
                   </Box>
                 ))}
