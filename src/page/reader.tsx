@@ -132,7 +132,7 @@ const Reader = () => {
 
         const a = document.createElement('a')
         a.href = blobUrl
-        a.download = 'download.pdf'
+        a.download = `${paperId}.pdf`
         a.style.display = 'none'
 
         document.body.appendChild(a)

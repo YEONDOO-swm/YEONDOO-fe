@@ -28,7 +28,10 @@ export type CounterState = {
         }
     };
     annotations: any;
-    summaryAnswer: string;
+    summaryAnswer: {
+        mermaid: boolean;
+        answer: string;
+    };
     isUpdatedDone: boolean;
 };
 
@@ -58,7 +61,10 @@ const initState = {
         }
     },
     annotations: null,
-    summaryAnswer: "",
+    summaryAnswer: {
+        mermaid: false,
+        answer: "",
+    },
     secondPaper: {
         paperId: "",
         paperTitle: "",

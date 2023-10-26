@@ -14,4 +14,7 @@ export default defineConfig({
         host: true,
     },
     base: './',
+    optimizeDeps: {
+        include: ['mermaid']
+      }
 });
