@@ -306,6 +306,11 @@ const Reader = () => {
                         paperTitle: data.paperInfo.title,
                       }
                     })
+                    if (data.userPdf) {
+                      fetch(`https://yeondoo-upload-pdf.s3.ap-northeast-2.amazonaws.com/${openedPaperNumber}.pdf`);
+                    } else {
+                      fetch(`https://browse.arxiv.org/pdf/${openedPaperNumber}.pdf`);
+                    }
                     if (iframeRef2 && iframeRef2.current && iframeRef2.current.contentWindow) {
                         iframeRef2.current.contentWindow.postMessage({
                           paperId: openedPaperNumber,

@@ -119,7 +119,9 @@ const Workspaces = () => {
             throw new Error("워크스페이스를 생성하는 데 실패하였습니다")
         })
         .then(data => {
-            setWorkspace({...workspace, workspaceId: data.workspaceId, editDate: data.editDate})  
+            if (data.workspaceId && data.editDate) {
+                setWorkspace({...workspace, workspaceId: data.workspaceId, editDate: data.editDate})  
+            }
         }).catch(error => {
             notify('Failed to create a workspace', {type: 'error'})
         })
@@ -269,8 +271,8 @@ const Workspaces = () => {
         </Box>
     )
 
-    const loadingCard = () => (
-        <Box sx={{width: '320px', height: '210px', bgcolor: '#f9f9f9', borderRadius: '20px'
+    const loadingCard = (index: number) => (
+        <Box key={index} sx={{width: '320px', height: '210px', bgcolor: '#f9f9f9', borderRadius: '20px'
             ,p: 3, mr: 3, mb: 3}} className={styles.loading}>
 
         </Box>
@@ -347,7 +349,7 @@ const Workspaces = () => {
                 {!isLoading && (workspacesArr) && workspacesArr.map((workspace, idx)=>(
                     card(workspace.title!, workspace.description!, workspace.editDate!, workspace.workspaceId!, idx)
                 ))}
-                {isLoading && Array.from({ length: 5 }).map((_, index) => loadingCard())}
+                {isLoading && Array.from({ length: 5 }).map((_, index) => loadingCard(index))}
             </Box>
         </Box>
         <Modal open={open} onClose={handleClose}>

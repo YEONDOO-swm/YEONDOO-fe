@@ -135,9 +135,14 @@ export const Trash = () => {
             notify("Please select the paper you want to restore", {type: 'error'})
         }
         else {
-            mutate(checkedItems)
-            setSubmittedItems((prevSubmittedItems: string[]) => [...prevSubmittedItems, ...checkedItems])
-            setCheckedItems([])
+            try {
+                mutate(checkedItems)
+            } catch (error) {
+                console.log(error)
+            } finally {
+                setSubmittedItems((prevSubmittedItems: string[]) => [...prevSubmittedItems, ...checkedItems])
+                setCheckedItems([])
+            }
             //setIsSubmitted(!isSubmitted)
 
             if (process.env.NODE_ENV === 'production') {

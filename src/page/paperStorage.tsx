@@ -133,6 +133,10 @@ export const PaperStorage = () => {
             if (response.status === 401) {
                 refreshApi(api, notify, navigate)
               }
+        })
+        .finally(()=>{
+            setOpen(false)
+            setPaperIdArray(prevArray => [...prevArray, value.paperId])
         }), {
             onError: (error) => {
                 console.log("관심 논문 삭제에 실패하였습니다", error)
@@ -145,15 +149,13 @@ export const PaperStorage = () => {
             
             amplitude.track("관심 논문 페이지에서 삭제",{paperId: paperId})
         }
-        setPaperIdArray(prevArray => [...prevArray, paperId])
 
         var payload = {
             workspaceId: Number(sessionStorage.getItem('workspaceId')),
             paperId: paperId,
-            on: false
+            on: false,
         }
         mutate(payload)
-        setOpen(false)
     }
 
     const {data: papersInStorage, isLoading} = useQuery(['homesearch', api, workspaceId],()=> 
