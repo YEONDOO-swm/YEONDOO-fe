@@ -490,7 +490,7 @@ const Reader = () => {
         </Box>
         <Box sx={{height: `calc(100vh - 45px)`}}>
           {isFirstPageLoading ? loadingBox('Paper Information Loading...') : <LoadingCompletedBox text='Loading Completed'/>}
-          {(!isSecondPageLoading && isPdfCompleted) ? <LoadingCompletedBox text='Loading Completed'/> : loadingBox('Reference Paper Information Loading...')}
+          {isPdfCompleted && (!isSecondPageLoading ? <LoadingCompletedBox text='Loading Completed'/> : loadingBox('Reference Paper Information Loading...')) }
           {openedPaperNumber === paperId
           ?<iframe src={readerUrl} width="100%" height="100%" ref={iframeRef}></iframe>
           :<iframe src={readerUrl} width="100%" height="100%" ref={iframeRef2}></iframe>}

@@ -102,7 +102,7 @@ const ImportPdf = ({setIsOpenImportPdf}:{setIsOpenImportPdf: any}) => {
         }).finally(() => {
             setIsOpenImportPdf(false)
             setIsLoading(false)
-        })
+        }).catch(error => console.log(error))
     }
 
  
