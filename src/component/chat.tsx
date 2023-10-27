@@ -179,13 +179,16 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                 console.log(decodedChunk)
                 //done: False -> done: True 여도 console.log('done')이 먼저 출력
                 if (done) {
+                    console.log('done!!')
                     break
                 } else {
                     setSearchResultsInPaper((prevSearchResults: string[]) => {
                         const curlenOfSearchResults = searchResultsInPaper.length
                         if (lenOfSearchResults === curlenOfSearchResults) {
+                            console.log('firstAnswerDecode', decodedChunk)
                             return [...prevSearchResults, decodedChunk]
                         } else {
+                            console.log('seoncdAnswerDecodeCheck', decodedChunk)
                             const lastItem = prevSearchResults[prevSearchResults.length -1]
                             const updatedResults = prevSearchResults.slice(0, -1)
                             return [...updatedResults, lastItem + decodedChunk]
