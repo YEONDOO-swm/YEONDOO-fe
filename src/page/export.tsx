@@ -14,12 +14,14 @@ import Mermaid from '../component/mermaid'
 import downloadjs from "downloadjs"
 import { toPng } from "html-to-image"
 import DownloadButton from '../component/downloadButton'
+import spinner from '../asset/spinner.gif'
 
 const Export = () => {
     const [colorSum, setColorSum] = useState<string>('All')
     const [fileFormat, setFileFormat] = useState<string>('Markdown')
     const [purpose, setPurpose] = useState<string>('Not selected')
     const [open, setOpen] = React.useState(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const handleClose = () => setOpen(false);
 
     const api: string = useSelector((state: CounterState) => state.api)
@@ -44,6 +46,7 @@ const Export = () => {
     }
 
     const handleGenerate = () => {
+        setIsLoading(true)
         const updatedAnnotations = annotations.map((annotation:any) => {
             const changeItem = {
                 ...annotation,
@@ -76,7 +79,10 @@ const Export = () => {
                 refreshApi(api, notify, navigate)
               }
             })
-        .finally(() => setOpen(true))
+        .finally(() => {
+            setIsLoading(false)
+            setOpen(true)
+        })
         .catch(error => console.log(error))
     }
     const style = {
@@ -108,7 +114,14 @@ const Export = () => {
 
   return (
     <Box sx={{display: 'flex', flexDirection: 'column', mt: 4}}>
-        {open?
+        {isLoading ?
+        <Box sx={{width: '100%', height: '50vh', display: 'flex', flexDirection: 'column',
+        justifyContent: 'center', alignItems: 'center'}}>
+            <img src={spinner} width="20%"/>
+            <Typography sx={{fontSize: '15px', fontWeight: 500}}>
+                Generate...
+            </Typography>
+        </Box>: (open?
         <Box sx={{px: 4, pt: 1, pb: 4}}>
             {summaryAnswer.mermaid ? (
                 <Box>
@@ -208,7 +221,7 @@ const Export = () => {
                 Generate
             </Typography>
         </Box>
-        </>}
+        </>)}
         {/* <Modal
             open={open}
             onClose={handleClose}
