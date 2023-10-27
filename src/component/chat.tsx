@@ -140,6 +140,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
         try {
             setKey(keyNumber)
             const response = await postApi(api, `/api/paper/${paperId}?workspaceId=${workspaceId}`, payload)
+            console.log('reponse 값', response)
 
             if (response.status === 401) {
                 refreshApi(api, notify, navigate)
@@ -173,8 +174,9 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
 
             while (true) {
                 const { value, done } = await reader.read()
+                
                 const decodedChunk = decoder.decode(value, { stream: true });
-
+                console.log(decodedChunk)
                 //done: False -> done: True 여도 console.log('done')이 먼저 출력
                 if (done) {
                     break
@@ -649,7 +651,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                                 <ExitToAppIcon/>
                                             </IconButton> */}
                                             <Box sx={{width: '30px', height: '30px', borderRadius: '100%', border: '1px solid #ddd',
-                                                    display: 'flex', justifyContent: 'center', alignItems: 'center', ml: 1, cursor: 'pointer'}} onClick={() => handleExportAnswer(term, searchResultsInPaper[index])}>
+                                                    display: 'flex', justifyContent: 'center', alignItems: 'center', ml: 1, cursor: 'pointer'}} onClick={() => handleExportAnswer(term.searchTerm, searchResultsInPaper[index])}>
                                                 <ExitToAppIcon sx={{color: '#333', fontSize: '19px'}}/>
                                             </Box>
                                             

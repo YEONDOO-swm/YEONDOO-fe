@@ -156,7 +156,24 @@ const Reader = () => {
         }
         return changeItem
       })
-      fetch(`https://browse.arxiv.org/pdf/${paperId}.pdf`)
+      // firstPaper인지 secondPaper인지 확인 후 SessionStorage에서 userPdf 확인
+      let userPdfCheck;
+      console.log(paperId, openedPaperNumber, curTab)
+      if (paperId === openedPaperNumber) {
+        const firstPayload = sessionStorage.getItem("firstPaper")
+        if (firstPayload) {
+          const firstPayloadParse = JSON.parse(firstPayload)
+          userPdfCheck = firstPayloadParse.userPdf
+        }
+      } else {
+        const secondPayload = sessionStorage.getItem("secondPaper")
+        if (secondPayload) {
+          const secondPayloadParse = JSON.parse(secondPayload)
+          userPdfCheck = secondPayloadParse.userPdf
+        }
+      }
+
+      fetch(userPdfCheck ?`https://yeondoo-upload-pdf.s3.ap-northeast-2.amazonaws.com/${openedPaperNumber}.pdf` : `https://browse.arxiv.org/pdf/${openedPaperNumber}.pdf`)
       .then((response) => response.arrayBuffer())
       .then(async(arrayBuffer) => {
         let buf = await pdfWorker.writeAnnotations(arrayBuffer, annotationsWithAuthor);
@@ -167,7 +184,7 @@ const Reader = () => {
 
         const a = document.createElement('a')
         a.href = blobUrl
-        a.download = `${paperId}.pdf`
+        a.download = `${openedPaperNumber}.pdf`
         a.style.display = 'none'
 
         document.body.appendChild(a)
@@ -274,6 +291,7 @@ const Reader = () => {
   }, [isPdfCompleted])
 
   useEffect(()=>{
+      console.log('check',openedPaperNumber)
       if (openedPaperNumber === paperId) {
         setCurTab(1)
         const firstPayload = sessionStorage.getItem("firstPaper")
@@ -285,6 +303,7 @@ const Reader = () => {
         }
       } else {
         setCurTab(2)
+        console.log(openedPaperNumber)
         const secondPayload = sessionStorage.getItem("secondPaper")
         const storeSecondPaper = () => getApi(api, `/api/paper/${openedPaperNumber}?workspaceId=${workspaceId}`) 
           .then(response => {
