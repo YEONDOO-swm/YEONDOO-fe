@@ -169,7 +169,9 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
             {refPaper.paperId
             ?<Box sx={{display: 'inline-flex', alignItems: 'center', gap: 1, pl: 2, pr: 1, py: 0.4, mb: 1,
             borderRadius: '100px', border: `1px solid ${color.mainGreen}`, cursor: 'pointer'}}>
-              <Typography sx={{fontSize: '13px', color: color.mainGreen, fontWeight: 500}} onClick={handleOpenSelectModal}>{refPaper.paperTitle}</Typography>
+              <Typography sx={{fontSize: '13px', color: color.mainGreen, fontWeight: 500}} onClick={handleOpenSelectModal}>
+                {refPaper.paperTitle.length>30?refPaper.paperTitle.slice(0,30)+"...":refPaper.paperTitle}
+              </Typography>
               <ClearIcon onClick={handleDeleteRef} sx={{cursor: 'pointer', color: color.mainGreen, fontSize: '15px', ml: 0.7,}}/>
             </Box>
             :<Box onClick={handleOpenSelectModal} sx={{display: 'inline-flex', alignItems: 'center', gap: 1, pl: 1, pr: 2, py: 0.4, mb: 1,
