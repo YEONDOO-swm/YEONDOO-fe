@@ -173,6 +173,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
             const lenOfSearchResults = searchResultsInPaper ? searchResultsInPaper.length : 0
 
             while (true) {
+                await new Promise(() => setTimeout(()=>{}, 1000));
                 const { value, done } = await reader.read()
                 
                 const decodedChunk = decoder.decode(value, { stream: true });
