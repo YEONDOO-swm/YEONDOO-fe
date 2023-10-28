@@ -258,9 +258,6 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
     const handleIndicateProof = (chatPaperId: string, rect: number[], pageIndex: number) => {
         // 히스토리일 경우에는 paperId 없음
         
-        // delete position.id
-        // delete position.type
-        // delete position.paperId
         const proofId = generateObjectKey()
         const payload = {
             type: 'highlight',
@@ -455,7 +452,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                             </Box>
                         </Box>
                         {!history.who && <Box sx={{display: 'inline-block', mt: 1}}>
-                                    {!history.positions?null:
+                                    {/* {!history.positions?null:
                                     <>
                                         <Box sx={{display: 'inline-block'}}>
                                             {history.positions && history.positions.length > 0&& history.positions[0].rects.map((proof: any, idx: number) => (
@@ -478,7 +475,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                             ))}
                                     </Box>
                                     </>
-                                    }
+                                    } */}
                                     {history.who? null:
                                     <Box>
                                         <Box sx={{display: 'flex'}}>
@@ -635,7 +632,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                 </Box>
                             </Box>
                             <Box sx={{display: 'inline-block'}}>
-                                {index>= searchResultsProof.length?null:
+                                {/* {index>= searchResultsProof.length?null:
                                 <Box sx={{display: 'inline-block'}}>
                                     {searchResultsProof[index].firstPaperPosition && searchResultsProof[index].firstPaperPosition.position.rects.map((proof: any, idx: number) => (
                                         // <Box sx={{bgcolor: color.secondaryGreen}} onClick={() => handleIndicateProof(searchResultsProof[index].firstPaperPosition.paperId, proof, searchResultsProof[index].firstPaperPosition.position.pageIndex)}>
@@ -662,7 +659,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                             </Typography>
                                         </Box>
                                     ))}
-                                </Box>}
+                                </Box>} */}
                                 {index>= searchResultsInPaper.length?null:
                                     <Box sx={{}}>
                                         <Box sx={{display: 'flex', flexDirection: 'row'}}>
