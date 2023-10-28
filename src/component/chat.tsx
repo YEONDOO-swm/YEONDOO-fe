@@ -311,11 +311,28 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
         };
     }, [isDragging])
 
+    const debounceFunction = (callback: any, delay: any) => {
+        let timer: string | number | NodeJS.Timeout | undefined;
+        return (...args: any) => {
+          // 실행한 함수(setTimeout())를 취소
+          clearTimeout(timer);
+          // delay가 지나면 callback 함수를 실행
+          timer = setTimeout(() => callback(...args), delay);
+        };
+      };
+
     const handleMouseMove = (e: any) => {
         if (!isDragging) return;
         setIsDragged(true)
-
+        // const debouncedSetChatPosition = debounceFunction((e: any) => {
+        //     setChatPosition({ x: e.clientX, y: e.clientY });
+        //   }, 50);
+          
+        //debouncedSetChatPosition(e);
+        // if (Math.abs(chatPosition.x-e.clientX)+Math.abs(chatPosition.y-e.clientY) > 70){
+        //     console.log(Math.abs(chatPosition.x-e.clientX)+Math.abs(chatPosition.y-e.clientY))
         setChatPosition({ x: e.clientX, y: e.clientY });
+        // }
     };
 
     const handleMouseUp = () => {
