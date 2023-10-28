@@ -169,32 +169,26 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
             // 스트리밍
             const reader = response.body!.getReader()
             const decoder = new TextDecoder()
-            const lenOfSearchResults = searchResultsInPaper ? searchResultsInPaper.length : 0
+
             let repeat = 0
 
             while (true) {
-                //await new Promise(() => setTimeout(()=>{}, 1000));
-                console.log("while 첫번째", repeat)
                 const { value, done } = await reader.read()
                 
                 const decodedChunk = decoder.decode(value, { stream: true });
                 const processedChunk = decodedChunk.replaceAll('data:', '')
-                const curlenOfSearchResults = searchResultsInPaper.length
+
                 console.log(processedChunk)
                 //done: False -> done: True 여도 console.log('done')이 먼저 출력
                 if (done) {
-                    console.log('done!!')
                     break
                 } else {
                     setSearchResultsInPaper((prevSearchResults: string[]) => {
-                        console.log(curlenOfSearchResults, lenOfSearchResults)
                         if (repeat === 0) {
                             repeat += 1   
-                            console.log('firstAnswerDecode', processedChunk)
                             return [...prevSearchResults, processedChunk]
                         } else {
                             repeat += 1
-                            console.log('seoncdAnswerDecodeCheck', processedChunk)
                             const lastItem = prevSearchResults[prevSearchResults.length -1]
                             const updatedResults = prevSearchResults.slice(0, -1)
                             return [...updatedResults, lastItem + processedChunk]
@@ -207,7 +201,6 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
             console.error("논문 내 질문 오류")
             Sentry.captureException(error)
         } finally {
-            console.log("fianlly", searchResultsInPaper)
             // const response = await getApi(api,`/api/paper/result/chat?key=${keyNumber}&workspaceId=${workspaceId}&paperId=${paperId}`)
             // const data = await response.json()
             // //setSearchResultsInPaper((prevResults: string[]) => [...prevResults, data.answer])
@@ -265,9 +258,6 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
     const handleIndicateProof = (chatPaperId: string, rect: number[], pageIndex: number) => {
         // 히스토리일 경우에는 paperId 없음
         
-        // delete position.id
-        // delete position.type
-        // delete position.paperId
         const proofId = generateObjectKey()
         const payload = {
             type: 'highlight',
@@ -318,11 +308,28 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
         };
     }, [isDragging])
 
+    const debounceFunction = (callback: any, delay: any) => {
+        let timer: string | number | NodeJS.Timeout | undefined;
+        return (...args: any) => {
+          // 실행한 함수(setTimeout())를 취소
+          clearTimeout(timer);
+          // delay가 지나면 callback 함수를 실행
+          timer = setTimeout(() => callback(...args), delay);
+        };
+      };
+
     const handleMouseMove = (e: any) => {
         if (!isDragging) return;
         setIsDragged(true)
-
+        // const debouncedSetChatPosition = debounceFunction((e: any) => {
+        //     setChatPosition({ x: e.clientX, y: e.clientY });
+        //   }, 50);
+          
+        //debouncedSetChatPosition(e);
+        // if (Math.abs(chatPosition.x-e.clientX)+Math.abs(chatPosition.y-e.clientY) > 70){
+        //     console.log(Math.abs(chatPosition.x-e.clientX)+Math.abs(chatPosition.y-e.clientY))
         setChatPosition({ x: e.clientX, y: e.clientY });
+        // }
     };
 
     const handleMouseUp = () => {
@@ -445,7 +452,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                             </Box>
                         </Box>
                         {!history.who && <Box sx={{display: 'inline-block', mt: 1}}>
-                                    {!history.positions?null:
+                                    {/* {!history.positions?null:
                                     <>
                                         <Box sx={{display: 'inline-block'}}>
                                             {history.positions && history.positions.length > 0&& history.positions[0].rects.map((proof: any, idx: number) => (
@@ -468,7 +475,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                             ))}
                                     </Box>
                                     </>
-                                    }
+                                    } */}
                                     {history.who? null:
                                     <Box>
                                         <Box sx={{display: 'flex'}}>
@@ -625,7 +632,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                 </Box>
                             </Box>
                             <Box sx={{display: 'inline-block'}}>
-                                {index>= searchResultsProof.length?null:
+                                {/* {index>= searchResultsProof.length?null:
                                 <Box sx={{display: 'inline-block'}}>
                                     {searchResultsProof[index].firstPaperPosition && searchResultsProof[index].firstPaperPosition.position.rects.map((proof: any, idx: number) => (
                                         // <Box sx={{bgcolor: color.secondaryGreen}} onClick={() => handleIndicateProof(searchResultsProof[index].firstPaperPosition.paperId, proof, searchResultsProof[index].firstPaperPosition.position.pageIndex)}>
@@ -652,7 +659,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                             </Typography>
                                         </Box>
                                     ))}
-                                </Box>}
+                                </Box>} */}
                                 {index>= searchResultsInPaper.length?null:
                                     <Box sx={{}}>
                                         <Box sx={{display: 'flex', flexDirection: 'row'}}>

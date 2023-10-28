@@ -15,6 +15,7 @@ import Export from './export';
 import deleteIcon from '../asset/deleteIcon.svg'
 import spinner from '../asset/spinner.gif'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import download from 'downloadjs';
 // import pdfWorker from '../../pdf-worker/src';
 // import { createRequire } from "module";
 // const require = createRequire(import.meta.url);
@@ -120,6 +121,8 @@ const Reader = () => {
   const [isFirstPageLoading, setIsFirstPageLoading] = useState<boolean>(true)
   const [isSecondPageLoading, setIsSecondPageLoading] = useState<boolean>(false)
 
+  const [downloadPdfAnnotations, setDownloadPdfAnnotations] = useState<any>(undefined)
+
   const handleClose = () => {
     setIsOpenExport(false)
   }
@@ -148,7 +151,6 @@ const Reader = () => {
       setIsOpenExport(true)
     }
     else if (e.data.pdfAnnotations) {
-      const pdfWorker = require('../../pdf-worker/src');
       const annotationsWithAuthor = e.data.pdfAnnotations.map((anno: any) => {
         const changeItem = {
           ...anno,
@@ -156,9 +158,20 @@ const Reader = () => {
         }
         return changeItem
       })
-      // firstPaper인지 secondPaper인지 확인 후 SessionStorage에서 userPdf 확인
+      setDownloadPdfAnnotations(annotationsWithAuthor)
+    }
+    else if (e.data.isUpdatedDone) {
+      dispatch({
+        type: SET_IS_UPDATED_DONE,
+        data: true
+      })
+    }
+  }
+
+  useEffect(()=>{
+    if (downloadPdfAnnotations !== undefined) {
+      const pdfWorker = require('../../pdf-worker/src');
       let userPdfCheck;
-      console.log(paperId, openedPaperNumber, curTab)
       if (paperId === openedPaperNumber) {
         const firstPayload = sessionStorage.getItem("firstPaper")
         if (firstPayload) {
@@ -176,7 +189,7 @@ const Reader = () => {
       fetch(userPdfCheck ?`https://yeondoo-upload-pdf.s3.ap-northeast-2.amazonaws.com/${openedPaperNumber}.pdf` : `https://browse.arxiv.org/pdf/${openedPaperNumber}.pdf`)
       .then((response) => response.arrayBuffer())
       .then(async(arrayBuffer) => {
-        let buf = await pdfWorker.writeAnnotations(arrayBuffer, annotationsWithAuthor);
+        let buf = await pdfWorker.writeAnnotations(arrayBuffer, downloadPdfAnnotations);
 
         const uint8Array = new Uint8Array(buf)
         const blob = new Blob([uint8Array], {type: 'application/pdf'})
@@ -197,14 +210,9 @@ const Reader = () => {
       .catch((error) => {
         console.error('파일을 가져오는 중 오류가 발생했습니다.', error);
       });
+      setDownloadPdfAnnotations(undefined)
     }
-    else if (e.data.isUpdatedDone) {
-      dispatch({
-        type: SET_IS_UPDATED_DONE,
-        data: true
-      })
-    }
-  }
+  }, [downloadPdfAnnotations])
 
   useEffect(()=>{
     if (isUpdatedDone && proofPayload) {
@@ -303,7 +311,6 @@ const Reader = () => {
         }
       } else {
         setCurTab(2)
-        console.log(openedPaperNumber)
         const secondPayload = sessionStorage.getItem("secondPaper")
         const storeSecondPaper = () => getApi(api, `/api/paper/${openedPaperNumber}?workspaceId=${workspaceId}`) 
           .then(response => {
@@ -350,6 +357,7 @@ const Reader = () => {
           const secondPayloadParse = JSON.parse(secondPayload)
           
           if (secondPayloadParse.paperId === openedPaperNumber) {
+            console.log('yes', openedPaperNumber)
             dispatch({
               type: SET_SECOND_PAPER,
               data: {

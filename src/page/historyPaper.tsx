@@ -144,7 +144,7 @@ export const HistoryPaper = () => {
                                 </Box>
                                 
                                 {mergedItems.map((item: paperHistoryPair) => (
-                                  <Box key={item.id} sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.7 }}>
+                                  <Box key={item.id} sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, mb: 0.7 }}>
                                     <Box>
                                         {item.who ? 
                                         <Box sx={{display: 'flex', p: '2px 6px', justifyContent: 'center', alignItems: 'center',
