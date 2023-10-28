@@ -178,6 +178,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                 
                 const decodedChunk = decoder.decode(value, { stream: true });
                 const processedChunk = decodedChunk.replaceAll('data:', '')
+                const curlenOfSearchResults = searchResultsInPaper.length
                 console.log(processedChunk)
                 //done: False -> done: True 여도 console.log('done')이 먼저 출력
                 if (done) {
@@ -185,7 +186,6 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                     break
                 } else {
                     setSearchResultsInPaper((prevSearchResults: string[]) => {
-                        const curlenOfSearchResults = searchResultsInPaper.length
                         console.log(curlenOfSearchResults, lenOfSearchResults)
                         if (lenOfSearchResults === curlenOfSearchResults) {
                             console.log('firstAnswerDecode', processedChunk)
