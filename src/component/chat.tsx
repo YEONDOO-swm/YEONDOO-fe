@@ -169,32 +169,26 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
             // 스트리밍
             const reader = response.body!.getReader()
             const decoder = new TextDecoder()
-            const lenOfSearchResults = searchResultsInPaper ? searchResultsInPaper.length : 0
+
             let repeat = 0
 
             while (true) {
-                //await new Promise(() => setTimeout(()=>{}, 1000));
-                console.log("while 첫번째", repeat)
                 const { value, done } = await reader.read()
                 
                 const decodedChunk = decoder.decode(value, { stream: true });
                 const processedChunk = decodedChunk.replaceAll('data:', '')
-                const curlenOfSearchResults = searchResultsInPaper.length
+
                 console.log(processedChunk)
                 //done: False -> done: True 여도 console.log('done')이 먼저 출력
                 if (done) {
-                    console.log('done!!')
                     break
                 } else {
                     setSearchResultsInPaper((prevSearchResults: string[]) => {
-                        console.log(curlenOfSearchResults, lenOfSearchResults)
                         if (repeat === 0) {
                             repeat += 1   
-                            console.log('firstAnswerDecode', processedChunk)
                             return [...prevSearchResults, processedChunk]
                         } else {
                             repeat += 1
-                            console.log('seoncdAnswerDecodeCheck', processedChunk)
                             const lastItem = prevSearchResults[prevSearchResults.length -1]
                             const updatedResults = prevSearchResults.slice(0, -1)
                             return [...updatedResults, lastItem + processedChunk]
@@ -207,7 +201,6 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
             console.error("논문 내 질문 오류")
             Sentry.captureException(error)
         } finally {
-            console.log("fianlly", searchResultsInPaper)
             // const response = await getApi(api,`/api/paper/result/chat?key=${keyNumber}&workspaceId=${workspaceId}&paperId=${paperId}`)
             // const data = await response.json()
             // //setSearchResultsInPaper((prevResults: string[]) => [...prevResults, data.answer])
