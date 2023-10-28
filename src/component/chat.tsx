@@ -177,7 +177,8 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                 const { value, done } = await reader.read()
                 
                 const decodedChunk = decoder.decode(value, { stream: true });
-                console.log(decodedChunk)
+                const processedChunk = decodedChunk.replaceAll('data:', '')
+                console.log(processedChunk)
                 //done: False -> done: True 여도 console.log('done')이 먼저 출력
                 if (done) {
                     console.log('done!!')
@@ -185,14 +186,15 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                 } else {
                     setSearchResultsInPaper((prevSearchResults: string[]) => {
                         const curlenOfSearchResults = searchResultsInPaper.length
+                        console.log(curlenOfSearchResults, lenOfSearchResults)
                         if (lenOfSearchResults === curlenOfSearchResults) {
-                            console.log('firstAnswerDecode', decodedChunk)
-                            return [...prevSearchResults, decodedChunk]
+                            console.log('firstAnswerDecode', processedChunk)
+                            return [...prevSearchResults, processedChunk]
                         } else {
-                            console.log('seoncdAnswerDecodeCheck', decodedChunk)
+                            console.log('seoncdAnswerDecodeCheck', processedChunk)
                             const lastItem = prevSearchResults[prevSearchResults.length -1]
                             const updatedResults = prevSearchResults.slice(0, -1)
-                            return [...updatedResults, lastItem + decodedChunk]
+                            return [...updatedResults, lastItem + processedChunk]
                         }
                     })
                 }   
