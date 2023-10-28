@@ -129,16 +129,15 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
         setSearchTermInPaper("")
         const query = new URLSearchParams(window.location.search);
         const paperId: string = query.get('paperid') || '';
-        const keyNumber = Math.floor(Math.random()*1000000000)
+        //const keyNumber = Math.floor(Math.random()*1000000000)
         const payload = {
             paperIds: refPaper.paperId?[paperId, refPaper.paperId]:[paperId],
             question: question? question : searchTermInPaper,
             context: draggeddText ? draggeddText : null,
             position: draggeddText ? position : null,
-            key: keyNumber,
         }
         try {
-            setKey(keyNumber)
+            //setKey(keyNumber)
             const response = await postApi(api, `/api/paper/${paperId}?workspaceId=${workspaceId}`, payload)
             console.log('reponse 값', response)
 
@@ -171,9 +170,11 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
             const reader = response.body!.getReader()
             const decoder = new TextDecoder()
             const lenOfSearchResults = searchResultsInPaper ? searchResultsInPaper.length : 0
+            let repeat = 0
 
             while (true) {
                 //await new Promise(() => setTimeout(()=>{}, 1000));
+                console.log("while 첫번째", repeat)
                 const { value, done } = await reader.read()
                 
                 const decodedChunk = decoder.decode(value, { stream: true });
@@ -187,44 +188,47 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                 } else {
                     setSearchResultsInPaper((prevSearchResults: string[]) => {
                         console.log(curlenOfSearchResults, lenOfSearchResults)
-                        if (lenOfSearchResults === curlenOfSearchResults) {
+                        if (repeat === 0) {
+                            repeat += 1   
                             console.log('firstAnswerDecode', processedChunk)
                             return [...prevSearchResults, processedChunk]
                         } else {
+                            repeat += 1
                             console.log('seoncdAnswerDecodeCheck', processedChunk)
                             const lastItem = prevSearchResults[prevSearchResults.length -1]
                             const updatedResults = prevSearchResults.slice(0, -1)
                             return [...updatedResults, lastItem + processedChunk]
                         }
                     })
-                }   
+                }
             }
         } 
         catch(error) {
             console.error("논문 내 질문 오류")
             Sentry.captureException(error)
         } finally {
-            const response = await getApi(api,`/api/paper/result/chat?key=${keyNumber}&workspaceId=${workspaceId}&paperId=${paperId}`)
-            const data = await response.json()
-            //setSearchResultsInPaper((prevResults: string[]) => [...prevResults, data.answer])
-            setSearchResultsProof((prevProof: any[]) => [...prevProof, {
-                firstPaperPosition: (data.positions && data.positions.length > 0) && 
-                {
-                    paperId: data.positions[0].paperId,
-                    position: {
-                        pageIndex: data.positions[0].pageIndex,
-                        rects: data.positions[0].rects,
-                    }
-                },
-                secondPaperPosition: (data.positions && data.positions.length > 1) && 
-                {
-                    paperId: data.positions[1].paperId,
-                    position: {
-                        pageIndex: data.positions[1].pageIndex,
-                        rects: data.positions[1].rects,
-                    }
-                },
-            }])
+            console.log("fianlly", searchResultsInPaper)
+            // const response = await getApi(api,`/api/paper/result/chat?key=${keyNumber}&workspaceId=${workspaceId}&paperId=${paperId}`)
+            // const data = await response.json()
+            // //setSearchResultsInPaper((prevResults: string[]) => [...prevResults, data.answer])
+            // setSearchResultsProof((prevProof: any[]) => [...prevProof, {
+            //     firstPaperPosition: (data.positions && data.positions.length > 0) && 
+            //     {
+            //         paperId: data.positions[0].paperId,
+            //         position: {
+            //             pageIndex: data.positions[0].pageIndex,
+            //             rects: data.positions[0].rects,
+            //         }
+            //     },
+            //     secondPaperPosition: (data.positions && data.positions.length > 1) && 
+            //     {
+            //         paperId: data.positions[1].paperId,
+            //         position: {
+            //             pageIndex: data.positions[1].pageIndex,
+            //             rects: data.positions[1].rects,
+            //         }
+            //     },
+            // }])
         }
     }
 
