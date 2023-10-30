@@ -273,6 +273,9 @@ const Reader = () => {
               throw new Error("논문 정보를 가져오는데 실패하였습니다")
             }
         })
+        .finally(()=> {
+          setIsFirstPageLoading(false)
+        })
       // setIsLoading(false)
       getApi(api, `/api/container?workspaceId=${workspaceId}`)
       .then(async response => 
@@ -288,9 +291,6 @@ const Reader = () => {
             await refreshApi(api, notify, navigate)
           }
         })
-      .finally(()=> {
-        setIsFirstPageLoading(false)
-      })
       .catch(error => {
         console.error('관심 논문 정보를 불러오는데 실패하였습니다: ', error)
         Sentry.captureException(error)
