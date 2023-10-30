@@ -129,7 +129,7 @@ const Reader = () => {
 
   const receiveIsPdfRender = (e: MessageEvent) => {
     if (e.data.isPdfRender) {
-      setIsPdfCompleted(e.data.isPdfRender)
+      setIsPdfCompleted(true)
     }
     else if (e.data.selectedText && e.data.position) {
       setIsChatOpen(true)
@@ -293,6 +293,7 @@ const Reader = () => {
             }
         })
         .finally(()=> {
+          console.log('????')
           setIsFirstPageLoading(false)
         })
     }
@@ -445,6 +446,7 @@ const Reader = () => {
 
   const [isHoveredOne, setIsHoveredOne] = useState<boolean>(false)
   const [isHoveredTwo, setIsHoveredTwo] = useState<boolean>(false)
+  console.log(isFirstPageLoading)
 
   return (
     <div>
@@ -521,7 +523,7 @@ const Reader = () => {
                               />)}
         </Box>
         <Box sx={{height: `calc(100vh - 45px)`}}>
-          {isPdfCompleted && (isFirstPageLoading ? loadingBox('Paper Information Loading...') : <LoadingCompletedBox text='Loading Completed'/>)}
+          {(isFirstPageLoading ? loadingBox('Paper Information Loading...') : <LoadingCompletedBox text='Loading Completed'/>)}
           {isPdfCompleted && (!isSecondPageLoading ? <LoadingCompletedBox text='Loading Completed'/> : loadingBox('Reference Paper Information Loading...')) }
           {openedPaperNumber === paperId
           ?<iframe src={readerUrl} width="100%" height="100%" ref={iframeRef}></iframe>
