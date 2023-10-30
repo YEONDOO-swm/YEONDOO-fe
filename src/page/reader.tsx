@@ -50,13 +50,14 @@ const style = {
   
 };
 
-const LoadingCompletedBox = ({text}: {text: string}) => {
+const LoadingCompletedBox = ({text, setIsSecondPageLoading}: {text: string, setIsSecondPageLoading: any}) => {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
     // 1초 후에 로딩 박스를 숨깁니다.
     const timeoutId = setTimeout(() => {
       setVisible(false);
+      setIsSecondPageLoading(1)
     }, 1000);
 
     return () => {
@@ -119,7 +120,7 @@ const Reader = () => {
   const [isOpenExport, setIsOpenExport] = useState<boolean>(false)
 
   const [isFirstPageLoading, setIsFirstPageLoading] = useState<boolean>(true)
-  const [isSecondPageLoading, setIsSecondPageLoading] = useState<boolean>(false)
+  const [isSecondPageLoading, setIsSecondPageLoading] = useState<number>(1)
 
   const [downloadPdfAnnotations, setDownloadPdfAnnotations] = useState<any>(undefined)
 
@@ -244,7 +245,7 @@ const Reader = () => {
 
   useEffect(()=>{
     if (isPdfCompleted) {
-      //setIsFirstPageLoading(true)
+      
       getApi(api, `/api/container?workspaceId=${workspaceId}`)
       .then(async response => 
         {
@@ -352,7 +353,7 @@ const Reader = () => {
               }
           })
           .finally(() => {
-            setIsSecondPageLoading(false)
+            setIsSecondPageLoading(3)
           })
         if (secondPayload) {
           const secondPayloadParse = JSON.parse(secondPayload)
@@ -371,11 +372,11 @@ const Reader = () => {
             }
           }
           else {
-            setIsSecondPageLoading(true)
+            setIsSecondPageLoading(2)
             storeSecondPaper()
           }
         } else {
-          setIsSecondPageLoading(true)
+          setIsSecondPageLoading(2)
           storeSecondPaper()
         }
       }
@@ -523,8 +524,9 @@ const Reader = () => {
                               />)}
         </Box>
         <Box sx={{height: `calc(100vh - 45px)`}}>
-          {isPdfCompleted && (isFirstPageLoading ? loadingBox('Paper Information Loading...') : <LoadingCompletedBox text='Loading Completed - first paper'/>)}
-          {isPdfCompleted && (!isSecondPageLoading ? <LoadingCompletedBox text='Loading Completed - second paper'/> : loadingBox('Reference Paper Information Loading...')) }
+          {(isFirstPageLoading ? loadingBox('Paper Information Loading...') : <LoadingCompletedBox text='Loading Completed' setIsSecondPageLoading={setIsSecondPageLoading}/>)}
+          {(isSecondPageLoading === 2 && loadingBox('Reference Paper Information Loading...'))}
+          {(isSecondPageLoading === 3 && <LoadingCompletedBox text='Loading Completed' setIsSecondPageLoading={setIsSecondPageLoading}/>)}
           {openedPaperNumber === paperId
           ?<iframe src={readerUrl} width="100%" height="100%" ref={iframeRef}></iframe>
           :<iframe src={readerUrl} width="100%" height="100%" ref={iframeRef2}></iframe>}
