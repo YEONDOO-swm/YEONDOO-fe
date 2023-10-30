@@ -245,37 +245,36 @@ const Reader = () => {
   useEffect(()=>{
     if (isPdfCompleted) {
       getApi(api, `/api/paper/${paperId}?workspaceId=${workspaceId}`) 
-        .then(response => {
+        .then(async response => {
             if (response.status === 200) {
-                return response.json().then(data => {
-                  setData(data)
-                  const firstPayload = {
-                    paperId: paperId,
-                    paperTitle: data.paperInfo.title,
-                    paperItems: data.paperInfo.paperItems,
-                    userPdf: data.paperInfo.userPdf,
-                  }
-                  sessionStorage.setItem("firstPaper", JSON.stringify(firstPayload))
-                  if (iframeRef && iframeRef.current && iframeRef.current.contentWindow) {
-                    iframeRef.current.contentWindow.postMessage({ 
-                      workspaceId: workspaceId,
-                      access: getCookie('access'),
-                      refresh: getCookie('refresh'),
-                      paperId: paperId,
-                      paperItems: data.paperInfo.paperItems,
-                      userPdf: data.paperInfo.userPdf,
-                    }, '*');
-                    setPaperInfo(data.paperInfo)
-                  }
-                })
+              const data = await response.json();
+              setData(data);
+              const firstPayload = {
+                paperId: paperId,
+                paperTitle: data.paperInfo.title,
+                paperItems: data.paperInfo.paperItems,
+                userPdf: data.paperInfo.userPdf,
+              };
+              sessionStorage.setItem("firstPaper", JSON.stringify(firstPayload));
+              if (iframeRef && iframeRef.current && iframeRef.current.contentWindow) {
+                iframeRef.current.contentWindow.postMessage({
+                  workspaceId: workspaceId,
+                  access: getCookie('access'),
+                  refresh: getCookie('refresh'),
+                  paperId: paperId,
+                  paperItems: data.paperInfo.paperItems,
+                  userPdf: data.paperInfo.userPdf,
+                }, '*');
+                setPaperInfo(data.paperInfo);
+              }
             } else if (response.status === 401) {
-                refreshApi(api, notify, navigate)
+                await refreshApi(api, notify, navigate)
               }
             throw new Error("논문 정보를 가져오는데 실패하였습니다")
         })
       // setIsLoading(false)
       getApi(api, `/api/container?workspaceId=${workspaceId}`)
-      .then(response => 
+      .then(async response => 
         {
           if (response.status === 200) {
             return response.json().then(data => {
@@ -285,7 +284,7 @@ const Reader = () => {
               })
             })
           } else if (response.status === 401) {
-            refreshApi(api, notify, navigate)
+            await refreshApi(api, notify, navigate)
           }
         })
       .finally(()=> {
@@ -313,7 +312,7 @@ const Reader = () => {
         setCurTab(2)
         const secondPayload = sessionStorage.getItem("secondPaper")
         const storeSecondPaper = () => getApi(api, `/api/paper/${openedPaperNumber}?workspaceId=${workspaceId}`) 
-          .then(response => {
+          .then(async response => {
               if (response.status === 200) {
                   return response.json().then(data => {
                     //let iframeRefNum = openedPaperNumber === paperInfo.paperId ? iframeRef : iframeRef2
@@ -346,7 +345,7 @@ const Reader = () => {
                     }
                   })
               } else if (response.status === 401) {
-                  refreshApi(api, notify, navigate)
+                  await refreshApi(api, notify, navigate)
                 }
               throw new Error("논문 정보를 가져오는데 실패하였습니다")
           })

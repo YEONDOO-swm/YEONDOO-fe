@@ -24,6 +24,7 @@ import styles from "../layout/home.module.css"
 import { getApi, refreshApi } from "../utils/apiUtils";
 import MoreButton from "../component/moreButton";
 import LessButton from "../component/lessButton";
+import { mockRecentTrends } from "../mocks/data/recentTrends";
 
 type searchResultType = {
   query?: string;
@@ -88,11 +89,11 @@ export const Home = () => {
 
     const {data: recentData, isLoading} = useQuery(["home", workspaceId], ()=> 
       getApi(api, `/api/workspace/workspaceEnter?workspaceId=${workspaceId}`)  
-      .then(response => {
+      .then(async response => {
         if (response.status === 200) {
           return response.json()
         } else if (response.status === 401) {
-            refreshApi(api, notify, navigate)
+          await refreshApi(api, notify, navigate)
         }
         throw new Error("워크스페이스 홈 정보를 가져오는데 실패하였습니다")
       })
@@ -168,7 +169,7 @@ export const Home = () => {
 
           const response: Response = await getApi(api, `/api/homesearch?query=${performSearchTerm}&workspaceId=${workspaceId}`)
           if (response.status === 401) {
-            refreshApi(api, notify, navigate)
+            await refreshApi(api, notify, navigate)
           }
           const data = await response.json();
 
@@ -470,11 +471,13 @@ export const Home = () => {
           <Box sx={{width: '31vw'}}>
             {subTitle('Recent trends')}
             <Box sx={{width: '27.5vw', height: '32vh', borderRadius: '20px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)',
-            px:3, py: 1}}>
-              {recentData && recentData.recentlyTrends.map((item: any, idx: number) => (
+            px:3, py: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly'}}>
+              {/* {recentData && recentData.recentlyTrends.map((item: any, idx: number) => ( */}
+              {mockRecentTrends.map((item: any, idx: number) => (
                 <Box key={idx}>
                   {trend(item.title, item.date, item.url)}
-                  {idx!==recentData.recentlyTrends.length-1 && <hr style={{backgroundColor: '#ddd', height: '1px', border: 0}}/>}
+                  {/* {idx!==recentData.recentlyTrends.length-1 && <hr style={{backgroundColor: '#ddd', height: '1px', border: 0}}/>} */}
+                  {idx!==mockRecentTrends.length-1 && <hr style={{backgroundColor: '#ddd', height: '1px', border: 0}}/>}
                 </Box>
               ))}
             </Box>

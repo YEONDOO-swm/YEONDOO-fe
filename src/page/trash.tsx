@@ -90,11 +90,11 @@ export const Trash = () => {
 
     const { data: papersInTrash, isLoading } = useQuery(["trash", workspaceId], 
         ()=> getApi(api, `/api/history/trash?workspaceId=${workspaceId}`)
-        .then(response => {
+        .then(async response => {
             if (response.status === 200) {
                 return response.json()
             } else if (response.status === 401) {
-                refreshApi(api, notify, navigate)
+                await refreshApi(api, notify, navigate)
               }
             throw new Error("관심 해제된 논문 정보를 가져오는데 실패하였습니다")
         }).then(data => data.trashContainers),
@@ -114,9 +114,9 @@ export const Trash = () => {
 
     const { mutate } = useMutation(
         (value: string[]) => postApi(api, `/api/history/trash?workspaceId=${workspaceId}`, value)
-        .then(response => {
+        .then(async response => {
             if (response.status === 401) {
-                refreshApi(api, notify, navigate)
+                await refreshApi(api, notify, navigate)
               }
         }),
         {

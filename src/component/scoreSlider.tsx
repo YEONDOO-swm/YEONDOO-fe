@@ -80,9 +80,9 @@ function ScoreSlider({id, score, paper}: {id: number, score?:number | null, pape
         }
         if (paper){
           postApi(api, `/api/paper/result/score?workspaceId=${workspaceId}`, JSON.stringify(payload))
-          .then(response =>{
+          .then(async response =>{
             if (response.status === 401) {
-              refreshApi(api, notify, navigate)
+              await refreshApi(api, notify, navigate)
             }
             return response
           })
@@ -91,9 +91,9 @@ function ScoreSlider({id, score, paper}: {id: number, score?:number | null, pape
           })
         } else {
           postApi(api, `/api/home/result/score?workspaceId=${workspaceId}`, JSON.stringify(payload))
-          .then(response =>{
+          .then(async response =>{
           if (response.status === 401) {
-            refreshApi(api, notify, navigate)
+            await refreshApi(api, notify, navigate)
           }
           return response
         })

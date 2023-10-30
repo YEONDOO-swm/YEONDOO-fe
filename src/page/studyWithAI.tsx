@@ -39,11 +39,11 @@ const StudyWithAI = () => {
 
     const {data: papersInStorage, isLoading} = useQuery(['homesearch', api, workspaceId],()=> 
       getApi(api, `/api/container?workspaceId=${workspaceId}`)
-      .then(response => {
+      .then(async response => {
           if (response.status === 200) {
               return response.json()
           } else if (response.status === 401) {
-              refreshApi(api, notify, navigate)
+              await refreshApi(api, notify, navigate)
             }
           throw new Error("논문 내 질의 히스토리 정보를 가져오는데 실패하였습니다")
       }),

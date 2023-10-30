@@ -129,9 +129,9 @@ export const PaperStorage = () => {
 
     const { mutate } = useMutation(
         (value: paperLikePayload)=> postApi(api, `/api/paperlikeonoff`, value)
-        .then(response => {
+        .then(async response => {
             if (response.status === 401) {
-                refreshApi(api, notify, navigate)
+                await refreshApi(api, notify, navigate)
               }
         })
         .finally(()=>{
@@ -160,11 +160,11 @@ export const PaperStorage = () => {
 
     const {data: papersInStorage, isLoading} = useQuery(['homesearch', api, workspaceId],()=> 
     getApi(api, `/api/container?workspaceId=${workspaceId}`)
-    .then(response => {
+    .then(async response => {
         if (response.status === 200) {
             return response.json()
         } else if (response.status === 401) {
-            refreshApi(api, notify, navigate)
+            await refreshApi(api, notify, navigate)
           }
         throw new Error("논문 내 질의 히스토리 정보를 가져오는데 실패하였습니다")
     }),
@@ -319,8 +319,7 @@ export const PaperStorage = () => {
                     ))}
                     {(papersInStorage && papersInStorage.length>0) ? papersInStorage.map((paper: paperType) => (
                         !paperIdArray.includes(paper.paperId) && (
-                                makePapersCard(paper)
-                            
+                            paper.userPdf ? makeUserPapersCard(paper) : makePapersCard(paper)
                         )
                     )):<Box sx={{height: '70vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 2}}>
                             <PostAddIcon sx={{fontSize: '180px'}}/>

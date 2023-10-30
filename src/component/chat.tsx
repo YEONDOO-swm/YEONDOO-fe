@@ -139,10 +139,9 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
         try {
             //setKey(keyNumber)
             const response = await postApi(api, `/api/paper/${paperId}?workspaceId=${workspaceId}`, payload)
-            console.log('reponse 값', response)
 
             if (response.status === 401) {
-                refreshApi(api, notify, navigate)
+                await refreshApi(api, notify, navigate)
             }
 
             // 일반 통신 방식
@@ -492,7 +491,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                 </Box>
                 ))}
                 {
-                    paperInfo && (
+                    (paperInfo && !data.paperHistory) && (
                         <Box sx={{display: 'flex'}}>
                             <Box sx={{width: '30px', height: '30px', borderRadius: '100%', bgcolor: color.mainGreen,
                                 display: 'flex', justifyContent: 'center', alignItems: 'center', mr: 1}}>

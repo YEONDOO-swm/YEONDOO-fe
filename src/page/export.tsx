@@ -63,7 +63,7 @@ const Export = () => {
             purpose: purpose
         }
         postApi(api, `/api/paper/export?workspaceId=${workspaceId}`,payload)
-        .then(response => 
+        .then(async response => 
             {
               if (response.status === 200) {
                 return response.json().then(data => {
@@ -76,7 +76,7 @@ const Export = () => {
                   })
                 })
               } else if (response.status === 401) {
-                refreshApi(api, notify, navigate)
+                await refreshApi(api, notify, navigate)
               }
             })
         .finally(() => {
