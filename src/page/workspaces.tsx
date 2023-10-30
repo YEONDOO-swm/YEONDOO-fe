@@ -72,8 +72,9 @@ const Workspaces = () => {
             return response.json()
         } else if (response.status === 401) {
             await refreshApi(api, notify, navigate)
+        } else {
+            throw new Error("워크스페이스 정보를 가져오는데 실패하였습니다")
         }
-        throw new Error("워크스페이스 정보를 가져오는데 실패하였습니다")
     })
     .then(data => {
         const workspacesWithBigIntIds = data.workspaces.map((workspace: any) => ({
@@ -115,8 +116,9 @@ const Workspaces = () => {
                 return response.json()
             } else if (response.status === 401) {
                 await refreshApi(api, notify, navigate)
+            } else {
+                throw new Error("워크스페이스를 생성하는 데 실패하였습니다")
             }
-            throw new Error("워크스페이스를 생성하는 데 실패하였습니다")
         })
         .then(data => {
             if (data.workspaceId && data.editDate) {

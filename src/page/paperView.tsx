@@ -69,8 +69,9 @@ export const PaperView = () => {
                 return response.json()
             } else if (response.status === 401) {
                 await refreshApi(api, notify, navigate)
-              }
-            throw new Error("논문 내 질의 히스토리 정보를 가져오는데 실패하였습니다")
+            } else {
+                throw new Error("논문 내 질의 히스토리 정보를 가져오는데 실패하였습니다")
+            }
         }),
         {
             onError: (error) => {

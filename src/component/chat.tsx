@@ -1,29 +1,23 @@
 import React, { useEffect, useRef, useState, KeyboardEvent, MouseEvent } from 'react'
-import { Button, Box, Typography, IconButton } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { color } from '../layout/color'
 import scrollStyle from "../layout/scroll.module.css"
 import CopyClick from './copyClick'
 import * as amplitude from '@amplitude/analytics-browser';
-import { StringMap, useNotify } from 'react-admin'
+import { useNotify } from 'react-admin'
 import * as Sentry from '@sentry/react';
-import { getApi, postApi, refreshApi } from '../utils/apiUtils'
+import { postApi, refreshApi } from '../utils/apiUtils'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { CounterState, SET_IS_UPDATED_DONE, SET_SECOND_PAPER } from '../reducer'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import loadingStyle from "../layout/loading.module.css"
-import { SearchTap } from './searchTap'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { ChatTextField } from './chatTextField'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import chatProfile from '../asset/chatProfile.png';
 import deleteIcon from '../asset/delete.svg'
 import chat from '../asset/chatProfile.png'
-import search from '../asset/searchIcon.svg'
-import searchBlack from '../asset/searchBlack.svg'
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import SendIcon from '@mui/icons-material/Send';
-
 
 type history = {
     who: boolean;
@@ -305,28 +299,32 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
         };
     }, [isDragging])
 
-    const debounceFunction = (callback: any, delay: any) => {
-        let timer: string | number | NodeJS.Timeout | undefined;
-        return (...args: any) => {
-          // 실행한 함수(setTimeout())를 취소
-          clearTimeout(timer);
-          // delay가 지나면 callback 함수를 실행
-          timer = setTimeout(() => callback(...args), delay);
-        };
-      };
-
     const handleMouseMove = (e: any) => {
+        e.preventDefault()
         if (!isDragging) return;
         setIsDragged(true)
-        // const debouncedSetChatPosition = debounceFunction((e: any) => {
-        //     setChatPosition({ x: e.clientX, y: e.clientY });
-        //   }, 50);
-          
-        //debouncedSetChatPosition(e);
-        // if (Math.abs(chatPosition.x-e.clientX)+Math.abs(chatPosition.y-e.clientY) > 70){
-        //     console.log(Math.abs(chatPosition.x-e.clientX)+Math.abs(chatPosition.y-e.clientY))
-        setChatPosition({ x: e.clientX, y: e.clientY });
-        // }
+
+        let newX = e.clientX;
+        let newY = e.clientY;
+
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+
+        const boundary = 50;
+
+        if (newX < boundary) {
+            newX = boundary;
+        } else if (newX > (viewportWidth - boundary)) {
+            newX = viewportWidth - boundary;
+        }
+        
+        if (newY < boundary) {
+            newY = boundary;
+        } else if (newY > (viewportHeight - boundary)) {
+            newY = viewportHeight - boundary;
+        }
+
+        setChatPosition({ x: newX, y: newY });
     };
 
     const handleMouseUp = () => {
@@ -367,7 +365,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
           left: chatPosition.x,
           top: chatPosition.y,
           zIndex: 10,
-          transform: 'translate(0, -95%)', // 상단 중앙으로 이동
+          transform: 'translate(3%, -100%)', // 상단 중앙으로 이동
           
         }}
       >
