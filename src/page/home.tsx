@@ -257,10 +257,9 @@ export const Home = () => {
           )}
           <Box sx = {{margin: "15px 0 0 0" , display: 'flex'}}>
             {/* <Button variant="contained" onClick={() => handleViewPaper(paper.url) }>논문 보기</Button> */}
-            <GoToArxiv url={paper.url} paperId={paper.paperId}/>
-
-            <Box sx={{width: '15px'}}></Box>
             <GoToViewMore paperid={paper.paperId} workspaceId={workspaceId} userPdf={paper.userPdf}/>
+            <Box sx={{width: '15px'}}></Box>
+            <GoToArxiv url={paper.url} paperId={paper.paperId}/>
           </Box>
                 {/* Add other details for the paper */}
               

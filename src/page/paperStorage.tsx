@@ -224,9 +224,9 @@ export const PaperStorage = () => {
                 
             </Box>
             <Box sx={{display: 'flex', mt: '15px', padding: '0px 40px'}}>
-                <GoToArxiv url={paper.url} paperId={paper.paperId}/>
-                    <Box sx={{width:'15px'}}></Box>
                 <GoToViewMore paperid={paper.paperId} workspaceId={workspaceId} userPdf={paper.userPdf}/>
+                <Box sx={{width:'15px'}}></Box>
+                <GoToArxiv url={paper.url} paperId={paper.paperId}/>
             </Box>
         </Box>
         )
