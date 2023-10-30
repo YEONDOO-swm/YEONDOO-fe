@@ -81,9 +81,9 @@ const ImportPdf = ({setIsOpenImportPdf}:{setIsOpenImportPdf: any}) => {
             headers : { 
                         'Gauth': getCookie('access') },
             body: formData
-        }).then((response) => {
+        }).then(async(response) => {
             if (response.status === 401) {
-                refreshApi(api, notify, navigate)
+                await refreshApi(api, notify, navigate)
             }
             else {
                 response.json()

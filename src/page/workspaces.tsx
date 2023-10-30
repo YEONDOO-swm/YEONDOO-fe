@@ -67,11 +67,11 @@ const Workspaces = () => {
         setWorkspace(initWorkspaceEdit)
     };
 
-    const {data: workspaces, isLoading} = useQuery(['workspace'],async ()=> await getApi(api, '/api/workspace/workspaces').then(response => {
+    const {data: workspaces, isLoading} = useQuery(['workspace'],async ()=> await getApi(api, '/api/workspace/workspaces').then(async response => {
         if (response.status === 200) {
             return response.json()
         } else if (response.status === 401) {
-            refreshApi(api, notify, navigate)
+            await refreshApi(api, notify, navigate)
         }
         throw new Error("워크스페이스 정보를 가져오는데 실패하였습니다")
     })
@@ -110,11 +110,11 @@ const Workspaces = () => {
             keywords: workspace && workspace.keywords
         }
         postApi(api, '/api/workspace/workspaceCRUD', payload)
-        .then(response => {
+        .then(async response => {
             if (response.status === 200) {
                 return response.json()
             } else if (response.status === 401) {
-                refreshApi(api, notify, navigate)
+                await refreshApi(api, notify, navigate)
             }
             throw new Error("워크스페이스를 생성하는 데 실패하였습니다")
         })
@@ -144,11 +144,11 @@ const Workspaces = () => {
         setDeleteOpen(false)
         
         deleteApi(api, `/api/workspace/workspaceCRUD?workspaceId=${workspaceId}`)
-        .then((response) => {
+        .then(async(response) => {
             if (response.status === 200) {
                 setWorkspacesArr((prevArr) => prevArr.filter((workspace) => workspace.workspaceId !== workspaceId));
             } else if (response.status === 401) {
-                refreshApi(api, notify, navigate)
+                await refreshApi(api, notify, navigate)
             } else {
                 throw new Error("워크스페이스 삭제하는 데 실패하였습니다")
             }
@@ -177,11 +177,11 @@ const Workspaces = () => {
         setOpen(false)
 
         putApi(api, `/api/workspace/workspaceCRUD?workspaceId=${workspaceId}`, curEditItem)
-        .then((response) => {
+        .then(async (response) => {
             if (response.status === 200) {
                 setWorkspacesArr((prevArr) => prevArr.map((workspace) => (workspace.workspaceId === workspaceId ? curEditItem : workspace)));
             } else if (response.status === 401) {
-                refreshApi(api, notify, navigate)
+                await refreshApi(api, notify, navigate)
             } else {
                 throw new Error("워크스페이스 삭제하는 데 실패하였습니다")
             }

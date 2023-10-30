@@ -42,11 +42,11 @@ export const History = () => {
 
     const {data: results, isLoading} = useQuery(["historySearch", workspaceId], ()=>
         getApi(api, `/api/history/search?workspaceId=${workspaceId}`)
-        .then(response => {
+        .then(async response => {
             if (response.status === 200) {
                 return response.json()
             } else if (response.status === 401) {
-                refreshApi(api, notify, navigate)
+                await refreshApi(api, notify, navigate)
             }
             throw new Error("히스토리 정보를 가져오는데 실패하였습니다")
         })

@@ -88,11 +88,11 @@ export const Home = () => {
 
     const {data: recentData, isLoading} = useQuery(["home", workspaceId], ()=> 
       getApi(api, `/api/workspace/workspaceEnter?workspaceId=${workspaceId}`)  
-      .then(response => {
+      .then(async response => {
         if (response.status === 200) {
           return response.json()
         } else if (response.status === 401) {
-            refreshApi(api, notify, navigate)
+          await refreshApi(api, notify, navigate)
         }
         throw new Error("워크스페이스 홈 정보를 가져오는데 실패하였습니다")
       })
@@ -168,7 +168,7 @@ export const Home = () => {
 
           const response: Response = await getApi(api, `/api/homesearch?query=${performSearchTerm}&workspaceId=${workspaceId}`)
           if (response.status === 401) {
-            refreshApi(api, notify, navigate)
+            await refreshApi(api, notify, navigate)
           }
           const data = await response.json();
 
