@@ -269,8 +269,9 @@ const Reader = () => {
               }
             } else if (response.status === 401) {
                 await refreshApi(api, notify, navigate)
-              }
-            throw new Error("논문 정보를 가져오는데 실패하였습니다")
+            } else {
+              throw new Error("논문 정보를 가져오는데 실패하였습니다")
+            }
         })
       // setIsLoading(false)
       getApi(api, `/api/container?workspaceId=${workspaceId}`)
@@ -345,9 +346,10 @@ const Reader = () => {
                     }
                   })
               } else if (response.status === 401) {
-                  await refreshApi(api, notify, navigate)
-                }
-              throw new Error("논문 정보를 가져오는데 실패하였습니다")
+                await refreshApi(api, notify, navigate)
+              } else {
+                throw new Error("논문 정보를 가져오는데 실패하였습니다")
+              }
           })
           .finally(() => {
             setIsSecondPageLoading(false)

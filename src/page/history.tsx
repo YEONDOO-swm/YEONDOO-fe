@@ -47,8 +47,9 @@ export const History = () => {
                 return response.json()
             } else if (response.status === 401) {
                 await refreshApi(api, notify, navigate)
+            } else {
+                throw new Error("히스토리 정보를 가져오는데 실패하였습니다")
             }
-            throw new Error("히스토리 정보를 가져오는데 실패하였습니다")
         })
         .then(data => data.results),
         {   
