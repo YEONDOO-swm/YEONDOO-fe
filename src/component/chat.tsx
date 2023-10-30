@@ -177,8 +177,6 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                 
                 const decodedChunk = decoder.decode(value, { stream: true });
                 const processedChunk = decodedChunk.replaceAll('data:', '')
-
-                console.log(processedChunk)
                 //done: False -> done: True 여도 console.log('done')이 먼저 출력
                 if (done) {
                     break
