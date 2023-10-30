@@ -21,6 +21,7 @@ import styles from '../layout/loading.module.css'
 import pageStyles from '../layout/workspace.module.css'
 import { deleteApi, getApi, postApi, putApi, refreshApi } from '../utils/apiUtils'
 import { color } from '../layout/color'
+import { red } from '@mui/material/colors'
 
 type workspaceEdit = {
     title?: string;
@@ -83,7 +84,6 @@ const Workspaces = () => {
         }));
     
         setWorkspacesArr(workspacesWithBigIntIds);
-        console.log(workspacesWithBigIntIds)
         return data.workspaces
     }),
     {
@@ -280,11 +280,14 @@ const Workspaces = () => {
         </Box>
     )
 
-    const workspaceTextField = (title: string, value: string, change: any) => (
+    const workspaceTextField = (title: string, value: string, change: any, required: boolean) => (
         <Box sx={{mb: 2}}>
-            <Typography id="modal-modal-description" sx={{ mt: 2, color: '#666' }}>
-                {title}
-            </Typography>
+            <Box sx={{display: 'flex', mt: 2}}>
+                <Typography id="modal-modal-description" sx={{ color: '#666' }}>
+                    {title}
+                </Typography>
+                {required && <Typography sx={{color: '#8b0000'}}>*</Typography>}
+            </Box>
             <TextField variant='outlined' 
                 value={value}
                 sx={{width: '100%'}}
@@ -359,10 +362,10 @@ const Workspaces = () => {
                 <Typography id="modal-modal-title" variant="h6" component="h2" sx={{color: color.mainGreen, fontWeight: 600, fontSize: '23px'}}>
                     {isEdit ? "Edit a workspace" :"Add a workspace"}
                 </Typography>
-                {!isEdit && workspaceTextField('Workspace Title*', workspace!.title!, (event: ChangeEvent<HTMLInputElement>)=>{setWorkspace({...workspace, title: event?.target.value})})}
-                {!isEdit && workspaceTextField('Workspace Description', workspace!.description!, (event: ChangeEvent<HTMLInputElement>)=>{setWorkspace({...workspace, description: event?.target.value})})}
-                {isEdit && workspaceTextField('Workspace Title', curEditItem!.title!, (event: ChangeEvent<HTMLInputElement>)=>{setCurEditItem({...curEditItem, title: event?.target.value})})}
-                {isEdit && workspaceTextField('Workspace Description', curEditItem!.description!, (event: ChangeEvent<HTMLInputElement>)=>{setCurEditItem({...curEditItem, description: event?.target.value})})}
+                {!isEdit && workspaceTextField('Workspace Title', workspace!.title!, (event: ChangeEvent<HTMLInputElement>)=>{setWorkspace({...workspace, title: event?.target.value})}, true)}
+                {!isEdit && workspaceTextField('Workspace Description', workspace!.description!, (event: ChangeEvent<HTMLInputElement>)=>{setWorkspace({...workspace, description: event?.target.value})}, false)}
+                {isEdit && workspaceTextField('Workspace Title', curEditItem!.title!, (event: ChangeEvent<HTMLInputElement>)=>{setCurEditItem({...curEditItem, title: event?.target.value})}, true)}
+                {isEdit && workspaceTextField('Workspace Description', curEditItem!.description!, (event: ChangeEvent<HTMLInputElement>)=>{setCurEditItem({...curEditItem, description: event?.target.value})}, false)}
                 <Box sx={{mb: 2}}>
                     <Typography id="modal-modal-description" sx={{ mt: 2, color: '#666', mb: 1 }}>
                         Workspace Research Field
