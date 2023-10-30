@@ -169,7 +169,8 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                 const { value, done } = await reader.read()
                 
                 const decodedChunk = decoder.decode(value, { stream: true });
-                const processedChunk = decodedChunk.replaceAll('data:', '')
+                console.log(decodedChunk + "checkindention")
+                const processedChunk = decodedChunk.replaceAll('data: ', '')
                 //done: False -> done: True 여도 console.log('done')이 먼저 출력
                 if (done) {
                     break
