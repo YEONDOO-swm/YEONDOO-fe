@@ -78,7 +78,7 @@ const ImportPdf = ({setIsOpenImportPdf}:{setIsOpenImportPdf: any}) => {
         formData.append('title', selectedFiles.name)
         fetch(`${api}/api/file/upload?workspaceId=${workspaceId}`,{
             method: 'POST',
-            headers : { 'Content-Type' : 'multipart/form-data',
+            headers : { 
                         'Gauth': getCookie('access') },
             body: formData
         }).then((response) => {
