@@ -446,7 +446,7 @@ const Reader = () => {
 
   const [isHoveredOne, setIsHoveredOne] = useState<boolean>(false)
   const [isHoveredTwo, setIsHoveredTwo] = useState<boolean>(false)
-  console.log(isFirstPageLoading)
+  console.log(isFirstPageLoading, isPdfCompleted)
 
   return (
     <div>
@@ -523,7 +523,7 @@ const Reader = () => {
                               />)}
         </Box>
         <Box sx={{height: `calc(100vh - 45px)`}}>
-          {(isFirstPageLoading ? loadingBox('Paper Information Loading...') : <LoadingCompletedBox text='Loading Completed'/>)}
+          {isPdfCompleted && (isFirstPageLoading ? loadingBox('Paper Information Loading...') : <LoadingCompletedBox text='Loading Completed'/>)}
           {isPdfCompleted && (!isSecondPageLoading ? <LoadingCompletedBox text='Loading Completed'/> : loadingBox('Reference Paper Information Loading...')) }
           {openedPaperNumber === paperId
           ?<iframe src={readerUrl} width="100%" height="100%" ref={iframeRef}></iframe>
