@@ -244,6 +244,25 @@ const Reader = () => {
 
   useEffect(()=>{
     if (isPdfCompleted) {
+      //setIsFirstPageLoading(true)
+      getApi(api, `/api/container?workspaceId=${workspaceId}`)
+      .then(async response => 
+        {
+          if (response.status === 200) {
+            return response.json().then(data => {
+              dispatch({
+                type: SET_PAPERS_IN_STORAGE,
+                data: data
+              })
+            })
+          } else if (response.status === 401) {
+            await refreshApi(api, notify, navigate)
+          }
+        })
+      .catch(error => {
+        console.error('관심 논문 정보를 불러오는데 실패하였습니다: ', error)
+        Sentry.captureException(error)
+      })
       getApi(api, `/api/paper/${paperId}?workspaceId=${workspaceId}`) 
         .then(async response => {
             if (response.status === 200) {
@@ -276,30 +295,10 @@ const Reader = () => {
         .finally(()=> {
           setIsFirstPageLoading(false)
         })
-      // setIsLoading(false)
-      getApi(api, `/api/container?workspaceId=${workspaceId}`)
-      .then(async response => 
-        {
-          if (response.status === 200) {
-            return response.json().then(data => {
-              dispatch({
-                type: SET_PAPERS_IN_STORAGE,
-                data: data
-              })
-            })
-          } else if (response.status === 401) {
-            await refreshApi(api, notify, navigate)
-          }
-        })
-      .catch(error => {
-        console.error('관심 논문 정보를 불러오는데 실패하였습니다: ', error)
-        Sentry.captureException(error)
-      })
     }
   }, [isPdfCompleted])
 
   useEffect(()=>{
-      console.log('check',openedPaperNumber)
       if (openedPaperNumber === paperId) {
         setCurTab(1)
         const firstPayload = sessionStorage.getItem("firstPaper")
@@ -522,7 +521,7 @@ const Reader = () => {
                               />)}
         </Box>
         <Box sx={{height: `calc(100vh - 45px)`}}>
-          {isFirstPageLoading ? loadingBox('Paper Information Loading...') : <LoadingCompletedBox text='Loading Completed'/>}
+          {isPdfCompleted && (isFirstPageLoading ? loadingBox('Paper Information Loading...') : <LoadingCompletedBox text='Loading Completed'/>)}
           {isPdfCompleted && (!isSecondPageLoading ? <LoadingCompletedBox text='Loading Completed'/> : loadingBox('Reference Paper Information Loading...')) }
           {openedPaperNumber === paperId
           ?<iframe src={readerUrl} width="100%" height="100%" ref={iframeRef}></iframe>
