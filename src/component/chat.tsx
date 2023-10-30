@@ -491,7 +491,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                 </Box>
                 ))}
                 {
-                    paperInfo && (
+                    (paperInfo && !data.paperHistory) && (
                         <Box sx={{display: 'flex'}}>
                             <Box sx={{width: '30px', height: '30px', borderRadius: '100%', bgcolor: color.mainGreen,
                                 display: 'flex', justifyContent: 'center', alignItems: 'center', mr: 1}}>
