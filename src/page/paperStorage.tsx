@@ -319,8 +319,7 @@ export const PaperStorage = () => {
                     ))}
                     {(papersInStorage && papersInStorage.length>0) ? papersInStorage.map((paper: paperType) => (
                         !paperIdArray.includes(paper.paperId) && (
-                                makePapersCard(paper)
-                            
+                            paper.userPdf ? makeUserPapersCard(paper) : makePapersCard(paper)
                         )
                     )):<Box sx={{height: '70vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 2}}>
                             <PostAddIcon sx={{fontSize: '180px'}}/>
