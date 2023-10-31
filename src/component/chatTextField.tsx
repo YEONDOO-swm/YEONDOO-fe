@@ -190,7 +190,7 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
                                               transform: 'translate(100%, -100%)', cursor: 'pointer'}}
                       onClick={handleClose}/>
                 <Typography id="modal-modal-title" variant="h6" component="h2">
-                  Select Reference Paper
+                  Add study paper
                 </Typography>
                 <FormControl sx={{width: '50%', mt: 2}} size='small'>
                   <InputLabel id="demo-simple-select-label">Papers</InputLabel>

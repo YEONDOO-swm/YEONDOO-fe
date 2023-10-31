@@ -8,7 +8,7 @@ import { UserMenu } from 'react-admin'
 const PageLayout = (props: any) => {
   return (
     <Box sx={{display: 'flex', width: '100%'}}>
-        <Box sx={{width: '17vw', bgcolor: color.mainGreen}}>
+        <Box sx={{width: '17vw', bgcolor: props.workspace ?color.mainGreen : color.homeGreen}}>
             {props.workspace === true ? (
                 <SideBarWorkspace number={props.number}/>
             ):(
@@ -16,7 +16,7 @@ const PageLayout = (props: any) => {
             )}
             
         </Box>
-        <Box sx={{width: '83vw', bgcolor: color.mainGreen}}>
+        <Box sx={{width: '83vw', bgcolor: props.workspace ?color.mainGreen : color.homeGreen}}>
         
             <Box sx={{width: '100%', height: '100vh', borderTopLeftRadius: '5vh', borderBottomLeftRadius: '5vh',
             bgcolor: 'white'}}>
