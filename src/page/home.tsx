@@ -386,7 +386,7 @@ export const Home = () => {
             <Typography sx={{height: '3vh', color: '#333', fontSize: '20px', fontWeight: 600, mb: 2}}>
               Search Results
             </Typography>
-            <Box sx={{height: '67.5vh',overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
+            <Box sx={{height: '60.5vh',overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
               {searchResults.papers.map((paper: any) => (
                 makePapersCard(paper)
               ))}
