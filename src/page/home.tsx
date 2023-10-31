@@ -276,7 +276,7 @@ export const Home = () => {
           <Box sx={{display: 'flex'}} onClick={()=>{window.open(`/paper?workspaceId=${workspaceId}&paperid=${recentlyPapers.paperId}&userPdf=false`)}}>
             <Typography sx={{fontWeight: 500, color: color.mainGreen, cursor: 'pointer', '&:hover':{
               color: '#445142'
-            }}}>More</Typography>
+            }}}>Study with AI</Typography>
             <img src={arrow}/>
           </Box>
         </Box>

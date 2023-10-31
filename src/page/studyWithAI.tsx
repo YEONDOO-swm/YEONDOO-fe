@@ -66,8 +66,8 @@ const StudyWithAI = () => {
                 <Box sx={{height: '16%', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                     <Box sx={{display: 'flex'}}>
                         <img src={study} style={{width: '25px'}}/>
-                        <Typography sx={{fontSize: '25px', fontWeight: '500', ml: 1}}>
-                            Select a paper you want to study
+                        <Typography sx={{fontSize: '25px', fontWeight: '600', ml: 1, color: '#333'}}>
+                            Start Study!
                         </Typography>
                     </Box>
                     <Box sx={{width: '35vw', height: '2px', bgcolor: color.secondaryGreen, mt: 3}}></Box>
