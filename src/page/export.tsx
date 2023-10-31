@@ -116,10 +116,10 @@ const Export = () => {
   return (
     <Box sx={{display: 'flex', flexDirection: 'column', mt: 4}}>
         
-        <Box sx={{width: '100%', height: '50vh', display: 'flex', flexDirection: 'column',
+        <Box sx={{width: '100%', height: '60vh', display: 'flex', flexDirection: 'column',
         justifyContent: 'center', alignItems: 'center'}}>
             <img src={interfaceIcon} width="20%"/>
-            <Typography sx={{fontSize: '15px', fontWeight: 500}}>
+            <Typography sx={{fontSize: '15px', fontWeight: 500, mt: 3}}>
                 Work in Progress
             </Typography>
         </Box>

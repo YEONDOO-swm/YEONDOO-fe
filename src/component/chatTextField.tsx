@@ -177,7 +177,7 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
             :<Box onClick={handleOpenSelectModal} sx={{display: 'inline-flex', alignItems: 'center', gap: 1, pl: 1, pr: 2, py: 0.4, mb: 1,
                 borderRadius: '100px', border: `1px solid ${color.mainGreen}`, cursor: 'pointer'}}>
               <AddIcon sx={{fontSize: '15px', color: color.mainGreen}}/>
-              <Typography sx={{fontSize: '13px', color: color.mainGreen, fontWeight: 500}}>Select reference paper</Typography>
+              <Typography sx={{fontSize: '13px', color: color.mainGreen, fontWeight: 500}}>Add study paper</Typography>
             </Box>}
             <Modal
               open={isOpenSelectRef}
@@ -201,8 +201,8 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
                       onChange={handlerefPaperListChange}
                       sx={{bgcolor: '#fff', border: '1px solid #ddd'}}
                   >
-                      <MenuItem value="My library">My library</MenuItem>
-                      <MenuItem value="Paper reference">Paper reference</MenuItem>
+                      <MenuItem value="My library">My works</MenuItem>
+                      <MenuItem value="Paper reference">Paper references</MenuItem>
                   </Select>
               </FormControl>
                 <Box sx={{width: '100%', height: '2px', bgcolor: color.secondaryGreen, mt: 1}}></Box>
