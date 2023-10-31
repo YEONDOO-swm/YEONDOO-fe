@@ -54,7 +54,7 @@ export const Login = () => {
 
                 response.json().then((data)=> {
                     setCookie('username', data.username)
-                    window.location.href = "/workspaces"
+                    window.location.href = "/home"
                 })
                 .catch(error => console.log(error))
             }

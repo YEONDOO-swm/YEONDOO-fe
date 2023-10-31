@@ -68,7 +68,7 @@ export const History = () => {
             
             amplitude.track("전체 검색 히스토리 List Clicked")
         }
-        navigate(`/home?query=${resultQuery}&type=1`)
+        navigate(`/dashboard?query=${resultQuery}&type=1`)
     }
     
     return (

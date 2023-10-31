@@ -129,7 +129,7 @@ export const Home = () => {
             amplitude.track("Home에서 검색")
           }
           
-          navigate(`/home?workspaceId=${workspaceId}&query=${searchTerm}`)
+          navigate(`/dashboard?workspaceId=${workspaceId}&query=${searchTerm}`)
           performSearch()
           //window.location.href = `/home?query=${searchTerm}&type=${searchType}`
       }
@@ -149,7 +149,7 @@ export const Home = () => {
         amplitude.track("Home에서 검색")
       }
       
-      navigate(`/home/${workspaceId}?query=${searchTerm}`)
+      navigate(`/dashboard?workspaceId=${workspaceId}?query=${searchTerm}`)
       performSearch()
 
   }
