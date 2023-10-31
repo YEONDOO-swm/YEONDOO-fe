@@ -20,7 +20,7 @@ const SideBarWorkspace = ({number}:{number: number}) => {
           <Typography sx={{
               color: 'white',
               textAlign: 'center',
-              fontSize: '26px',
+              fontSize: '22px',
               fontStyle: 'normal',
               fontWeight: '600',
               lineHeight: 'normal',
@@ -28,7 +28,7 @@ const SideBarWorkspace = ({number}:{number: number}) => {
               pb: 4
           }}
           onClick={()=>{window.location.replace("/dashboard?workspaceId="+workspaceId)}}
-          >{workspaceTitle}</Typography>
+          >{workspaceTitle && (workspaceTitle.length > 15?workspaceTitle.slice(0,15)+"...":workspaceTitle)}</Typography>
         <SideBarMenu img={dashboard} title='Dashboard' number={number} idx={0} url={"/dashboard?workspaceId="+workspaceId}/>
         <SideBarMenu img={works} title='My Works' number={number} idx={1} url="/paperstorage"/>
         <SideBarMenu img={study} title='Study with AI' number={number} idx={2} url="/selectpaper"/>

@@ -71,7 +71,7 @@ export const SearchTap: React.FC<SearchTapProps> = ({
                         </IconButton>
                     </InputAdornment>
                     ),
-                    sx: {...heightSx, border: `1px solid ${color.mainGreen}`, borderRadius: '10px'}
+                    sx: {...heightSx, border: `1px solid ${color.mainGreen}`, borderRadius: '15px', bgcolor: '#D7E3D4'}
                 }}
                 />
         </Box>
