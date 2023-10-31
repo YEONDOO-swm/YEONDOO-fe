@@ -53,12 +53,12 @@ const Library = () => {
                             {paper.title}
                         </Typography>
                         <Box sx={{display: 'flex', alignItems: 'center', transform: 'translate(2vh, -2vh)'}}>
-                            <Typography sx={{fontWeight: 500, color: color.mainGreen,'&:hover':{
+                            <Typography sx={{fontWeight: 500, color: color.homeGreen,'&:hover':{
                                 color: '#445142',
                                 cursor: 'pointer',
                                 }}}
                                 onClick={()=> {
-                                    navigate(`/home?workspaceId=${paper.workspaceId}`)
+                                    navigate(`/dashboard?workspaceId=${paper.workspaceId}`)
                                 }}>{paper.workspaceTitle}</Typography>
                             <img src={arrow}/>
                         </Box>

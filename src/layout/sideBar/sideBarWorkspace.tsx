@@ -9,6 +9,7 @@ import history from '../../asset/history.svg'
 import study from '../../asset/study.svg'
 import rightarrowWhite from '../../asset/rightarrowWhite.svg'
 import { color } from '../color'
+import dashboard from '../../asset/Dashboard.svg'
 
 const SideBarWorkspace = ({number}:{number: number}) => {
     const navigate = useNavigate()
@@ -19,22 +20,22 @@ const SideBarWorkspace = ({number}:{number: number}) => {
           <Typography sx={{
               color: 'white',
               textAlign: 'center',
-              fontSize: '26px',
+              fontSize: '22px',
               fontStyle: 'normal',
               fontWeight: '600',
               lineHeight: 'normal',
               pt: 2,
               pb: 4
           }}
-          onClick={()=>{window.location.replace("/home?workspaceId="+workspaceId)}}
-          >{workspaceTitle}</Typography>
-        <SideBarMenu img={home} title='Home' number={number} idx={0} url={"/home?workspaceId="+workspaceId}/>
+          onClick={()=>{window.location.replace("/dashboard?workspaceId="+workspaceId)}}
+          >{workspaceTitle && (workspaceTitle.length > 15?workspaceTitle.slice(0,15)+"...":workspaceTitle)}</Typography>
+        <SideBarMenu img={dashboard} title='Dashboard' number={number} idx={0} url={"/dashboard?workspaceId="+workspaceId}/>
         <SideBarMenu img={works} title='My Works' number={number} idx={1} url="/paperstorage"/>
         <SideBarMenu img={study} title='Study with AI' number={number} idx={2} url="/selectpaper"/>
         <SideBarMenu img={history} title='History' number={number} idx={3} url="/history"/>
         
         <Box sx={{position: 'absolute', bottom: '5vh', width: '17vw', ml: 4,
-        }} onClick={()=>{navigate('/workspaces')}}>
+        }} onClick={()=>{navigate('/home')}}>
           <Box sx={{display: 'inline-flex', height: '60px', width: '85%', justifyContent: 'center', alignItems: 'center', gap: '10px',
                   borderRadius: '20px', border: '1px solid #fff',
                   '&:hover': {
@@ -42,7 +43,7 @@ const SideBarWorkspace = ({number}:{number: number}) => {
                   }}}>
               <img src={rightarrowWhite} style={{ transform: 'rotate(180deg)' }}/>
               <Typography sx={{color: color.white, fontSize: '16px', fontWeight: 600}}>
-                Workspaces
+                Home
               </Typography>
           </Box>
           {/* <SideBarMenu img={history} title='Workspaces' number={number} idx={4} url="/workspaces" /> */}

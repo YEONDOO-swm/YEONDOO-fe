@@ -167,6 +167,9 @@ const Reader = () => {
         data: true
       })
     }
+    else if (e.data.createReader) {
+      setIsFirstPageLoading(false)
+    }
   }
 
   useEffect(()=>{
@@ -292,10 +295,6 @@ const Reader = () => {
             } else {
               throw new Error("논문 정보를 가져오는데 실패하였습니다")
             }
-        })
-        .finally(()=> {
-          console.log('????')
-          setIsFirstPageLoading(false)
         })
     }
   }, [isPdfCompleted])
@@ -447,7 +446,6 @@ const Reader = () => {
 
   const [isHoveredOne, setIsHoveredOne] = useState<boolean>(false)
   const [isHoveredTwo, setIsHoveredTwo] = useState<boolean>(false)
-  console.log(isFirstPageLoading, isPdfCompleted)
 
   return (
     <div>

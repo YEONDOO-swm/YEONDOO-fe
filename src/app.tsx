@@ -100,14 +100,14 @@ export const App = () => {
                         <CustomRoutes>
                             {/* <Route path="/" element={<Navigate to="/home" replace />} /> */}
                             
-                            <Route path="/home" element={< Home />}/>
+                            <Route path="/dashboard" element={< Home />}/>
                             <Route path="/paperstorage" element={< PaperStorage/>}/>
                             <Route path="/history" element={< HistoryPaper />}/>
                             <Route path="/userprofile" element={< UserProfile />}/>
                             {/* <Route path="/paper" element={< PaperView />}/> */}
                             <Route path="/trash" element={< Trash />} />
                             <Route path="/pdfviewer" element={< PdfViewer />} />
-                            <Route path="/workspaces" element={<Workspaces/>} />
+                            <Route path="/home" element={<Workspaces/>} />
                             <Route path="/selectpaper" element={<StudyWithAI/>} />
                             <Route path="/paper" element={<Reader/>} />
                             <Route path="/export" element={<Export/>} />

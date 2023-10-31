@@ -6,6 +6,7 @@ import SideBarMenu from './sideBarMenu'
 import { useNavigate } from 'react-router-dom'
 import logoWhite from '../../asset/logoWhite.png'
 import logoIcon from '../../asset/logoIconWhite.svg'
+import Home from '../../asset/home.svg'
 
 const SideBar = ({number}:{number: number}) => {
     const navigate = useNavigate()
@@ -25,7 +26,7 @@ const SideBar = ({number}:{number: number}) => {
         onClick={()=>{window.location.replace('/workspaces')}}
         >Yeondoo</Typography> */}
         <Box sx={{display: 'flex', alignItems: 'center', mt: 2, mb: 3, cursor: 'pointer'}}
-              onClick={()=>{window.location.replace('/workspaces')}}>
+              onClick={()=>{window.location.replace('/home')}}>
 
           <img src={logoIcon} style={{ transform: 'scaleX(-1)' }} />
           <img src={logoWhite}
@@ -35,7 +36,7 @@ const SideBar = ({number}:{number: number}) => {
         </Box>
         
 
-        <SideBarMenu img={Dashboard} title='Dashboard' number={number} idx={0} url="/workspaces"/>
+        <SideBarMenu img={Home} title='Home' number={number} idx={0} url="/home"/>
         <SideBarMenu img={Profile} title='My Library' number={number} idx={1} url="/library"/>
 
         

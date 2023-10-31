@@ -372,7 +372,8 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
       >
         <Box sx={{width: '100%', height:'35px', bgcolor: '#333', color: color.white, px: 1,
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-            <Typography sx={{fontSize: '15px', fontWeight: 500}}>
+            <Typography sx={{display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+            fontSize: '15px', fontWeight: 500}}>
                 {paperTitle}
             </Typography>
             <img src={deleteIcon} style={{width: '18px', cursor: 'pointer'}} onClick={()=>{setIsChatOpen(false)}}/>

@@ -139,7 +139,7 @@ export const HistoryPaper = () => {
                                   <Box sx={{display: 'flex', transform: 'translateY(-8px)'}} onClick={()=>{window.open(`/paper?workspaceId=${workspaceId}&paperid=${mergedItems[0].paperId}&userPdf=${mergedItems[0].userPdf}`)}}>
                                     <Typography sx={{fontWeight: 500, color: color.mainGreen, cursor: 'pointer', '&:hover':{
                                       color: '#445142'
-                                    }}}>More</Typography>
+                                    }}}>Study with AI</Typography>
                                     <img src={arrow}/>
                                   </Box>
                                 </Box>

@@ -7,7 +7,7 @@ import { color } from './color'
 const WorkspacePageLayout = (props: any) => {
   return (
     <Box sx={{display: 'flex', width: '100%'}}>
-        <Box sx={{width: '17vw', bgcolor: color.mainGreen}}>
+        <Box sx={{width: '17vw', bgcolor: color.homeGreen}}>
             {props.workspace === true ? (
                 <SideBarWorkspace number={props.number}/>
             ):(
@@ -15,7 +15,7 @@ const WorkspacePageLayout = (props: any) => {
             )}
             
         </Box>
-        <Box sx={{width: '83vw', bgcolor: color.mainGreen}}>
+        <Box sx={{width: '83vw', bgcolor: color.homeGreen}}>
             <Box sx={{width: '100%', height: '100vh', borderTopLeftRadius: '5vh', borderBottomLeftRadius: '5vh',
             bgcolor: 'white'}}>
                 {props.children}
