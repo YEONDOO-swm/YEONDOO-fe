@@ -73,7 +73,10 @@ const ImportPdf = ({setIsOpenImportPdf}:{setIsOpenImportPdf: any}) => {
     const handleClickUpload = () => {
         setIsLoading(true)
         const formData = new FormData();
-        console.log(selectedFiles, selectedFiles.name)
+        if (!selectedFiles) {
+            notify('Select a paper')
+            return
+        }
         formData.append('file', selectedFiles)
         formData.append('title', selectedFiles.name)
         fetch(`${api}/api/file/upload?workspaceId=${workspaceId}`,{
