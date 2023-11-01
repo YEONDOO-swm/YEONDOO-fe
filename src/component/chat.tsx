@@ -18,6 +18,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import chatProfile from '../asset/chatProfile.png';
 import deleteIcon from '../asset/delete.svg'
 import chat from '../asset/chatProfile.png'
+import StickyNote2Icon from '@mui/icons-material/StickyNote2';
 
 type history = {
     who: boolean;
@@ -231,11 +232,11 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
 
     const handleExportAnswer = (question: string, answer: string) => {
         const iframeRefNum = openedPaperNumber === paperId ? iframeRef : iframeRef2
-        const combinedText = `${question}\n\n${answer}`
+        const combinedText = `Q. ${question}\n\n A. ${answer}`
         const chatNote = {
             type: 'note',
             position: { pageIndex: curPageIndex, rects: [[575.9580509977826, 420.80943015521063, 597.9580509977826, 442.80943015521063]] },
-            color: '#000',
+            color: color.mainGreen,
             comment: combinedText,
             tags: [],
             id: generateObjectKey(),
@@ -479,7 +480,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                             <CopyClick contents={history.content}/>
                                             <Box sx={{width: '30px', height: '30px', borderRadius: '100%', border: '1px solid #ddd',
                                                     display: 'flex', justifyContent: 'center', alignItems: 'center', ml: 1, cursor: 'pointer'}} onClick={() => handleExportAnswer(data.paperHistory[index-1].content, history.content)}>
-                                                <ExitToAppIcon sx={{color: '#333', fontSize: '19px'}}/>
+                                                <StickyNote2Icon sx={{color: '#333', fontSize: '19px'}}/>
                                             </Box>
                                             {/* <IconButton onClick={() => handleExportAnswer(data.paperHistory[index-1].content, history.content)}>
                                                 <ExitToAppIcon/>
@@ -666,7 +667,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                             </IconButton> */}
                                             <Box sx={{width: '30px', height: '30px', borderRadius: '100%', border: '1px solid #ddd',
                                                     display: 'flex', justifyContent: 'center', alignItems: 'center', ml: 1, cursor: 'pointer'}} onClick={() => handleExportAnswer(term.searchTerm, searchResultsInPaper[index])}>
-                                                <ExitToAppIcon sx={{color: '#333', fontSize: '19px'}}/>
+                                                <StickyNote2Icon sx={{color: '#333', fontSize: '19px'}}/>
                                             </Box>
                                             
                                         </Box>
