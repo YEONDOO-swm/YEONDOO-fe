@@ -10,6 +10,7 @@ import study from '../../asset/study.svg'
 import rightarrowWhite from '../../asset/rightarrowWhite.svg'
 import { color } from '../color'
 import dashboard from '../../asset/Dashboard.svg'
+import workspaceIcon from '../../asset/workspaceIcon.svg'
 
 const SideBarWorkspace = ({number}:{number: number}) => {
     const navigate = useNavigate()
@@ -17,18 +18,26 @@ const SideBarWorkspace = ({number}:{number: number}) => {
     const workspaceTitle = sessionStorage.getItem('workspaceTitle')
     return (
       <Box sx={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', cursor: 'pointer'}}>
-          <Typography sx={{
-              color: 'white',
-              textAlign: 'center',
-              fontSize: '22px',
-              fontStyle: 'normal',
-              fontWeight: '600',
-              lineHeight: 'normal',
+          <Box onClick={()=>{window.location.replace("/dashboard?workspaceId="+workspaceId)}}>
+
+            <Typography sx={{
+              fontSize: '12px', 
+              color: color.white,
               pt: 2,
-              pb: 4
-          }}
-          onClick={()=>{window.location.replace("/dashboard?workspaceId="+workspaceId)}}
-          >{workspaceTitle && (workspaceTitle.length > 15?workspaceTitle.slice(0,15)+"...":workspaceTitle)}</Typography>
+              lineHeight: 0.5,
+              }}>Workspace</Typography>
+            {/* <img src={workspaceIcon} width="10%"/> */}
+            <Typography sx={{
+                color: 'white',
+                textAlign: 'center',
+                fontSize: '22px',
+                fontStyle: 'normal',
+                fontWeight: '600',
+                lineHeight: 'normal',
+                pb: 4
+            }}
+            >{workspaceTitle && (workspaceTitle.length > 15?workspaceTitle.slice(0,15)+"...":workspaceTitle)}</Typography>
+          </Box>
         <SideBarMenu img={dashboard} title='Dashboard' number={number} idx={0} url={"/dashboard?workspaceId="+workspaceId}/>
         <SideBarMenu img={works} title='My Works' number={number} idx={1} url="/paperstorage"/>
         <SideBarMenu img={study} title='Study with AI' number={number} idx={2} url="/selectpaper"/>
