@@ -312,7 +312,7 @@ const Reader = () => {
       } else {
         setCurTab(2)
         const secondPayload = sessionStorage.getItem("secondPaper")
-        const storeSecondPaper = () => getApi(api, `/api/paper/${openedPaperNumber}?workspaceId=${workspaceId}`) 
+        const storeSecondPaper = () => getApi(api, `/api/paper?paperId=${openedPaperNumber}&workspaceId=${workspaceId}`) 
           .then(async response => {
               if (response.status === 200) {
                   return response.json().then(data => {
