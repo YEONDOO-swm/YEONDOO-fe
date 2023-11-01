@@ -191,7 +191,7 @@ export const PaperStorage = () => {
                     <Typography sx={{color: '#333', fontSize: '18px', fontWeight: 600}}>
                         {paper.title}
                     </Typography>
-                    {paper.subject && <Box sx={{width: '23vw', display: 'flex', flexWrap:'', mt: 1, mb: 0.5, overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none',
+                    {paper.subject && <Box sx={{width: '48vw', display: 'flex', flexWrap:'', mt: 1, mb: 0.5, overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none',
                         '&::-webkit-scrollbar': {
                           display: 'none', /* Chrome 브라우저의 스크롤바 숨김 */
                         }}}>
