@@ -129,7 +129,7 @@ export const reducer = (state:CounterState = initState, action:any) => {
         case SET_USER_PDF_LIST:
             return {
                 ...state,
-                userPdfList: [...state.userPdfList, action.data]
+                userPdfList: action.data
             }
         default:
             return state;

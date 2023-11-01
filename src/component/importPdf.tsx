@@ -25,6 +25,7 @@ const ImportPdf = ({setIsOpenImportPdf}:{setIsOpenImportPdf: any}) => {
     const notify = useNotify()
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const userPdfList = useSelector((state:CounterState) => state.userPdfList)
 
     const onSelectFile = (e: any) => {
         e.preventDefault();
@@ -93,11 +94,11 @@ const ImportPdf = ({setIsOpenImportPdf}:{setIsOpenImportPdf: any}) => {
                 .then(data => {
                     dispatch({
                         type: SET_USER_PDF_LIST,
-                        data: {
+                        data: [{
                             title: selectedFiles.name.slice(0, -4),
                             paperId: data.paperId,
                             url: data.url,
-                        }
+                        }, ...userPdfList]
                     })
                 })
 
