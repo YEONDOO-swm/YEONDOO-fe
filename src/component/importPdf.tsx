@@ -78,7 +78,7 @@ const ImportPdf = ({setIsOpenImportPdf}:{setIsOpenImportPdf: any}) => {
             return
         }
         formData.append('file', selectedFiles)
-        formData.append('title', selectedFiles.name)
+        formData.append('title', selectedFiles.name.slice(0, -4))
         fetch(`${api}/api/file/upload?workspaceId=${workspaceId}`,{
             method: 'POST',
             headers : { 
