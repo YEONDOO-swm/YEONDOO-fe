@@ -270,7 +270,8 @@ export const Home = () => {
   const recentPaper = (recentlyPapers: any) => (
     <Box sx={{height: '55px', borderRadius: '10px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)',
       display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 2, mb: 1}}>
-          <Typography sx={{fontWeight: 500}}>
+          <Typography sx={{fontWeight: 500, width: '80%',
+        display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>
             {recentlyPapers.title}
           </Typography>
           <Box sx={{display: 'flex'}} onClick={()=>{window.open(`/paper?workspaceId=${workspaceId}&paperid=${recentlyPapers.paperId}&userPdf=false`)}}>

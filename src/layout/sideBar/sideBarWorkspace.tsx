@@ -18,14 +18,24 @@ const SideBarWorkspace = ({number}:{number: number}) => {
     const workspaceTitle = sessionStorage.getItem('workspaceTitle')
     return (
       <Box sx={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', cursor: 'pointer'}}>
-          <Box onClick={()=>{window.location.replace("/dashboard?workspaceId="+workspaceId)}}>
-
-            <Typography sx={{
-              fontSize: '12px', 
-              color: color.white,
+          <Box onClick={()=>{window.location.replace("/dashboard?workspaceId="+workspaceId)}}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               pt: 2,
-              lineHeight: 0.5,
-              }}>Workspace</Typography>
+              pb: 4,
+              gap: 0.4,
+            }}>
+            <Typography sx={{
+              fontSize: '12px',
+              fontWeight: 700,
+              color: color.mainGreen,
+              bgcolor: color.white,
+              borderRadius: '100%',
+              px: 0.5,
+              py: 0.1,
+              }}>W</Typography>
             {/* <img src={workspaceIcon} width="10%"/> */}
             <Typography sx={{
                 color: 'white',
@@ -34,7 +44,6 @@ const SideBarWorkspace = ({number}:{number: number}) => {
                 fontStyle: 'normal',
                 fontWeight: '600',
                 lineHeight: 'normal',
-                pb: 4
             }}
             >{workspaceTitle && (workspaceTitle.length > 15?workspaceTitle.slice(0,15)+"...":workspaceTitle)}</Typography>
           </Box>

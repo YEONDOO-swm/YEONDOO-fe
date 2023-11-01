@@ -53,7 +53,6 @@ export const SearchTap: React.FC<SearchTapProps> = ({
                 id="search"
                 type="search"
                 variant="outlined"
-                multiline
                 inputProps={{
                   maxLength: maxLengthLimit,
                 }}
