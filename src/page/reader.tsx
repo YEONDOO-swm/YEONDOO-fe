@@ -267,7 +267,7 @@ const Reader = () => {
         console.error('관심 논문 정보를 불러오는데 실패하였습니다: ', error)
         Sentry.captureException(error)
       })
-      getApi(api, `/api/paper/${paperId}?workspaceId=${workspaceId}`) 
+      getApi(api, `/api/paper?paperId=${paperId}&workspaceId=${workspaceId}`) 
         .then(async response => {
             if (response.status === 200) {
               const data = await response.json();
