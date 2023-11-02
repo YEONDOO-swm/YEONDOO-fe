@@ -58,6 +58,9 @@ const style = {
 
 const trashButton = () => {
     const [isHovered, setIsHovered] = useState<boolean>(false)
+
+    const workspaceId: number | null = Number(sessionStorage.getItem("workspaceId"));
+
     const navigate = useNavigate()
     return (
         <Box sx={{display: 'inline-flex', px: '20px', justifyContent: 'center', alignItems: 'center', gap: '10px',
@@ -68,7 +71,7 @@ const trashButton = () => {
         }}}
         onMouseEnter={()=>{setIsHovered(true)}}
         onMouseLeave={()=>{setIsHovered(false)}}
-        onClick={()=>{navigate('/trash')}}>
+        onClick={()=>{navigate(`/trash/${workspaceId}`)}}>
             {/* <img src={trashGrey}/> */}
             <DeleteIcon sx={{color: isHovered?color.white :'#777'}}/>
             <Typography sx={{color: isHovered?color.white :'#777', fontSize: '15px', fontWeight: '700'}}>
