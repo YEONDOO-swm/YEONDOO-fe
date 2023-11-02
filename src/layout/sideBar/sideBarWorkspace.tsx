@@ -18,7 +18,7 @@ const SideBarWorkspace = ({number}:{number: number}) => {
     const workspaceTitle = sessionStorage.getItem('workspaceTitle')
     return (
       <Box sx={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', cursor: 'pointer'}}>
-          <Box onClick={()=>{window.location.replace("/dashboard?workspaceId="+workspaceId)}}
+          <Box onClick={()=>{window.location.replace("/dashboard/"+workspaceId)}}
             sx={{
               display: 'flex',
               alignItems: 'center',
@@ -47,10 +47,10 @@ const SideBarWorkspace = ({number}:{number: number}) => {
             }}
             >{workspaceTitle && (workspaceTitle.length > 15?workspaceTitle.slice(0,15)+"...":workspaceTitle)}</Typography>
           </Box>
-        <SideBarMenu img={dashboard} title='Dashboard' number={number} idx={0} url={"/dashboard?workspaceId="+workspaceId}/>
-        <SideBarMenu img={works} title='My Works' number={number} idx={1} url="/paperstorage"/>
-        <SideBarMenu img={study} title='Study with AI' number={number} idx={2} url="/selectpaper"/>
-        <SideBarMenu img={history} title='History' number={number} idx={3} url="/history"/>
+        <SideBarMenu img={dashboard} title='Dashboard' number={number} idx={0} url={"/dashboard/"+workspaceId}/>
+        <SideBarMenu img={works} title='My Works' number={number} idx={1} url={"/paperstorage/"+workspaceId}/>
+        <SideBarMenu img={study} title='Study with AI' number={number} idx={2} url={"/selectpaper/"+workspaceId}/>
+        <SideBarMenu img={history} title='History' number={number} idx={3} url={"/history/"+workspaceId}/>
         
         <Box sx={{position: 'absolute', bottom: '5vh', width: '17vw', ml: 4,
         }} onClick={()=>{navigate('/home')}}>

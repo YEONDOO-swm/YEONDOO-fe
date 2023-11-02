@@ -100,17 +100,17 @@ export const App = () => {
                         <CustomRoutes>
                             {/* <Route path="/" element={<Navigate to="/home" replace />} /> */}
                             
-                            <Route path="/dashboard" element={< Home />}/>
-                            <Route path="/paperstorage" element={< PaperStorage/>}/>
-                            <Route path="/history" element={< HistoryPaper />}/>
-                            <Route path="/userprofile" element={< UserProfile />}/>
+                            <Route path="/dashboard/:workspaceId" element={< Home />}/>
+                            <Route path="/paperstorage/:workspaceId" element={< PaperStorage/>}/>
+                            <Route path="/history/:workspaceId" element={< HistoryPaper />}/>
+                            {/* <Route path="/userprofile" element={< UserProfile />}/> */}
                             {/* <Route path="/paper" element={< PaperView />}/> */}
-                            <Route path="/trash" element={< Trash />} />
-                            <Route path="/pdfviewer" element={< PdfViewer />} />
-                            <Route path="/home" element={<Workspaces/>} />
-                            <Route path="/selectpaper" element={<StudyWithAI/>} />
-                            <Route path="/paper" element={<Reader/>} />
-                            <Route path="/export" element={<Export/>} />
+                            <Route path="/trash/:workspaceId" element={< Trash />} />
+                            {/* <Route path="/pdfviewer" element={< PdfViewer />} /> */}
+                            <Route path='/home' element={<Workspaces/>} />
+                            <Route path="/selectpaper/:workspaceId" element={<StudyWithAI/>} />
+                            <Route path="/paper/:workspaceId" element={<Reader/>} />
+                            {/* <Route path="/export" element={<Export/>} /> */}
                             <Route path="/library" element={<Library/>} />
 
                         </CustomRoutes>

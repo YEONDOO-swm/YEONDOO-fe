@@ -130,7 +130,7 @@ export const Home = () => {
             amplitude.track("Home에서 검색")
           }
           
-          navigate(`/dashboard?workspaceId=${workspaceId}&query=${searchTerm}`)
+          navigate(`/dashboard/${workspaceId}?query=${searchTerm}`)
           performSearch()
           //window.location.href = `/home?query=${searchTerm}&type=${searchType}`
       }
@@ -150,7 +150,7 @@ export const Home = () => {
         amplitude.track("Home에서 검색")
       }
       
-      navigate(`/dashboard?workspaceId=${workspaceId}?query=${searchTerm}`)
+      navigate(`/dashboard/${workspaceId}?query=${searchTerm}`)
       performSearch()
 
   }
@@ -260,7 +260,7 @@ export const Home = () => {
           )}
           <Box sx = {{margin: "15px 0 0 0" , display: 'flex'}}>
             {/* <Button variant="contained" onClick={() => handleViewPaper(paper.url) }>논문 보기</Button> */}
-            <GoToViewMore paperid={paper.paperId} workspaceId={workspaceId} userPdf={paper.userPdf}/>
+            <GoToViewMore paperid={paper.paperId} workspaceId={workspaceId} userPdf={paper.userPdf===undefined?false:paper.userPdf}/>
             <Box sx={{width: '15px'}}></Box>
             <GoToArxiv url={paper.url} paperId={paper.paperId}/>
           </Box>
@@ -277,7 +277,7 @@ export const Home = () => {
         display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>
             {recentlyPapers.title}
           </Typography>
-          <Box sx={{display: 'flex'}} onClick={()=>{window.open(`/paper?workspaceId=${workspaceId}&paperid=${recentlyPapers.paperId}&userPdf=false`)}}>
+          <Box sx={{display: 'flex'}} onClick={()=>{window.open(`/paper/${workspaceId}?paperid=${recentlyPapers.paperId}&userPdf=false`)}}>
             <Typography sx={{fontWeight: 500, color: color.mainGreen, cursor: 'pointer', '&:hover':{
               color: '#445142'
             }}}>Study with AI</Typography>
