@@ -82,7 +82,7 @@ export const Login = () => {
             <img src={spinner} alt="로딩" width="10%"/>
         </Box>
         :<Box sx={{display: 'flex'}}>
-            <Box sx={{height: '100vh', width: '70%', bgcolor: color.mainGreen,
+            <Box sx={{height: '100vh', width: '60%', bgcolor: color.mainGreen,
                     display: 'flex', flexDirection: 'column', alignItems: 'center',
                     position: 'relative'}}>
                 <Box sx={{bgcolor: '#fff', marginTop: '13vh', width: '60vh', height: '60vh',
@@ -97,7 +97,7 @@ export const Login = () => {
                     <Typography sx={{fontSize: '15px', fontWeight: 400}}>Experience new paper study with Yeondoo</Typography>
                 </Box>
             </Box>
-            <Box sx={{height: '100vh', width: '30%', display:'flex', justifyContent: 'center', alignItems:"center"}}>
+            <Box sx={{height: '100vh', width: '40%', display:'flex', justifyContent: 'center', alignItems:"center"}}>
                 <Box sx={{display: 'inline-flex', padding: '50px 60px', flexDirection: 'column', alignItems: 'center', gap: '25px',
                         borderRadius: '20px', border: '1px solid #ddd', boxShadow: '0px 0px 20px 0px rgba(0, 0, 0, 0.05)'}}>
                     <Box>
