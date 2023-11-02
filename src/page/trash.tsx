@@ -67,7 +67,9 @@ const backToMyWorksButton = () => {
         }}}
         onMouseEnter={()=>{setIsHovered(true)}}
         onMouseLeave={()=>{setIsHovered(false)}}
-        onClick={()=>{navigate(`/paperstorage/${workspaceId}`)}}>
+
+        onClick={()=>{navigate(`/paperstorage?workspaceId=${workspaceId}`)}}>
+
             {isHovered?<img src={works} width="22px"/>:<img src={worksGrey} width="22px"/>}
             <Typography sx={{color: isHovered?color.white:color.hoverGreen, fontSize: '15px', fontWeight: '700'}}>
                 Back to My Works
