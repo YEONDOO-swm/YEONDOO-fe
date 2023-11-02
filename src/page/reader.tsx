@@ -170,6 +170,9 @@ const Reader = () => {
     else if (e.data.createReader) {
       setIsFirstPageLoading(false)
     }
+    else if (e.data.requireLogin) {
+      navigate('/login')
+    }
   }
 
   useEffect(()=>{
