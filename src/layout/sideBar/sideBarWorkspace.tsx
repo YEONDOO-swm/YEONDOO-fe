@@ -27,6 +27,7 @@ const SideBarWorkspace = ({number}:{number: number}) => {
               pb: 4,
               gap: 0.4,
             }}>
+
             <Typography sx={{
               fontSize: '12px',
               fontWeight: 700,
@@ -48,9 +49,9 @@ const SideBarWorkspace = ({number}:{number: number}) => {
             >{workspaceTitle && (workspaceTitle.length > 15?workspaceTitle.slice(0,15)+"...":workspaceTitle)}</Typography>
           </Box>
         <SideBarMenu img={dashboard} title='Dashboard' number={number} idx={0} url={"/dashboard?workspaceId="+workspaceId}/>
-        <SideBarMenu img={works} title='My Works' number={number} idx={1} url="/paperstorage"/>
-        <SideBarMenu img={study} title='Study with AI' number={number} idx={2} url="/selectpaper"/>
-        <SideBarMenu img={history} title='History' number={number} idx={3} url="/history"/>
+        <SideBarMenu img={works} title='My Works' number={number} idx={1} url={"/paperstorage?workspaceId="+workspaceId}/>
+        <SideBarMenu img={study} title='Study with AI' number={number} idx={2} url={"/selectpaper?workspaceId="+workspaceId}/>
+        <SideBarMenu img={history} title='History' number={number} idx={3} url={"/history?workspaceId="+workspaceId}/>
         
         <Box sx={{position: 'absolute', bottom: '5vh', width: '17vw', ml: 4,
         }} onClick={()=>{navigate('/home')}}>

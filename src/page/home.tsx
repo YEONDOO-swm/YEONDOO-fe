@@ -71,9 +71,10 @@ export const Home = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
 
     // const { workspaceId } = useParams()
-    const query: URLSearchParams = new URLSearchParams(window.location.search); 
-    const workspaceId: number = Number(query.get('workspaceId'));
-    sessionStorage.setItem('workspaceId', String(workspaceId))
+    //const query: URLSearchParams = new URLSearchParams(window.location.search); 
+    //const workspaceId: number = Number(query.get('workspaceId'));
+    //sessionStorage.setItem('workspaceId', String(workspaceId))
+    const workspaceId: number = Number(sessionStorage.getItem('workspaceId'))
     const workspaceTitle = sessionStorage.getItem('workspaceTitle')
     
     const [searchTerm, setSearchTerm] = useState<string>(""); // 사용자가 치고있는 질문
@@ -129,7 +130,7 @@ export const Home = () => {
             amplitude.track("Home에서 검색")
           }
           
-          navigate(`/dashboard?workspaceId=${workspaceId}&query=${searchTerm}`)
+          navigate(`/dashboard/${workspaceId}?query=${searchTerm}`)
           performSearch()
           //window.location.href = `/home?query=${searchTerm}&type=${searchType}`
       }
@@ -149,7 +150,7 @@ export const Home = () => {
         amplitude.track("Home에서 검색")
       }
       
-      navigate(`/dashboard?workspaceId=${workspaceId}?query=${searchTerm}`)
+      navigate(`/dashboard/${workspaceId}?query=${searchTerm}`)
       performSearch()
 
   }
@@ -163,11 +164,13 @@ export const Home = () => {
           setLoading(true)
           setIsSearched(true)
           const query: URLSearchParams = new URLSearchParams(window.location.search); 
-          const performSearchTerm: string = query.get('query') || '';
+          let performSearchTerm: string | null = query.get('query') || '';
           /*useQuery는 get일 때 쓸 수 있다. 하지만 최상단에 훅이 위치해 있어야 한다. 이경우 performSearchTerm이 이 함수안에서만
           접근할 수 있다. 그리고 어차피 searchResults가 다른 곳에서도 업데이트가 되어야 해서 react query를 쓰는 이유가 없다.
           더하여 다른 컴포넌트에서 사용되는 값도 아니다. (다른 컴포넌트에서 사용하려면 staleTime 사용)*/
-
+          if (!performSearchTerm) {
+            performSearchTerm = sessionStorage.getItem('searchTerm')
+          }
           const response: Response = await getApi(api, `/api/homesearch?query=${performSearchTerm}&workspaceId=${workspaceId}`)
           if (response.status === 401) {
             await refreshApi(api, notify, navigate)
@@ -257,7 +260,7 @@ export const Home = () => {
           )}
           <Box sx = {{margin: "15px 0 0 0" , display: 'flex'}}>
             {/* <Button variant="contained" onClick={() => handleViewPaper(paper.url) }>논문 보기</Button> */}
-            <GoToViewMore paperid={paper.paperId} workspaceId={workspaceId} userPdf={paper.userPdf}/>
+            <GoToViewMore paperid={paper.paperId} workspaceId={workspaceId} userPdf={paper.userPdf===undefined?false:paper.userPdf}/>
             <Box sx={{width: '15px'}}></Box>
             <GoToArxiv url={paper.url} paperId={paper.paperId}/>
           </Box>
@@ -357,7 +360,10 @@ export const Home = () => {
             <Typography sx={{fontSize: '18px', fontWeight: '600', color: color.homeGreen}}>Paper Search</Typography>
               <SearchTap
                 searchTerm={searchTerm}
-                onChange={setSearchTerm}
+                onChange={(e) => {
+                  sessionStorage.setItem('searchTerm', e)
+                  setSearchTerm(e)}
+                }
                 onSearch={handleButtonClick}
                 onSearchKeyDown={handleSearchKeyDown}
                 placeholder="Attention is all you need"

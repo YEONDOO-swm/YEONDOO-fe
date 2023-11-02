@@ -54,6 +54,9 @@ const restoreButton = (props:any) => {
 
 const backToMyWorksButton = () => {
     const [isHovered, setIsHovered] = useState<boolean>(false)
+
+    const workspaceId: number = Number(sessionStorage.getItem('workspaceId'))
+
     const navigate = useNavigate()
     return (
         <Box sx={{display: 'inline-flex', px: '20px', justifyContent: 'center', alignItems: 'center', gap: '10px',
@@ -64,7 +67,7 @@ const backToMyWorksButton = () => {
         }}}
         onMouseEnter={()=>{setIsHovered(true)}}
         onMouseLeave={()=>{setIsHovered(false)}}
-        onClick={()=>{navigate('/paperstorage')}}>
+        onClick={()=>{navigate(`/paperstorage?workspaceId=${workspaceId}`)}}>
             {isHovered?<img src={works} width="22px"/>:<img src={worksGrey} width="22px"/>}
             <Typography sx={{color: isHovered?color.white:color.hoverGreen, fontSize: '15px', fontWeight: '700'}}>
                 Back to My Works

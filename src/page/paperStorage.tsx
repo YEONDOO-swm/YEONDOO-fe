@@ -16,8 +16,8 @@ import { Helmet } from "react-helmet-async";
 import MetaTag from "../SEOMetaTag";
 import * as Sentry from '@sentry/react';
 import { getCookie, setCookie } from "../cookie";
-import { useSelector } from "react-redux";
-import { CounterState } from "../reducer";
+import { useDispatch, useSelector } from "react-redux";
+import { CounterState, SET_USER_PDF_LIST } from "../reducer";
 import { useMutation, useQuery } from "react-query";
 import { paperType, tag } from "./home";
 import { useNavigate } from "react-router-dom";
@@ -58,6 +58,9 @@ const style = {
 
 const trashButton = () => {
     const [isHovered, setIsHovered] = useState<boolean>(false)
+
+    const workspaceId: number | null = Number(sessionStorage.getItem("workspaceId"));
+
     const navigate = useNavigate()
     return (
         <Box sx={{display: 'inline-flex', px: '20px', justifyContent: 'center', alignItems: 'center', gap: '10px',
@@ -68,7 +71,7 @@ const trashButton = () => {
         }}}
         onMouseEnter={()=>{setIsHovered(true)}}
         onMouseLeave={()=>{setIsHovered(false)}}
-        onClick={()=>{navigate('/trash')}}>
+        onClick={()=>{navigate(`/trash?workspaceId=${workspaceId}`)}}>
             {/* <img src={trashGrey}/> */}
             <DeleteIcon sx={{color: isHovered?color.white :'#777'}}/>
             <Typography sx={{color: isHovered?color.white :'#777', fontSize: '15px', fontWeight: '700'}}>
@@ -120,6 +123,7 @@ export const PaperStorage = () => {
 
     const navigate = useNavigate()
     const notify = useNotify()
+    const dispatch = useDispatch()
 
     const handleCancelClick = (paperId: string, paperTitle: string) => { // x버튼 클릭시
         setOpen(true)
@@ -162,6 +166,10 @@ export const PaperStorage = () => {
     getApi(api, `/api/container?workspaceId=${workspaceId}`)
     .then(async response => {
         if (response.status === 200) {
+            dispatch({
+                type: SET_USER_PDF_LIST,
+                data: []
+            })
             return response.json()
         } else if (response.status === 401) {
             await refreshApi(api, notify, navigate)

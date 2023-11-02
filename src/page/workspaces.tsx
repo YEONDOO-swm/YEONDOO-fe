@@ -194,6 +194,7 @@ const Workspaces = () => {
 
     const goToWorkspace = (workspaceId: number, workspaceTitle: string) => {
         sessionStorage.setItem('workspaceTitle', workspaceTitle)
+        sessionStorage.setItem('workspaceId', String(workspaceId))
         navigate(`/dashboard?workspaceId=${workspaceId}`)
     }
 
@@ -340,7 +341,7 @@ const Workspaces = () => {
         <Box sx={{display: 'flex', justifyContent: 'flex-end', p:2, color: 'grey.700'}}>
           <UserMenu/>
         </Box>
-        <Box>
+        <Box sx={{height: '80vh', overflowY: 'scroll'}}>
             <Box sx={{mx: '7vw', my: '5vh', display: 'flex', flexWrap: 'wrap'}}>
                 <Box sx={{width: '320px', height: '210px', bgcolor: '#F5F5F5', borderRadius: '20px'
                 , display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',

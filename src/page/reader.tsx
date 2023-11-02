@@ -95,7 +95,8 @@ const Reader = () => {
 
   const query = new URLSearchParams(window.location.search);
   const paperId: string = query.get('paperid') || '';
-  const workspaceId: number = Number(query.get('workspaceId'));
+  //const workspaceId: number = Number(query.get('workspaceId'));
+  const workspaceId: number = Number(sessionStorage.getItem('workspaceId'));
 
   const [isPdfCompleted, setIsPdfCompleted] = useState<boolean>(false)
   const [isChatOpen, setIsChatOpen] = useState<boolean>(false)
@@ -169,6 +170,10 @@ const Reader = () => {
     }
     else if (e.data.createReader) {
       setIsFirstPageLoading(false)
+    }
+    else if (e.data.requireLogin) {
+      navigate('/login')
+      notify('Login time has expired')
     }
   }
 
@@ -523,7 +528,7 @@ const Reader = () => {
         </Box>
         <Box sx={{height: `calc(100vh - 45px)`}}>
           {(isFirstPageLoading ? loadingBox('Paper Information Loading...') : <LoadingCompletedBox text='Loading Completed' setIsSecondPageLoading={setIsSecondPageLoading}/>)}
-          {(isSecondPageLoading === 2 && loadingBox('Reference Paper Information Loading...'))}
+          {(isSecondPageLoading === 2 && loadingBox('Additional Paper Information Loading...'))}
           {(isSecondPageLoading === 3 && <LoadingCompletedBox text='Loading Completed' setIsSecondPageLoading={setIsSecondPageLoading}/>)}
           {openedPaperNumber === paperId
           ?<iframe src={readerUrl} width="100%" height="100%" ref={iframeRef}></iframe>
