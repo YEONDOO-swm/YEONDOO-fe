@@ -21,7 +21,7 @@ export const GoToViewMore = ({paperid, workspaceId, userPdf}: {paperid:string, w
     };
 
     const handleViewMore = (paperId: string) => {
-        window.open(`/paper/${workspaceId}?userPdf=${userPdf}&paperid=${paperId}`)
+        window.open(`/paper?worksapceId=${workspaceId}&userPdf=${userPdf}&paperid=${paperId}`)
       }
 
     return (
