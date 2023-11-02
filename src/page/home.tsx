@@ -277,7 +277,7 @@ export const Home = () => {
         display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>
             {recentlyPapers.title}
           </Typography>
-          <Box sx={{display: 'flex'}} onClick={()=>{window.open(`/paper?workspaceId=${workspaceId}&paperid=${recentlyPapers.paperId}&userPdf=false`)}}>
+          <Box sx={{display: 'flex'}} onClick={()=>{window.open(`/paper/${workspaceId}?paperid=${recentlyPapers.paperId}&userPdf=false`)}}>
             <Typography sx={{fontWeight: 500, color: color.mainGreen, cursor: 'pointer', '&:hover':{
               color: '#445142'
             }}}>Study with AI</Typography>

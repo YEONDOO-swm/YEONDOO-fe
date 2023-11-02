@@ -20,9 +20,18 @@ jobs:
     - name: Generate environment variables file for production
       run: |
         echo "VITE_REACT_APP_AWS_SERVER=${{ secrets.VITE_REACT_APP_AWS_SERVER }}" >> $GITHUB_ENV
+        echo "VITE_READER_URL=${{ secrets.VITE_READER_URL }}" >> $GITHUB_ENV
+        echo "VITE_GOOGLE_CLIENT_ID=${{ secrets.VITE_GOOGLE_CLIENT_ID }}" >> $GITHUB_ENV
+        echo "VITE_AMPLITUDE_ID=${{ secrets.VITE_AMPLITUDE_ID }}" >> $GITHUB_ENV
         
     - name: npm install, build
       run: |
+        git submodule update --init --recursive
+        cd pdf-worker
+        git submodule update --init --recursive
+        npm install --force
+        npm run build
+        cd ..
         npm install --legacy-peer-deps
         npm run build
         

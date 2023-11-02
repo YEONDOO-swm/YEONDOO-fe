@@ -174,6 +174,7 @@ const Reader = () => {
     else if (e.data.requireLogin) {
       navigate('/login')
       notify('Login time has expired')
+
     }
   }
 

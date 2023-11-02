@@ -196,6 +196,7 @@ const Workspaces = () => {
         sessionStorage.setItem('workspaceTitle', workspaceTitle)
         sessionStorage.setItem('workspaceId', String(workspaceId))
         navigate(`/dashboard?workspaceId=${workspaceId}`)
+
     }
 
     const style = {

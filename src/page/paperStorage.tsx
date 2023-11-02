@@ -71,7 +71,9 @@ const trashButton = () => {
         }}}
         onMouseEnter={()=>{setIsHovered(true)}}
         onMouseLeave={()=>{setIsHovered(false)}}
+
         onClick={()=>{navigate(`/trash?workspaceId=${workspaceId}`)}}>
+
             {/* <img src={trashGrey}/> */}
             <DeleteIcon sx={{color: isHovered?color.white :'#777'}}/>
             <Typography sx={{color: isHovered?color.white :'#777', fontSize: '15px', fontWeight: '700'}}>

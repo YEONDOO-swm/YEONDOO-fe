@@ -110,6 +110,7 @@ export const App = () => {
                             <Route path='/home' element={<Workspaces/>} />
                             <Route path="/selectpaper" element={<StudyWithAI/>} />
                             <Route path="/paper" element={<Reader/>} />
+
                             {/* <Route path="/export" element={<Export/>} /> */}
                             <Route path="/library" element={<Library/>} />
 
