@@ -136,7 +136,7 @@ export const HistoryPaper = () => {
                                   <Typography sx={{ color: '#333', fontSize: '18px', marginBottom: 1.5, fontWeight: 600, display: 'inline-block' }}>          
                                       {mergedItems[0].title}
                                   </Typography>
-                                  <Box sx={{display: 'flex', transform: 'translateY(-8px)'}} onClick={()=>{window.open(`/paper/${workspaceId}?paperid=${mergedItems[0].paperId}&userPdf=${mergedItems[0].userPdf}`)}}>
+                                  <Box sx={{display: 'flex', transform: 'translateY(-8px)'}} onClick={()=>{window.open(`/paper?workspaceId=${workspaceId}&paperid=${mergedItems[0].paperId}&userPdf=${mergedItems[0].userPdf}`)}}>
                                     <Typography sx={{fontWeight: 500, color: color.mainGreen, cursor: 'pointer', '&:hover':{
                                       color: '#445142'
                                     }}}>Study with AI</Typography>
