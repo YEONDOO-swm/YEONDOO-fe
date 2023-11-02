@@ -59,7 +59,7 @@ const Library = () => {
                                 }}}
                                 onClick={()=> {
                                     sessionStorage.setItem('workspaceId', String(paper.workspaceId))
-                                    navigate(`/dashboard/${paper.workspaceId}`)
+                                    navigate(`/dashboard?workspaceId=${paper.workspaceId}`)
                                 }}>{paper.workspaceTitle}</Typography>
                             <img src={arrow}/>
                         </Box>
