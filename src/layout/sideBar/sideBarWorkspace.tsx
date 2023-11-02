@@ -18,7 +18,7 @@ const SideBarWorkspace = ({number}:{number: number}) => {
     const workspaceTitle = sessionStorage.getItem('workspaceTitle')
     return (
       <Box sx={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', cursor: 'pointer'}}>
-          <Box onClick={()=>{window.location.replace("/dashboard/"+workspaceId)}}
+          <Box onClick={()=>{window.location.replace("/dashboard?workspaceId="+workspaceId)}}
             sx={{
               display: 'flex',
               alignItems: 'center',
