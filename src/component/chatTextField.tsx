@@ -18,6 +18,7 @@ import { paperType } from '../page/home';
 import scrollStyle from "../layout/scroll.module.css"
 import deleteIcon from "../asset/deleteIcon.svg"
 import spinner from '../asset/spinner.gif'
+import CustomButton from './customButton';
 
 type SearchTapProps = {
     searchTerm: string;
@@ -220,19 +221,24 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
                 <Typography id="modal-modal-title" variant="h6" component="h2">
                   Add study paper
                 </Typography>
-                <FormControl sx={{width: '50%', mt: 2}} size='small'>
-                  <InputLabel id="demo-simple-select-label">Papers</InputLabel>
-                  <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={refPaperList}
-                      onChange={handlerefPaperListChange}
-                      sx={{bgcolor: '#fff', border: '1px solid #ddd'}}
-                  >
-                      <MenuItem value="My library">My works</MenuItem>
-                      <MenuItem value="Paper reference">Paper references</MenuItem>
-                  </Select>
-              </FormControl>
+                <Box sx={{display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between'}}>
+                  <FormControl sx={{width: '50%', mt: 2}} size='small'>
+                    <InputLabel id="demo-simple-select-label">Papers</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={refPaperList}
+                        onChange={handlerefPaperListChange}
+                        sx={{bgcolor: '#fff', border: '1px solid #ddd'}}
+                    >
+                        <MenuItem value="My library">My works</MenuItem>
+                        <MenuItem value="Paper reference">Paper references</MenuItem>
+                      </Select>
+                  </FormControl>
+                  {refPaperList === 'My library' && <Box>
+                    <CustomButton title="Add works" width="100px" click={()=>{window.open(`/dashboard?workspaceId=${workspaceId}`)}} />
+                  </Box>}
+                </Box>
                 <Box sx={{width: '100%', height: '2px', bgcolor: color.secondaryGreen, mt: 1}}></Box>
                 <Box sx={{height: '30vh', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
                   {refPaperList === 'My library' 
