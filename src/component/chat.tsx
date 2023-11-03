@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, KeyboardEvent, MouseEvent } from 'react'
-import { Box, Typography } from '@mui/material'
+import { Box, Typography, useMediaQuery } from '@mui/material'
 import { color } from '../layout/color'
 import scrollStyle from "../layout/scroll.module.css"
 import CopyClick from './copyClick'
@@ -332,12 +332,16 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
     const handleMouseUp = () => {
         setIsDragging(false);
     };
+
+    const isTablet = useMediaQuery("(min-width: 481px) and (max-width: 1024px)")
+    const isMobile = useMediaQuery("(max-width: 480px)")
+
     return (
     <div>
         <Box
         sx={{
-          width: '90px',
-          height: '90px',
+          width: isMobile? '60px':'90px',
+          height: isMobile? '60px':'90px',
           borderRadius: '100%',
           backgroundColor: isChatOpen?color.hoverGreen: color.mainGreen,
           position: 'absolute', // 부모(상위) 요소에 대한 상대 위치로 설정
@@ -349,18 +353,23 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
           boxShadow: '0px 5px 5px rgba(0, 0, 0, 0.1), 0px -5px 5px rgba(0, 0, 0, 0.1)',
           '&:hover':{
             bgcolor: color.hoverGreen
-          }
+          },
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
         onClick={handleChatOpen}
         onMouseDown={handleMouseDown}
         >
-            <img src={chatProfile} style={{marginTop: '25px', marginLeft: '25px'}} draggable={false}/>
+            <img src={chatProfile} 
+                draggable={false}
+                width={isMobile?'30px':undefined}/>
         </Box>
 
       {/* 직사각형 (예: 채널톡 스타일) */}
       {isChatOpen && <Box
         style={{
-          width: '400px',
+          width: isMobile?'80vw':'400px',
           height: '550px',
           //backgroundColor: '#ddd',
           position: 'absolute', // 부모(상위) 요소에 대한 상대 위치로 설정
@@ -401,7 +410,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                         padding: '16px',
                         marginBottom: '10px',
                         borderRadius: history.who ? '15px 0px 15px 15px' : '0px 15px 15px 15px',
-                        maxWidth: history.who ? '300px' : '300px'
+                        maxWidth: '80%'
                         }}
                     >
                         {history.who && <Box>
@@ -409,14 +418,15 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                     {history.paperDetailList.map((paper: any, index: number) => (
                                         <Box key={index} sx={{display: 'inline-flex', alignItems: 'center', gap: 1, pl: 2, pr: 1, py: 0.4, mb: 1,
                                         borderRadius: '100px', border: `1px solid ${color.white}`, cursor: 'pointer'}}>
-                                        <Typography sx={{fontSize: '13px', color: color.white, fontWeight: 500}} onClick={() => 
+                                        <Typography sx={{fontSize: '13px', color: color.white, fontWeight: 500
+                                        ,display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden'}} onClick={() => 
                                             { setOpenedPaperNumber(paper.paperId) 
                                               if (paper.paperId === paperId){
                                                 setCurTab(1)
                                               } else {
                                                 setCurTab(2)
                                               }}}>
-                                            #{paper.title.length > 10 ? paper.title.slice(0,10)+"..." : paper.title}
+                                            #{paper.title}
                                         </Typography>
                                         </Box>
                                         ))

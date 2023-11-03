@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Card, CardContent, Typography, Box, Checkbox, Button, getPaperUtilityClass } from '@mui/material';
+import { Card, CardContent, Typography, Box, Checkbox, Button, getPaperUtilityClass, useMediaQuery } from '@mui/material';
 import { Title, useAuthenticated, useNotify } from 'react-admin';
 import { useEffect, useState, MouseEvent } from "react";
 import * as amplitude from '@amplitude/analytics-browser';
@@ -52,11 +52,10 @@ const restoreButton = (props:any) => {
     )
 }
 
-const backToMyWorksButton = () => {
+const backToMyWorksButton = (isMobile: boolean) => {
     const [isHovered, setIsHovered] = useState<boolean>(false)
 
     const workspaceId: number = Number(sessionStorage.getItem('workspaceId'))
-
     const navigate = useNavigate()
     return (
         <Box sx={{display: 'inline-flex', px: '20px', justifyContent: 'center', alignItems: 'center', gap: '10px',
@@ -72,7 +71,7 @@ const backToMyWorksButton = () => {
 
             {isHovered?<img src={works} width="22px"/>:<img src={worksGrey} width="22px"/>}
             <Typography sx={{color: isHovered?color.white:color.hoverGreen, fontSize: '15px', fontWeight: '700'}}>
-                Back to My Works
+                {isMobile?"Back":"Back to My Works"}
             </Typography>
         </Box>
     )
@@ -230,7 +229,7 @@ export const Trash = () => {
           backgroundColor: color.mainGreen,
         },
       });
-
+      const isMobile = useMediaQuery("(max-width: 767px)")
     return (
         <PageLayout workspace={true} number={1}>
             <MetaTag title="Papers in Trash - Yeondoo" description="사용자가 관심 해제한 논문의 리스트를 볼 수 있고, 복구할 수 있습니다." keywords="히스토리, 관심 해제, 복구, 논문"/>
@@ -241,7 +240,7 @@ export const Trash = () => {
                 </Typography>
                 <Box sx={{display: 'flex', gap: 1}}>
                     {restoreButton({handleSubmit})}
-                    {backToMyWorksButton()}
+                    {backToMyWorksButton(isMobile)}
                 </Box>
             </Box>
             {isLoading ? (

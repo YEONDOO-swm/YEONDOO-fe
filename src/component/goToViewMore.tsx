@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Typography, useMediaQuery } from "@mui/material";
 import * as amplitude from '@amplitude/analytics-browser';
 import { useNavigate } from 'react-router-dom';
 import * as React from "react";
@@ -11,6 +11,7 @@ import { useState } from "react";
 
 export const GoToViewMore = ({paperid, workspaceId, userPdf}: {paperid:string, workspaceId: number, userPdf?:boolean}) => {
     const [isHovered, setIsHovered] = useState(false);
+    const isMobile = useMediaQuery("(max-width: 480px)")
 
     const handleMouseEnter = () => {
         setIsHovered(true);
@@ -37,7 +38,7 @@ export const GoToViewMore = ({paperid, workspaceId, userPdf}: {paperid:string, w
                                                             onMouseLeave={handleMouseLeave}>
                 <img src={study}/>
                 <Typography sx={{color: isHovered?color.white:color.white, fontSize: '15px', fontWeight: 700}}>
-                    Study with AI
+                    {isMobile?"Study":"Study with AI"}
                 </Typography>
             </Box>
     )

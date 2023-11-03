@@ -342,16 +342,20 @@ const Workspaces = () => {
         <Box sx={{display: 'flex', justifyContent: 'flex-end', p:2, color: 'grey.700'}}>
           <UserMenu/>
         </Box>
-        <Box sx={{height: '80vh', overflowY: 'scroll'}}>
+        <Box sx={{height: '85vh', overflowY: 'scroll', '&::-webkit-scrollbar': {
+                        display: 'none'
+                    }}}>
             <Box sx={{mx: '7vw', my: '5vh', display: 'flex', flexWrap: 'wrap'}}>
-                <Box sx={{width: '320px', height: '210px', bgcolor: '#F5F5F5', borderRadius: '20px'
-                , display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
-                mr: 3, mb: 3}}>
-                    <Box className={pageStyles.imageContainer}>
-                        <img src={plus} onClick={handleAddWorkspace} className={pageStyles.plusIcon}/>
-                        <img src={plusHover} onClick={handleAddWorkspace} className={pageStyles.plusIconHover}/>
+                <Box>
+                    <Box sx={{width: '320px', height: '210px', bgcolor: '#F5F5F5', borderRadius: '20px'
+                    , display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
+                    mr: 3, mb: 3}}>
+                        <Box className={pageStyles.imageContainer}>
+                            <img src={plus} onClick={handleAddWorkspace} className={pageStyles.plusIcon}/>
+                            <img src={plusHover} onClick={handleAddWorkspace} className={pageStyles.plusIconHover}/>
+                        </Box>
+                        <Typography sx={{color: '#333', fontSize: '16px', fontWeight: '500'}}> Add a workspace</Typography>
                     </Box>
-                    <Typography sx={{color: '#333', fontSize: '16px', fontWeight: '500'}}> Add a workspace</Typography>
                 </Box>
                 {!isLoading && (workspacesArr) && workspacesArr.map((workspace, idx)=>(
                     card(workspace.title!, workspace.description!, workspace.editDate!, workspace.workspaceId!, idx)

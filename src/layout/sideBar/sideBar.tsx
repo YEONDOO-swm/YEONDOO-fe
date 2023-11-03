@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material'
+import { Box, Typography, useMediaQuery } from '@mui/material'
 import Dashboard from '../../asset/Dashboard.svg'
 import Profile from '../../asset/Profile.svg'
 import React from 'react'
@@ -9,7 +9,7 @@ import logoIcon from '../../asset/logoIconWhite.svg'
 import Home from '../../asset/home.svg'
 
 const SideBar = ({number}:{number: number}) => {
-    const navigate = useNavigate()
+  const isMobile = useMediaQuery("(max-width: 480px)")
   return (
     <Box sx={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
         {/* <Typography sx={{
@@ -29,10 +29,10 @@ const SideBar = ({number}:{number: number}) => {
               onClick={()=>{window.location.replace('/home')}}>
 
           <img src={logoIcon} style={{ transform: 'scaleX(-1)' }} />
-          <img src={logoWhite}
+          {!isMobile && <img src={logoWhite}
                 style={{
                   width: '150px',
-                }}/>
+                }}/>}
         </Box>
         
 

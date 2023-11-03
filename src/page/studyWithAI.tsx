@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import PageLayout from '../layout/pageLayout'
-import { Box, Button, Typography } from '@mui/material'
+import { Box, Button, Typography, useMediaQuery } from '@mui/material'
 import { useNotify } from 'react-admin'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
@@ -22,7 +22,7 @@ const PaperBox = ({handleClickPaper, paper}: {handleClickPaper: any, paper: any}
         onMouseLeave={()=>{setIsHovered(false)}}
         sx={{py: 1, px: 1, borderBottom: '1px solid #eee', cursor: 'pointer', bgcolor: isHovered?"#f5f5f5":color.white}}>
             <Typography sx={{color: isHovered?color.mainGreen:'#666', fontSize: '18px', fontWeight: '400',
-                            }}>
+                             display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>
                 {paper.title}
             </Typography>
         </Box>
@@ -58,19 +58,21 @@ const StudyWithAI = () => {
     const handleClickPaper = (paperId: string, userPdf: boolean) => {
         window.open(`/paper?workspaceId=${workspaceId}&paperid=${paperId}&userPdf=${userPdf}`)
     }
+    
+    const isTablet = useMediaQuery("(max-width: 767px)")
   return (
     <PageLayout workspace={true} number={2}>
         <Box sx={{height: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center',}}>
-            <Box sx={{width: '40vw', height: '70%', p: 4,  borderRadius: '50px 0px 0px 0px'
+            <Box sx={{width: isTablet?"100%":'50vw', height: '70%', p: 4,  borderRadius: '50px 0px 0px 0px'
             , border: `1px solid #ddd`, boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)'}}>
                 <Box sx={{height: '16%', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                     <Box sx={{display: 'flex'}}>
                         <img src={study} style={{width: '25px'}}/>
                         <Typography sx={{fontSize: '25px', fontWeight: '600', ml: 1, color: '#333'}}>
-                            Start Study!
+                            {isTablet?"Study!":"Start Study!"}
                         </Typography>
                     </Box>
-                    <Box sx={{width: '35vw', height: '2px', bgcolor: color.secondaryGreen, mt: 3}}></Box>
+                    <Box sx={{width: '100%', height: '2px', bgcolor: color.secondaryGreen, mt: 3}}></Box>
                 </Box>
                 <Box sx={{height: '84%', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
                     {!isLoading && papersInStorage.map((paper: any) => (
