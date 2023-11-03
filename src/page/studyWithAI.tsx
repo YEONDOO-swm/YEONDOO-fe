@@ -92,13 +92,6 @@ const StudyWithAI = () => {
                 </Box>
             </Box>
         </Box>
-        {/* <Mermaid name="diagram">
-        graph TD;
-          A--{'>'}B;
-          A--{'>'}C;
-          B--{'>'}D;
-          C--{'>'}D;
-      </Mermaid> */}
     </PageLayout>
   )
 }
