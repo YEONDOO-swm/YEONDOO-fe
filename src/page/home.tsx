@@ -408,7 +408,7 @@ export const Home = () => {
       </Box>
     )):(
       <Box>
-        {subTitle('Recently papers')}
+        {subTitle('Recently Works')}
         {isLoading ? <>
           {loadingRecentPaper()}
           {loadingRecentPaper()}
