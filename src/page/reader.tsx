@@ -484,7 +484,7 @@ const Reader = () => {
                 borderRadius: '15px 15px 0px 0px'}}> 
                 <Typography sx={{fontSize: '15px', fontWeight: curTab === 1?600:500, color:curTab === 1?color.appbarGreen:(isHoveredOne?color.appbarGreen:color.white)
               , display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden',}}>
-                  {data && (paperInfo.title)} 
+                  {data && (paperInfo.title.length>25?paperInfo.title.slice(0,25)+"...":paperInfo.title)} 
                 </Typography>
             </Box>
             {secondPaper.paperId && 
@@ -497,7 +497,7 @@ const Reader = () => {
               >
               <Typography sx={{fontSize: '15px', fontWeight: curTab === 2?600:500, color:curTab === 2?color.appbarGreen:(isHoveredTwo?color.appbarGreen:color.white)
             , display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden',}}>
-                {secondPaper.paperTitle} 
+                {secondPaper.paperTitle.length>25?secondPaper.paperTitle.slice(0,25)+"...":secondPaper.paperTitle} 
               </Typography>
             </Box>}
           </Box>
