@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Card } from '@mui/material';
+import { Card, useMediaQuery } from '@mui/material';
 import { Box, Typography} from "@mui/material";
 import { useState, useEffect, useRef, KeyboardEvent, MouseEvent } from "react";
 import { Title, UserMenu, useAuthenticated, useNotify } from 'react-admin';
@@ -88,6 +88,7 @@ export const Home = () => {
     
     const searchInputRef: React.MutableRefObject<HTMLInputElement | null> = useRef<HTMLInputElement | null>(null); // 채팅 입력창에 포거스 주기 위해
 
+    const isMobile = useMediaQuery("(max-width: 767px)")
     const {data: recentData, isLoading} = useQuery(["home", workspaceId], ()=> 
       getApi(api, `/api/workspace/workspaceEnter?workspaceId=${workspaceId}`)  
       .then(async response => {
@@ -258,10 +259,10 @@ export const Home = () => {
               <Typography variant="body2">{paper.summary}</Typography>
             </Box>  
           )}
-          <Box sx = {{margin: "15px 0 0 0" , display: 'flex'}}>
+          <Box sx = {{margin: "15px 0 0 0" , display: 'flex', flexWrap: 'wrap', flexDirection: isMobile?'column':'row'}}>
             {/* <Button variant="contained" onClick={() => handleViewPaper(paper.url) }>논문 보기</Button> */}
             <GoToViewMore paperid={paper.paperId} workspaceId={workspaceId} userPdf={paper.userPdf===undefined?false:paper.userPdf}/>
-            <Box sx={{width: '15px'}}></Box>
+            <Box sx={{width: isMobile?null:'15px', height: isMobile?'5px':null, bgcolor: color.white}}></Box>
             <GoToArxiv url={paper.url} paperId={paper.paperId}/>
           </Box>
                 {/* Add other details for the paper */}
@@ -303,14 +304,15 @@ export const Home = () => {
         , display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>
             {title}
           </Typography>
-          <Typography sx={{color: '#666', fontSize: '15px'}}>
+          <Typography sx={{color: '#666', fontSize: '15px'
+        , display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>
             {date}
           </Typography>
         </Box>
         <Box sx={{display: 'flex', alignItems: 'center', cursor: 'pointer'}} onClick={()=>{window.open(url)}}>
-          <Typography sx={{fontWeight: 500, color: color.mainGreen,'&:hover':{
+          {!isMobile&&<Typography sx={{fontWeight: 500, color: color.mainGreen,'&:hover':{
               color: '#445142'
-            }}}>More</Typography>
+            }}}>More</Typography>}
           <img src={arrow}/>
         </Box>
       </Box>
@@ -425,11 +427,11 @@ export const Home = () => {
       </>
         }
         <Box sx={{display: 'flex', mt: 5, width: '60.5vw'}}>
-          <Box sx={{width: '31.5vw'}}>
+          {!isMobile&&<Box sx={{width: '31.5vw'}}>
             {subTitle('Recommended papers')}
             <Box sx={{width: '27.5vw', height: '32vh', borderRadius: '20px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)',
             }} className={styles.transitionContainer}>
-              <Box className={styles.transitionWrapper} style={{ transform: wrapperTransform }}>
+              <Box className={styles.transitionWrapper} style={{ transform: wrapperTransform}}>
                 {recommendedPapers && recommendedPapers.map((paper: any, idx: number) => (
                   <Box key={idx} className={`${styles.transitionItem} ${
                     idx === currentIndex ? styles.active : ''
@@ -478,10 +480,10 @@ export const Home = () => {
                 ))}
               </Box>
             </Box>
-          </Box>
-          <Box sx={{width: '31vw'}}>
+          </Box>}
+          <Box sx={{width: isMobile?'62.5vw':'31vw'}}>
             {subTitle('Recent trends')}
-            <Box sx={{width: '27.5vw', height: '32vh', borderRadius: '20px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)',
+            <Box sx={{width: isMobile?'59vw':'27.5vw', height: '32vh', borderRadius: '20px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)',
             px:3, py: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly'}}>
               {/* {recentData && recentData.recentlyTrends.map((item: any, idx: number) => ( */}
               {mockRecentTrends.map((item: any, idx: number) => (

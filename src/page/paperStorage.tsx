@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Card, CardContent, Box, Typography, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Modal } from '@mui/material';
+import { Card, CardContent, Box, Typography, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Modal, useMediaQuery } from '@mui/material';
 import { Title, useAuthenticated, useNotify } from 'react-admin';
 import * as amplitude from '@amplitude/analytics-browser';
 import { useEffect, useState } from "react";
@@ -43,18 +43,7 @@ export type userPdfPaper = {
     url: string;
 }
 
-const style = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 600,
-    bgcolor: 'background.paper',
-    border: '2px solid #eee',
-    borderRadius: '50px 0px 0px 0px',
-    boxShadow: 24,
-    p: 4,
-  };
+
 
 const trashButton = () => {
     const [isHovered, setIsHovered] = useState<boolean>(false)
@@ -97,7 +86,7 @@ const addMyPdfButton = (props:any) => {
         onClick={()=>{props.setIsOpenImportPdf(true)}}>
             <PictureAsPdfIcon sx={{color: isHovered?color.white:color.hoverGreen}}/>
             <Typography sx={{color: isHovered?color.white:color.hoverGreen, fontSize: '15px', fontWeight: '700'}}>
-                Add My PDF
+                {props.isMobile ? "PDF" :"Add My PDF"}
             </Typography>
         </Box>
     )
@@ -201,7 +190,7 @@ export const PaperStorage = () => {
                     <Typography sx={{color: '#333', fontSize: '18px', fontWeight: 600}}>
                         {paper.title}
                     </Typography>
-                    {paper.subject && <Box sx={{width: '48vw', display: 'flex', flexWrap:'', mt: 1, mb: 0.5, overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none',
+                    {paper.subject && <Box sx={{width: '40vw', display: 'flex', flexWrap:'', mt: 1, mb: 0.5, overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none',
                         '&::-webkit-scrollbar': {
                           display: 'none', /* Chrome 브라우저의 스크롤바 숨김 */
                         }}}>
@@ -233,9 +222,9 @@ export const PaperStorage = () => {
                 </Box> 
                 
             </Box>
-            <Box sx={{display: 'flex', mt: '15px', padding: '0px 40px'}}>
+            <Box sx={{display: 'flex', mt: '15px', padding: '0px 40px', flexWrap: 'wrap', flexDirection: isMobile?'column':'row'}}>
                 <GoToViewMore paperid={paper.paperId} workspaceId={workspaceId} userPdf={paper.userPdf}/>
-                <Box sx={{width:'15px'}}></Box>
+                <Box sx={{width: isMobile?null:'15px', height: isMobile?'5px':null}}></Box>
                 <GoToArxiv url={paper.url} paperId={paper.paperId}/>
             </Box>
         </Box>
@@ -273,10 +262,25 @@ export const PaperStorage = () => {
         )
       }
 
+      const isMobile = useMediaQuery("(max-width: 767px)")
+
+      const style = {
+        position: 'absolute' as 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: isMobile?"60%":600,
+        bgcolor: 'background.paper',
+        border: '2px solid #eee',
+        borderRadius: '50px 0px 0px 0px',
+        boxShadow: 24,
+      };
+
       const handleClose = () => {
         setIsOpenImportPdf(false)
       }
-    
+
+      
     return (
     <PageLayout workspace={true} number={1}>
         <MetaTag title="Working Papers - Yeondoo" description="사용자가 선택한 관심 논문 리스트를 볼 수 있습니다." keywords="히스토리, 논문, AI, 관심 논문, 찜"/>
@@ -289,7 +293,7 @@ export const PaperStorage = () => {
                 </Typography>
                 <Box sx={{display: 'flex', gap: 1}}>
                     {trashButton()}
-                    {addMyPdfButton({setIsOpenImportPdf})}
+                    {addMyPdfButton({setIsOpenImportPdf, isMobile})}
                 </Box>
             </Box>
             <Box sx={{height: 40}}></Box>
@@ -346,10 +350,9 @@ export const PaperStorage = () => {
             aria-describedby="modal-modal-description"
         >
             <Box sx={style}>
-                <Box sx={{height: '200px'}}>
-                <img src={deleteIcon} style={{width: '20px', position: 'absolute', left: '90%',
-                                                transform: 'translate(150%, -80%)', cursor: 'pointer'}}
-                            onClick={handleClose}/>
+                <img src={deleteIcon} style={{width: '20px', position: 'absolute', left: isMobile?'90%':'95%', top: '5%', cursor: 'pointer'}}
+                onClick={handleClose}/>
+                <Box sx={{height: '200px', p: 4}}>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         Upload pdf file
                     </Typography>

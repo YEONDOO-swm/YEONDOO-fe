@@ -1,9 +1,9 @@
 import React from 'react'
-import { Box, Typography } from '@mui/material'
+import { Box, Typography, useMediaQuery } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 
 const SideBarMenu = ({img, title, number, idx, url}: {img: any, title: string, number: number, idx: number, url: string}) => {
-  const navigate = useNavigate()
+  const isMobile = useMediaQuery("(max-width: 480px)")
   return (
     <Box sx={{
       width: '87%',
@@ -18,9 +18,9 @@ const SideBarMenu = ({img, title, number, idx, url}: {img: any, title: string, n
     }} onClick={()=>window.location.href =url}>
       <Box sx={{height: '100%',display: 'flex', alignItems: 'center', p: 2}}>
           <img src={img} style={{opacity: number===idx?1:0.5}}/>
-          <Typography sx={{color: number===idx?'white':'rgba(255, 255, 255, 0.5)', ml: 2}}>
+          {!isMobile && <Typography sx={{color: number===idx?'white':'rgba(255, 255, 255, 0.5)', ml: 2}}>
               {title}
-          </Typography>
+          </Typography>}
       </Box>
     </Box>
   )

@@ -129,7 +129,7 @@ const ImportPdf = ({setIsOpenImportPdf}:{setIsOpenImportPdf: any}) => {
                     height: '33px',
                     padding: '0 10px',
                     border: '1px solid #ddd',
-                    width: '78%',
+                    width: '77%',
                     color: '#999',
                     alignItems: 'center',
                     cursor: 'pointer'

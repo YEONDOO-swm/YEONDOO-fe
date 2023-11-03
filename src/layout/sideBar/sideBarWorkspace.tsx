@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material'
+import { Box, Typography, useMediaQuery } from '@mui/material'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import SideBarMenu from './sideBarMenu'
@@ -14,6 +14,7 @@ import workspaceIcon from '../../asset/workspaceIcon.svg'
 
 const SideBarWorkspace = ({number}:{number: number}) => {
     const navigate = useNavigate()
+    const isMobile = useMediaQuery("(max-width: 480px)")
     const workspaceId = sessionStorage.getItem('workspaceId')
     const workspaceTitle = sessionStorage.getItem('workspaceTitle')
     return (
@@ -38,7 +39,7 @@ const SideBarWorkspace = ({number}:{number: number}) => {
               py: 0.1,
               }}>W</Typography>
             {/* <img src={workspaceIcon} width="10%"/> */}
-            <Typography sx={{
+            {!isMobile && <Typography sx={{
                 color: 'white',
                 textAlign: 'center',
                 fontSize: '22px',
@@ -46,7 +47,7 @@ const SideBarWorkspace = ({number}:{number: number}) => {
                 fontWeight: '600',
                 lineHeight: 'normal',
             }}
-            >{workspaceTitle && (workspaceTitle.length > 15?workspaceTitle.slice(0,15)+"...":workspaceTitle)}</Typography>
+            >{workspaceTitle && (workspaceTitle.length > 15?workspaceTitle.slice(0,15)+"...":workspaceTitle)}</Typography>}
           </Box>
         
         <SideBarMenu img={dashboard} title='Dashboard' number={number} idx={0} url={"/dashboard?workspaceId="+workspaceId}/>
@@ -54,17 +55,21 @@ const SideBarWorkspace = ({number}:{number: number}) => {
         <SideBarMenu img={study} title='Study with AI' number={number} idx={2} url={"/selectpaper?workspaceId="+workspaceId}/>
         <SideBarMenu img={history} title='History' number={number} idx={3} url={"/history?workspaceId="+workspaceId}/>
         
-        <Box sx={{position: 'absolute', bottom: '5vh', width: '17vw', ml: 4,
+        <Box sx={{position: 'absolute', bottom: '5vh', width: '15vw', ml: '1vh',
         }} onClick={()=>{navigate('/home')}}>
           <Box sx={{display: 'inline-flex', height: '60px', width: '85%', justifyContent: 'center', alignItems: 'center', gap: '10px',
                   borderRadius: '20px', border: '1px solid #fff',
                   '&:hover': {
                     backgroundColor: 'rgba(255, 255, 255, 0.1)',
                   }}}>
-              <img src={rightarrowWhite} style={{ transform: 'rotate(180deg)' }}/>
-              <Typography sx={{color: color.white, fontSize: '16px', fontWeight: 600}}>
-                Home
-              </Typography>
+              {isMobile
+              ?<img src={home} />
+              :<Box sx={{display: 'inline-flex'}}>
+                <img src={rightarrowWhite} style={{ transform: 'rotate(180deg)' }}/>
+                <Typography sx={{color: color.white, fontSize: '16px', fontWeight: 600}}>
+                  Home
+                </Typography>
+              </Box>}
           </Box>
           {/* <SideBarMenu img={history} title='Workspaces' number={number} idx={4} url="/workspaces" /> */}
         </Box>

@@ -2,7 +2,7 @@ import React from 'react'
 import PageLayout from '../layout/pageLayout'
 import MetaTag from '../SEOMetaTag'
 import { Title, useNotify } from 'react-admin'
-import { Box, Typography } from '@mui/material'
+import { Box, Typography, useMediaQuery } from '@mui/material'
 import { GoToArxiv } from '../component/goToArxiv'
 import { GoToViewMore } from '../component/goToViewMore'
 import { paperType, tag } from './home'
@@ -23,6 +23,9 @@ const Library = () => {
 
     const navigate = useNavigate()
     const notify = useNotify()
+
+    const isMobile = useMediaQuery("(max-width: 767px)")
+
 
     const {data: papersInStorage, isLoading} = useQuery(['library', api],()=> 
         getApi(api, `/api/library`)
@@ -96,9 +99,9 @@ const Library = () => {
                 </Box> 
                 
             </Box>
-            <Box sx={{display: 'flex', mt: '15px', padding: '0px 40px'}}>
+            <Box sx={{display: 'flex', mt: '15px', padding: '0px 40px', flexWrap: 'wrap', flexDirection: isMobile?'column':'row'}}>
                 <GoToViewMore paperid={paper.paperId} workspaceId={paper.workspaceId} userPdf={paper.userPdf}/>
-                <Box sx={{width:'15px'}}></Box>
+                <Box sx={{width: isMobile?null:'15px', height: isMobile?'5px':null, bgcolor: color.white}}></Box>
                 <GoToArxiv url={paper.url} paperId={paper.paperId}/>
             </Box>
         </Box>
