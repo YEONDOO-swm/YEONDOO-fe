@@ -75,19 +75,23 @@ const StudyWithAI = () => {
                     <Box sx={{width: '100%', height: '2px', bgcolor: color.secondaryGreen, mt: 3}}></Box>
                 </Box>
                 <Box sx={{height: '84%', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
-                    {!isLoading && papersInStorage.map((paper: any) => (
-                        <PaperBox paper={paper} handleClickPaper={handleClickPaper} />
-                    ))}
+                    {!isLoading && (papersInStorage && papersInStorage.length === 0
+                    ?<Box sx={{height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+                        <Typography sx={{fontSize: '18px', fontWeight: 500}}>
+                            Save papers you want to study!
+                        </Typography>
+                        <Typography sx={{fontSize: '13px', textAlign: 'center'}}>
+                            You can save papers to My Works by pressing ♡ button
+                        </Typography>
+                    </Box>
+                    :papersInStorage.map((paper: any, idx: number) => (
+                        <Box key={idx}>
+                            <PaperBox paper={paper} handleClickPaper={handleClickPaper} />
+                        </Box>
+                    )))}
                 </Box>
             </Box>
         </Box>
-        {/* <Mermaid name="diagram">
-        graph TD;
-          A--{'>'}B;
-          A--{'>'}C;
-          B--{'>'}D;
-          C--{'>'}D;
-      </Mermaid> */}
     </PageLayout>
   )
 }

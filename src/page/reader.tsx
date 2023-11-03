@@ -196,6 +196,8 @@ const Reader = () => {
         }
       }
 
+      console.log(downloadPdfAnnotations)
+
       fetch(userPdfCheck ?`https://yeondoo-upload-pdf.s3.ap-northeast-2.amazonaws.com/${openedPaperNumber}.pdf` : `https://browse.arxiv.org/pdf/${openedPaperNumber}.pdf`)
       .then((response) => response.arrayBuffer())
       .then(async(arrayBuffer) => {

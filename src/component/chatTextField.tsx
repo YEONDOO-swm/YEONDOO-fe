@@ -207,18 +207,32 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
               </FormControl>
                 <Box sx={{width: '100%', height: '2px', bgcolor: color.secondaryGreen, mt: 1}}></Box>
                 <Box sx={{height: '30vh', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
-                  {refPaperList === 'My library' ? papersInStorage && papersInStorage.map((paper: any, idx: number) => (
-                    <Box key={idx}>
-                    {/* <Button onClick={() => handleSetRef(paper.paperId, paper.title)}>{paper.title}</Button><br/> */}
+                  {refPaperList === 'My library' ? papersInStorage && 
+                    (papersInStorage.length > 0 ?papersInStorage.map((paper: any, idx: number) => (
+                    paperInfo.paperId !== paper.paperId && <Box key={idx}>
                       <PaperBox paper={paper} handleClickPaper={() => handleSetRef(paper.paperId, paper.title)} />
-                    </Box>
-                      
-                  )):
-                  paperInfo && paperInfo.references && paperInfo.references.map((paper: any, idx: number) => (
+                    </Box>)        
+                  )
+                  :
+                  <Box sx={{height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+                    <Typography sx={{fontSize: '15px'}}>
+                      No papers in My Works.
+                    </Typography>
+                    <Typography sx={{fontSize: '12px'}}>
+                      Save papers to My Works by pressing ♡ button.
+                    </Typography>
+                  </Box>):
+                  paperInfo && paperInfo.references && 
+                  (paperInfo.references.length > 0?paperInfo.references.map((paper: any, idx: number) => (
                     <Box key={idx}>
                       <PaperBox paper={paper} handleClickPaper={()=>handleSetRef(paper.paperId, paper.title)} />
                     </Box>
                   ))
+                  : <Box sx={{height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+                    <Typography sx={{fontSize: '15px'}}>
+                      No reference papers
+                    </Typography>
+                  </Box>)
                   }
                 </Box>
               </Box>
