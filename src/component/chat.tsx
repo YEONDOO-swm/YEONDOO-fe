@@ -502,7 +502,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                 </Box>
                 ))}
                 {
-                    (data.paperHistory.length === 0) && (
+                    (data.paperHistory.length !== 0) && (
                         <Box sx={{display: 'flex'}}>
                             <Box sx={{width: '30px', height: '30px', borderRadius: '100%', bgcolor: color.mainGreen,
                                 display: 'flex', justifyContent: 'center', alignItems: 'center', mr: 1}}>
@@ -516,9 +516,9 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                 borderRadius: '0px 15px 15px 15px',
                                 maxWidth: '300px'}}>
                                 <Typography sx={{fontSize: '14px', color: '#333'}}>
-                                    Hello. This is '{paperInfo.title}' paper. You can ask any question about this paper. <br/>
-                                    You can choose another paper you want to ask question together. <br/>
-                                    Also, you can ask question about selected text by clicking push to chat button in pdf viewer when you drag the text.
+                                    Hello. This is <b>'{paperInfo.title}'</b> paper. You can ask any question about this paper. <br/>
+                                    You can choose another paper you want to ask question together by clicking <b>Add study paper</b> button below. <br/>
+                                    Also, you can ask question about selected text by clicking <b>Push to Chat</b> button in pdf viewer when you drag the text.
                                 </Typography>
                                 {/* <Typography sx={{fontSize: '15px', fontWeight: 600, color: '#333'}}>
                                     Summary
