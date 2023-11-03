@@ -57,7 +57,7 @@ const Header = () => {
           </Box>
           <div className="right">
             {/* <CustomButton title="Login" width="100px" click={()=>{navigate('/login')}}/> */}
-            <Typography sx={{color: color.appbarGreen, mr: 2, fontWeight: 500, cursor: 'pointer'}}>
+            <Typography sx={{color: color.appbarGreen, mr: 2, fontWeight: 500, cursor: 'pointer'}} onClick={()=>{navigate('/login')}}>
               Login
             </Typography>
           </div>

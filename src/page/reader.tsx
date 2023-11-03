@@ -196,8 +196,6 @@ const Reader = () => {
         }
       }
 
-      console.log(downloadPdfAnnotations)
-
       fetch(userPdfCheck ?`https://yeondoo-upload-pdf.s3.ap-northeast-2.amazonaws.com/${openedPaperNumber}.pdf` : `https://browse.arxiv.org/pdf/${openedPaperNumber}.pdf`)
       .then((response) => response.arrayBuffer())
       .then(async(arrayBuffer) => {
@@ -257,24 +255,24 @@ const Reader = () => {
   useEffect(()=>{
     if (isPdfCompleted) {
       
-      getApi(api, `/api/container?workspaceId=${workspaceId}`)
-      .then(async response => 
-        {
-          if (response.status === 200) {
-            return response.json().then(data => {
-              dispatch({
-                type: SET_PAPERS_IN_STORAGE,
-                data: data
-              })
-            })
-          } else if (response.status === 401) {
-            await refreshApi(api, notify, navigate)
-          }
-        })
-      .catch(error => {
-        console.error('관심 논문 정보를 불러오는데 실패하였습니다: ', error)
-        Sentry.captureException(error)
-      })
+      // getApi(api, `/api/container?workspaceId=${workspaceId}`)
+      // .then(async response => 
+      //   {
+      //     if (response.status === 200) {
+      //       return response.json().then(data => {
+      //         dispatch({
+      //           type: SET_PAPERS_IN_STORAGE,
+      //           data: data
+      //         })
+      //       })
+      //     } else if (response.status === 401) {
+      //       await refreshApi(api, notify, navigate)
+      //     }
+      //   })
+      // .catch(error => {
+      //   console.error('관심 논문 정보를 불러오는데 실패하였습니다: ', error)
+      //   Sentry.captureException(error)
+      // })
       getApi(api, `/api/paper?paperId=${paperId}&workspaceId=${workspaceId}`) 
         .then(async response => {
             if (response.status === 200) {

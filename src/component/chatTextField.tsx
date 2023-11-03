@@ -4,7 +4,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useNotify } from "react-admin";
 import { MouseEvent } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { CounterState, SET_CHAT_SELECTED, SET_IS_OPEN_SELECT_REF, SET_REF_PAPER, SET_SECOND_PAPER } from '../reducer';
+import { CounterState, SET_CHAT_SELECTED, SET_IS_OPEN_SELECT_REF, SET_PAPERS_IN_STORAGE, SET_REF_PAPER, SET_SECOND_PAPER } from '../reducer';
 import { useQuery } from 'react-query';
 import { getApi, refreshApi } from '../utils/apiUtils';
 import { useNavigate } from 'react-router-dom';
@@ -17,7 +17,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { paperType } from '../page/home';
 import scrollStyle from "../layout/scroll.module.css"
 import deleteIcon from "../asset/deleteIcon.svg"
-
+import spinner from '../asset/spinner.gif'
 
 type SearchTapProps = {
     searchTerm: string;
@@ -81,9 +81,15 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
     const maxLengthLimit: number = 300
     const searchInputRef = React.useRef<HTMLInputElement | null>(null);
     const notify = useNotify()
+    const navigate = useNavigate()
     const dispatch = useDispatch()
 
     const papersInStorage = useSelector((state:CounterState) => state.papersInStorage)
+    const api = useSelector((state: CounterState) => state.api)
+    const workspaceId = Number(sessionStorage.getItem('workspaceId'))
+
+    const [isLoading, setIsLoading] = useState(false)
+
   
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const inputText = event.target.value;
@@ -100,6 +106,28 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
     }, []);
 
     const handleOpenSelectModal = () => {
+      setIsLoading(true)
+      getApi(api, `/api/container?workspaceId=${workspaceId}`)
+      .then(async response => 
+        {
+          if (response.status === 200) {
+            return response.json().then(data => {
+              dispatch({
+                type: SET_PAPERS_IN_STORAGE,
+                data: data
+              })
+            })
+          } else if (response.status === 401) {
+            await refreshApi(api, notify, navigate)
+          }
+        })
+      .catch(error => {
+        console.error('관심 논문 정보를 불러오는데 실패하였습니다: ', error)
+        Sentry.captureException(error)
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
       dispatch({
         type: SET_IS_OPEN_SELECT_REF,
         data: true
@@ -207,21 +235,31 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
               </FormControl>
                 <Box sx={{width: '100%', height: '2px', bgcolor: color.secondaryGreen, mt: 1}}></Box>
                 <Box sx={{height: '30vh', overflowY: 'scroll'}} className={scrollStyle.scrollBar}>
-                  {refPaperList === 'My library' ? papersInStorage && 
-                    (papersInStorage.length > 0 ?papersInStorage.map((paper: any, idx: number) => (
-                    paperInfo.paperId !== paper.paperId && <Box key={idx}>
-                      <PaperBox paper={paper} handleClickPaper={() => handleSetRef(paper.paperId, paper.title)} />
-                    </Box>)        
-                  )
+                  {refPaperList === 'My library' 
+                  // My works 일때
+                  ? isLoading 
+                    ? 
+                    <Box sx={{height: '100%', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                      <img src={spinner} width="20%"/>
+                    </Box>
+                    :
+                    (papersInStorage.length > 0 
+                      ? papersInStorage.map((paper: any, idx: number) => (
+                      paperInfo.paperId !== paper.paperId && <Box key={idx}>
+                        <PaperBox paper={paper} handleClickPaper={() => handleSetRef(paper.paperId, paper.title)} />
+                      </Box>)        
+                    )
+                    :
+                    <Box sx={{height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+                      <Typography sx={{fontSize: '15px'}}>
+                        No papers in My Works.
+                      </Typography>
+                      <Typography sx={{fontSize: '12px'}}>
+                        Save papers to My Works by pressing ♡ button.
+                      </Typography>
+                    </Box>)
+                  // References 일때
                   :
-                  <Box sx={{height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
-                    <Typography sx={{fontSize: '15px'}}>
-                      No papers in My Works.
-                    </Typography>
-                    <Typography sx={{fontSize: '12px'}}>
-                      Save papers to My Works by pressing ♡ button.
-                    </Typography>
-                  </Box>):
                   paperInfo && paperInfo.references && 
                   (paperInfo.references.length > 0?paperInfo.references.map((paper: any, idx: number) => (
                     <Box key={idx}>
