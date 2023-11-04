@@ -25,6 +25,7 @@ import works from "../asset/works.svg"
 import worksGrey from "../asset/worksGrey.svg"
 import { styled } from '@mui/material/styles';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { useQueryOption } from '../utils/useQueryOption';
 
 
 type papersInTrashType = {
@@ -104,6 +105,7 @@ export const Trash = () => {
             }
         }).then(data => data.trashContainers),
         {
+            ...useQueryOption,
             onError: (error) => {
                 console.log("관심 해제된 논문 정보를 가져오는데 실패하였습니다: ", error)
                 Sentry.captureException(error)

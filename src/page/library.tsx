@@ -17,6 +17,7 @@ import loadingStyle from "../layout/loading.module.css"
 import scrollStyle from "../layout/scroll.module.css"
 import { color } from '../layout/color'
 import arrow from '../asset/rightarrow.svg'
+import { useQueryOption } from '../utils/useQueryOption'
 
 const Library = () => {
     const api: string = useSelector((state: CounterState) => state.api)
@@ -39,6 +40,7 @@ const Library = () => {
             }
         }),
         {
+            ...useQueryOption,
             onError: (error) => {
                 console.error('관심 논문 정보를 불러오는데 실패하였습니다: ', error)
                 Sentry.captureException(error)

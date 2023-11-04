@@ -25,6 +25,7 @@ import { getApi, refreshApi } from "../utils/apiUtils";
 import MoreButton from "../component/moreButton";
 import LessButton from "../component/lessButton";
 import { mockRecentTrends } from "../mocks/data/recentTrends";
+import { useQueryOption } from "../utils/useQueryOption";
 
 type searchResultType = {
   query?: string;
@@ -59,7 +60,7 @@ export const tag = (tag: string) => (
 
 export const Home = () => {
     // 유효성 검사
-    useAuthenticated();
+    //useAuthenticated();
 
     // hook 설정
     const navigate = useNavigate();
@@ -89,6 +90,7 @@ export const Home = () => {
     const searchInputRef: React.MutableRefObject<HTMLInputElement | null> = useRef<HTMLInputElement | null>(null); // 채팅 입력창에 포거스 주기 위해
 
     const isMobile = useMediaQuery("(max-width: 767px)")
+
     const {data: recentData, isLoading} = useQuery(["home", workspaceId], ()=> 
       getApi(api, `/api/workspace/workspaceEnter?workspaceId=${workspaceId}`)  
       .then(async response => {
@@ -103,7 +105,8 @@ export const Home = () => {
       .then(data => {
         setRecommendedPapers(data.recommendedPapers)
         return data
-      })
+      }),
+      useQueryOption
     )
 
     useEffect(()=> {
