@@ -23,9 +23,6 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { CookiesProvider } from 'react-cookie'
 import { PersonalInfo } from './page/personalInfo';
 import {
-    useQuery,
-    useMutation,
-    useQueryClient,
     QueryClient,
     QueryClientProvider,
   } from 'react-query'

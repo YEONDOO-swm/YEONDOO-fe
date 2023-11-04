@@ -12,6 +12,7 @@ import { color } from '../layout/color'
 import scrollStyle from "../layout/scroll.module.css"
 import { paperType } from './home'
 import study from '../asset/studyGreen.svg'
+import { useQueryOption } from '../utils/useQueryOption';
 // var Mermaid = require('react-mermaid');
 
 const PaperBox = ({handleClickPaper, paper}: {handleClickPaper: any, paper: any}) => {
@@ -37,6 +38,7 @@ const StudyWithAI = () => {
     const api: string = useSelector((state: CounterState) => state.api)
     const workspaceId: number | null = Number(sessionStorage.getItem("workspaceId"));
 
+    console.log('---')
     const {data: papersInStorage, isLoading} = useQuery(['homesearch', api, workspaceId],()=> 
       getApi(api, `/api/container?workspaceId=${workspaceId}`)
       .then(async response => {
@@ -49,10 +51,13 @@ const StudyWithAI = () => {
         }
       }),
       {
+        ...useQueryOption,
           onError: (error) => {
               console.error('관심 논문 정보를 불러오는데 실패하였습니다: ', error)
               Sentry.captureException(error)
-          }
+          },
+        //   cacheTime: Infinity,
+        refetchOnWindowFocus: false,
     })
 
     const handleClickPaper = (paperId: string, userPdf: boolean) => {

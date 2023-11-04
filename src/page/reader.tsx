@@ -1,7 +1,6 @@
 import { Box, Button, Modal, Popper, Typography } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react'
 import { getCookie } from '../cookie';
-import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { CounterState, SET_ANNOTATIONS, SET_CHAT_SELECTED, SET_IS_UPDATED_DONE, SET_PAPERS_IN_STORAGE, SET_SECOND_PAPER } from '../reducer';
 import { getApi, refreshApi } from '../utils/apiUtils';

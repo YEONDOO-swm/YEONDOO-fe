@@ -18,6 +18,7 @@ import PageLayout from '../layout/pageLayout';
 import { getApi, refreshApi } from '../utils/apiUtils';
 import arrow from '../asset/rightarrow.svg'
 import TelegramIcon from '@mui/icons-material/Telegram';
+import { useQueryOption } from '../utils/useQueryOption';
 
 type paperHistory = {
   paperId: string;
@@ -58,6 +59,7 @@ export const HistoryPaper = () => {
         throw new Error("논문 내 질의 히스토리 정보를 가져오는데 실패하였습니다")
       }
   }), {
+      ...useQueryOption,
       onError: (error) => {
         console.error('논문 내 질의 히스토리 정보를 가져오는데 실패하였습니다: ', error)
         Sentry.captureException(error)

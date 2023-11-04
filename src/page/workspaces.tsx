@@ -21,7 +21,7 @@ import styles from '../layout/loading.module.css'
 import pageStyles from '../layout/workspace.module.css'
 import { deleteApi, getApi, postApi, putApi, refreshApi } from '../utils/apiUtils'
 import { color } from '../layout/color'
-import { red } from '@mui/material/colors'
+import { useQueryOption } from '../utils/useQueryOption';
 
 type workspaceEdit = {
     title?: string;
@@ -87,6 +87,7 @@ const Workspaces = () => {
         return data.workspaces
     }),
     {
+        ...useQueryOption,
         onError: (error) => {
             console.error('워크스페이스 정보를 불러오는데 실패하였습니다: ', error)
             Sentry.captureException(error)

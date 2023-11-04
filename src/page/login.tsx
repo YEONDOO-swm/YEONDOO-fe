@@ -4,8 +4,8 @@ import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google'
 import { useGoogleLogin } from '@react-oauth/google';
 import { Box, Button, Card, Paper, Typography, makeStyles, useMediaQuery } from '@mui/material';
 import { color } from '../layout/color'
-import { setCookie, getCookie, removeCookie } from '../cookie';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { setCookie } from '../cookie';
+import { useMutation } from 'react-query';
 import { useSelector } from 'react-redux';
 import { CounterState } from '../reducer';
 import { useNotify } from 'react-admin';

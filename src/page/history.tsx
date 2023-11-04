@@ -21,6 +21,7 @@ import { CounterState } from "../reducer";
 import { useQuery } from "react-query";
 import PageLayout from "../layout/pageLayout";
 import { getApi, refreshApi } from "../utils/apiUtils";
+import { useQueryOption } from "../utils/useQueryOption";
 
 type historySearchType = {
     results: resultType[]
@@ -53,6 +54,7 @@ export const History = () => {
         })
         .then(data => data.results),
         {   
+            ...useQueryOption,
             onError: (error) => {
                 console.error('히스토리 정보를 가져오는데 실패하였습니다: ', error)
                 Sentry.captureException(error)
