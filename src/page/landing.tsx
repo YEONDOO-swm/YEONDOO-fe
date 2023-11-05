@@ -77,6 +77,9 @@ const fadeInChat = keyframes`
     opacity: 0;
   }
   25% {
+    opacity: 0;
+  }
+  50% {
     opacity: 1;
   }
   100% {
@@ -96,10 +99,10 @@ const fadeInNote = keyframes`
   0% {
     opacity: 0;
   }
-  25% {
+  50% {
     opacity: 0;
   }
-  50% {
+  75% {
     opacity: 1;
   }
   100% {
@@ -119,8 +122,8 @@ const fadeInWorkspace = keyframes`
   0% {
     opacity: 0;
   }
-  50% {
-    opacity: 0;
+  25% {
+    opacity: 1;
   }
   75% {
     opacity: 1;
