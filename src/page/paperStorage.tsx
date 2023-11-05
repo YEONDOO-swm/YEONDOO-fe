@@ -30,6 +30,7 @@ import deleteIcon from "../asset/deleteIcon.svg"
 import ImportPdf from "../component/importPdf";
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useQueryOption } from "../utils/useQueryOption";
 
 export type paperLikePayload = {
     workspaceId: number | null;
@@ -169,6 +170,7 @@ export const PaperStorage = () => {
         }
     }),
     {
+        ...useQueryOption,
         onError: (error) => {
             console.error('관심 논문 정보를 불러오는데 실패하였습니다: ', error)
             Sentry.captureException(error)
