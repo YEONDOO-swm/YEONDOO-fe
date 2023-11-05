@@ -8,9 +8,13 @@ import styled, { keyframes } from 'styled-components';
 import styles from '../layout/landing.module.css'
 import CustomButton from '../component/customButton'
 import logoGreen from '../asset/logoGreen.png'
+import logoWhite from '../asset/logoWhite.png'
 import logoIcon from '../asset/logoIconGreen.svg'
 import macTrans from '../asset/macbookTransparent.png'
 import mac from '../asset/macbook.png'
+import mainLading from '../asset/mainLanding.png'
+import workspaces from '../asset/workspaces.gif'
+import exportPng from '../asset/export.png'
 
 const HeaderBlock = styled.div`
   position: fixed;
@@ -68,6 +72,74 @@ const Header = () => {
   )
 }
 
+const fadeInChat = keyframes`
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+`;
+
+
+const ElementChat = styled.div`
+  animation: ${fadeInChat} 5s infinite;
+  animation-timing-function: linear;
+  opacity: 0;
+  animation-fill-mode: forwards;
+`;
+
+const fadeInNote = keyframes`
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+`;
+
+
+const ElementNote = styled.div`
+  animation: ${fadeInNote} 5s infinite;
+  animation-timing-function: linear;
+  opacity: 0;
+  animation-fill-mode: forwards;
+`;
+
+const fadeInWorkspace = keyframes`
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+`;
+
+
+const ElementWorkspace = styled.div`
+  animation: ${fadeInWorkspace} 5s infinite;
+  animation-timing-function: linear;
+  opacity: 0;
+  animation-fill-mode: forwards;
+`;
 
 export const Landing = () => {
     const navigate = useNavigate()
@@ -81,10 +153,7 @@ export const Landing = () => {
     const [isTypingCompleted, setIsTypingCompleted] = useState<boolean>(false)
 
     useEffect(()=> {
-      window.scrollTo(0,0)
-      if (window.location.pathname !== '#first') {
-        window.location.href = '#first'
-      }
+      //window.scrollTo(0,0)
       
       let typingInterval:NodeJS.Timer|undefined;
       if (count < completedWord.length) {
@@ -107,82 +176,123 @@ export const Landing = () => {
       }
     }, [count])
 
-    let options = {
-      anchors: ['first', 'second', 'third']
-    }
+
+    const makeCard = (color: string, text:string, subText: string, image:any) => (
+      <Box sx={{bgcolor: color==='white'?'#fff':'#F2F6F1', height: '70vh', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', flexDirection: color==='white'?'row-reverse':'row'}}>
+        <img src={image} style={{width: '50vw', height: '30vw', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.2)', borderRadius: '0px'}}/>
+        <Box>
+        <Typography sx={{ fontSize: '40px', fontWeight: 700, lineHeight: 1.1, color: '#333'}}>
+          <div dangerouslySetInnerHTML={{ __html: text }} />
+        </Typography>
+        <Typography sx={{mt: 2, fontSize: '17px', fontWeight: 500, color: '#888'}}>
+          <div dangerouslySetInnerHTML={{ __html: subText }} />
+        </Typography>
+        </Box>
+    </Box>
+    )
   return (
     <Box>
         <MetaTag title="Yeondoo" description="연두를 통해 특별한 연구 경험을 느껴보세요." keywords="연두, yeondoo, 논문, 논문 내 질의, 질의, gpt, 논문 gpt" />
-        
-        {/* <SectionsContainer {...options}>
-          <Section> */}
           <Header/>
-            <Box sx ={{height: '95vh', display: 'flex', flexDirection: 'column',justifyContent: 'center', alignItems: 'center', bgcolor: color.white}}>
+            <Box sx={{background: 'linear-gradient(to top, #F2F6F1, #fff)',}}>
+              <Box sx ={{height: '45vh', display: 'flex', flexDirection: 'column',justifyContent: 'flex-end', alignItems: 'center'}}>
+                <Box>
+                  <Typography sx={{textAlign: 'center', color: color.mainGreen, fontWeight: 700, fontSize: '18px'}}>
+                    New study experience
+                  </Typography>
+                  <Box className={styles.firstTitle} sx={{
+                    color: '#333',
+                    textAlign: 'center',
+                    fontSize: '50px',
+                    fontWeight: 700}}>
+                      {firstTitle ? firstTitle : "Y"}
+                  </Box>
+                  {isTypingCompleted && <Typography variant= 'h3' className={styles.slideIn} 
+                  sx={{fontSize:'22px', fontWeight: '500', textAlign:'center', color: '#888', mt: 2}}>
+                      In your own workspace,
+                      <br/> try to concentrate on your thesis
+                      <br/> by chatting and notting
+                  </Typography>}
+                  
+                </Box>
+                <Box sx={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+
+                    {isTypingCompleted && <Box className={styles.slideIn} sx={{mt: 4, width: '100px', fontWeight: '500', fontSize: '2vh'}} onClick={goToLogin}>
+                        <CustomButton title="START" width="100px" click={null}/>
+                    </Box>}
+                </Box>
+              </Box>
+              <Box sx={{ mt: 10, display: 'flex', justifyContent: 'center', pb: 15}}>
+                  <img src={mainLading} style={{width: '65vw',borderTopLeftRadius: '20px', borderTopRightRadius: '20px'}}/>
+                  <ElementChat>
+                    <Box sx={{position: 'absolute', width: '10vw', top: '80vh', left: '10vw', background: 'linear-gradient(to bottom right, #b89c14, #ffd400)', py: 2, borderRadius: '20px', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.4)',
+                  display: 'flex', justifyContent: 'center'}}>
+                      <Typography sx={{fontSize: '35px', fontWeight: '700', color: 'white'}}>
+                        Chat
+                      </Typography>
+                    </Box>
+                    <Box sx={{position: 'absolute', top: '90vh', left: '19vw'}}>
+                      <hr style={{border: 'none', borderTop: '8px dotted #ffd400', height: '1px', width: '10vw',
+                                transform: 'rotate(45deg)'}}/>
+                    </Box>
+                  </ElementChat>
+                  <ElementNote>
+                    <Box sx={{position: 'absolute', width: '10vw', top: '110vh', left: '80vw', background: 'linear-gradient(to bottom right, #6d14b8, #8b00ff)', py: 2, borderRadius: '20px', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.4)',
+                  display: 'flex', justifyContent: 'center'}}>
+                      <Typography sx={{fontSize: '35px', fontWeight: '700', color: 'white'}}>
+                        Note
+                      </Typography>
+                    </Box>
+                    <Box sx={{position: 'absolute', top: '110vh', left: '70vw'}}>
+                      <hr style={{border: 'none', borderTop: '8px dotted #6d14b8', height: '1px', width: '10vw',
+                                transform: 'rotate(20deg)'}}/>
+                    </Box>
+                  </ElementNote>
+                  <ElementWorkspace>
+                    <Box sx={{position: 'absolute', width: '15vw', top: '70vh', left: '75vw', background: 'linear-gradient(to bottom right, #0d4f75, #0067a3)', py: 2, borderRadius: '20px', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.4)',
+                  display: 'flex', justifyContent: 'center'}}>
+                      <Typography sx={{fontSize: '35px', fontWeight: '700', color: 'white'}}>
+                        Workspace
+                      </Typography>
+                    </Box>
+                    <Box sx={{position: 'absolute', top: '68vh', left: '65.5vw'}}>
+                      <hr style={{border: 'none', borderTop: '8px dotted #0067a3', height: '1px', width: '10vw',
+                                transform: 'rotate(35deg)'}}/>
+                    </Box>
+                  </ElementWorkspace>
+              </Box>
+            </Box>
+            {makeCard('green', 'Create your <br/> own workspace', 'Manage your study by workspace!', workspaces)}
+            {makeCard('white', "Is there any part <br/> you don't understand? <br/> Want to see summary?", 'Ask any questions you have through chat. <br/> You can receive highly accurate answers.', workspaces)}
+            <Box sx={{bgcolor: '#F2F6F1', height: '70vh', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center'}}>
+              <img src={exportPng} />
               <Box>
-                <Typography sx={{textAlign: 'center', color: color.mainGreen, fontWeight: 700, fontSize: '18px'}}>
-                  New study experience
-                </Typography>
-                <Box className={styles.firstTitle} sx={{
-                  color: '#333',
-                  textAlign: 'center',
-                  fontSize: '50px',
-                  fontWeight: 700}}>
-                    {firstTitle ? firstTitle : "Y"}
-                </Box>
-                {isTypingCompleted && <Typography variant= 'h3' className={styles.slideIn} 
-                sx={{fontSize:'22px', fontWeight: '500', textAlign:'center', color: '#888', mt: 2}}>
-                    In your own workspace,
-                    <br/> try to concentrate on your thesis
-                    <br/> by chatting and notting
-                </Typography>}
-                
+              <Typography sx={{ fontSize: '40px', fontWeight: 700, lineHeight: 1.1, color: '#333'}}>
+                Convert the records <br/> you left <br/> into various types
+              </Typography>
+              <Typography sx={{mt: 2, fontSize: '17px', fontWeight: 500, color: '#888'}}>
+                  The Generate Summary function summarizes your records <br/> with the purpose and format you want.
+              </Typography>
               </Box>
-              <Box sx={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-
-                  {isTypingCompleted && <Box className={styles.slideIn} sx={{mt: 4, width: '100px', fontWeight: '500', fontSize: '2vh'}} onClick={goToLogin}>
-                      <CustomButton title="START" width="100px" click={null}/>
-                  </Box>}
-              </Box>
-              {/* <Box>
-                  <img src={mac} style={{borderLeft: '1px solid #ddd'}}/>
-              </Box> */}
-            </Box>
-          {/* </Section>
-          <Section> */}
-            <Box sx={{height: '100vh', bgcolor: color.appbarGreen, flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-              <Box sx={{height: '50vh', display: 'flex', alignItems: 'center'}}>
-                <Box sx={{display: 'flex', justifyContent: 'space-around', width: '100%'}}>
-
-                  <img src='../images/home.png' width="40%" className={styles.images}/>
-                  <Box className={styles.texts} sx={{height: '300', diplay: 'flex', flexDirection:'column', justifyContent: 'center', margin: 'auto 0'}}>
-                    Search papers you want
-                  </Box>
-                </Box>
-              </Box>
-
-              <Box sx={{height: '50vh', display: 'flex', alignItems: 'center'}}>
-                <Box sx={{display: 'flex', justifyContent: 'space-around', width: '100%'}}>
-                  <Box className={styles.texts} sx={{height: '300', diplay: 'flex', flexDirection:'column', justifyContent: 'center', margin: 'auto 0'}}>
-                    Keep your favorite papers
-                  </Box>
-                  <img src='../images/storage.png' width="40%" className={styles.images}/>
-                </Box>
-              </Box>
-            </Box>
-          {/* </Section>
-          <Section> */}
-          <Box sx={{height: '100vh', bgcolor: color.appbarGreen}}>
-            <Box sx={{display: 'flex', mx: 10, alignItems: 'center', height: '100vh'}}>
-              <Box sx={{mt: 8, my: 5, display: 'flex', justifyContent: 'space-around', width: '100%'}}>
-                <img src='../images/chat.png' width="50%" className={styles.images} />
-                <Box className={styles.texts} sx={{height: '300', diplay: 'flex', flexDirection:'column', justifyContent: 'center', margin: 'auto 0'}}>
-                  Ask any questions <br/>you have <br/>about the paper
-                </Box>
-              </Box>
-            </Box>
           </Box>
-          {/* </Section>
-        </SectionsContainer> */}
+          <Box sx={{height: '20vh', px: 3, bgcolor: color.mainGreen, display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: color.white}}>
+            <img src={logoWhite} width='120px' height='40px'/>
+            <Box>
+              <Typography sx={{pr: 80}}>
+                서울특별시 강남구 테헤란로 311(역삼동) 아남타워빌딩 7층(06151)
+                <br/>
+                기업 또는 이용 문의: igy2840@gmail.com
+              </Typography>
+            </Box>
+            <Typography sx={{fontWeight: 600, cursor: 'pointer'}} onClick={() => {navigate('/personalInfo')}}>
+              개인정보처리방침
+            </Typography>
+        </Box>
+        <Box sx={{height: '5vh', bgcolor: color.mainGreen, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', color: color.white}}>
+          <Typography>
+            COPYRIGHT 2023 Federation Co. All RIGHTS RESERVED.
+          </Typography>
+        </Box>
     </Box>
   )
   }
