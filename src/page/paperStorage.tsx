@@ -129,7 +129,7 @@ export const PaperStorage = () => {
             if (response.status === 401) {
                 await refreshApi(api, notify, navigate)
               } else if (response.status === 400) {
-                navigate(`/dashboard?workspaceId=${workspaceId}`)
+                navigate(`/home`)
               }
         })
         .finally(()=>{
@@ -167,7 +167,7 @@ export const PaperStorage = () => {
         } else if (response.status === 401) {
             await refreshApi(api, notify, navigate)
         } else if (response.status === 400) {
-            navigate(`/dashboard?workspaceId=${workspaceId}`)
+            navigate(`/home`)
         } else {
             throw new Error("논문 내 질의 히스토리 정보를 가져오는데 실패하였습니다")
         }

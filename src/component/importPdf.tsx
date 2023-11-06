@@ -89,7 +89,7 @@ const ImportPdf = ({setIsOpenImportPdf}:{setIsOpenImportPdf: any}) => {
             if (response.status === 401) {
                 await refreshApi(api, notify, navigate)
             } else if (response.status === 400) {
-                navigate(`/dashboard?workspaceId=${workspaceId}`)
+                navigate(`/home`)
             }
             else {
                 response.json()

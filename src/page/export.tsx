@@ -79,7 +79,7 @@ const Export = () => {
               } else if (response.status === 401) {
                 await refreshApi(api, notify, navigate)
               } else if (response.status === 400) {
-                navigate(`/dashboard?workspaceId=${workspaceId}`)
+                navigate(`/home`)
               }
             })
         .finally(() => {
