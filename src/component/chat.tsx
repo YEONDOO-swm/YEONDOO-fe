@@ -90,17 +90,19 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
     }
 
     const handleSearchKeyDownInPaper = (event: KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter' && event.nativeEvent.isComposing === false && !isLoading){
-            event.preventDefault();
-            amplitude.track('논문 내 질의', {paperId: paperId})
-            if (searchTermInPaper === '') {
-                notify('Please enter your question', {type: 'error'})
-                return ;
+        if (event.key === 'Enter' && event.nativeEvent.isComposing === false){
+            if (isLoading) {
+                notify('Generating Answers...')
+            } 
+            else {
+                event.preventDefault();
+                amplitude.track('논문 내 질의', {paperId: paperId})
+                if (searchTermInPaper === '') {
+                    notify('Please enter your question', {type: 'error'})
+                    return ;
+                }
+                performSearchInPaper()
             }
-            performSearchInPaper()
-        }
-        if (isLoading) {
-            notify('Generating Answers...')
         }
     }
 
@@ -144,10 +146,11 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
         }
         try {
             //setKey(keyNumber)
-            const response = await postApi(api, `/api/paper?paperId=${paperId}&workspaceId=${workspaceId}`, payload)
+            let response = await postApi(api, `/api/paper?paperId=${paperId}&workspaceId=${workspaceId}`, payload)
 
             if (response.status === 401) {
                 await refreshApi(api, notify, navigate)
+                response  = await postApi(api, `/api/paper?paperId=${paperId}&workspaceId=${workspaceId}`, payload)
             }
 
             // 일반 통신 방식
@@ -172,32 +175,34 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
             //     },
             // }])
             // 스트리밍
-            const reader = response.body!.getReader()
-            const decoder = new TextDecoder()
-
-            let repeat = 0
-
-            while (true) {
-                const { value, done } = await reader.read()
-                
-                const decodedChunk = decoder.decode(value, { stream: true });
-                console.log(decodedChunk + "checkindention")
-                const processedChunk = decodedChunk.replaceAll('data:', '')
-                //done: False -> done: True 여도 console.log('done')이 먼저 출력
-                if (done) {
-                    break
-                } else {
-                    setSearchResultsInPaper((prevSearchResults: string[]) => {
-                        if (repeat === 0) {
-                            repeat += 1   
-                            return [...prevSearchResults, processedChunk]
-                        } else {
-                            repeat += 1
-                            const lastItem = prevSearchResults[prevSearchResults.length -1]
-                            const updatedResults = prevSearchResults.slice(0, -1)
-                            return [...updatedResults, lastItem + processedChunk]
-                        }
-                    })
+            if (response.status === 200) {
+                const reader = response.body!.getReader()
+                const decoder = new TextDecoder()
+    
+                let repeat = 0
+    
+                while (true) {
+                    const { value, done } = await reader.read()
+                    
+                    const decodedChunk = decoder.decode(value, { stream: true });
+                    console.log(decodedChunk + "checkindention")
+                    const processedChunk = decodedChunk.replaceAll('data:', '')
+                    //done: False -> done: True 여도 console.log('done')이 먼저 출력
+                    if (done) {
+                        break
+                    } else {
+                        setSearchResultsInPaper((prevSearchResults: string[]) => {
+                            if (repeat === 0) {
+                                repeat += 1   
+                                return [...prevSearchResults, processedChunk]
+                            } else {
+                                repeat += 1
+                                const lastItem = prevSearchResults[prevSearchResults.length -1]
+                                const updatedResults = prevSearchResults.slice(0, -1)
+                                return [...updatedResults, lastItem + processedChunk]
+                            }
+                        })
+                    }
                 }
             }
         } 
