@@ -26,6 +26,8 @@ export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentIt
 
     const api: string = useSelector((state: CounterState) => state.api)
 
+    const workspaceId = Number(sessionStorage.getItem("workspaceId"));
+    
     const navigate = useNavigate()
     const notify = useNotify()
     
@@ -72,6 +74,8 @@ export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentIt
         .then(response => {
           if (response.status === 401) {
             refreshApi(api, notify, navigate)
+          } else if (response.status === 400) {
+            navigate(`/dashboard?workspaceId=${workspaceId}`)
           }
           return response;
           }

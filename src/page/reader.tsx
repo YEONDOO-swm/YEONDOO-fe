@@ -307,6 +307,8 @@ const Reader = () => {
               }
             } else if (response.status === 401) {
                 await refreshApi(api, notify, navigate)
+            } else if (response.status === 400) {
+              navigate(`/dashboard?workspaceId=${workspaceId}`)
             } else {
               throw new Error("논문 정보를 가져오는데 실패하였습니다")
             }
@@ -362,6 +364,8 @@ const Reader = () => {
                   })
               } else if (response.status === 401) {
                 await refreshApi(api, notify, navigate)
+              } else if (response.status === 400) {
+                navigate(`/dashboard?workspaceId=${workspaceId}`)
               } else {
                 throw new Error("논문 정보를 가져오는데 실패하였습니다")
               }
