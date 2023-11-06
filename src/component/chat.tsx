@@ -153,7 +153,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                 response  = await postApi(api, `/api/paper?paperId=${paperId}&workspaceId=${workspaceId}`, payload)
             }
             else if (response.status === 400) {
-                navigate(`/dashboard?workspaceId=${workspaceId}`)
+                navigate(`/home`)
             }
 
             // 일반 통신 방식

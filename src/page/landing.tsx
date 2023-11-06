@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from '@mui/material'
+import { Box, Button, Typography, useMediaQuery } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import {SectionsContainer, Section} from 'react-fullpage'
 import React, { useEffect, useState } from 'react'
@@ -15,6 +15,7 @@ import mac from '../asset/macbook.png'
 import mainLading from '../asset/mainLanding.png'
 import workspaces from '../asset/workspaces.gif'
 import exportPng from '../asset/export.png'
+import chatLanding from '../asset/chatLading.gif'
 
 const HeaderBlock = styled.div`
   position: fixed;
@@ -152,6 +153,9 @@ export const Landing = () => {
     const [count, setCount] = useState<number>(0)
     const [isTypingCompleted, setIsTypingCompleted] = useState<boolean>(false)
 
+    const isTablet = useMediaQuery("(max-width: 1024px)")
+    const isMobile = useMediaQuery("(max-width: 519px)")
+
     useEffect(()=> {
       //window.scrollTo(0,0)
       
@@ -177,14 +181,15 @@ export const Landing = () => {
     }, [count])
 
 
-    const makeCard = (color: string, text:string, subText: string, image:any) => (
-      <Box sx={{bgcolor: color==='white'?'#fff':'#F2F6F1', height: '70vh', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', flexDirection: color==='white'?'row-reverse':'row'}}>
-        <img src={image} style={{width: '50vw', height: '30vw', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.2)', borderRadius: '0px'}}/>
+    const makeCard = (color: string, text:string, subText: string, image:any, widthStr: string) => (
+      <Box sx={{bgcolor: color==='white'?'#fff':'#F2F6F1', height: isTablet?(isMobile?'70vh':'90vh'):'70vh', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', flexDirection: isTablet?'column-reverse':(color==='white'?'row-reverse':'row')}}>
+        <img src={image} style={{width: widthStr, boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.2)', borderRadius: '0px'}}/>
+        {/* {isTablet && <Box height="10px"></Box>} */}
         <Box>
-        <Typography sx={{ fontSize: '40px', fontWeight: 700, lineHeight: 1.1, color: '#333'}}>
+        <Typography sx={{ fontSize: isMobile?'30px':'40px', fontWeight: 700, lineHeight: 1.1, color: '#333', textAlign: isTablet?'center':undefined}}>
           <div dangerouslySetInnerHTML={{ __html: text }} />
         </Typography>
-        <Typography sx={{mt: 2, fontSize: '17px', fontWeight: 500, color: '#888'}}>
+        <Typography sx={{mt: 2, fontSize: isMobile?'12px':'17px', fontWeight: 500, color: '#888', textAlign: isTablet?'center':undefined}}>
           <div dangerouslySetInnerHTML={{ __html: subText }} />
         </Typography>
         </Box>
@@ -195,7 +200,7 @@ export const Landing = () => {
         <MetaTag title="Yeondoo" description="Yeondoo is your research assistant! 연두를 통해 특별한 연구 경험을 느껴보세요." keywords="연두, yeondoo, 논문, 논문 내 질의, 질의, gpt, 논문 gpt" />
           <Header/>
             <Box sx={{background: 'linear-gradient(to top, #F2F6F1, #fff)',}}>
-              <Box sx ={{height: '45vh', display: 'flex', flexDirection: 'column',justifyContent: 'flex-end', alignItems: 'center'}}>
+              <Box sx ={{height: isMobile?'55vh':'45vh', display: 'flex', flexDirection: 'column',justifyContent: 'flex-end', alignItems: 'center'}}>
                 <Box>
                   <Typography sx={{textAlign: 'center', color: color.mainGreen, fontWeight: 700, fontSize: '18px'}}>
                     New study experience
@@ -203,12 +208,12 @@ export const Landing = () => {
                   <Box className={styles.firstTitle} sx={{
                     color: '#333',
                     textAlign: 'center',
-                    fontSize: '50px',
+                    fontSize: isMobile?'40px':'50px',
                     fontWeight: 700}}>
                       {firstTitle ? firstTitle : "Y"}
                   </Box>
                   {isTypingCompleted && <Typography variant= 'h3' className={styles.slideIn} 
-                  sx={{fontSize:'22px', fontWeight: '500', textAlign:'center', color: '#888', mt: 2}}>
+                  sx={{fontSize:isMobile?'17px':'22px', fontWeight: '500', textAlign:'center', color: '#888', mt: 2}}>
                       In your own workspace,
                       <br/> try to concentrate on your thesis
                       <br/> by chatting and notting
@@ -223,73 +228,75 @@ export const Landing = () => {
                 </Box>
               </Box>
               <Box sx={{ mt: 10, display: 'flex', justifyContent: 'center', pb: 15}}>
-                  <img src={mainLading} style={{width: '65vw',borderTopLeftRadius: '20px', borderTopRightRadius: '20px'}}/>
+                  <img src={mainLading} style={{width: isTablet?'90vw':'65vw',borderTopLeftRadius: '20px', borderTopRightRadius: '20px'}}/>
                   <ElementChat>
-                    <Box sx={{position: 'absolute', width: '10vw', top: '80vh', left: '10vw', background: 'linear-gradient(to bottom right, #b89c14, #ffd400)', py: 2, borderRadius: '20px', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.4)',
+                    <Box sx={{position: 'absolute', width: '10vw', top: '80vh', left: '10vw', background: 'linear-gradient(to bottom right, #b89c14, #ffd400)', py: isTablet?'1vw':2, borderRadius: '20px', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.4)',
                   display: 'flex', justifyContent: 'center'}}>
-                      <Typography sx={{fontSize: '35px', fontWeight: '700', color: 'white'}}>
+                      <Typography sx={{fontSize: isTablet?'3vw':'35px', fontWeight: '700', color: 'white'}}>
                         Chat
                       </Typography>
                     </Box>
-                    <Box sx={{position: 'absolute', top: '90vh', left: '19vw'}}>
+                    {/* <Box sx={{position: 'absolute', top: '90vh', left: '19vw'}}>
                       <hr style={{border: 'none', borderTop: '8px dotted #ffd400', height: '1px', width: '10vw',
                                 transform: 'rotate(45deg)'}}/>
-                    </Box>
+                    </Box> */}
                   </ElementChat>
                   <ElementNote>
-                    <Box sx={{position: 'absolute', width: '10vw', top: '110vh', left: '80vw', background: 'linear-gradient(to bottom right, #6d14b8, #8b00ff)', py: 2, borderRadius: '20px', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.4)',
+                    <Box sx={{position: 'absolute', width: '10vw', top: isTablet?(isMobile?'90vh':'90vh'):'100vh', left: '80vw', background: 'linear-gradient(to bottom right, #6d14b8, #8b00ff)', py: isTablet?'1vw':2, borderRadius: '20px', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.4)',
                   display: 'flex', justifyContent: 'center'}}>
-                      <Typography sx={{fontSize: '35px', fontWeight: '700', color: 'white'}}>
+                      <Typography sx={{fontSize: isTablet?'3vw':'35px', fontWeight: '700', color: 'white'}}>
                         Note
                       </Typography>
                     </Box>
-                    <Box sx={{position: 'absolute', top: '110vh', left: '70vw'}}>
+                    {/* <Box sx={{position: 'absolute', top: '110vh', left: '70vw'}}>
                       <hr style={{border: 'none', borderTop: '8px dotted #6d14b8', height: '1px', width: '10vw',
                                 transform: 'rotate(20deg)'}}/>
-                    </Box>
+                    </Box> */}
                   </ElementNote>
                   <ElementWorkspace>
-                    <Box sx={{position: 'absolute', width: '15vw', top: '70vh', left: '75vw', background: 'linear-gradient(to bottom right, #0d4f75, #0067a3)', py: 2, borderRadius: '20px', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.4)',
+                    <Box sx={{position: 'absolute', width: '19vw', top: isMobile?'70vh':'60vh', left: '75vw', background: 'linear-gradient(to bottom right, #0d4f75, #0067a3)', py: isTablet?'1vw':2, borderRadius: '20px', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.4)',
                   display: 'flex', justifyContent: 'center'}}>
-                      <Typography sx={{fontSize: '35px', fontWeight: '700', color: 'white'}}>
+                      <Typography sx={{fontSize: isTablet?'3vw':'35px', fontWeight: '700', color: 'white'}}>
                         Workspace
                       </Typography>
                     </Box>
-                    <Box sx={{position: 'absolute', top: '68vh', left: '65.5vw'}}>
+                    {/* <Box sx={{position: 'absolute', top: '68vh', left: '65.5vw'}}>
                       <hr style={{border: 'none', borderTop: '8px dotted #0067a3', height: '1px', width: '10vw',
                                 transform: 'rotate(35deg)'}}/>
-                    </Box>
+                    </Box> */}
                   </ElementWorkspace>
               </Box>
             </Box>
-            {makeCard('green', 'Create your <br/> own workspace', 'Manage your study by workspace!', workspaces)}
-            {makeCard('white', "Is there any part <br/> you don't understand? <br/> Want to see summary?", 'Ask any questions you have through chat. <br/> You can receive highly accurate answers.', workspaces)}
-            <Box sx={{bgcolor: '#F2F6F1', height: '70vh', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center'}}>
-              <img src={exportPng} />
+            {makeCard('green', 'Create your <br/> own workspace', 'Manage your study by workspace!', workspaces, isTablet?'80vw':'50vw')}
+            {makeCard('white', "Is there any part <br/> you don't understand? <br/> Want to see summary?", 'Ask any questions you have through chat. <br/> You can receive highly accurate answers.', chatLanding, isTablet?'40vw':'20vw')}
+            <Box sx={{bgcolor: '#F2F6F1', height: isTablet?(isMobile?'70vh':'90vh'):'70vh', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', flexDirection: isTablet?'column-reverse':'row'}}>
+              <img src={exportPng} style={{width: isTablet?'80vw':'50vw'}}/>
               <Box>
-              <Typography sx={{ fontSize: '40px', fontWeight: 700, lineHeight: 1.1, color: '#333'}}>
+              <Typography sx={{ fontSize: isMobile?'30px':'40px', fontWeight: 700, lineHeight: 1.1, color: '#333', textAlign: isTablet?'center':undefined}}>
                 Convert the records <br/> you left <br/> into various types
               </Typography>
-              <Typography sx={{mt: 2, fontSize: '17px', fontWeight: 500, color: '#888'}}>
+              <Typography sx={{mt: 2, fontSize: isMobile?'12px':'17px', fontWeight: 500, color: '#888', textAlign: isTablet?'center':undefined}}>
                   The Generate Summary function summarizes your records <br/> with the purpose and format you want.
               </Typography>
               </Box>
           </Box>
           <Box sx={{height: '20vh', px: 3, bgcolor: color.mainGreen, display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: color.white}}>
-            <img src={logoWhite} width='120px' height='40px'/>
-            <Box>
-              <Typography sx={{pr: 80}}>
-                서울특별시 강남구 테헤란로 311(역삼동) 아남타워빌딩 7층(06151)
-                <br/>
-                기업 또는 이용 문의: igy2840@gmail.com
-              </Typography>
+            <Box sx={{display: 'flex', alignItems: 'center'}}>
+              <img src={logoWhite} style={{width: '120px'}}/>
+              <Box sx={{ml: 1}}>
+                <Typography sx={{fontSize: isMobile?'12px':'15px'}}>
+                  서울특별시 강남구 테헤란로 311(역삼동) 아남타워빌딩 7층(06151)
+                  <br/>
+                  기업 또는 이용 문의: igy2840@gmail.com
+                </Typography>
+              </Box>
             </Box>
-            <Typography sx={{fontWeight: 600, cursor: 'pointer'}} onClick={() => {navigate('/personalInfo')}}>
+            <Typography sx={{fontSize: isMobile?'12px':'15px', fontWeight: 600, cursor: 'pointer'}} onClick={() => {navigate('/personalInfo')}}>
               개인정보처리방침
             </Typography>
         </Box>
-        <Box sx={{height: '5vh', bgcolor: color.mainGreen, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', color: color.white}}>
-          <Typography>
+        <Box sx={{height: '6vh', bgcolor: color.mainGreen, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', color: color.white}}>
+          <Typography sx={{textAlign: 'center', fontSize: isMobile?'12px':'15px'}}>
             COPYRIGHT 2023 Federation Co. All RIGHTS RESERVED.
           </Typography>
         </Box>
