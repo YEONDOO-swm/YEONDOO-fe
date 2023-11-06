@@ -351,7 +351,7 @@ export const Home = () => {
     return (
       <PageLayout workspace={true} number={0}>
     <div>
-        <MetaTag title="연두 홈" description="궁금한 개념 질문 또는 논문 제목 검색을 하면 답변과 관련 논문을 제공합니다." keywords="논문, 검색, 질문, 개념, gpt"/>
+        <MetaTag title="Dashboard - Yeondoo" description="궁금한 개념 질문 또는 논문 제목 검색을 하면 답변과 관련 논문을 제공합니다." keywords="논문, 검색, 질문, 개념, gpt"/>
         <Title title="Home" />
         <Box>
           <Typography sx={{fontSize: '15px', fontWeight: '500', lineHeight: 0.5, color: color.mainGreen}}>

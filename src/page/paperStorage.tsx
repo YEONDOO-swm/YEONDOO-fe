@@ -285,7 +285,7 @@ export const PaperStorage = () => {
       
     return (
     <PageLayout workspace={true} number={1}>
-        <MetaTag title="Working Papers - Yeondoo" description="사용자가 선택한 관심 논문 리스트를 볼 수 있습니다." keywords="히스토리, 논문, AI, 관심 논문, 찜"/>
+        <MetaTag title="My Works - Yeondoo" description="사용자가 선택한 관심 논문 리스트를 볼 수 있습니다." keywords="히스토리, 논문, AI, 관심 논문, 찜"/>
         <Title title="Working Papers" />
         <Box>
             <Box sx={{display: 'flex', justifyContent: 'space-between'}}>

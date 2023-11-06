@@ -7,10 +7,10 @@ export default (
         <Route path="/home" />
         <Route path="/paperstorage" />
         <Route path="/history" />
-        <Route path="/userprofile" />
         <Route path="/paper" />
-        <Route path="/historypaper" />
-        <Route path="/historytrash"  />
-        
+        <Route path="/dashboard"/>        
+        <Route path="/library"/>        
+        <Route path="/selectpaper"/>        
+        <Route path="/trash"/>        
     </Route>
 );

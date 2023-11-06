@@ -192,7 +192,7 @@ export const Landing = () => {
     )
   return (
     <Box>
-        <MetaTag title="Yeondoo" description="연두를 통해 특별한 연구 경험을 느껴보세요." keywords="연두, yeondoo, 논문, 논문 내 질의, 질의, gpt, 논문 gpt" />
+        <MetaTag title="Yeondoo" description="Yeondoo is your research assistant! 연두를 통해 특별한 연구 경험을 느껴보세요." keywords="연두, yeondoo, 논문, 논문 내 질의, 질의, gpt, 논문 gpt" />
           <Header/>
             <Box sx={{background: 'linear-gradient(to top, #F2F6F1, #fff)',}}>
               <Box sx ={{height: '45vh', display: 'flex', flexDirection: 'column',justifyContent: 'flex-end', alignItems: 'center'}}>

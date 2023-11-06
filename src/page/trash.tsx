@@ -234,7 +234,7 @@ export const Trash = () => {
       const isMobile = useMediaQuery("(max-width: 767px)")
     return (
         <PageLayout workspace={true} number={1}>
-            <MetaTag title="Papers in Trash - Yeondoo" description="사용자가 관심 해제한 논문의 리스트를 볼 수 있고, 복구할 수 있습니다." keywords="히스토리, 관심 해제, 복구, 논문"/>
+            <MetaTag title="Trash - Yeondoo" description="사용자가 관심 해제한 논문의 리스트를 볼 수 있고, 복구할 수 있습니다." keywords="히스토리, 관심 해제, 복구, 논문"/>
             <Title title="History"/>
             <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
                 <Typography sx={{fontSize: '25px', fontWeight: '600'}}>
