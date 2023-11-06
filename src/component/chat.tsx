@@ -152,6 +152,9 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                 await refreshApi(api, notify, navigate)
                 response  = await postApi(api, `/api/paper?paperId=${paperId}&workspaceId=${workspaceId}`, payload)
             }
+            else if (response.status === 400) {
+                navigate(`/dashboard?workspaceId=${workspaceId}`)
+            }
 
             // 일반 통신 방식
             // const data = await response.json()

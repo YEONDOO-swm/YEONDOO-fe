@@ -100,6 +100,8 @@ export const Trash = () => {
                 return response.json()
             } else if (response.status === 401) {
                 await refreshApi(api, notify, navigate)
+            } else if (response.status === 400) {
+                navigate(`/dashboard?workspaceId=${workspaceId}`)
             } else {
                 throw new Error("관심 해제된 논문 정보를 가져오는데 실패하였습니다")
             }
@@ -124,6 +126,8 @@ export const Trash = () => {
         .then(async response => {
             if (response.status === 401) {
                 await refreshApi(api, notify, navigate)
+              } else if (response.status === 400) {
+                navigate(`/dashboard?workspaceId=${workspaceId}`)
               }
         }),
         {
