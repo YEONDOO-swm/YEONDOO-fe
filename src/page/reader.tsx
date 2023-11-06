@@ -15,6 +15,7 @@ import deleteIcon from '../asset/deleteIcon.svg'
 import spinner from '../asset/spinner.gif'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import download from 'downloadjs';
+import * as amplitude from '@amplitude/analytics-browser';
 // import pdfWorker from '../../pdf-worker/src';
 // import { createRequire } from "module";
 // const require = createRequire(import.meta.url);
@@ -124,6 +125,12 @@ const Reader = () => {
 
   const [downloadPdfAnnotations, setDownloadPdfAnnotations] = useState<any>(undefined)
 
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'production') { 
+      amplitude.track("Pdf Viewer Viewed")
+    }
+  }, [])
+  
   const handleClose = () => {
     setIsOpenExport(false)
   }
@@ -133,6 +140,9 @@ const Reader = () => {
       setIsPdfCompleted(true)
     }
     else if (e.data.selectedText && e.data.position) {
+      if (process.env.NODE_ENV === 'production') { 
+        amplitude.track("Push to Chat Button clicked")
+      }
       setIsChatOpen(true)
       dispatch({
         type: SET_CHAT_SELECTED,
@@ -402,6 +412,9 @@ const Reader = () => {
   }
 
   const handleClickSummary = () => {
+    if (process.env.NODE_ENV === 'production') { 
+      amplitude.track("Generate Summary Viewed")
+    }
     let iframeRefNum = openedPaperNumber === paperId ? iframeRef : iframeRef2
     if (iframeRefNum && iframeRefNum.current && iframeRefNum.current.contentWindow) {
       iframeRefNum.current.contentWindow.postMessage({
@@ -411,6 +424,9 @@ const Reader = () => {
   }
 
   const handleClickDownloadPdf = async() => {
+    if (process.env.NODE_ENV === 'production') { 
+      amplitude.track("Download PDF button clicked")
+    }
     let iframeRefNum = openedPaperNumber === paperId ? iframeRef : iframeRef2
     if (iframeRefNum && iframeRefNum.current && iframeRefNum.current.contentWindow) {
       iframeRefNum.current.contentWindow.postMessage({

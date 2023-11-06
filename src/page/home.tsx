@@ -91,6 +91,12 @@ export const Home = () => {
 
     const isMobile = useMediaQuery("(max-width: 767px)")
 
+    useEffect(() => {
+      if (process.env.NODE_ENV === 'production') { 
+        amplitude.track("Dashboard Viewed")
+      }
+    }, [])
+
     const {data: recentData, isLoading} = useQuery(["home", workspaceId], ()=> 
       getApi(api, `/api/workspace/workspaceEnter?workspaceId=${workspaceId}`)  
       .then(async response => {
@@ -131,7 +137,7 @@ export const Home = () => {
           //   return
           // }
           if (process.env.NODE_ENV === 'production') { 
-            amplitude.track("Home에서 검색")
+            amplitude.track("Dashboard에서 검색")
           }
           
           navigate(`/dashboard?workspaceId=${workspaceId}&query=${searchTerm}`)
@@ -150,7 +156,7 @@ export const Home = () => {
         return
       }
       if (process.env.NODE_ENV === 'production') { 
-        amplitude.track("Home에서 검색")
+        amplitude.track("Dashboard에서 검색")
       }
       
       navigate(`/dashboard?workspaceId=${workspaceId}&query=${searchTerm}`)
@@ -330,10 +336,6 @@ export const Home = () => {
   const wrapperTransform = getWrapperTransformValue();
 
   useEffect(() => {
-    if (process.env.NODE_ENV === 'production') {
-            
-      amplitude.track("Home Page Viewed");
-    }
     searchInputRef.current?.focus();
 
     const query: URLSearchParams = new URLSearchParams(window.location.search);

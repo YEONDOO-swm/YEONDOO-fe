@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PageLayout from '../layout/pageLayout'
 import MetaTag from '../SEOMetaTag'
 import { Title, useNotify } from 'react-admin'
@@ -18,6 +18,7 @@ import scrollStyle from "../layout/scroll.module.css"
 import { color } from '../layout/color'
 import arrow from '../asset/rightarrow.svg'
 import { useQueryOption } from '../utils/useQueryOption'
+import * as amplitude from '@amplitude/analytics-browser';
 
 const Library = () => {
     const api: string = useSelector((state: CounterState) => state.api)
@@ -26,6 +27,12 @@ const Library = () => {
     const notify = useNotify()
 
     const isMobile = useMediaQuery("(max-width: 767px)")
+
+    useEffect(() => {
+        if (process.env.NODE_ENV === 'production') { 
+          amplitude.track("Library Viewed")
+        }
+      }, [])
 
 
     const {data: papersInStorage, isLoading} = useQuery(['library', api],()=> 
@@ -64,6 +71,9 @@ const Library = () => {
                                 }}}
                                 onClick={()=> {
                                     sessionStorage.setItem('workspaceId', String(paper.workspaceId))
+                                    if (process.env.NODE_ENV === 'production') { 
+                                      amplitude.track("Library에서 Worspace 이동 버튼 클릭")
+                                    }
                                     navigate(`/paperStorage?workspaceId=${paper.workspaceId}`)
                                 }}>{paper.workspaceTitle}</Typography>
                             <img src={arrow}/>

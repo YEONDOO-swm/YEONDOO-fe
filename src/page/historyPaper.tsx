@@ -68,9 +68,8 @@ export const HistoryPaper = () => {
 
     useEffect(() => {
         if (process.env.NODE_ENV === 'production') {
-            amplitude.track("논문 내 질의 히스토리 Page Viewed")
+            amplitude.track("History Page Viewed")
         }
-
     }, [])
     return (
         <PageLayout workspace={true} number={3}>
@@ -138,7 +137,12 @@ export const HistoryPaper = () => {
                                   <Typography sx={{ color: '#333', fontSize: '18px', marginBottom: 1.5, fontWeight: 600, display: 'inline-block' }}>          
                                       {mergedItems[0].title}
                                   </Typography>
-                                  <Box sx={{display: 'flex', transform: 'translateY(-8px)'}} onClick={()=>{window.open(`/paper?workspaceId=${workspaceId}&paperid=${mergedItems[0].paperId}&userPdf=${mergedItems[0].userPdf}`)}}>
+                                  <Box sx={{display: 'flex', transform: 'translateY(-8px)'}} onClick={()=>{
+                                    if (process.env.NODE_ENV === 'production') { 
+                                      amplitude.track("History에서 Study with AI 버튼 클릭")
+                                    }
+                                    window.open(`/paper?workspaceId=${workspaceId}&paperid=${mergedItems[0].paperId}&userPdf=${mergedItems[0].userPdf}`)
+                                    }}>
                                     <Typography sx={{fontWeight: 500, color: color.mainGreen, cursor: 'pointer', '&:hover':{
                                       color: '#445142'
                                     }}}>Study with AI</Typography>

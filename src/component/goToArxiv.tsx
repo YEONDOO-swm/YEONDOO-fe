@@ -21,7 +21,7 @@ export const GoToArxiv = ({url, paperId}: {url: string, paperId: string}) => {
 
     const handleViewPaper = (url: string) => {
         if (process.env.NODE_ENV === 'production'){
-            amplitude.track("Arxiv Clicked", {paperId: paperId});
+            amplitude.track("Arxiv Button Clicked", {paperId: paperId});
         }
         window.open(url, "home")
     }

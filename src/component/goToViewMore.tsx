@@ -22,6 +22,9 @@ export const GoToViewMore = ({paperid, workspaceId, userPdf}: {paperid:string, w
     };
 
     const handleViewMore = (paperId: string) => {
+        if (process.env.NODE_ENV === 'production') { 
+            amplitude.track("Study with AI 버튼 클릭")
+          }
         window.open(`/paper?worksapceId=${workspaceId}&userPdf=${userPdf}&paperid=${paperId}`)
       }
 

@@ -11,6 +11,7 @@ import { CounterState } from '../reducer';
 import { useNotify } from 'react-admin';
 import loginIllust from '../asset/login.svg'
 import spinner from "../asset/spinner.gif"
+import * as amplitude from '@amplitude/analytics-browser';
 
 var api: string = '';
 
@@ -54,6 +55,10 @@ export const Login = () => {
 
                 response.json().then((data)=> {
                     setCookie('username', data.username)
+                    if (process.env.NODE_ENV === 'production') {
+                        amplitude.setUserId(data.username.length < 5 ? data.username + "0000" : data.username)
+                        amplitude.track("Login")
+                    }
                     window.location.href = "/home"
                 })
                 .catch(error => console.log(error))
