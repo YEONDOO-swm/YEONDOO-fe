@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PageLayout from '../layout/pageLayout'
 import { Box, Button, Typography, useMediaQuery } from '@mui/material'
 import { useNotify } from 'react-admin'
@@ -13,6 +13,7 @@ import scrollStyle from "../layout/scroll.module.css"
 import { paperType } from './home'
 import study from '../asset/studyGreen.svg'
 import { useQueryOption } from '../utils/useQueryOption';
+import * as amplitude from '@amplitude/analytics-browser';
 // var Mermaid = require('react-mermaid');
 
 const PaperBox = ({handleClickPaper, paper}: {handleClickPaper: any, paper: any}) => {
@@ -38,7 +39,12 @@ const StudyWithAI = () => {
     const api: string = useSelector((state: CounterState) => state.api)
     const workspaceId: number | null = Number(sessionStorage.getItem("workspaceId"));
 
-    console.log('---')
+    useEffect(() => {
+        if (process.env.NODE_ENV === 'production') { 
+            amplitude.track("Select Paper Viewed")
+        }
+    }, [])
+    
     const {data: papersInStorage, isLoading} = useQuery(['homesearch', api, workspaceId],()=> 
       getApi(api, `/api/container?workspaceId=${workspaceId}`)
       .then(async response => {

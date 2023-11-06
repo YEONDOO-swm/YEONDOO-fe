@@ -22,6 +22,7 @@ import pageStyles from '../layout/workspace.module.css'
 import { deleteApi, getApi, postApi, putApi, refreshApi } from '../utils/apiUtils'
 import { color } from '../layout/color'
 import { useQueryOption } from '../utils/useQueryOption';
+import * as amplitude from '@amplitude/analytics-browser';
 
 type workspaceEdit = {
     title?: string;
@@ -63,6 +64,11 @@ const Workspaces = () => {
     const [workspacesArr, setWorkspacesArr] = useState<workspaceEdit[]>([])
     const [curEditItem, setCurEditItem] = useState<workspaceEdit>(initWorkspaceEdit)
 
+    useEffect(() => {
+        if (process.env.NODE_ENV === 'production'){
+            amplitude.track("Home Page Viewed");
+        }
+    }, [])
     const handleClose = () => {
         setOpen(false)
         setWorkspace(initWorkspaceEdit)
@@ -123,6 +129,9 @@ const Workspaces = () => {
         })
         .then(data => {
             if (data.workspaceId && data.editDate) {
+                if (process.env.NODE_ENV === 'production'){
+                    amplitude.track(`워크스페이스 생성 - ${workspace.title}`);
+                }
                 setWorkspace({...workspace, workspaceId: data.workspaceId, editDate: data.editDate})  
             }
         }).catch(error => {
@@ -150,6 +159,9 @@ const Workspaces = () => {
         .then(async(response) => {
             if (response.status === 200) {
                 setWorkspacesArr((prevArr) => prevArr.filter((workspace) => workspace.workspaceId !== workspaceId));
+                if (process.env.NODE_ENV === 'production'){
+                    amplitude.track(`워크스페이스 삭제`);
+                }
             } else if (response.status === 401) {
                 await refreshApi(api, notify, navigate)
             } else {
@@ -183,6 +195,9 @@ const Workspaces = () => {
         .then(async (response) => {
             if (response.status === 200) {
                 setWorkspacesArr((prevArr) => prevArr.map((workspace) => (workspace.workspaceId === workspaceId ? curEditItem : workspace)));
+                if (process.env.NODE_ENV === 'production'){
+                    amplitude.track(`워크스페이스 수정`);
+                }
             } else if (response.status === 401) {
                 await refreshApi(api, notify, navigate)
             } else {

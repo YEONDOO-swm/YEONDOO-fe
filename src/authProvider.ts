@@ -27,15 +27,15 @@ export const authProvider = {
       // if (!passwordRegex.test(password)){
       //   return Promise.reject('패스워드는 영어, 숫자, 특수문자(!@#$%^&*)만 가능합니다.')
       // }
-      
+
       var api ='';
       if (process.env.NODE_ENV === 'development'){
         api = `${import.meta.env.VITE_REACT_APP_LOCAL_SERVER}`
       }
       else if (process.env.NODE_ENV === 'production'){
         api = `${process.env.VITE_REACT_APP_AWS_SERVER}`
-        amplitude.track("Login");
-        amplitude.setUserId(username)
+        // amplitude.track("Login");
+        // amplitude.setUserId(username)
       }
       return fetch(`${api}/api/login`, {
         method: 'POST',
@@ -80,6 +80,7 @@ export const authProvider = {
 
       removeCookie('username')
       removeCookie('access')
+      removeCookie('refresh')
       return Promise.resolve();
     },
     // called when the API returns an error

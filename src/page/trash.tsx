@@ -114,7 +114,7 @@ export const Trash = () => {
 
     useEffect(()=>{
         if (process.env.NODE_ENV === 'production') {     
-            amplitude.track('관심 해제된 논문 Page Viewed')
+            amplitude.track('Trash Page Viewed')
         }
        },[])
 

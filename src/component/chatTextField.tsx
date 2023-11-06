@@ -19,6 +19,7 @@ import scrollStyle from "../layout/scroll.module.css"
 import deleteIcon from "../asset/deleteIcon.svg"
 import spinner from '../asset/spinner.gif'
 import CustomButton from './customButton';
+import * as amplitude from '@amplitude/analytics-browser';
 
 type SearchTapProps = {
     searchTerm: string;
@@ -144,6 +145,9 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
     const isOpenSelectRef = useSelector((state: CounterState) => state.isOpenSelectRef)
 
     const handleSetRef = (paperId: string, paperTitle: string) => {
+      if (process.env.NODE_ENV === 'production') { 
+        amplitude.track("다 논문 질의를 위한 논문 선택")
+      }
       dispatch({
         type: SET_REF_PAPER,
         data: {

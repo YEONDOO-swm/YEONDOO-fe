@@ -142,8 +142,7 @@ export const PaperStorage = () => {
     )
     const handleCancel = (paperId: string) => { // 예를 누르면 실제 삭제
         if (process.env.NODE_ENV === 'production') {
-            
-            amplitude.track("관심 논문 페이지에서 삭제",{paperId: paperId})
+            amplitude.track("My works 페이지에서 삭제",{paperId: paperId})
         }
 
         var payload = {
@@ -179,7 +178,7 @@ export const PaperStorage = () => {
 
     useEffect(() => {
         if (process.env.NODE_ENV === 'production') {
-            amplitude.track("관심 논문 Page Viewed");
+            amplitude.track("My Works Page Viewed");
         }
     }, []);
 
