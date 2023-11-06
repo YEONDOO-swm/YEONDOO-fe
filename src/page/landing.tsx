@@ -15,6 +15,7 @@ import mac from '../asset/macbook.png'
 import mainLading from '../asset/mainLanding.png'
 import workspaces from '../asset/workspaces.gif'
 import exportPng from '../asset/export.png'
+import chatLanding from '../asset/chatLading.gif'
 
 const HeaderBlock = styled.div`
   position: fixed;
@@ -177,9 +178,9 @@ export const Landing = () => {
     }, [count])
 
 
-    const makeCard = (color: string, text:string, subText: string, image:any) => (
+    const makeCard = (color: string, text:string, subText: string, image:any, widthStr: string) => (
       <Box sx={{bgcolor: color==='white'?'#fff':'#F2F6F1', height: '70vh', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', flexDirection: color==='white'?'row-reverse':'row'}}>
-        <img src={image} style={{width: '50vw', height: '30vw', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.2)', borderRadius: '0px'}}/>
+        <img src={image} style={{width: widthStr, height: '30vw', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.2)', borderRadius: '0px'}}/>
         <Box>
         <Typography sx={{ fontSize: '40px', fontWeight: 700, lineHeight: 1.1, color: '#333'}}>
           <div dangerouslySetInnerHTML={{ __html: text }} />
@@ -262,8 +263,8 @@ export const Landing = () => {
                   </ElementWorkspace>
               </Box>
             </Box>
-            {makeCard('green', 'Create your <br/> own workspace', 'Manage your study by workspace!', workspaces)}
-            {makeCard('white', "Is there any part <br/> you don't understand? <br/> Want to see summary?", 'Ask any questions you have through chat. <br/> You can receive highly accurate answers.', workspaces)}
+            {makeCard('green', 'Create your <br/> own workspace', 'Manage your study by workspace!', workspaces, '50vw')}
+            {makeCard('white', "Is there any part <br/> you don't understand? <br/> Want to see summary?", 'Ask any questions you have through chat. <br/> You can receive highly accurate answers.', chatLanding, '20vw')}
             <Box sx={{bgcolor: '#F2F6F1', height: '70vh', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center'}}>
               <img src={exportPng} />
               <Box>
