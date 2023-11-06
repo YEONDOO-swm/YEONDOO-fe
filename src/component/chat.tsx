@@ -63,6 +63,8 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
     const isUpdatedDone = useSelector((state: CounterState) => state.isUpdatedDone)
     const secondPaper = useSelector((state: CounterState) => state.secondPaper)
 
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -88,7 +90,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
     }
 
     const handleSearchKeyDownInPaper = (event: KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter' && event.nativeEvent.isComposing === false){
+        if (event.key === 'Enter' && event.nativeEvent.isComposing === false && !isLoading){
             event.preventDefault();
             amplitude.track('논문 내 질의', {paperId: paperId})
             if (searchTermInPaper === '') {
@@ -97,19 +99,28 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
             }
             performSearchInPaper()
         }
+        if (isLoading) {
+            notify('Generating Answers...')
+        }
     }
 
     const handleButtonClickInPaper = (event: MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
-        amplitude.track('논문 내 질의', {paperId: paperId})
-        if (searchTermInPaper === '') {
-            notify('Please enter your question', {type: 'error'})
-            return ;
+        if (isLoading) {
+            notify('Generating Answers...')
         }
-        performSearchInPaper();
+        else {
+            amplitude.track('논문 내 질의', {paperId: paperId})
+            if (searchTermInPaper === '') {
+                notify('Please enter your question', {type: 'error'})
+                return ;
+            }
+            performSearchInPaper();
+        }
     }
 
     const performSearchInPaper = async (question=undefined) => {
+        setIsLoading(true)
         if (searchTermInPaper != ''){
             setEnteredSearchTermInPaper((prevEnteredSearchTerm: any[])=>[...prevEnteredSearchTerm, 
                 {searchTerm: searchTermInPaper, 
@@ -194,6 +205,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
             console.error("논문 내 질문 오류")
             Sentry.captureException(error)
         } finally {
+            setIsLoading(false)
             // const response = await getApi(api,`/api/paper/result/chat?key=${keyNumber}&workspaceId=${workspaceId}&paperId=${paperId}`)
             // const data = await response.json()
             // //setSearchResultsInPaper((prevResults: string[]) => [...prevResults, data.answer])
