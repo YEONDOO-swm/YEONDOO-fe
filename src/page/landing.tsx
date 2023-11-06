@@ -202,13 +202,14 @@ export const Landing = () => {
             <Box sx={{background: 'linear-gradient(to top, #F2F6F1, #fff)',}}>
               <Box sx ={{height: isMobile?'55vh':'45vh', display: 'flex', flexDirection: 'column',justifyContent: 'flex-end', alignItems: 'center'}}>
                 <Box>
-                  <Typography sx={{textAlign: 'center', color: color.mainGreen, fontWeight: 700, fontSize: '18px'}}>
+                  <Typography sx={{textAlign: 'center', color: color.mainGreen, fontWeight: 700, fontSize: isMobile?'15px':'18px'}}>
                     New study experience
                   </Typography>
                   <Box className={styles.firstTitle} sx={{
                     color: '#333',
                     textAlign: 'center',
                     fontSize: isMobile?'40px':'50px',
+                    px: 2,
                     fontWeight: 700}}>
                       {firstTitle ? firstTitle : "Y"}
                   </Box>
