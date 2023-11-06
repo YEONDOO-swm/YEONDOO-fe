@@ -149,8 +149,7 @@ export const Home = () => {
         notify("Please enter your search term", {type: 'error'})
         return
       }
-      if (process.env.NODE_ENV === 'production') {
-            
+      if (process.env.NODE_ENV === 'production') { 
         amplitude.track("Home에서 검색")
       }
       

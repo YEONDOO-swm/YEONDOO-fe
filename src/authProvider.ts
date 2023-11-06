@@ -80,6 +80,7 @@ export const authProvider = {
 
       removeCookie('username')
       removeCookie('access')
+      removeCookie('refresh')
       return Promise.resolve();
     },
     // called when the API returns an error
