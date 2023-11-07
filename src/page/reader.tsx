@@ -319,13 +319,33 @@ const Reader = () => {
   useEffect(()=>{
       if (openedPaperNumber === paperId) {
         setCurTab(1)
-        const firstPayload = sessionStorage.getItem("firstPaper")
-        if (firstPayload) {
-          const firstPayloadParse = JSON.parse(firstPayload)
-          if (iframeRef && iframeRef.current && iframeRef.current.contentWindow) {
-              iframeRef.current.contentWindow.postMessage(firstPayloadParse, '*');
+        // const firstPayload = sessionStorage.getItem("firstPaper")
+        // if (firstPayload) {
+        //   const firstPayloadParse = JSON.parse(firstPayload)
+        //   if (iframeRef && iframeRef.current && iframeRef.current.contentWindow) {
+        //       iframeRef.current.contentWindow.postMessage(firstPayloadParse, '*');
+        //     }
+        // }
+        getApi(api, `/api/paper?paperId=${paperId}&workspaceId=${workspaceId}`) 
+        .then(async response => {
+            if (response.status === 200) {
+              const data = await response.json();
+              
+              if (iframeRef && iframeRef.current && iframeRef.current.contentWindow) {
+                iframeRef.current.contentWindow.postMessage({
+                  paperId: paperId,
+                  paperItems: data.paperInfo.paperItems,
+                  userPdf: data.paperInfo.userPdf,
+                }, '*');
+              }
+            } else if (response.status === 401) {
+                await refreshApi(api, notify, navigate)
+            } else if (response.status === 400) {
+              navigate(`/home`)
+            } else {
+              throw new Error("논문 정보를 가져오는데 실패하였습니다")
             }
-        }
+        })
       } else {
         setCurTab(2)
         const secondPayload = sessionStorage.getItem("secondPaper")
@@ -377,17 +397,18 @@ const Reader = () => {
           const secondPayloadParse = JSON.parse(secondPayload)
           
           if (secondPayloadParse.paperId === openedPaperNumber) {
-            console.log('yes', openedPaperNumber)
-            dispatch({
-              type: SET_SECOND_PAPER,
-              data: {
-                paperId: openedPaperNumber,
-                paperTitle: secondPayloadParse.paperTitle,
-              }
-            })
-            if (iframeRef2 && iframeRef2.current && iframeRef2.current.contentWindow) {
-                iframeRef2.current.contentWindow.postMessage(secondPayloadParse, '*');
-            }
+            // dispatch({
+            //   type: SET_SECOND_PAPER,
+            //   data: {
+            //     paperId: openedPaperNumber,
+            //     paperTitle: secondPayloadParse.paperTitle,
+            //   }
+            // })
+            // if (iframeRef2 && iframeRef2.current && iframeRef2.current.contentWindow) {
+            //     iframeRef2.current.contentWindow.postMessage(secondPayloadParse, '*');
+            // }
+            setIsSecondPageLoading(2)
+            storeSecondPaper()
           }
           else {
             setIsSecondPageLoading(2)
