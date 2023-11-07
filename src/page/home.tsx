@@ -475,16 +475,16 @@ export const Home = () => {
                         <Box sx={{display: 'flex', mb: 1.5}}>
                           <Typography sx={{fontWeight: '500', mr: 1
                         , display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}> 
-                            {(paper.authors.length > 3 
+                            {paper.authors && (paper.authors.length > 3 
                             ? paper.authors.slice(3).join(', ')
                             : paper.authors.join(', '))} 
                           </Typography>
                           <Typography sx={{color: '#666'}}> 
-                            {paper.year}
+                            {paper.year && paper.year}
                           </Typography>
                         </Box>
                         <Box sx={{color: '#666', mb: 1.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>
-                          {paper.summary}
+                          {paper.summary && paper.summary}
                         </Box>
                     </Box>
                     <GoToViewMore paperid={paper.paperId} workspaceId={workspaceId} userPdf={false}/>
