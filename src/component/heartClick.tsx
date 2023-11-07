@@ -20,7 +20,7 @@ type onUpdateLikesType = (
   newLikes: number
  ) => void
 
-export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentItem: paperType, onUpdateLikes?:onUpdateLikesType, paperlike?: boolean }) => {
+export const HeartClick = ({ currentItem, onUpdateLikes, paperlike}: { currentItem: any, onUpdateLikes?:onUpdateLikesType, paperlike?: boolean }) => {
     const [paperIdArray, setPaperIdArray] = useState<string[]>([]);
     const [isPaperLike, setIsPaperLike] = useState<boolean|undefined>(paperlike)
 

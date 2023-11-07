@@ -146,7 +146,7 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
     }
     const isOpenSelectRef = useSelector((state: CounterState) => state.isOpenSelectRef)
 
-    const handleSetRef = (paperId: string, paperTitle: string) => {
+    const handleSetRef = (paperId: string, paperTitle: string, isLikeOrNot: boolean) => {
       if (process.env.NODE_ENV === 'production') { 
         amplitude.track("다 논문 질의를 위한 논문 선택")
       }
@@ -162,6 +162,7 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
         data: {
           paperId: paperId,
           paperTitle: paperTitle,
+          isLike: isLikeOrNot
         }
       })
       setOpenedPaperNumber(paperId)
@@ -258,7 +259,7 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
                     (papersInStorage.length > 0 
                       ? papersInStorage.map((paper: any, idx: number) => (
                       paperInfo.paperId !== paper.paperId && <Box key={idx}>
-                        <PaperBox paper={paper} handleClickPaper={() => handleSetRef(paper.paperId, paper.title)} />
+                        <PaperBox paper={paper} handleClickPaper={() => handleSetRef(paper.paperId, paper.title, true)} />
                       </Box>)        
                     )
                     :
@@ -275,7 +276,7 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
                   paperInfo && paperInfo.references && 
                   (paperInfo.references.length > 0?paperInfo.references.map((paper: any, idx: number) => (
                     <Box key={idx}>
-                      <PaperBox paper={paper} handleClickPaper={()=>handleSetRef(paper.paperId, paper.title)} />
+                      <PaperBox paper={paper} handleClickPaper={()=>handleSetRef(paper.paperId, paper.title, paper.isLike)} />
                     </Box>
                   ))
                   : <Box sx={{height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>

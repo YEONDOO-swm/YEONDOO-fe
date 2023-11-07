@@ -16,6 +16,7 @@ import spinner from '../asset/spinner.gif'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import download from 'downloadjs';
 import * as amplitude from '@amplitude/analytics-browser';
+import { HeartClick } from '../component/heartClick';
 // import pdfWorker from '../../pdf-worker/src';
 // import { createRequire } from "module";
 // const require = createRequire(import.meta.url);
@@ -367,6 +368,7 @@ const Reader = () => {
                       data: {
                         paperId: openedPaperNumber,
                         paperTitle: data.paperInfo.title,
+                        isLike: data.paperInfo.isLike,
                       }
                     })
                     if (data.userPdf) {
@@ -533,7 +535,7 @@ const Reader = () => {
             <Box onClick={handleClickTab2}
               onMouseEnter={()=>{setIsHoveredTwo(true)}}
               onMouseLeave={()=>{setIsHoveredTwo(false)}}
-              sx={{height: '100%', px: 4, cursor: 'pointer', display: 'flex', alignItems: 'center',
+              sx={{height: '100%', pl: 4, pr: 2, cursor: 'pointer', display: 'flex', alignItems: 'center',
                 bgcolor: curTab === 2?color.white:(isHoveredTwo?"rgba(255, 255, 255, 0.5)":null),
                 borderRadius: '15px 15px 0px 0px'}}
               >
@@ -541,6 +543,7 @@ const Reader = () => {
             , display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden',}}>
                 {secondPaper.paperTitle.length>25?secondPaper.paperTitle.slice(0,25)+"...":secondPaper.paperTitle} 
               </Typography>
+              <HeartClick currentItem={secondPaper} paperlike={secondPaper.isLike}/>
             </Box>}
           </Box>
           <Box sx={{height: '100%', display: 'flex', alignItems: 'center', px: 4}}>
