@@ -246,9 +246,9 @@ export const Home = () => {
           </Box>
         </Box>
         <Box sx={{display: 'flex', mb: 0.6}}>
-          <Typography sx={{color: '#111', fontSize: '15px', fontWeight: 500}}> {paper.authors.slice(0,3).join(", ")}  </Typography>
+          <Typography sx={{color: '#111', fontSize: '15px', fontWeight: 500}}> {paper.authors && paper.authors.slice(0,3).join(", ")}  </Typography>
           <Typography sx={{color: '#666', fontSize: '15px', fontWeight: 400, ml: 2}}>
-            {paper.year}
+            {paper.year && paper.year}
           </Typography>
         </Box>
           {paper.summary && paper.summary.length > 300 ? (
