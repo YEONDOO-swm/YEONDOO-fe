@@ -85,7 +85,7 @@ export const Home = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [expandedPaperArray, setExpandedPaperArray] = useState<string[]>([]) // abstract 열려있는 논문 모음
     const [isSearched, setIsSearched] = useState<boolean>(false)
-    const [recommendedPapers, setRecommendedPapers] = useState<any>([])
+    const [recommendedPapers, setRecommendedPapers] = useState<any>()
     
     const searchInputRef: React.MutableRefObject<HTMLInputElement | null> = useRef<HTMLInputElement | null>(null); // 채팅 입력창에 포거스 주기 위해
 
@@ -438,7 +438,14 @@ export const Home = () => {
             <Box sx={{width: '27.5vw', height: '32vh', borderRadius: '20px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)',
             }} className={styles.transitionContainer}>
               <Box className={styles.transitionWrapper} style={{ transform: wrapperTransform}}>
-                {recommendedPapers && recommendedPapers.map((paper: any, idx: number) => (
+                {recommendedPapers && (recommendedPapers.length===0?
+                <Box sx ={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '27.5vw'}}>
+                  <Typography sx={{fontSize: '18px', fontWeight: 500, color: color.mainGreen, textAlign: 'center'}}>
+                    Collecting user data 
+                    <br/>for recommendation
+                  </Typography>
+                </Box>
+                :(recommendedPapers.map((paper: any, idx: number) => (
                   <Box key={idx} className={`${styles.transitionItem} ${
                     idx === currentIndex ? styles.active : ''
                     }`}
@@ -468,22 +475,22 @@ export const Home = () => {
                         <Box sx={{display: 'flex', mb: 1.5}}>
                           <Typography sx={{fontWeight: '500', mr: 1
                         , display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}> 
-                            {(paper.authors.length > 3 
+                            {paper.authors && (paper.authors.length > 3 
                             ? paper.authors.slice(3).join(', ')
                             : paper.authors.join(', '))} 
                           </Typography>
                           <Typography sx={{color: '#666'}}> 
-                            {paper.year}
+                            {paper.year && paper.year}
                           </Typography>
                         </Box>
                         <Box sx={{color: '#666', mb: 1.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>
-                          {paper.summary}
+                          {paper.summary && paper.summary}
                         </Box>
                     </Box>
                     <GoToViewMore paperid={paper.paperId} workspaceId={workspaceId} userPdf={false}/>
                     {/* <CustomButton title="Study with AI" width="100%" click={()=>window.open(`/paper?paperid=${paper.paperId}`)}/> */}
                   </Box>
-                ))}
+                ))))}
               </Box>
             </Box>
           </Box>}
