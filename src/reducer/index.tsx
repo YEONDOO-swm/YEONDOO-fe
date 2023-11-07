@@ -18,6 +18,7 @@ export type CounterState = {
     secondPaper: {
         paperId: string;
         paperTitle: string;
+        isLike: boolean;
     }
     papersInStorage: Paper[];
     chatSelected: {
@@ -74,6 +75,7 @@ const initState = {
     secondPaper: {
         paperId: "",
         paperTitle: "",
+        isLike: false,
     },
     isUpdatedDone: false,
     userPdfList: [],
