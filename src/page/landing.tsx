@@ -17,6 +17,7 @@ import workspaces from '../asset/workspaces.gif'
 import exportPng from '../asset/export.png'
 import chatLanding from '../asset/chatLading.gif'
 import metaImage from '../asset/metaImage.png'
+import * as amplitude from '@amplitude/analytics-browser';
 
 const HeaderBlock = styled.div`
   position: fixed;
@@ -63,7 +64,12 @@ const Header = () => {
           </Box>
           <div className="right">
             {/* <CustomButton title="Login" width="100px" click={()=>{navigate('/login')}}/> */}
-            <Typography sx={{color: color.appbarGreen, mr: 2, fontWeight: 500, cursor: 'pointer'}} onClick={()=>{navigate('/login')}}>
+            <Typography sx={{color: color.appbarGreen, mr: 2, fontWeight: 500, cursor: 'pointer'}} onClick={()=>{
+              if (process.env.NODE_ENV === 'production') { 
+                amplitude.track("Landing에서 Login Button Clicked")
+              }
+              navigate('/login')
+              }}>
               Login
             </Typography>
           </div>
@@ -146,7 +152,10 @@ const ElementWorkspace = styled.div`
 export const Landing = () => {
     const navigate = useNavigate()
     const goToLogin = () => {
-        navigate(`/login`)
+      if (process.env.NODE_ENV === 'production') { 
+        amplitude.track("Landing에서 START Button Clicked")
+      }
+      navigate(`/login`)
     }
 
     const completedWord: string = "Yeondoo is your research assistant!"
@@ -156,6 +165,12 @@ export const Landing = () => {
 
     const isTablet = useMediaQuery("(max-width: 1024px)")
     const isMobile = useMediaQuery("(max-width: 519px)")
+
+    useEffect(() => {
+      if (process.env.NODE_ENV === 'production') { 
+        amplitude.track("Landing Page Viewed")
+      }
+    }, [])
 
     useEffect(()=> {
       //window.scrollTo(0,0)
@@ -294,7 +309,12 @@ export const Landing = () => {
                 </Typography>
               </Box>
             </Box>
-            <Typography sx={{fontSize: isMobile?'12px':'15px', fontWeight: 600, cursor: 'pointer'}} onClick={() => {navigate('/personalInfo')}}>
+            <Typography sx={{fontSize: isMobile?'12px':'15px', fontWeight: 600, cursor: 'pointer'}} onClick={() => {
+              if (process.env.NODE_ENV === 'production') { 
+                amplitude.track("Landing에서 개인정보처리방침 Clicked")
+              }
+              window.open('/personalInfo')
+              }}>
               개인정보처리방침
             </Typography>
         </Box>
