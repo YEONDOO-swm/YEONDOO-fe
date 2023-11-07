@@ -318,7 +318,10 @@ const Reader = () => {
   }, [isPdfCompleted])
 
   useEffect(()=>{
-      if (openedPaperNumber === paperId) {
+      if (!isPdfCompleted){
+
+      }
+      else if (openedPaperNumber === paperId) {
         setCurTab(1)
         // const firstPayload = sessionStorage.getItem("firstPaper")
         // if (firstPayload) {
@@ -331,7 +334,6 @@ const Reader = () => {
         .then(async response => {
             if (response.status === 200) {
               const data = await response.json();
-              
               if (iframeRef && iframeRef.current && iframeRef.current.contentWindow) {
                 iframeRef.current.contentWindow.postMessage({
                   paperId: paperId,
