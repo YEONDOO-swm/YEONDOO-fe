@@ -85,7 +85,7 @@ export const Home = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [expandedPaperArray, setExpandedPaperArray] = useState<string[]>([]) // abstract 열려있는 논문 모음
     const [isSearched, setIsSearched] = useState<boolean>(false)
-    const [recommendedPapers, setRecommendedPapers] = useState<any>([])
+    const [recommendedPapers, setRecommendedPapers] = useState<any>()
     
     const searchInputRef: React.MutableRefObject<HTMLInputElement | null> = useRef<HTMLInputElement | null>(null); // 채팅 입력창에 포거스 주기 위해
 
@@ -438,7 +438,14 @@ export const Home = () => {
             <Box sx={{width: '27.5vw', height: '32vh', borderRadius: '20px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)',
             }} className={styles.transitionContainer}>
               <Box className={styles.transitionWrapper} style={{ transform: wrapperTransform}}>
-                {recommendedPapers && recommendedPapers.map((paper: any, idx: number) => (
+                {recommendedPapers && (recommendedPapers.length===0?
+                <Box sx ={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '27.5vw'}}>
+                  <Typography sx={{fontSize: '18px', fontWeight: 500, color: color.mainGreen, textAlign: 'center'}}>
+                    Collecting user data 
+                    <br/>for recommendation
+                  </Typography>
+                </Box>
+                :(recommendedPapers.map((paper: any, idx: number) => (
                   <Box key={idx} className={`${styles.transitionItem} ${
                     idx === currentIndex ? styles.active : ''
                     }`}
@@ -483,7 +490,7 @@ export const Home = () => {
                     <GoToViewMore paperid={paper.paperId} workspaceId={workspaceId} userPdf={false}/>
                     {/* <CustomButton title="Study with AI" width="100%" click={()=>window.open(`/paper?paperid=${paper.paperId}`)}/> */}
                   </Box>
-                ))}
+                ))))}
               </Box>
             </Box>
           </Box>}
