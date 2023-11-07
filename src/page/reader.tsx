@@ -549,15 +549,15 @@ const Reader = () => {
             </Box>}
           </Box>
           <Box sx={{height: '100%', display: 'flex', alignItems: 'center', px: 4}}>
-            <Box onClick={handleClickExportButton}
+            <Box onClick={handleClickDownloadPdf}
                   sx={{borderRadius: '7px', border: '1px solid rgba(255, 255, 255, 0.30)', bgcolor: color.white, px: 4, py:0.5,
                     boxShadow: '0px 2px 0px 0px #D4DBE1', '&:hover': {cursor: 'pointer'}}}>
                 <Typography sx={{fontSize: '15px', fontWeight: 600, color: color.appbarGreen}}>
-                  EXPORT
+                  Download PDF
                 </Typography>
             </Box>
           </Box>
-          <Popper id={exportId} open={exportOpen} anchorEl={anchorEl} sx={{zIndex: 999, width: '250px'}}>
+          {/* <Popper id={exportId} open={exportOpen} anchorEl={anchorEl} sx={{zIndex: 999, width: '250px'}}>
             <Box sx={{ p: 1, bgcolor: 'background.paper',
             display: 'flex', flexDirection: 'column', alignItems: 'center',
             borderRadius: '5px', border: '1px solid #ddd', boxShadow: '0px 5px 5px rgba(0, 0, 0, 0.1), 0px -5px 5px rgba(0, 0, 0, 0.1)',
@@ -565,7 +565,7 @@ const Reader = () => {
               <PopUpButton title="Download PDF" clickEvent={handleClickDownloadPdf}/>
               <PopUpButton title="Generate Summary" clickEvent={handleClickSummary} />
             </Box>
-          </Popper>
+          </Popper> */}
         </Box>
         <Box>
           {(!isFirstPageLoading) && (<Chat isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} 
