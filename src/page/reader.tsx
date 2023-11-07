@@ -349,7 +349,7 @@ const Reader = () => {
       } else {
         setCurTab(2)
         const secondPayload = sessionStorage.getItem("secondPaper")
-        const storeSecondPaper = () => getApi(api, `/api/paper?paperId=${openedPaperNumber}&workspaceId=${workspaceId}`) 
+        const storeSecondPaper = (load: boolean) => getApi(api, `/api/paper?paperId=${openedPaperNumber}&workspaceId=${workspaceId}`) 
           .then(async response => {
               if (response.status === 200) {
                   return response.json().then(data => {
@@ -391,7 +391,9 @@ const Reader = () => {
               }
           })
           .finally(() => {
-            setIsSecondPageLoading(3)
+            if (load) {
+              setIsSecondPageLoading(3)
+            }
           })
         if (secondPayload) {
           const secondPayloadParse = JSON.parse(secondPayload)
@@ -407,16 +409,16 @@ const Reader = () => {
             // if (iframeRef2 && iframeRef2.current && iframeRef2.current.contentWindow) {
             //     iframeRef2.current.contentWindow.postMessage(secondPayloadParse, '*');
             // }
-            setIsSecondPageLoading(2)
-            storeSecondPaper()
+            //setIsSecondPageLoading(2)
+            storeSecondPaper(false)
           }
           else {
             setIsSecondPageLoading(2)
-            storeSecondPaper()
+            storeSecondPaper(true)
           }
         } else {
           setIsSecondPageLoading(2)
-          storeSecondPaper()
+          storeSecondPaper(true)
         }
       }
   }, [openedPaperNumber])
