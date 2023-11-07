@@ -188,8 +188,6 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                     const { value, done } = await reader.read()
                     
                     const decodedChunk = decoder.decode(value, { stream: true });
-                    console.log(decodedChunk + "checkindention")
-                    const processedChunk = decodedChunk.replaceAll('data:', '')
                     //done: False -> done: True 여도 console.log('done')이 먼저 출력
                     if (done) {
                         break
@@ -197,12 +195,12 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                         setSearchResultsInPaper((prevSearchResults: string[]) => {
                             if (repeat === 0) {
                                 repeat += 1   
-                                return [...prevSearchResults, processedChunk]
+                                return [...prevSearchResults, decodedChunk]
                             } else {
                                 repeat += 1
                                 const lastItem = prevSearchResults[prevSearchResults.length -1]
                                 const updatedResults = prevSearchResults.slice(0, -1)
-                                return [...updatedResults, lastItem + processedChunk]
+                                return [...updatedResults, lastItem + decodedChunk]
                             }
                         })
                     }
