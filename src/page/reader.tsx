@@ -100,7 +100,7 @@ const Reader = () => {
   const workspaceId: number = Number(sessionStorage.getItem('workspaceId'));
 
   const [isPdfCompleted, setIsPdfCompleted] = useState<boolean>(false)
-  const [isChatOpen, setIsChatOpen] = useState<boolean>(false)
+  const [isChatOpen, setIsChatOpen] = useState<boolean>(true)
   //const [selectedText, setSelectedText] = useState<string>("")
   const [isMultiplePaper, setIsMultiplePaper] = useState<boolean>(false)
   const [openedPaperNumber, setOpenedPaperNumber] = useState<string>(paperId)
