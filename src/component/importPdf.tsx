@@ -162,7 +162,7 @@ const ImportPdf = ({setIsOpenImportPdf}:{setIsOpenImportPdf: any}) => {
                     name='pdf'
                     onChange={onSelectFile}
                     accept='.pdf'
-                    style={{ display: 'none'}}
+                    style={{opacity: 0}}
                     ref={inputRef}
                 />
             </Box>
