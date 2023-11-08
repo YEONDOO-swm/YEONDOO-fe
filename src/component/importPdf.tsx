@@ -134,37 +134,44 @@ const ImportPdf = ({setIsOpenImportPdf}:{setIsOpenImportPdf: any}) => {
                     width: '77%',
                     color: '#999',
                     alignItems: 'center',
-                    cursor: 'pointer'
+                    //cursor: 'pointer'
                 }}
-                onClick={(e)=>{inputRef.current && inputRef.current.click()}}>
+                onClick={(e)=>{
+                    //inputRef.current && inputRef.current.click()
+                    }}>
                     
                     {selectedImages.length === 1 && attachFile}
                     
                 </Box>
-                <Box onClick={(e)=>{inputRef.current && inputRef.current.click()}}
-                    sx={{
-                        display: 'inline-flex',
-                        padding: '7px 15px',
-                        color: color.white,
-                        bgcolor: '#999',
-                        cursor: 'pointer',
-                        height: '20px',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        ml: 1
-                    }}>
-                    <Typography sx={{fontSize: '15px'}}>
-                        Find Pdf
-                    </Typography>
+                <Box sx={{ position: 'relative', width: '100px', overflow: 'hidden'}}>
+                    <Box onClick={(e)=>{}}
+                        sx={{
+                            display: 'inline-flex',
+                            padding: '7px 15px',
+                            color: color.white,
+                            bgcolor: '#999',
+                            cursor: 'pointer',
+                            height: '20px',
+                            // justifyContent: 'center',
+                            // alignItems: 'center',
+                            ml: 1,
+                            width: '100px',
+                            position: 'absolute',
+                            top: '0px',
+                        }}>
+                        <Typography sx={{fontSize: '15px'}}>
+                            Find Pdf
+                        </Typography>
+                    </Box>
+                    <input
+                        type='file'
+                        name='pdf'
+                        onChange={onSelectFile}
+                        accept='.pdf'
+                        style={{fontSize: '45px', position: 'absolute', top: '0px', right: '0px', opacity: 0, cursor: 'pointer'}}
+                        ref={inputRef}
+                    />
                 </Box>
-                <input
-                    type='file'
-                    name='pdf'
-                    onChange={onSelectFile}
-                    accept='.pdf'
-                    style={{opacity: 0}}
-                    ref={inputRef}
-                />
             </Box>
             {/* )} */}
         </Box>
