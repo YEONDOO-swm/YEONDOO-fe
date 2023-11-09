@@ -178,7 +178,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
             //     },
             // }])
             // 스트리밍
-            if (response.status === 200) {
+            if (response.status === 200 || response.status === 500 || response.status === 504) {
                 const reader = response.body!.getReader()
                 const decoder = new TextDecoder()
     
