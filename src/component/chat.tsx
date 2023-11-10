@@ -600,7 +600,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                 padding: '16px',
                                 marginBottom: '10px',
                                 borderRadius: '0px 15px 15px 15px',
-                                maxWidth: '300px'}}>
+                                maxWidth: '80%'}}>
                                 <Typography sx={{fontSize: '14px', color: '#333'}}>
                                     Hello. This is <b>'{paperInfo.title}'</b> paper. You can ask any question about this paper. <br/>
                                     You can choose another paper you want to ask question together by clicking <b>Add study paper</b> button below. <br/>
@@ -654,7 +654,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                                 padding: '16px',
                                 marginBottom: '10px',
                                 borderRadius: '15px 0px 15px 15px' ,
-                                maxWidth: '300px'
+                                maxWidth: '80%'
                                 }}
                             >
                             <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
@@ -714,9 +714,9 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                             padding: '16px',
                             marginBottom: '10px',
                             borderRadius: '0px 15px 15px 15px',
-                            maxWidth: '300px'}}>
+                            maxWidth: '80%'}}>
                             <Box sx={{display: 'flex', alignItems: 'flex-start'}}>
-                                <Box sx={{maxWidth: '300px', display: 'flex', justifyContent: 'space-between', mb: 1}}>
+                                <Box sx={{display: 'flex', justifyContent: 'space-between', mb: 1}}>
                                 
                                     {index>=searchResultsInPaper.length?(
                                         <Typography className={loadingStyle.loading}> <MoreHorizIcon /> </Typography>
