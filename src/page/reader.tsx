@@ -499,6 +499,9 @@ const Reader = () => {
   const [isHoveredOne, setIsHoveredOne] = useState<boolean>(false)
   const [isHoveredTwo, setIsHoveredTwo] = useState<boolean>(false)
 
+
+  
+
   return (
     <div>
       <Box sx={{height: '100vh', overflow: 'hidden'}}>
