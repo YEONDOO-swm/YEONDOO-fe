@@ -425,16 +425,7 @@ useEffect(()=>{
 
     return (
     <div>
-        <Box style={{
-            position: 'absolute',
-            width: '100vw',
-            height: '80vh',
-            
-        }}
-        onMouseMove={handleResizeMouseMove}
-        onMouseUp={handleResizeMouseUp}>
-
-        </Box>
+        
         <Box
         sx={{
           width: isMobile? '60px':'90px',
@@ -490,6 +481,8 @@ useEffect(()=>{
             cursor: 'ew-resize',
           }}
           onMouseDown={handleResizeMouseDown}
+          onMouseMove={handleResizeMouseMove}
+            onMouseUp={handleResizeMouseUp}
         >
         </Box>
         <Box
@@ -503,6 +496,8 @@ useEffect(()=>{
             cursor: 'ns-resize',
           }}
           onMouseDown={handleResizeHeightMouseDown}
+          onMouseMove={handleResizeHeightMouseMove}
+            onMouseUp={handleResizeHeightMouseUp}
         >
         </Box>
         
