@@ -19,6 +19,9 @@ import chatProfile from '../asset/chatProfile.png';
 import deleteIcon from '../asset/delete.svg'
 import chat from '../asset/chatProfile.png'
 import StickyNote2Icon from '@mui/icons-material/StickyNote2';
+import AspectRatioIcon from '@mui/icons-material/AspectRatio';
+import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import HeightSharpIcon from '@mui/icons-material/HeightSharp';
 
 type history = {
     who: boolean;
@@ -354,8 +357,54 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
     const isTablet = useMediaQuery("(min-width: 481px) and (max-width: 1024px)")
     const isMobile = useMediaQuery("(max-width: 480px)")
 
+    const [size, setSize] = useState({ width: localStorage.getItem('chatWidth')?Number(localStorage.getItem('chatWidth')):(isMobile ? '80vw' : '400px'), height: localStorage.getItem('chatHeight')?Number(localStorage.getItem('chatHeight')):'550px' });
+  const [isResizing, setIsResizing] = useState(false);
+
+  const handleResizeMouseDown = (e:any) => {
+    setIsResizing(true);
+  };
+
+  useEffect(()=>{
+    if (isResizing) {
+        document.addEventListener('mousemove', handleResizeMouseMove);
+        document.addEventListener('mouseup', handleResizeMouseUp);
+    } 
+    return () => { // useEffect 동작 전에 실행
+        document.removeEventListener('mousemove', handleResizeMouseMove);
+        document.removeEventListener('mouseup', handleResizeMouseUp);
+    };
+}, [isResizing])
+
+  const handleResizeMouseMove = (e:any) => {
+    e.preventDefault()
+    if (isResizing) {
+      const deltaX = e.clientX - chatPosition.x - 10;
+      const deltaY = chatPosition.y - e.clientY + 10;
+      setSize({
+        width: `${deltaX}px`,
+        height: `${deltaY}px`,
+      });
+      localStorage.setItem('chatWidth', deltaX.toString())
+      localStorage.setItem('chatHeight', deltaY.toString())
+    }
+  };
+
+  const handleResizeMouseUp = () => {
+    setIsResizing(false);
+  };
+
     return (
     <div>
+        <Box style={{
+            position: 'absolute',
+            width: '100vw',
+            height: '80vh',
+            
+        }}
+        onMouseMove={handleResizeMouseMove}
+        onMouseUp={handleResizeMouseUp}>
+
+        </Box>
         <Box
         sx={{
           width: isMobile? '60px':'90px',
@@ -387,8 +436,10 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
       {/* 직사각형 (예: 채널톡 스타일) */}
       {isChatOpen && <Box
         style={{
-          width: isMobile?'80vw':'400px',
-          height: '550px',
+          //width: isMobile?'80vw':'400px',
+          //height: '550px',
+          width: size.width,
+          height: size.height,
           //backgroundColor: '#ddd',
           position: 'absolute', // 부모(상위) 요소에 대한 상대 위치로 설정
           left: chatPosition.x,
@@ -398,6 +449,23 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
           
         }}
       >
+        <Box
+        style={{
+            width: '15px',
+            height: '15px',
+            backgroundColor: '',
+            position: 'absolute',
+            top: '-15px',
+            right: '-5px',
+            cursor: 'nesw-resize',
+          }}
+          onMouseDown={handleResizeMouseDown}
+        >
+            {/* <StickyNote2Icon/> */}
+            <HeightSharpIcon style={{color: color.mainGreen, transform: 'rotate(45deg)'}}/>
+            {/* <AspectRatioIcon /> */}
+        </Box>
+        
         <Box sx={{width: '100%', height:'35px', bgcolor: '#333', color: color.white, px: 1,
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
             <Typography sx={{display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden',

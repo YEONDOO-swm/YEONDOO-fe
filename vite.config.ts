@@ -15,6 +15,7 @@ export default defineConfig({
     },
     base: './',
     optimizeDeps: {
-        include: ['mermaid']
+        include: ['mermaid'],
+        exclude: ["HeightSharp"]
       }
 });
