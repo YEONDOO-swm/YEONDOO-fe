@@ -357,15 +357,19 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
     const isTablet = useMediaQuery("(min-width: 481px) and (max-width: 1024px)")
     const isMobile = useMediaQuery("(max-width: 480px)")
 
-    const [size, setSize] = useState({ width: localStorage.getItem('chatWidth')?Number(localStorage.getItem('chatWidth')):(isMobile ? '80vw' : '400px'), height: localStorage.getItem('chatHeight')?Number(localStorage.getItem('chatHeight')):'550px' });
-  const [isResizing, setIsResizing] = useState(false);
+    const [size, setSize] = useState({ width: localStorage.getItem('chatWidth')?localStorage.getItem('chatWidth'):(isMobile ? '80vw' : '400px'), height: localStorage.getItem('chatHeight')?localStorage.getItem('chatHeight'):'550px' });
+  const [isResizingWidth, setIsResizingWidth] = useState(false);
+  const [isResizingHeight, setIsResizingHeight] = useState(false);
 
   const handleResizeMouseDown = (e:any) => {
-    setIsResizing(true);
+    setIsResizingWidth(true);
+  };
+  const handleResizeHeightMouseDown = (e:any) => {
+    setIsResizingHeight(true);
   };
 
   useEffect(()=>{
-    if (isResizing) {
+    if (isResizingWidth) {
         document.addEventListener('mousemove', handleResizeMouseMove);
         document.addEventListener('mouseup', handleResizeMouseUp);
     } 
@@ -373,24 +377,50 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
         document.removeEventListener('mousemove', handleResizeMouseMove);
         document.removeEventListener('mouseup', handleResizeMouseUp);
     };
-}, [isResizing])
+}, [isResizingWidth])
+useEffect(()=>{
+    if (isResizingHeight) {
+        document.addEventListener('mousemove', handleResizeHeightMouseMove);
+        document.addEventListener('mouseup', handleResizeHeightMouseUp);
+    } 
+    return () => { // useEffect 동작 전에 실행
+        document.removeEventListener('mousemove', handleResizeHeightMouseMove);
+        document.removeEventListener('mouseup', handleResizeHeightMouseUp);
+    };
+}, [isResizingHeight])
 
   const handleResizeMouseMove = (e:any) => {
     e.preventDefault()
-    if (isResizing) {
+    if (isResizingWidth) {
       const deltaX = e.clientX - chatPosition.x - 10;
-      const deltaY = chatPosition.y - e.clientY + 10;
+      //const deltaY = chatPosition.y - e.clientY + 10;
       setSize({
         width: `${deltaX}px`,
+        height: size.height,
+      });
+      localStorage.setItem('chatWidth', `${deltaX}px`)
+      localStorage.setItem('chatHeight', size.height!)
+    }
+  };
+  const handleResizeHeightMouseMove = (e:any) => {
+    e.preventDefault()
+    if (isResizingHeight) {
+      //const deltaX = e.clientX - chatPosition.x - 10;
+      const deltaY = chatPosition.y - e.clientY + 10;
+      setSize({
+        width: size.width,
         height: `${deltaY}px`,
       });
-      localStorage.setItem('chatWidth', deltaX.toString())
-      localStorage.setItem('chatHeight', deltaY.toString())
+      localStorage.setItem('chatWidth', size.width!)
+      localStorage.setItem('chatHeight', `${deltaY}px`)
     }
   };
 
   const handleResizeMouseUp = () => {
-    setIsResizing(false);
+    setIsResizingWidth(false);
+  };
+  const handleResizeHeightMouseUp = () => {
+    setIsResizingHeight(false);
   };
 
     return (
@@ -438,8 +468,8 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
         style={{
           //width: isMobile?'80vw':'400px',
           //height: '550px',
-          width: size.width,
-          height: size.height,
+          width: size.width!,
+          height: size.height!,
           //backgroundColor: '#ddd',
           position: 'absolute', // 부모(상위) 요소에 대한 상대 위치로 설정
           left: chatPosition.x,
@@ -452,18 +482,28 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
         <Box
         style={{
             width: '15px',
-            height: '15px',
+            height: size.height?size.height:'500px',
             backgroundColor: '',
             position: 'absolute',
-            top: '-15px',
+            //top: '-15px',
             right: '-5px',
-            cursor: 'nesw-resize',
+            cursor: 'ew-resize',
           }}
           onMouseDown={handleResizeMouseDown}
         >
-            {/* <StickyNote2Icon/> */}
-            <HeightSharpIcon style={{color: color.mainGreen, transform: 'rotate(45deg)'}}/>
-            {/* <AspectRatioIcon /> */}
+        </Box>
+        <Box
+        style={{
+            width: size.width?size.width:'370px',
+            height: '15px',
+            backgroundColor: '',
+            position: 'absolute',
+            top: '-5px',
+            //right: '-5px',
+            cursor: 'ns-resize',
+          }}
+          onMouseDown={handleResizeHeightMouseDown}
+        >
         </Box>
         
         <Box sx={{width: '100%', height:'35px', bgcolor: '#333', color: color.white, px: 1,
