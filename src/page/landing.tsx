@@ -17,6 +17,7 @@ import workspaces from '../asset/workspaces.gif'
 import exportPng from '../asset/export.png'
 import chatLanding from '../asset/chatLading.gif'
 import metaImage from '../asset/metaImage.png'
+import landingThird from '../asset/landingThird.png'
 import * as amplitude from '@amplitude/analytics-browser';
 
 const HeaderBlock = styled.div`
@@ -288,13 +289,14 @@ export const Landing = () => {
             {makeCard('green', 'Create your <br/> own workspace', 'Manage your study by workspace!', workspaces, isTablet?'80vw':'50vw')}
             {makeCard('white', "Is there any part <br/> you don't understand? <br/> Want to see summary?", 'Ask any questions you have through chat. <br/> You can receive highly accurate answers.', chatLanding, isTablet?'40vw':'20vw')}
             <Box sx={{bgcolor: '#F2F6F1', height: isTablet?(isMobile?'70vh':'90vh'):'70vh', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', flexDirection: isTablet?'column-reverse':'row'}}>
-              <img src={exportPng} style={{width: isTablet?'80vw':'50vw'}}/>
+              <img src={landingThird} style={{width: isTablet?'80vw':'50vw'}}/>
               <Box>
               <Typography sx={{ fontSize: isMobile?'30px':'40px', fontWeight: 700, lineHeight: 1.1, color: '#333', textAlign: isTablet?'center':undefined}}>
-                Convert the records <br/> you left <br/> into various types
+                Experience <br/> flexible interaction <br/> of Chat and Pdf Viewer
               </Typography>
               <Typography sx={{mt: 2, fontSize: isMobile?'12px':'17px', fontWeight: 500, color: '#888', textAlign: isTablet?'center':undefined}}>
-                  The Generate Summary function summarizes your records <br/> with the purpose and format you want.
+                Save favorite answers to your paper. 
+                <br/> Conveniently ask questions <br/> about the text you want to ask about in the paper.
               </Typography>
               </Box>
           </Box>
