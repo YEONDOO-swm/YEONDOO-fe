@@ -547,7 +547,7 @@ useEffect(()=>{
                                               } else {
                                                 setCurTab(2)
                                               }}}>
-                                            #{paper.title}
+                                            #{paper.title.length > 10 ? paper.title.slice(0, 10) + "..." : paper.title}
                                         </Typography>
                                         </Box>
                                         ))
