@@ -96,7 +96,7 @@ const Library = () => {
                             : paper.authors.join(', '))}
                         </Typography>
                         <Typography sx={{color: '#666', fontSize: '15px', fontWeight: 400}}>
-                            {paper.year}
+                            {paper.year && paper.year}
                         </Typography>
                     </Box>
                     {/* <Typography variant="body1">
