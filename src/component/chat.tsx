@@ -555,7 +555,7 @@ useEffect(()=>{
                                 </Box>
                                 <Box>
                                 {history && history.context && (history.context.length>20 ? 
-                                <Box sx={{display: 'flex', alignItems: 'center', bgcolor: color.white, borderRadius: '100px', mb: 1, cursor: 'pointer'}}>
+                                <Box sx={{display: 'flex', alignItems: 'center', bgcolor: color.white, borderRadius: '100px', mb: 1}}>
                                 <Box sx={{display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden', mx: 1, my: 0.5, px: 1, cursor: 'pointer'}}>
                                     <Typography sx={{color: color.mainGreen, fontSize: '13px', fontWeight: 500}}>
                                     {history.context} 
@@ -713,8 +713,8 @@ useEffect(()=>{
                                     </Box>
                                     <Box>
                                     {term.draggedText && (term.draggedText.length>15 ? 
-                                    <Box sx={{display: 'flex', alignItems: 'center', bgcolor: color.white, borderRadius: '100px', mb: 1, cursor: 'pointer'}}>
-                                    <Box sx={{display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden', mx: 1, my: 0.5, px: 1, cursor: 'pointer'}}>
+                                    <Box sx={{display: 'flex', alignItems: 'center', bgcolor: color.white, borderRadius: '100px', mb: 1}}>
+                                    <Box sx={{display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden', mx: 1, my: 0.5, px: 1}}>
                                         <Typography sx={{color: color.mainGreen, fontSize: '13px', fontWeight: 500}}>
                                         {term.draggedText} 
                                         </Typography>
