@@ -19,7 +19,7 @@
 <table>
   <tr>
     <td valign="top">
-      <img width="1000" alt="image" src="./src/asset/workspaces.gif">
+      <img width="450" alt="image" src="./src/asset/workspaces.gif">
     </td>
     <td valign="center">
       <div>
@@ -32,7 +32,7 @@
 <table>
   <tr>
     <td valign="top">
-      <img width="600" alt="image" src="./src/asset/chatLading.gif">
+      <img width="350" alt="image" src="./src/asset/chatLading.gif">
     </td>
     <td valign="center">
       <div>
