@@ -6,28 +6,41 @@
 
 
 ## Introduction
-<div style="display: flex; flex-direction: column; justify-content: center; align-items: center">
+<p align="center">
   <img width="500" alt="image" src="./src/asset/mainLanding.png" title="Yeondoo 워크북 공간 및 채팅 서비스">
   <div style="text-align: center; margin-top: 10px">
     연두는 연구를 도와주는 웹 서비스입니다. <br/>
     연두 서비스는 논문에 대한 노팅 및 하이라이팅 기능을 제공하는 워크북 공간이 있습니다. 뿐만 아니라, 채팅을 통해 논문을 깊이 이해할 수 있도록 도와줍니다.
   </div>
-</div>
+</p>
 
 ## Main feature
-<div style="display: flex; align-items: center; margin-bottom: 20px;">
-  <img width="400" alt="image" src="./src/asset/workspaces.gif">
-  <div style="margin-left: 20px">
-    개인 워크스페이스를 생성하여 자신만의 연구 공간을 관리할 수 있습니다.
-  </div>
-</div>
 
-<div style="display: flex; align-items: center;">
-  <img width="250" alt="image" src="./src/asset/chatLading.gif">
-  <div style="margin-left: 20px">
-    논문에 대해 궁금한 내용을 모두 질문할 수 있습니다. 논문 전체 컨텍스트를 임베딩하였기 때문에, 논문에 대한 질문을 정확하게 응답하여 줍니다.
-  </div>
-</div>
+<table>
+  <tr>
+    <td valign="top">
+      <img width="1000" alt="image" src="./src/asset/workspaces.gif">
+    </td>
+    <td valign="center">
+      <div>
+        개인 워크스페이스를 생성하여 자신만의 연구 공간을 관리할 수 있습니다.
+      </div>
+    </td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td valign="top">
+      <img width="600" alt="image" src="./src/asset/chatLading.gif">
+    </td>
+    <td valign="center">
+      <div>
+        논문에 대해 궁금한 내용을 모두 질문할 수 있습니다. 논문 전체 컨텍스트를 임베딩하였기 때문에, 논문에 대한 질문을 정확하게 응답하여 줍니다.
+      </div>
+    </td>
+  </tr>
+</table>
 
 ## Tech Stacks
 <p align="center">
@@ -116,6 +129,6 @@ npm run build
 - 서브도메인으로 Yeondoo와 통신
 
 ## License
-연두는 GNU AFFERO GENERAL PUBLIC LICENSE를 따릅니다. 자세한 내용은 [LICENSE](https://github.com/YEONDOO-swm/YEONDOO-fe/blob/main/LICENSE)를 참고해주세요.
+연두는 GNU AFFERO GENERAL PUBLIC LICENSE를 따릅니다. 자세한 내용은 [LICENSE](https://github.com/YEONDOO-swm/YEONDOO-fe/blob/main/LICENSE)파일을 참고해주세요.
 
 
