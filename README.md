@@ -8,9 +8,10 @@
 ## Introduction
 <p align="center">
   <img width="500" alt="image" src="./src/asset/mainLanding.png" title="Yeondoo 워크북 공간 및 채팅 서비스">
-  <div style="text-align: center; margin-top: 10px">
+  <div align="center">
     연두는 연구를 도와주는 웹 서비스입니다. <br/>
-    연두 서비스는 논문에 대한 노팅 및 하이라이팅 기능을 제공하는 워크북 공간이 있습니다. 뿐만 아니라, 채팅을 통해 논문을 깊이 이해할 수 있도록 도와줍니다.
+    연두 서비스는 논문에 대한 노팅 및 하이라이팅 기능을 제공하는 워크북 공간이 있습니다. 뿐만 아니라, 채팅을 통해 논문을 깊이 이해할 수 있도록 도와줍니다. <br/>
+    채팅과 워크북을 통해 더욱 풍부한 연구 경험을 할 수 있습니다.
   </div>
 </p>
 
