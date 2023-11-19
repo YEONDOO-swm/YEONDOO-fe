@@ -57,7 +57,8 @@ const Library = () => {
     const makePapersCard = (paper: paperType) => {
         return (
         <Box key={paper.paperId} sx={{ mb: '15px', pb: '30px',
-        borderRadius: '20px', border: '1px solid #ddd', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)'}}>
+        borderRadius: '20px', border: paper.userPdf? `1px solid ${color.mainGreen}`: '1px solid #ddd' , boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.05)',
+        bgcolor: paper.userPdf ? '#F1F8F0' : '#fff'}}>
             <Box sx={{display: 'flex', justifyContent:'space-between', padding: '0px 10px 0px 40px'}}>
                 <Box sx={{pt: '30px', width: '100%', pr: '20px'}}>
                     <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
