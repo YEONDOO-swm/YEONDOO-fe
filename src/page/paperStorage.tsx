@@ -343,7 +343,7 @@ export const PaperStorage = () => {
                             paper.userPdf ? makeUserPapersCard(paper) : makePapersCard(paper)
                         )
                     )):
-                    (!userPdfList && <Box sx={{height: '70vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 2}}>
+                    (!(userPdfList && userPdfList.length>0) && <Box sx={{height: '70vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 2}}>
                             <PostAddIcon sx={{fontSize: '180px'}}/>
                             <Typography sx={{ color: '#333', fontSize: '22px', fontWeight: 600}}>No Papers In My Works</Typography>
                         </Box>)}
