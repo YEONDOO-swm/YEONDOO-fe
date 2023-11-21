@@ -90,8 +90,9 @@ const ImportPdf = ({setIsOpenImportPdf}:{setIsOpenImportPdf: any}) => {
                 await refreshApi(api, notify, navigate)
             } else if (response.status === 400) {
                 navigate(`/home`)
-            }
-            else {
+            } else if (response.status === 500) {
+                notify("Upload is failed")
+            } else {
                 response.json()
                 .then(data => {
                     dispatch({
