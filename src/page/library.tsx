@@ -72,6 +72,7 @@ const Library = () => {
                                 }}}
                                 onClick={()=> {
                                     sessionStorage.setItem('workspaceId', String(paper.workspaceId))
+                                    sessionStorage.setItem('workspaceTitle', paper.workspaceTitle)
                                     if (process.env.NODE_ENV === 'production') { 
                                       amplitude.track("Library에서 Worspace 이동 버튼 클릭")
                                     }
