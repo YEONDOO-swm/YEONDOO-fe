@@ -197,8 +197,9 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                     } else {
                         setSearchResultsInPaper((prevSearchResults: string[]) => {
                             if (repeat === 0) {
-                                repeat += 1   
-                                return [...prevSearchResults, decodedChunk]
+                                repeat += 1
+                                const newDecodedChunk = decodedChunk.replace('\n\n', '')
+                                return [...prevSearchResults, newDecodedChunk]
                             } else {
                                 repeat += 1
                                 const lastItem = prevSearchResults[prevSearchResults.length -1]
