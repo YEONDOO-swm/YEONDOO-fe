@@ -756,7 +756,7 @@ useEffect(()=>{
                                     {index>=searchResultsInPaper.length?(
                                         <Typography className={loadingStyle.loading}> <MoreHorizIcon /> </Typography>
                                     ):(
-                                        <Typography sx={{fontSize: '14px', color: '#333'}}>{searchResultsInPaper[index]}</Typography>                 
+                                        <Typography sx={{fontSize: '14px', color: '#333', whiteSpace: 'pre-wrap'}}>{searchResultsInPaper[index]}</Typography>                 
                                     )}       
                                 </Box>
                             </Box>
