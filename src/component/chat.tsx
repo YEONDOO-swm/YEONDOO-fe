@@ -558,14 +558,14 @@ useEffect(()=>{
                                 {history && history.context && (history.context.length>20 ? 
                                 <Box sx={{display: 'flex', alignItems: 'center', bgcolor: color.white, borderRadius: '100px', mb: 1}}>
                                 <Box sx={{display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden', mx: 1, my: 0.5, px: 1}}>
-                                    <Typography sx={{color: color.mainGreen, fontSize: '13px', fontWeight: 500, whiteSpace: 'pre-wrap'}}>
+                                    <Typography sx={{color: color.mainGreen, fontSize: '13px', fontWeight: 500}}>
                                     {history.context} 
                                     </Typography>
                                 </Box>
                                 </Box>:
                                 <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
                                 <Box sx={{display: 'inline-flex', px: 2, py: 0.5, alignItems: 'center', bgcolor: color.white, borderRadius: '100px'}}>
-                                    <Typography sx={{color: color.mainGreen, fontSize: '13px', fontWeight: 500, whiteSpace: 'pre-wrap'}}>
+                                    <Typography sx={{color: color.mainGreen, fontSize: '13px', fontWeight: 500}}>
                                         {history.context} 
                                     </Typography>
                                 </Box>
@@ -575,7 +575,7 @@ useEffect(()=>{
                         <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
                             
                             <Box sx={{}}>
-                                <Typography sx={{fontSize: '14px' , color: history.who ? color.white : '#333'}}>
+                                <Typography sx={{fontSize: '14px' , color: history.who ? color.white : '#333', whiteSpace: 'pre-wrap'}}>
                                     {history.content}
                                 </Typography>
                                    
