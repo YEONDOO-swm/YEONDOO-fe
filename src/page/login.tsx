@@ -6,8 +6,8 @@ import { Box, Button, Card, Paper, Typography, makeStyles, useMediaQuery } from 
 import { color } from '../layout/color'
 import { setCookie } from '../cookie';
 import { useMutation } from 'react-query';
-import { useSelector } from 'react-redux';
-import { CounterState } from '../reducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { CounterState, SET_LEFT_QUESTIONS } from '../reducer';
 import { useNotify } from 'react-admin';
 import loginIllust from '../asset/login.svg'
 import spinner from "../asset/spinner.gif"
@@ -24,6 +24,7 @@ export const Login = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const notify = useNotify()
+    const dispatch = useDispatch()
 
     const { mutate } = useMutation(
         (value: loginPayload) => fetch(`${api}/api/login/google`, {
@@ -55,6 +56,11 @@ export const Login = () => {
 
                 response.json().then((data)=> {
                     setCookie('username', data.username)
+                    dispatch({
+                        type: SET_LEFT_QUESTIONS,
+                        data: data.leftQuestions
+                    })
+                    localStorage.setItem('chatToken', data.leftQuestions)
                     if (process.env.NODE_ENV === 'production') {
                         amplitude.setUserId(data.username.length < 5 ? data.username + "0000" : data.username)
                         amplitude.track("Login")
