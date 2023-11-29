@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TitlePortal, useNotify, AppBar } from 'react-admin';
+import { TitlePortal, useNotify, AppBar, UserMenu } from 'react-admin';
 import Box from '@mui/material/Box';
 import { Typography, styled, alpha,  ToggleButtonGroup } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
@@ -9,9 +9,10 @@ import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import * as amplitude from '@amplitude/analytics-browser';
 import MuiToggleButton from "@mui/material/ToggleButton";
+import MyLogoutButton from './myLogoutButton';
 // import AppBar from '@material-ui/core/AppBar';
 
-
+const MyUserMenu = () => <UserMenu><MyLogoutButton /></UserMenu>;
 
 
 const Search = styled('div')(({ theme }) => ({

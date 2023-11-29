@@ -6,10 +6,10 @@ import CopyClick from './copyClick'
 import * as amplitude from '@amplitude/analytics-browser';
 import { useNotify } from 'react-admin'
 import * as Sentry from '@sentry/react';
-import { postApi, refreshApi } from '../utils/apiUtils'
+import { getApi, postApi, refreshApi } from '../utils/apiUtils'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { CounterState, SET_IS_UPDATED_DONE, SET_SECOND_PAPER } from '../reducer'
+import { CounterState, SET_IS_UPDATED_DONE, SET_LEFT_QUESTIONS, SET_SECOND_PAPER } from '../reducer'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import loadingStyle from "../layout/loading.module.css"
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
@@ -140,7 +140,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
         setSearchTermInPaper("")
         const query = new URLSearchParams(window.location.search);
         const paperId: string = query.get('paperid') || '';
-        //const keyNumber = Math.floor(Math.random()*1000000000)
+        // const keyNumber = Math.floor(Math.random()*1000000000)
         const payload = {
             paperIds: refPaper.paperId?[paperId, refPaper.paperId]:[paperId],
             question: question? question : searchTermInPaper,
@@ -148,7 +148,26 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
             position: draggeddText ? position : null,
         }
         try {
-            //setKey(keyNumber)
+            // setKey(keyNumber)
+            const leftChat = localStorage.getItem('chatToken')
+            if (leftChat === null) {
+                console.log('hehe')
+                const response = await getApi(api,`/api/paper/token`)
+                const data = await response.json()
+                dispatch({
+                    type: SET_LEFT_QUESTIONS,
+                    data: data.leftQuestions
+                })
+                localStorage.setItem('chatToken', data.leftQuestions)
+                if (data.leftQuestions <= 0) {
+                    notify("You've exhausted your daily question limit. Please use tomorrow.")
+                    throw new Error('Chat token is exhausted.')
+                }
+            } 
+            else if (Number(leftChat) <=0 ) {
+                notify("You've exhausted your daily question limit. Please use tomorrow.")
+                throw new Error('Chat token is exhausted.')
+            }
             let response = await postApi(api, `/api/paper?paperId=${paperId}&workspaceId=${workspaceId}`, payload)
 
             if (response.status === 401) {
@@ -157,6 +176,10 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
             }
             else if (response.status === 400) {
                 navigate(`/home`)
+            }
+            else if (response.status === 403) {
+                notify("You've exhausted your daily question limit. Please use tomorrow.")
+                throw new Error('Chat token is exhausted.')
             }
 
             // 일반 통신 방식
@@ -216,8 +239,16 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
             Sentry.captureException(error)
         } finally {
             setIsLoading(false)
-            // const response = await getApi(api,`/api/paper/result/chat?key=${keyNumber}&workspaceId=${workspaceId}&paperId=${paperId}`)
-            // const data = await response.json()
+            const leftChat = localStorage.getItem('chatToken')
+            if (leftChat === null || Number(leftChat) > 0) {
+                const response = await getApi(api,`/api/paper/token`)
+                const data = await response.json()
+                dispatch({
+                    type: SET_LEFT_QUESTIONS,
+                    data: data.leftQuestions
+                })
+                localStorage.setItem('chatToken', data.leftQuestions)
+            }
             // //setSearchResultsInPaper((prevResults: string[]) => [...prevResults, data.answer])
             // setSearchResultsProof((prevProof: any[]) => [...prevProof, {
             //     firstPaperPosition: (data.positions && data.positions.length > 0) && 

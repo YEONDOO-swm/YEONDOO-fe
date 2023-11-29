@@ -88,6 +88,7 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
 
     const papersInStorage = useSelector((state:CounterState) => state.papersInStorage)
     const api = useSelector((state: CounterState) => state.api)
+    const leftQuestions = useSelector((state: CounterState) => state.leftQuestions)
     const workspaceId = Number(sessionStorage.getItem('workspaceId'))
 
     const [isLoading, setIsLoading] = useState(false)
@@ -307,49 +308,53 @@ export const ChatTextField: React.FC<SearchTapProps> = ({
               </Box>
             </Box>)}
             <Box sx={firstBoxSx}>
-                    <Box sx={{height: '45px',display: 'flex', justifyContent: 'space-between', alignItems: 'center'
-                    , color: '#333', backgroundColor: '#f5f5f5', borderRadius: '10px'}}>
-                        <input
-                        id="search"
-                        type="search"
-                        // variant="outlined"
-                        // multiline
-                        // inputProps={{
-                        //     maxLength: maxLengthLimit,
-                        // }}
-                        ref={searchInputRef}
-                        placeholder={placeholder}
-                        value={searchTerm}
-                        onChange={handleChange}
-                        onKeyDown={onSearchKeyDown}
-                        onClick={()=>{searchInputRef.current?.focus();}}
-                        style={{ color: '#333', backgroundColor: '#f5f5f5', borderRadius: '10px', width: '100%', paddingLeft: '10px',
-                        border: 'none', outline: 'none',
-                        fontSize: '15px'}}
-                        // InputProps={{
-                        //     endAdornment: (
-                        //     <InputAdornment position="end">
-                                // <IconButton onClick={onSearch} sx={{bgcolor: color.mainGreen, my:1, height: '35px', width: '35px'}}>
-                                // <SearchIcon sx={{color: color.mainGreen}}/>
-                                // </IconButton>
-                        //     </InputAdornment>
-                        //     ),
-                        //     sx: {...heightSx, border: '1px solid #fff', borderRadius: '10px', height: '50px'}
-                        // }}
-                        />
-                        <div
-                        onClick={(e)=>{
-                          onSearch(e)
-                          searchInputRef.current?.focus()
-                        }} 
-                        style={{display: 'flex', justifyContent: 'center', alignItems: 'center'
-                        , backgroundColor: color.mainGreen, marginTop:1, marginBottom: 1, height: '35px', width: '38px',
-                        borderRadius: '100%', marginRight: '5px', cursor: 'pointer'}}>
-                          <SendIcon sx={{color: color.white, transform: 'rotate(-45deg)', ml: 0.5, mb: 0.5, fontSize: '18px'}}/>
-                        </div>
-                        
+              <Box sx={{height: '45px',display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+              , color: '#333', backgroundColor: '#f5f5f5', borderRadius: '10px'}}>
+                  <input
+                  id="search"
+                  type="search"
+                  // variant="outlined"
+                  // multiline
+                  // inputProps={{
+                  //     maxLength: maxLengthLimit,
+                  // }}
+                  ref={searchInputRef}
+                  placeholder={placeholder}
+                  value={searchTerm}
+                  onChange={handleChange}
+                  onKeyDown={onSearchKeyDown}
+                  onClick={()=>{searchInputRef.current?.focus();}}
+                  style={{ color: '#333', backgroundColor: '#f5f5f5', borderRadius: '10px', width: '100%', paddingLeft: '10px',
+                  border: 'none', outline: 'none',
+                  fontSize: '15px'}}
+                  // InputProps={{
+                  //     endAdornment: (
+                  //     <InputAdornment position="end">
+                          // <IconButton onClick={onSearch} sx={{bgcolor: color.mainGreen, my:1, height: '35px', width: '35px'}}>
+                          // <SearchIcon sx={{color: color.mainGreen}}/>
+                          // </IconButton>
+                  //     </InputAdornment>
+                  //     ),
+                  //     sx: {...heightSx, border: '1px solid #fff', borderRadius: '10px', height: '50px'}
+                  // }}
+                  />
+                  <div
+                  onClick={(e)=>{
+                    onSearch(e)
+                    searchInputRef.current?.focus()
+                  }} 
+                  style={{display: 'flex', justifyContent: 'center', alignItems: 'center'
+                  , backgroundColor: color.mainGreen, marginTop:1, marginBottom: 1, height: '35px', width: '38px',
+                  borderRadius: '100%', marginRight: '5px', cursor: 'pointer'}}>
+                    <SendIcon sx={{color: color.white, transform: 'rotate(-45deg)', ml: 0.5, mb: 0.5, fontSize: '18px'}}/>
+                  </div>     
                 </Box>
-            </Box>     
+            </Box>  
+            <Box sx={{width: '100%', display: 'flex', justifyContent: 'flex-end'}}>
+              <Typography sx={{fontSize: '12px', color: '#555'}}>
+                  {leftQuestions} Chat token Left
+              </Typography>
+            </Box>   
         </Box>
     );
   };
