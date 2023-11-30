@@ -151,7 +151,6 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
             // setKey(keyNumber)
             const leftChat = localStorage.getItem('chatToken')
             if (leftChat === null) {
-                console.log('hehe')
                 const response = await getApi(api,`/api/paper/token`)
                 const data = await response.json()
                 dispatch({
@@ -161,11 +160,13 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
                 localStorage.setItem('chatToken', data.leftQuestions)
                 if (data.leftQuestions <= 0) {
                     notify("You've exhausted your daily question limit. Please use tomorrow.")
+                    enteredSearchTermInPaper.pop()
                     throw new Error('Chat token is exhausted.')
                 }
             } 
             else if (Number(leftChat) <=0 ) {
                 notify("You've exhausted your daily question limit. Please use tomorrow.")
+                enteredSearchTermInPaper.pop()
                 throw new Error('Chat token is exhausted.')
             }
             let response = await postApi(api, `/api/paper?paperId=${paperId}&workspaceId=${workspaceId}`, payload)
