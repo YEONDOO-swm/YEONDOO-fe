@@ -215,7 +215,7 @@ export const Landing = () => {
   return (
     <Box>
         <MetaTag title="Yeondoo" description="Yeondoo is your research assistant! 연두를 통해 특별한 연구 경험을 느껴보세요." keywords="연두, yeondoo, 논문, 논문 내 질의, 질의, gpt, 논문 gpt" 
-                imgsrc={metaImage} url='https://yeondoo.net'/>
+                imgsrc={metaImage} url='https://yeon-doo.com'/>
           <Header/>
             <Box sx={{background: 'linear-gradient(to top, #F2F6F1, #fff)',}}>
               <Box sx ={{height: isMobile?'55vh':'45vh', display: 'flex', flexDirection: 'column',justifyContent: 'flex-end', alignItems: 'center'}}>

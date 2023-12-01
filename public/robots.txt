@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://yeondoo.net/sitemap.xml
+Sitemap: https://yeon-doo.com/sitemap.xml

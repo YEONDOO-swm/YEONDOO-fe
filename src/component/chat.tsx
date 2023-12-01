@@ -180,6 +180,7 @@ const Chat = ({isChatOpen, setIsChatOpen, data, paperId, iframeRef, iframeRef2, 
             }
             else if (response.status === 403) {
                 notify("You've exhausted your daily question limit. Please use tomorrow.")
+                enteredSearchTermInPaper.pop()
                 throw new Error('Chat token is exhausted.')
             }
 
