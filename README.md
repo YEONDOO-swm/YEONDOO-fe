@@ -2,7 +2,7 @@
 ![React](https://img.shields.io/badge/React-18.2.0-61DAFB.svg)
 [![Build Status](https://github.com/YEONDOO-swm/YEONDOO-fe/actions/workflows/main.yml/badge.svg)](https://github.com/YEONDOO-swm/YEONDOO-fe/actions)
 
-## 🔗 [Yeondoo 서비스 바로가기](https://yeondoo.net)
+## 🔗 [Yeondoo 서비스 바로가기](https://yeon-doo.com)
 
 
 ## Introduction
