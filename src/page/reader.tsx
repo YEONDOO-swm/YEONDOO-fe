@@ -206,7 +206,7 @@ const Reader = () => {
         }
       }
 
-      fetch(userPdfCheck ?`https://yeondoo-upload-pdf.s3.ap-northeast-2.amazonaws.com/${openedPaperNumber}.pdf` : `https://browse.arxiv.org/pdf/${openedPaperNumber}.pdf`)
+      fetch(userPdfCheck ?`https://yeondoo-be-upload-pdf.s3.ap-northeast-2.amazonaws.com/${openedPaperNumber}.pdf` : `${api}/api/paper/file${openedPaperNumber}`)
       .then((response) => response.arrayBuffer())
       .then(async(arrayBuffer) => {
         let buf = await pdfWorker.writeAnnotations(arrayBuffer, downloadPdfAnnotations);
@@ -374,9 +374,9 @@ const Reader = () => {
                       }
                     })
                     if (data.userPdf) {
-                      fetch(`https://yeondoo-upload-pdf.s3.ap-northeast-2.amazonaws.com/${openedPaperNumber}.pdf`);
+                      fetch(`https://yeondoo-be-upload-pdf.s3.ap-northeast-2.amazonaws.com/${openedPaperNumber}.pdf`);
                     } else {
-                      fetch(`https://browse.arxiv.org/pdf/${openedPaperNumber}.pdf`);
+                      fetch(`${api}/api/paper/file${openedPaperNumber}`);
                     }
                     if (iframeRef2 && iframeRef2.current && iframeRef2.current.contentWindow) {
                         iframeRef2.current.contentWindow.postMessage({
